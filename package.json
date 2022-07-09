@@ -1,0 +1,15 @@
+{
+  "name": "com.Threeyes.AliveCursorSDK",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "SDK for AliveCursor.",
+  "keywords": [
+    "Alive Cursor"
+  ],
+  "category": "editor extensions",
+  "dependencies": {},
+  "author": {
+    "name": "Threeyes",
+    "url": "https://github.com/Threeyes"
+  }
+}
