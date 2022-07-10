@@ -1,0 +1,2 @@
+TextMeshPro的内置字体库为LiberationSans，可能会导致中文及其他国家的文字无法显示，因此改用NotoSansSC作为默认字体库
+The builtin font library is LiberationSans, which may not display characters correctly (eg: Chinese or Japanese). in that case, try use NotoSansSC instead.

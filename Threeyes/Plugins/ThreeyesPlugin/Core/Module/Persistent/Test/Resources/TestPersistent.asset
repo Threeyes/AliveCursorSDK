@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b1904a99691ee241834fa5ab1021ad7, type: 3}
+  m_Name: TestPersistent
+  m_EditorClassIdentifier: 
+  gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  config:
+    listSO:
+    - {fileID: 11400000, guid: 674ba7f9bfcd1b74881b96573d551087, type: 2}
+    - {fileID: 11400000, guid: ec94f08c75bbf74469e0bd7e80e935e1, type: 2}
+    - {fileID: 11400000, guid: dbbf1664dc26b1e4484acfc0cc0bf38c, type: 2}
+    arrSO:
+    - {fileID: 11400000, guid: 91ed69e29832a9048b7868011ead77c1, type: 2}
+    - {fileID: 11400000, guid: e04c927a5072fa840aad5cc591b86179, type: 2}
+    - {fileID: 11400000, guid: 1e1cd8c0deeb606488dbc89cb18a60f9, type: 2}
+    listString:
+    - AA
+    - BB
+    - CC
+    arrString:
+    - 11
+    - 22
+    - 33
+    defaultTextureAsset: {fileID: 2800000, guid: 91b42e999a47fd546a16cecd0e7fecce,
+      type: 3}
+    textureAsset: {fileID: 0}
+    sOBytesAsset: {fileID: 0}
+    textAsset: {fileID: 0}
+    listOptionMaterial:
+    - {fileID: 2100000, guid: 1eafd2984b19e2d40acd88cac3ac01ce, type: 2}
+    - {fileID: 2100000, guid: 990efd8cac9ec344eb4d3346e4a82cac, type: 2}
+    - {fileID: 2100000, guid: 75d76820e3f81f3468a0fbd42852ba79, type: 2}
+    curOptionMaterial: {fileID: 0}
+    PersistentDirPath: I:\Unity Group\My Group\App Group\AliveCursor/Data/Persistent
+    textureAssetPath: "C:\\Users\\Colyu_i7_001\\Pictures\\Test\\AliveCursor RuntimeEdit\\Texture\\\u4E24\u5F39_\u65F6\u4EE3\u80CC\u666F.png"
+    bytesAssetPath: "C:\\Users\\Colyu_i7_001\\Pictures\\Test\\AliveCursor RuntimeEdit\\Texture\\\u4E24\u5F39_\u82F1\u96C4\u91C7\u8BBF.png"
+    textAssetPath: "C:\\Users\\Colyu_i7_001\\Pictures\\Test\\AliveCursor RuntimeEdit\\Texture\\\u4E24\u5F39_\u65F6\u4EE3\u80CC\u666F.png"
+    curOptionMaterialIndex: 0

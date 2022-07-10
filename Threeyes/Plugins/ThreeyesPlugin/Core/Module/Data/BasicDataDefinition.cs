@@ -1,0 +1,240 @@
+using System;
+using UnityEngine;
+using UnityEngine.Events;
+#if USE_JsonDotNet
+using Newtonsoft.Json;
+#endif
+namespace Threeyes.Data
+{
+	//PS：该namespace存储所有Module公用的class
+
+	public enum BasicDataState
+	{
+		Init = 1,
+		Update = 2,
+		DeInit = 3,
+	}
+
+	/// <summary>
+	/// Turn common struct type into class, and get their value change event
+	/// </summary>
+#if USE_JsonDotNet
+	[JsonObject(MemberSerialization.Fields)]
+#endif
+	public abstract class BasicData
+	{
+		public virtual IDataOption Option { get { return new DataOption(); } }
+
+		public abstract void CloneTo(ref object other);
+		public abstract void NotifyValueChanged(BasicDataState state = BasicDataState.Update);
+		public abstract void ClearEvent();
+	}
+
+	//基本数据类
+	public class BasicData<TValue> : BasicData
+	{
+		public virtual TValue Value
+		{
+			get { return value; }
+			set
+			{
+				if (!EqualsTo(value))
+				{
+					this.value = value;
+					NotifyValueChanged();
+				}
+			}
+		}
+		public virtual TValue ValueForceUpdate
+		{
+			get { return value; }
+			set
+			{
+				//PS:不检测是否与旧值相同，强制更新事件
+				this.value = value;
+				NotifyValueChanged();
+			}
+		}
+
+		[SerializeField] protected TValue value;
+		[SerializeField] protected TValue defaultValue;
+
+#if USE_JsonDotNet
+		[JsonIgnore]
+#endif
+		public UnityAction<TValue> actionValueChanged;
+#if USE_JsonDotNet
+		[JsonIgnore]
+#endif
+		public UnityAction<TValue, BasicDataState> actionValueChangedEx;
+
+		public BasicData()//用于反射调用
+		{
+		}
+		public BasicData(TValue value)
+		{
+			this.value = value;
+		}
+
+		public override void CloneTo(ref object other)
+		{
+			BasicData<TValue> realOther = other as BasicData<TValue>;
+			if (realOther != null)
+			{
+				realOther.value = value;
+				realOther.defaultValue = defaultValue;
+				//PS:不能覆盖其UnityAction
+			}
+			else
+			{
+				Debug.LogError("The other is Null!");
+			}
+		}
+
+		public override void NotifyValueChanged(BasicDataState state = BasicDataState.Update)
+		{
+			actionValueChanged.Execute(Value);
+			actionValueChangedEx.Execute(Value, state);
+		}
+		public override void ClearEvent()
+		{
+			actionValueChanged = null;
+			actionValueChangedEx = null;
+		}
+
+		#region Utility
+		/// <summary>
+		/// 值是否相同
+		/// </summary>
+		/// <param name="otherValue"></param>
+		/// <returns></returns>
+		protected virtual bool EqualsTo(TValue otherValue)
+		{
+			return value.Equals(otherValue);
+		}
+		#endregion
+	}
+
+	public abstract class BasicData<TValue, TOption> : BasicData<TValue>
+		where TOption : IDataOption
+	{
+		public override IDataOption Option { get { return option; } }
+		public virtual TOption RealOption { get { return option; } }
+		[SerializeField] protected TOption option;
+
+		public BasicData() : base() { }
+		public BasicData(TValue value) : base(value) { }
+
+
+		public BasicData(TValue value, TOption option) : base(value)
+		{
+			this.option = option;
+		}
+	}
+
+	public abstract class BasicNumberData<TValue, TOption> : BasicData<TValue, TOption>
+		where TOption : DataOption_RangeBase<TValue>
+	{
+		protected BasicNumberData() : base() { }
+		protected BasicNumberData(TValue value) : base(value) { }
+		protected BasicNumberData(TValue value, TOption option) : base(value, option) { }
+
+		public override TValue Value
+		{
+			get
+			{
+				return base.Value;
+			}
+			set
+			{
+				TValue tempValue = value;
+
+				if (option.UseRange)
+					tempValue = Clamp(value, option.MinValue, option.MaxValue);
+				base.Value = tempValue;
+			}
+		}
+
+		/// <summary>
+		/// 外部调用并检测值是否在有效范围内
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns>是否进行了裁剪</returns>
+		public bool Clamp(TValue value, out TValue valueResult)
+		{
+			valueResult = Clamp(value, option.MinValue, option.MaxValue);
+			return !EqualsTo(valueResult);
+		}
+
+		protected abstract TValue Clamp(TValue value, TValue min, TValue max);
+
+		public override void CloneTo(ref object other)
+		{
+			base.CloneTo(ref other);
+
+			BasicData<TValue, TOption> realOther = other as BasicData<TValue, TOption>;
+			if (realOther != null)
+			{
+
+				realOther.RealOption.UseRange = this.RealOption.UseRange;
+				realOther.RealOption.MinValue = this.RealOption.MinValue;
+				realOther.RealOption.MaxValue = this.RealOption.MaxValue;
+			}
+		}
+	}
+
+	[Serializable]
+	public class BoolData : BasicData<bool>
+	{
+		public BoolData() : base() { }
+		public BoolData(bool value) : base(value) { }
+	}
+
+	[Serializable]
+	public class StringData : BasicData<string>
+	{
+		public StringData() : base() { }
+		public StringData(string value) : base(value) { }
+	}
+
+	[Serializable]
+	public class Color32Data : BasicData<Color32>
+	{
+		public int r;
+		public int g;
+		public int b;
+		public int a;
+		public Color32Data() : base() { }
+		public Color32Data(Color32 value) : base(value)
+		{
+			r = value.r;
+			g = value.g;
+			b = value.b;
+			a = value.a;
+		}
+	}
+	[Serializable]
+	public class FloatData : BasicNumberData<float, DataOption_Float>
+	{
+		public FloatData() : base() { }
+		public FloatData(float value) : base(value) { }
+		public FloatData(float value, DataOption_Float option) : base(value, option) { }
+
+		protected override float Clamp(float value, float minValue, float maxValue)
+		{
+			return Mathf.Clamp(value, minValue, maxValue);
+		}
+	}
+	[Serializable]
+	public class IntData : BasicNumberData<int, DataOption_Int>
+	{
+		public IntData() : base() { }
+		public IntData(int value) : base(value) { }
+		public IntData(int value, DataOption_Int option) : base(value, option) { }
+
+		protected override int Clamp(int value, int min, int max)
+		{
+			return Mathf.Clamp(value, min, max);
+		}
+	}
+}

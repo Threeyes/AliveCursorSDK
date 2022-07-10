@@ -1,0 +1,19 @@
+{
+    "name": "Threeyes.Plugin",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b2435c17de217264ebdae08cf9d32e1d",
+        "GUID:5d663dd738e3541438a443fe571f0b6d",
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229",
+        "GUID:c55d28459d9c4444ebb4788be912e1f1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Threeyes/AliveCursor%20SDK/Editor/Resources/StyleSheets/SteamWorkshopBrowser.uss?fileID=7433441132597879392&amp;guid=b9494492d35440844b72c6a22990b150&amp;type=3#SteamWorkshopBrowser" />
+    <ui:VisualElement name="MainGroup" style="flex-direction: row; flex-grow: 1; width: 100%; height: 100%;">
+        <ui:VisualElement name="LeftGroup" style="width: 20%; background-color: rgba(0, 0, 0, 0.5);">
+            <ui:TextField picking-mode="Ignore" label="Search:" readonly="false" name="SearchTextField" class="common-input-field" />
+            <ui:TextField picking-mode="Ignore" label="Include Tag:" readonly="false" name="IncludeTagTextField" class="common-input-field" />
+            <ui:TextField picking-mode="Ignore" label="Ignore Tag:" readonly="false" name="IgnoreTagTextField" class="common-input-field" />
+        </ui:VisualElement>
+        <ui:VisualElement name="MiddleGroup" style="width: 60%; background-color: rgb(140, 140, 139);">
+            <ui:ScrollView style="flex-grow: 1;">
+                <ui:RadioButtonGroup label="Radio Button Group" value="-1">
+                    <ui:RadioButton label="Radio Button" />
+                    <ui:RadioButton label="Radio Button" />
+                    <ui:RadioButton label="Radio Button" />
+                    <ui:RadioButton label="Radio Button" />
+                </ui:RadioButtonGroup>
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="RightGroup" style="width: 20%; background-color: rgba(0, 0, 0, 0.5);" />
+    </ui:VisualElement>
+</ui:UXML>

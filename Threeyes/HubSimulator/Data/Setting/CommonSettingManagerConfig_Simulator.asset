@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948acb7fa969f73429e4fb000256cc72, type: 3}
+  m_Name: CommonSettingManagerConfig_Simulator
+  m_EditorClassIdentifier: 
+  config:
+    cursorAppearance_IsHideOnTextInput:
+      value: 0
+      defaultValue: 0
+    cursorAppearance_CursorSize:
+      value: 5
+      defaultValue: 0
+      option:
+        useRange: 1
+        minValue: 0.5
+        maxValue: 10
+    cursorState_StandBy_IsActive:
+      value: 1
+      defaultValue: 0
+    cursorState_StandBy_DelayTime:
+      value: 3
+      defaultValue: 0
+      option:
+        useRange: 1
+        minValue: 1
+        maxValue: 120
+    cursorState_Bored_IsActive:
+      value: 0
+      defaultValue: 0
+    cursorState_Bored_DelayTime:
+      value: 3
+      defaultValue: 0
+      option:
+        useRange: 1
+        minValue: 3
+        maxValue: 3600
+    cursorState_Bored_Depth:
+      value: 5
+      defaultValue: 0
+      option:
+        useRange: 1
+        minValue: 0
+        maxValue: 10
+    generalSetting_Localization:
+      value: English
+      defaultValue: 
+    generalSetting_Quality:
+      value: Ultra
+      defaultValue: 
+    generalSetting_ProcessPriority:
+      value: High
+      defaultValue: 
+    generalSetting_IsActiveVSync:
+      value: 0
+      defaultValue: 0
+    generalSetting_TargetFrameRate:
+      value: 90
+      defaultValue: 0
+      option:
+        useRange: 0
+        minValue: 0
+        maxValue: 0
+    notifySetting_IsActiveAliveCursor:
+      value: 1
+      defaultValue: 0
+    notifySetting_IsSupportMultiDisplay:
+      value: 1
+      defaultValue: 0

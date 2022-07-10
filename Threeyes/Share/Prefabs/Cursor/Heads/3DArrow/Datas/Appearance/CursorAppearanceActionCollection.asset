@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f342f7c3f872549a68fdc273aea0a7, type: 3}
+  m_Name: CursorAppearanceActionCollection
+  m_EditorClassIdentifier: 
+  remark: 
+  soActionNo: {fileID: 0}
+  soActionArrow: {fileID: 0}
+  soActionAppStarting: {fileID: 11400000, guid: 9f9467d3ee226734994fa8cfd9eac9fe,
+    type: 2}
+  soActionCrosshair: {fileID: 0}
+  soActionHelp: {fileID: 0}
+  soActionIBeam: {fileID: 0}
+  soActionSizeAll: {fileID: 0}
+  soActionSizeNESW: {fileID: 0}
+  soActionSizeNS: {fileID: 0}
+  soActionSizeNWSE: {fileID: 0}
+  soActionSizeWE: {fileID: 0}
+  soActionUpArrow: {fileID: 0}
+  soActionWait: {fileID: 11400000, guid: 9f9467d3ee226734994fa8cfd9eac9fe, type: 2}
+  soActionHand: {fileID: 0}
+  soActionPen: {fileID: 0}
+  soActionScrollNS: {fileID: 0}
+  soActionScrollWE: {fileID: 0}
+  soActionScrollAll: {fileID: 0}
+  soActionScrollN: {fileID: 0}
+  soActionScrollS: {fileID: 0}
+  soActionScrollW: {fileID: 0}
+  soActionScrollE: {fileID: 0}
+  soActionScrollNW: {fileID: 0}
+  soActionScrollNE: {fileID: 0}
+  soActionScrollSW: {fileID: 0}
+  soActionScrollSE: {fileID: 0}
+  soActionArrowCD: {fileID: 0}
+  soActionPerson: {fileID: 0}

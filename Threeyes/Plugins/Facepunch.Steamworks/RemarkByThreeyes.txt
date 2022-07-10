@@ -1,0 +1,8 @@
+Source：https://github.com/Facepunch/Facepunch.Steamworks
+Version：5cb1496e80ce9cd0c6b31155d3dbd92838d10cc1
+License：(MIT) https://github.com/Facepunch/Facepunch.Steamworks/blob/master/LICENSE
+
+
+Modify Fields:
+Add：
+	Item.FileSize

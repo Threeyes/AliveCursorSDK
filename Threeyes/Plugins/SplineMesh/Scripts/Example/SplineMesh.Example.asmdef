@@ -1,0 +1,16 @@
+{
+    "name": "SplineMesh.Example",
+    "rootNamespace": "",
+    "references": [
+        "GUID:03c08af6b3339b74f811a57b6231150a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

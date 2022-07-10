@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Threeyes/AliveCursorSDK/Scripts/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
+    <ui:VisualElement name="SceneTemplateManagerGroup" style="flex-grow: 1; flex-direction: row; min-width: auto; min-height: auto;">
+        <ui:VisualElement name="LeftGroup" style="flex-grow: 1; width: 49%; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">
+            <ui:ListView focusable="true" name="SceneTemplateListView" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Gap" class="VerticalGap" />
+        <ui:VisualElement name="RightGroup" focusable="false" style="flex-grow: 0; width: 340px; margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; justify-content: flex-start; flex-shrink: 0;">
+            <ui:VisualElement name="InfoGroup" style="flex-grow: 1; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">
+                <ui:VisualElement name="PreviewArea" style="height: 189px; border-left-color: rgb(128, 128, 128); border-right-color: rgb(128, 128, 128); border-top-color: rgb(128, 128, 128); border-bottom-color: rgb(128, 128, 128); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; background-image: none; -unity-background-scale-mode: scale-to-fit;" />
+                <ui:Label text="description" display-tooltip-when-elided="true" name="description" binding-path="description" style="height: auto; top: auto; flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 2px; padding-bottom: 0; white-space: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ButtonGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
+                <ui:Button text="Create" display-tooltip-when-elided="true" name="CreateButton" focusable="true" style="overflow: visible; width: 49%;" />
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelButton" focusable="true" style="overflow: hidden; width: 49%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

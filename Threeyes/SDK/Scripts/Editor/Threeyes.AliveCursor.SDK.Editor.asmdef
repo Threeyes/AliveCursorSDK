@@ -1,0 +1,20 @@
+{
+    "name": "Threeyes.AliveCursor.SDK.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:68bbd570b7eb11f4b96431cc8cb8426a",
+        "GUID:b2435c17de217264ebdae08cf9d32e1d",
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

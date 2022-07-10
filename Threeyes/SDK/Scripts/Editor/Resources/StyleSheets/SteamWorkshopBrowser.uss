@@ -1,0 +1,6 @@
+.common-input-field {
+    align-items: auto;
+    justify-content: flex-start;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}

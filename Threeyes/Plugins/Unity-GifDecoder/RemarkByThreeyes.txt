@@ -1,0 +1,3 @@
+Source£ºhttps://github.com/3DI70R/Unity-GifDecoder
+Version£º90ffa399087521817ab03ce9213ec33b38e4492f
+License£º(MIT) https://github.com/3DI70R/Unity-GifDecoder/blob/master/LICENSE

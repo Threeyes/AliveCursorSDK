@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a582f3316a4d10a499b7a94f3d07f31e, type: 3}
+  m_Name: ControllerCSAC
+  m_EditorClassIdentifier: 
+  soActionEnter: {fileID: 11400000, guid: 4acb49240e9adbc4ea8ad8a687f51f65, type: 2}
+  soActionExit: {fileID: 11400000, guid: 4e402d2a251433e4cb1bc941d8102c42, type: 2}
+  soActionShow: {fileID: 11400000, guid: 5ac65d856abd30d4eae9794c753b36d1, type: 2}
+  soActionHide: {fileID: 11400000, guid: 144a619b636f6a1498d6f04f4d4d0e96, type: 2}
+  soActionWorking: {fileID: 11400000, guid: 11668e3f17b7e3443b1995a24b20d6ce, type: 2}
+  soActionStandBy: {fileID: 11400000, guid: 69b682cac09dc74428fe1d0344777fd9, type: 2}
+  soActionBored: {fileID: 11400000, guid: 4dfcd4afd7e6a59478508a7dfcd8df7f, type: 2}

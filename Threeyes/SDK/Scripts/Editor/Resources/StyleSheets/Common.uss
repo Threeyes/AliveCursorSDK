@@ -1,0 +1,27 @@
+.HorizontalGap {
+    height: 4px;
+    background-color: rgba(0, 0, 0, 0.25);
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.Title {
+    -unity-text-align: upper-center;
+    -unity-font-style: bold;
+    font-size: 15px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    background-color: rgba(144, 144, 144, 0.25);
+}
+
+.VerticalGap {
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.25);
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 4px;
+}

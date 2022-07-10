@@ -1,0 +1,3 @@
+Source：https://github.com/Demigiant/dotween/_DOTween.Assembly/bin
+Version：2022.4.8
+License：http://dotween.demigiant.com/license.php

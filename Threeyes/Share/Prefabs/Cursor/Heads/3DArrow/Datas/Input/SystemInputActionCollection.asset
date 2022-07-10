@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f791fae83d0e04eb4e27b789840b46, type: 3}
+  m_Name: SystemInputActionCollection
+  m_EditorClassIdentifier: 
+  soActionLeftButton: {fileID: 11400000, guid: 596c02da68bd35b40bc89782a70b45b8, type: 2}
+  soActionRightButton: {fileID: 11400000, guid: d1e94889765913245b2afd0dcf5bbaa2,
+    type: 2}
+  soActionMiddleButton: {fileID: 0}
+  soActionXButton1: {fileID: 0}
+  soActionXButton2: {fileID: 0}
+  soActionWheelScroll: {fileID: 0}
+  soActionMove: {fileID: 0}

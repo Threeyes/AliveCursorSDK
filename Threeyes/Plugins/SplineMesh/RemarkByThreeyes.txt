@@ -1,0 +1,3 @@
+Source£ºhttps://github.com/methusalah/SplineMesh
+Version£º71c4591f5531af06e8555fa76c8ece0c466ee3e8
+License£º(MIT) https://github.com/methusalah/SplineMesh/blob/master/LICENSE
