@@ -5,7 +5,11 @@
     <br />
     <i>SDK for AliveCursor.</i>
 </p>
-## About
+
+
+<p align="center">
+	<a href="https://openupm.com/packages/com.threeyes.alivecursor.sdk/"><img src="https://img.shields.io/npm/v/com.threeyes.alivecursor.sdk?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
+</p>
 
 ## Installation
 
@@ -24,7 +28,15 @@ Alternatively, merge this snippet to your `Packages/manifest.json` file:
             "name": "package.openupm.com",
             "url": "https://package.openupm.com",
             "scopes": [
-                "com.threeyes.alivecursor.sdk"
+                "com.threeyes.alivecursor.sdk": "1.0.0",
+                "com.beans.deform": "1.2.1",
+                "com.coffee.ui-effect": "4.0.0-preview.9",
+                "com.dbrizov.naughtyattributes": "2.1.4",
+                "com.unity.ide.visualstudio": "2.0.16",
+                "com.unity.ide.vscode": "1.2.5",
+                "com.yasirkula.beziersolution": "2.3.1",
+                "com.zibra.liquids-free": "1.4.5",
+                "jillejr.newtonsoft.json-for-unity.converters": "1.4.0",
             ]
         }
     ],
@@ -39,9 +51,10 @@ Alternatively, merge this snippet to your `Packages/manifest.json` file:
 Add this under `dependencies` in your `Packages/manifest.json` file:
 
 ```
-"io.savolainen.uicomponents": "hhttps://github.com/Threeyes/AliveCursorSDK.git"
+"com.threeyes.alivecursor.sdk": "hhttps://github.com/Threeyes/AliveCursorSDK.git"
 ```
 
 This will install the latest version.
 
 ## Documentation
+Please hold...
