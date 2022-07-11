@@ -65,7 +65,10 @@ namespace Threeyes.Persistent.Test
         {
             //Test NaughtyAttributes
             public bool isEnableFollowing = true;
-            [EnableIf(nameof(isEnableFollowing))] public DataOption_OptionInfo optionInfo;
+#if USE_NaughtyAttributes
+  [EnableIf(nameof(isEnableFollowing))]
+#endif
+            public DataOption_OptionInfo optionInfo;
 
             //Test IList
             public List<ScriptableObject> listSO = new List<ScriptableObject>();

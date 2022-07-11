@@ -35,11 +35,6 @@ public class AC_ObjectGenerator : AC_ConfigableComponentBase<AC_SOObjectGenerato
         [Header("Generate")]
         [JsonIgnore] public AC_SOPrefabGroup soPrefabGroup;
         public GetPrefabType getPrefabType = GetPrefabType.Random;//How to get new prefab from list
-
-        [Header("Bored")]
-        [Tooltip("The interval time range that generate new obj on specify state")]
-        public Vector2 boredGenerateIntervalRange = new Vector2(1, 5);
-        public Vector2 boredGenerateSizeRange = new Vector2(0.1f, 1f);
     }
 
     public enum GetPrefabType

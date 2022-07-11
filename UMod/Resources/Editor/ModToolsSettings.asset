@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toolsIconSmall: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsIconLarge: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
-  toolsName: AliveCursor Mod Tools
-  toolsVersion: 1.0.0
+  toolsName: AliveCursorSDK
+  toolsVersion: 1.0.1
   firstRunWindow:
     assemblyQualifiedName: 
   developerName: Threeyes

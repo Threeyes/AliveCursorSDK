@@ -1,0 +1,2 @@
+1.If you prefer a modify version of these files, please clone it and copy to your Item folder.
+2.Can't contain script files because upm will only complily script with asmdef files.

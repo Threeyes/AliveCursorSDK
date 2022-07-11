@@ -1,6 +1,10 @@
 using UnityEngine;
 using NaughtyAttributes;
-
+/// <summary>
+///
+/// PS:
+/// 1.此处的Config默认设置应为：Debug全激活，方便用户直接调试
+/// </summary>
 public class AC_StateManagerSimulator : AC_StateManagerBase<AC_StateManagerSimulator>
 {
 	[Space]

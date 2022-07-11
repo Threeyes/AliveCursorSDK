@@ -41,7 +41,7 @@ public class GifPlayer : MonoBehaviour
         Reset();
         if (cancellationToken != CancellationToken.None)
         {
-            using CancellationTokenRegistration ctr = cancellationToken.Register(Reset);//监听外部取消事件，然后调用selfCancellationTokenSource.Cancel (好处是cancellationTokenSource被销毁也不会影响本地访问）
+            /*using*/ CancellationTokenRegistration ctr = cancellationToken.Register(Reset);//监听外部取消事件，然后调用selfCancellationTokenSource.Cancel (好处是cancellationTokenSource被销毁也不会影响本地访问）
         }
         selfCancellationTokenSource = new CancellationTokenSource();
         var listDecodedData = await arrByteGif.ToListGifFrameDataAsync(selfCancellationTokenSource.Token, decodeOption);

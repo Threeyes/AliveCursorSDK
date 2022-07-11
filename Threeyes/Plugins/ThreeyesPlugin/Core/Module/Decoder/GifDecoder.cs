@@ -76,21 +76,6 @@ namespace Threeyes.Decoder
             return decodeResult;
         }
 
-        static GifFrameData GetTexture(DecodeOption option, GifStream gifStream)
-        {
-            GifFrameData gifFrameData = new GifFrameData();
-            var image = gifStream.ReadImage();
-            var textureFrame = new Texture2D(gifStream.Header.width, gifStream.Header.height, TextureFormat.ARGB32, false);
-            textureFrame.SetPixels32(image.colors);
-            textureFrame.Apply();
-            if (option.compress)//压缩
-                textureFrame.TryCompress(option.compressInHighQuality);
-
-            gifFrameData.texture = textureFrame;
-            gifFrameData.frameDelaysSeconds = image.SafeDelaySeconds;// More about SafeDelay below
-            return gifFrameData;
-        }
-
         /// <summary>
         /// (每加载一张图片等待一帧）
         /// </summary>
@@ -155,7 +140,22 @@ namespace Threeyes.Decoder
 
             return decodeResult;
         }
+#if Threeyes_UnityGifDecoder
+  static GifFrameData GetTexture(DecodeOption option, GifStream gifStream)
+        {
+            GifFrameData gifFrameData = new GifFrameData();
+            var image = gifStream.ReadImage();
+            var textureFrame = new Texture2D(gifStream.Header.width, gifStream.Header.height, TextureFormat.ARGB32, false);
+            textureFrame.SetPixels32(image.colors);
+            textureFrame.Apply();
+            if (option.compress)//压缩
+                textureFrame.TryCompress(option.compressInHighQuality);
 
+            gifFrameData.texture = textureFrame;
+            gifFrameData.frameDelaysSeconds = image.SafeDelaySeconds;// More about SafeDelay below
+            return gifFrameData;
+        }
+#endif
 
         [Serializable]
         public class DecodeOption : IDecodeOption
