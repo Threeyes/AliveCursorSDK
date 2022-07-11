@@ -12,7 +12,7 @@
 ### With [OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/) (recommended)
 
 ```shell
-openupm add io.savolainen.uicomponents
+openupm add com.threeyes.alivecursor.sdk
 ```
 
 Alternatively, merge this snippet to your `Packages/manifest.json` file:
