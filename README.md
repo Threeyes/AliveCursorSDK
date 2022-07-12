@@ -16,7 +16,7 @@
 ### 
 
 + Create a empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe) (You can download it from [here](https://unity3d.com/get-unity/download/archive)).
-+ Merge this snippet to your `Packages/manifest.json` file:
++ Merge this snippet to your `Packages/manifest.json` file (Remember to change com.threeyes.alivecursor.sdk's version to latest):
 ```json
 {
     "scopedRegistries": [
@@ -28,6 +28,7 @@
                 "com.beans.deform",
                 "com.coffee.ui-effect",
                 "com.zibra.liquids-free",
+                "com.threeyes.alivecursor.sdk",
                 "com.yasirkula.beziersolution",
                 "com.dbrizov.naughtyattributes",
                 "jillejr.newtonsoft.json-for-unity.converters"
@@ -35,14 +36,12 @@
         }
     ],
     "dependencies": {
-        "com.threeyes.alivecursor.sdk": "1.0.0",
         "com.beans.deform": "1.2.1",
         "com.coffee.ui-effect": "4.0.0-preview.9",
-        "com.dbrizov.naughtyattributes": "2.1.4",
-        "com.unity.ide.visualstudio": "2.0.16",
-        "com.unity.ide.vscode": "1.2.5",
-        "com.yasirkula.beziersolution": "2.3.1",
         "com.zibra.liquids-free": "1.4.5",
+        "com.threeyes.alivecursor.sdk": "1.0.0",
+        "com.yasirkula.beziersolution": "2.3.1",
+        "com.dbrizov.naughtyattributes": "2.1.4",
         "jillejr.newtonsoft.json-for-unity.converters": "1.4.0"
     }
 }
