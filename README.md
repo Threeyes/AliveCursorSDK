@@ -15,7 +15,7 @@
 
 ### 
 
-+ Create a empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe) (You can download it from [here](https://unity3d.com/get-unity/download/archive)).
++ Create an empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe) (You can download it from [here](https://unity3d.com/get-unity/download/archive)).
 + Merge this snippet to your `Packages/manifest.json` file (Remember to change com.threeyes.alivecursor.sdk's version to latest):
 ```json
 {
@@ -47,5 +47,6 @@
 }
 ```
 + Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig/ProjectSettings.zip) zip file, extract it and replace project's origin ProjectSettings folder.
++ Open Project, some error may appear on first import due to the , try cleanup or restart project.
 ## Documentation
 Please hold...
