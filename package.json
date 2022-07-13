@@ -53,6 +53,11 @@
       "displayName": "Liquid",
       "description": "Liquid",
       "path": "Threeyes/Samples/Feature/Liquid"
+    },
+    {
+      "displayName": "Action",
+      "description": "Action",
+      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/Action/Examples"   
     }
   ],
   "author": {
