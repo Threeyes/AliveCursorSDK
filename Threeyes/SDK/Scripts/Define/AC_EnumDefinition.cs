@@ -127,7 +127,7 @@ public enum AC_SystemCursorAppearanceType
 /// <summary>
 /// Ref: 对应Steamworks.RemoteStoragePublishedFileVisibility
 /// </summary>
-public enum AC_WCItemVisibility
+public enum AC_WSItemVisibility
 {
 	Public = 0,
 	FriendsOnly = 1,
@@ -138,21 +138,20 @@ public enum AC_WCItemVisibility
 //——Custom Tags——
 
 /// <summary>
-/// 年龄段（Ref： https://rating-system.fandom.com/wiki/Australian_Classification_Board）
+/// 年龄等级（Ref： https://rating-system.fandom.com/wiki/Australian_Classification_Board）
 /// </summary>
-public enum AC_WCItemAgeRatingType
+public enum AC_WSItemAgeRating
 {
 	General,//Suitable for everyone
 	ParentalGuidance,// Suggested for younger viewers
 	Restricted//Children Under XX Require Accompanying Parent or Adult Guardian.
 }
 
-
 /// <summary>
 /// Item样式(外形）
 /// </summary>
 [System.Flags]
-public enum AC_WCItemStyle
+public enum AC_WSItemStyle
 {
 	None = 0,
 
@@ -173,7 +172,7 @@ public enum AC_WCItemStyle
 /// Ref：https://www.imdb.com/feature/genre
 /// </summary>
 [System.Flags]
-public enum AC_WCItemGenre
+public enum AC_WSItemGenre
 {
 	None = 0,
 	Comedy = 1 << 0,
@@ -192,10 +191,10 @@ public enum AC_WCItemGenre
 }
 
 /// <summary>
-/// Item引用
+/// Item引用（致敬）
 /// </summary>
 [System.Flags]
-public enum AC_WCItemReference
+public enum AC_WSItemReference
 {
 	None = 0,
 
@@ -212,31 +211,31 @@ public enum AC_WCItemReference
 /// 物体功能特性（通用）（多选）
 /// </summary>
 [System.Flags]
-public enum AC_WCItemFeature
+public enum AC_WSItemFeature
 {
 	None = 0,
 	Interactable = 1 << 0,//可交互/碰撞（如气球、弹球、扫雷、液体）
 	AudioVisualizer = 1 << 1,//音频可视化
 	Clock = 1 << 2,//时钟
-	Exhibition = 1 << 3,//展览（如条幅、官方或第三方制作的用于展示及循环播放的广告）
+	Exhibition = 1 << 3,//展示用途（如条幅、官方或第三方制作的用于展示及循环播放的广告）
 
 	All = ~0
 }
 
 //ToUse:
 /// <summary>
-/// Item的安全性
+/// Item的高级功能，涉及安全
 /// 
 /// PS:仅开发者可设置的内部Tag枚举。
-/// 如：Item使用了代码，那就设置该枚举， 并且每次在Item上显示警告
+/// 如：Item使用了代码，那就设置该枚举， 并且每次在Item上有UI提示
 /// </summary>
 [System.Flags]
-public enum AC_WCItemSafety
+public enum AC_WSItemAdvanced
 {
 	None = 0,
 
 	IncludeScripts = 1 << 0,//Include custom script
-	KeyBoardListening = 1 << 1,//Listen to KeyBoard event
+	KeyListening = 1 << 1,//Listen to KeyBoard event
 	Networking = 1 << 2,//Multi Player
 
 	All = ~0
@@ -247,7 +246,7 @@ public enum AC_WCItemSafety
 /// <summary>
 /// 本地Item所在位置
 /// </summary>
-public enum AC_WCItemLocation
+public enum AC_WSItemLocation
 {
 	Downloaded,//Steam下载后的文件。包括SteamingAssets中内置的Item
 

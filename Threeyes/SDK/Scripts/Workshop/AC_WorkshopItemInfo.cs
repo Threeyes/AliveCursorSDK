@@ -26,11 +26,11 @@ public sealed class AC_WorkshopItemInfo
     [JsonProperty] public string description;
     [JsonProperty] public string modFileRelatePath;//局部的Mod文件路径
     [JsonProperty] public string previewFileRelatePath;//局部预览图路径                                   
-    [JsonProperty] public AC_WCItemVisibility itemVisibility = AC_WCItemVisibility.Public;
+    [JsonProperty] public AC_WSItemVisibility itemVisibility = AC_WSItemVisibility.Public;
     [JsonProperty] public string[] tags;//PS:因为最终呈现的形式都是tags，所以不需要存储枚举，以免后续有更改
 
     //#Runtime Info
-    public AC_WCItemLocation itemLocation = AC_WCItemLocation.Downloaded;//标识Mod位置，便于区分
+    public AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded;//标识Mod位置，便于区分
     public ulong id;//Item ID
     public string dirPath;//Item所在文件夹路径
     public long fileSize;//文件总大小

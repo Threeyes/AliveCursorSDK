@@ -31,7 +31,7 @@ namespace Threeyes.Data
     }
 
     /// <summary>
-    /// ´ø·¶Î§
+    /// å¸¦èŒƒå›´
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
 #if USE_JsonDotNet
@@ -124,7 +124,7 @@ namespace Threeyes.Data
     }
 
     /// <summary>
-    /// ¿ÉÑ¡Ïî
+    /// å¯é€‰é¡¹
     /// </summary>
     [System.Serializable]
     public class DataOption_OptionInfo : DataOption
@@ -134,8 +134,8 @@ namespace Threeyes.Data
         #region Define
 
         /// <summary>
-        /// (PS: ÎªÁË¼æÈİUGUI¡¢TextMeshpro»òÒÔºóµÄUIToolkit£¬ĞèÒª¶¨Òå¶ÔÓ¦µÄÊı¾İÀà£©
-        /// £¨Ref£ºDropdown.OptionData£©
+        /// (PS: ä¸ºäº†å…¼å®¹UGUIã€TextMeshproæˆ–ä»¥åçš„UIToolkitï¼Œéœ€è¦å®šä¹‰å¯¹åº”çš„æ•°æ®ç±»ï¼‰
+        /// ï¼ˆRefï¼šDropdown.OptionDataï¼‰
         /// </summary>
         [System.Serializable]
         public class OptionData
@@ -190,7 +190,7 @@ namespace Threeyes.Data
     }
 
     /// <summary>
-    /// ¿ÉÑ¡Ïî
+    /// å¯é€‰é¡¹
     /// </summary>
     [System.Serializable]
     public class DataOption_EnumInfo : DataOption
@@ -203,16 +203,16 @@ namespace Threeyes.Data
         }
 
         ///PS:
-        /// Enum.GetUnderlyingType¿ÉÒÔÖªµÀÃ¶¾ÙÖµµÄÀàĞÍ£¨int£¬byte£¬etc£©(https://www.delftstack.com/howto/csharp/how-to-get-int-value-from-enum-in-csharp/#:~:text=Get%20Int%20Value%20From%20Enum%20in%20C%23%201,method%20of%20GetTypeCode%20%28%29.%203%20More%20Examples.%20)
+        /// Enum.GetUnderlyingTypeå¯ä»¥çŸ¥é“æšä¸¾å€¼çš„ç±»å‹ï¼ˆintï¼Œbyteï¼Œetcï¼‰(https://www.delftstack.com/howto/csharp/how-to-get-int-value-from-enum-in-csharp/#:~:text=Get%20Int%20Value%20From%20Enum%20in%20C%23%201,method%20of%20GetTypeCode%20%28%29.%203%20More%20Examples.%20)
 
-        ///ÃüÃû¹æ·¶£º
-        /// ¶ÔÓ¦Type.FullName
-        /// ĞèÒªÌá¹©ËùÔÚÃüÃû¿Õ¼äµÄÍêÕûÂ·¾¶£¬eg£ºUnityEngine.TextAlignment
-        /// Èç¹ûÊÇÔÚÀàÖĞ¶¨ÒåµÄÀàĞÍ£¬ÄÇ¾ÍĞèÒªÓÃ+£¬eg: UnityEngine.UI.Slider+Direction. (You need the '+' sign to get Nested Classes to be mapped using Assembly.GeType. https://stackoverflow.com/questions/376105/using-assembly-gettypemycompany-class1-class2-returns-null£©
+        ///å‘½åè§„èŒƒï¼š
+        /// å¯¹åº”Type.FullName
+        /// éœ€è¦æä¾›æ‰€åœ¨å‘½åç©ºé—´çš„å®Œæ•´è·¯å¾„ï¼Œegï¼šUnityEngine.TextAlignment
+        /// å¦‚æœæ˜¯åœ¨ç±»ä¸­å®šä¹‰çš„ç±»å‹ï¼Œé‚£å°±éœ€è¦ç”¨+ï¼Œeg: UnityEngine.UI.Slider+Direction. (You need the '+' sign to get Nested Classes to be mapped using Assembly.GeType. https://stackoverflow.com/questions/376105/using-assembly-gettypemycompany-class1-class2-returns-nullï¼‰
         [Tooltip("The full name of enum type (eg: UnityEngine.UI.Slider+Direction)")]
-        public string enumTypeFullName;//Ã¶¾ÙËùÔÚÀàĞÍµÄFullName
+        public string enumTypeFullName;//æšä¸¾æ‰€åœ¨ç±»å‹çš„FullName
 
-        //¡ª¡ªWarning:µ÷ÓÃÒÔÏÂµÄÊôĞÔÖ®Ç°£¬ĞèÒªÏÈÅĞ¶ÏEnumTypeÊÇ·ñÎª¿Õ¡ª¡ª
+        //â€”â€”Warning:è°ƒç”¨ä»¥ä¸‹çš„å±æ€§ä¹‹å‰ï¼Œéœ€è¦å…ˆåˆ¤æ–­EnumTypeæ˜¯å¦ä¸ºç©ºâ€”â€”
         public Type EnumType
         {
             get
@@ -220,7 +220,7 @@ namespace Threeyes.Data
                 Type typeEnum = null;
                 if (enumTypeFullName.NotNullOrEmpty())
                 {
-                    //²éÕÒÆ¥ÅäµÄ¶¨Òå
+                    //æŸ¥æ‰¾åŒ¹é…çš„å®šä¹‰
                     foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
                         Type tempType = assembly.GetType(enumTypeFullName, false);
@@ -238,14 +238,14 @@ namespace Threeyes.Data
         /// <summary>
         /// Convert from name/value to Enum type
         /// </summary>
-        /// <param name="enumNameOrValue">enum name (including multi name splited by ','), or value in string format£©</param>
+        /// <param name="enumNameOrValue">enum name (including multi name splited by ','), or value in string formatï¼‰</param>
         /// <returns></returns>
         public Enum Parse(string enumNameOrValue)
         {
             if (EnumType != null && enumNameOrValue.NotNullOrEmpty())
             {
-                //ÅĞ¶Ïµ±Ç°ËùÓĞÃû³ÆÊÇ·ñ¶¼ÊÇ¸ÃÃ¶¾ÙµÄ¶¨Òå£¬±ÜÃâ¸ü»»Ã¶¾Ù»ò¸ÄÃûµÄÇé¿ö¡£×¢ÒâÈç¹ûÊÇFlag¾ÍÒª½«Ìí¼ÓµÄ"0"ºÍ"-1"¿¼ÂÇ½øÈ¥ (PS:²»ÄÜÓÃEnum.IsDefined£¬ÒòÎª¸Ã·½·¨²»ÄÜÅĞ¶Ï¶à¸öÖµ£©
-                string[] arrCurEnum = enumNameOrValue.Split(',');//·ÖÀë³öËùÓĞ¿ÉÄÜµÄÖµ
+                //åˆ¤æ–­å½“å‰æ‰€æœ‰åç§°æ˜¯å¦éƒ½æ˜¯è¯¥æšä¸¾çš„å®šä¹‰ï¼Œé¿å…æ›´æ¢æšä¸¾æˆ–æ”¹åçš„æƒ…å†µã€‚æ³¨æ„å¦‚æœæ˜¯Flagå°±è¦å°†æ·»åŠ çš„"0"å’Œ"-1"è€ƒè™‘è¿›å» (PS:ä¸èƒ½ç”¨Enum.IsDefinedï¼Œå› ä¸ºè¯¥æ–¹æ³•ä¸èƒ½åˆ¤æ–­å¤šä¸ªå€¼ï¼‰
+                string[] arrCurEnum = enumNameOrValue.Split(',');//åˆ†ç¦»å‡ºæ‰€æœ‰å¯èƒ½çš„å€¼
                 if (arrCurEnum.ToList().TrueForAll((str) => ArrStrNameOrValue.Contains(str.Trim())))
                 {
                     object result = null;
@@ -257,7 +257,7 @@ namespace Threeyes.Data
                     }
                     catch
                     {
-                        //Ôİ²»´¦Àí
+                        //æš‚ä¸å¤„ç†
                     }
                 }
             }
@@ -278,7 +278,7 @@ namespace Threeyes.Data
 
         /// <summary>
         /// Return ll Name or value in string type, mainly for UI display
-        /// £¨Õë¶ÔUnity¹Ù·½µÄFlagÃ¶¾Ù£¨ÈçCameraType)£¬ÒòÎª²¢ÎŞ¶¨Òå0/1¶ÔÓ¦µÄÃ¶¾Ù£¬ËùÒÔ»á±£´æÎªÆäÖµµÄ×Ö·û´®£©
+        /// ï¼ˆé’ˆå¯¹Unityå®˜æ–¹çš„Flagæšä¸¾ï¼ˆå¦‚CameraType)ï¼Œå› ä¸ºå¹¶æ— å®šä¹‰0/1å¯¹åº”çš„æšä¸¾ï¼Œæ‰€ä»¥ä¼šä¿å­˜ä¸ºå…¶å€¼çš„å­—ç¬¦ä¸²ï¼‰
         /// </summary>
         public string[] ArrStrNameOrValue
         {
@@ -302,7 +302,7 @@ namespace Threeyes.Data
 
         /// <summary>
         /// Return all define name
-        /// (Èç¹ûÊÇFLag£¬ÄÇ¾Í·µ»Ø³ıÁË0µÄËùÓĞÖµ)
+        /// (å¦‚æœæ˜¯FLagï¼Œé‚£å°±è¿”å›é™¤äº†0çš„æ‰€æœ‰å€¼)
         /// </summary>
         public Array ArrEnumValue
         {
@@ -317,7 +317,7 @@ namespace Threeyes.Data
         }
     }
 
-    //¡ª¡ªFile¡ª¡ª
+    //â€”â€”Fileâ€”â€”
 
     /// <summary>
     /// Decice how to read, decode file
@@ -326,7 +326,7 @@ namespace Threeyes.Data
     public class DataOption_File : DataOption
     {
         /// <summary>
-        /// Valid file extension£¨eg: "jpg", "jpeg", or "*" for anytype £©
+        /// Valid file extensionï¼ˆeg: "jpg", "jpeg", or "*" for anytype ï¼‰
         /// </summary>
         public string[] FileFilterExtensions { get { return OverrideFileFilterExtensions != null && OverrideFileFilterExtensions.Length > 0 ? OverrideFileFilterExtensions : DefaultFileFilterExtensions; } }
         public virtual string[] DefaultFileFilterExtensions { get { return new string[] { "*" }; } }
@@ -349,18 +349,18 @@ namespace Threeyes.Data
         [SerializeField] protected TDecodeOption decodeOption;
     }
 
-    //PS£º·ÅÔÚÕâÀï±ãÓÚËùÓĞÈË·ÃÎÊ
+    //PSï¼šæ”¾åœ¨è¿™é‡Œä¾¿äºæ‰€æœ‰äººè®¿é—®
 
     [System.Serializable]
     public class DataOption_TextFile : DataOption_File<TextAsset, TextAssetDecoder.DecodeOption>
     {
-        //PS£ºÄ¬ÈÏÖ§³ÖËùÓĞ¸ñÊ½£¬ÇÒText¸ñÊ½ÖÚ¶à£¨Xml¡¢json...£©£¬ËùÒÔ²»ÓÃÏŞÖÆ
+        //PSï¼šé»˜è®¤æ”¯æŒæ‰€æœ‰æ ¼å¼ï¼Œä¸”Textæ ¼å¼ä¼—å¤šï¼ˆXmlã€json...ï¼‰ï¼Œæ‰€ä»¥ä¸ç”¨é™åˆ¶
     }
 
     [System.Serializable]
     public class DataOption_BytesFile : DataOption_File<SOBytesAsset, BytesAssetDecoder.DecodeOption>
     {
-        //Ä¬ÈÏ²»ĞèÒªÏŞ¶¨ÏŞ¶¨ºó×º£¬ÈçÓĞĞèÒª¿ÉÒÔÉèÖÃoverrideFileFilterExtensions
+        //é»˜è®¤ä¸éœ€è¦é™å®šé™å®šåç¼€ï¼Œå¦‚æœ‰éœ€è¦å¯ä»¥è®¾ç½®overrideFileFilterExtensions
     }
     [System.Serializable]
     public class DataOption_TextureFile : DataOption_File<Texture, TextureDecoder.DecodeOption>

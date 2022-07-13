@@ -23,8 +23,6 @@ namespace Threeyes.Data
 #endif
 	public abstract class BasicData
 	{
-		public virtual IDataOption Option { get { return new DataOption(); } }
-
 		public abstract void CloneTo(ref object other);
 		public abstract void NotifyValueChanged(BasicDataState state = BasicDataState.Update);
 		public abstract void ClearEvent();
@@ -118,8 +116,7 @@ namespace Threeyes.Data
 	public abstract class BasicData<TValue, TOption> : BasicData<TValue>
 		where TOption : IDataOption
 	{
-		public override IDataOption Option { get { return option; } }
-		public virtual TOption RealOption { get { return option; } }
+		public virtual TOption Option { get { return option; } }
 		[SerializeField] protected TOption option;
 
 		public BasicData() : base() { }
@@ -176,9 +173,9 @@ namespace Threeyes.Data
 			if (realOther != null)
 			{
 
-				realOther.RealOption.UseRange = this.RealOption.UseRange;
-				realOther.RealOption.MinValue = this.RealOption.MinValue;
-				realOther.RealOption.MaxValue = this.RealOption.MaxValue;
+				realOther.Option.UseRange = this.Option.UseRange;
+				realOther.Option.MinValue = this.Option.MinValue;
+				realOther.Option.MaxValue = this.Option.MaxValue;
 			}
 		}
 	}

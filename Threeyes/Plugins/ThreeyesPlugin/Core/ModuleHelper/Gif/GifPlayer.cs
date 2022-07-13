@@ -12,7 +12,6 @@ public class GifPlayer : MonoBehaviour
     public List<GifFrameData> listData = new List<GifFrameData>();
     public TextureEvent onUpdateTexture;
 
-    bool isSelfToken = false;
     CancellationTokenSource selfCancellationTokenSource;
     CancellationTokenRegistration ctr;
     int curIndex = 0;

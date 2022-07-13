@@ -25,13 +25,13 @@ public static class AC_WorkshopItemInfoFactory
             previewFileRelatePath = sOWorkshopItemInfo.PreviewFilePath.NotNullOrEmpty() ? new FileInfo(sOWorkshopItemInfo.PreviewFilePath).Name : "",
 
             //Set runtime
-            itemLocation = AC_WCItemLocation.UnityProject,
+            itemLocation = AC_WSItemLocation.UnityProject,
             //id=//PS:id可能尚未设置，所以暂不设置
             dirPath = sOWorkshopItemInfo.ItemDirPath,
         };
     }
 
-    public static bool IsValidDir(string itemDirPath, AC_WCItemLocation itemLocation = AC_WCItemLocation.Downloaded)
+    public static bool IsValidDir(string itemDirPath, AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded)
     {
         string jsonPath = Path.Combine(itemDirPath, AC_WorkshopItemInfo.ItemInfoFileName);
         return File.Exists(jsonPath);
@@ -43,7 +43,7 @@ public static class AC_WorkshopItemInfoFactory
     /// <param name="itemDirPath"></param>
     /// <param name="itemLocation">有效值：Downloaded/UnityExported</param>
     /// <returns></returns>
-    public static AC_WorkshopItemInfo Create(string itemDirPath, AC_WCItemLocation itemLocation = AC_WCItemLocation.Downloaded)
+    public static AC_WorkshopItemInfo Create(string itemDirPath, AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded)
     {
         AC_WorkshopItemInfo inst = null;
 
@@ -57,7 +57,7 @@ public static class AC_WorkshopItemInfoFactory
             {
                 //Set runtime
                 inst.itemLocation = itemLocation;
-                if (itemLocation == AC_WCItemLocation.Downloaded)//已下载资源才有正确的ID
+                if (itemLocation == AC_WSItemLocation.Downloaded)//已下载资源才有正确的ID
                 {
                     inst.id = AC_WorkshopItemTool.GetId(itemDirPath);
                 }
@@ -103,7 +103,7 @@ public static class AC_WorkshopItemInfoFactory
                 //Set runtime
                 inst.id = item.Id.Value;
                 inst.dirPath = itemDir;
-                inst.itemLocation = AC_WCItemLocation.Downloaded;
+                inst.itemLocation = AC_WSItemLocation.Downloaded;
             }
         }
         else

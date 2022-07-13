@@ -16,7 +16,7 @@ namespace Threeyes.EventPlayer
 	    /// <param name="isEnter"></param>
 	    public async void SetAllByOrderAsync(bool isEnter)
 	    {
-	        Debug.Log("SetAllByOrderAsync begin");
+	        //Debug.Log("SetAllByOrderAsync begin");
 	        foreach (EventPlayer_SOAction ep in ListData)
 	        {
 	            SOActionBase sOActionBase = ep.SOAction;
@@ -26,7 +26,7 @@ namespace Threeyes.EventPlayer
 	                await sOActionBase.EnterAsync(isEnter, ep.GOTarget);
 	            }
 	        }
-	        Debug.Log("SetAllByOrderAsync complete");
+	        //Debug.Log("SetAllByOrderAsync complete");
 	    }
 	
 
@@ -36,7 +36,7 @@ namespace Threeyes.EventPlayer
 	    /// <param name="isEnter"></param>
 	    public async void SetAllSynchronouslyAsync(bool isEnter)
 	    {
-	        Debug.Log("SetAllSynchronouslyAsync begin");
+	        //Debug.Log("SetAllSynchronouslyAsync begin");
 	        List<Task> listTask = new List<Task>();
 	        foreach (EventPlayer_SOAction ep in ListData)
 	        {
@@ -48,7 +48,7 @@ namespace Threeyes.EventPlayer
 	            }
 	        }
 	        await Task.WhenAll(listTask.ToArray());
-	        Debug.Log("SetAllSynchronouslyAsync complete");
+	        //Debug.Log("SetAllSynchronouslyAsync complete");
 	    }
 	
 	}
