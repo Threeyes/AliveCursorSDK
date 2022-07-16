@@ -41,7 +41,7 @@ namespace Threeyes.Persistent
             }
             catch (Exception e)
             {
-                Debug.LogError(Key + " JsonGetValueFunc error: " + e);
+                Debug.LogError(Key + " GetValueFunc error: " + e);
                 HasChanged = true;//读取失败，设置该字段好让后续强制保存默认值
             }
             return DefaultValue;

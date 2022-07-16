@@ -33,23 +33,23 @@ namespace Threeyes.Data
 	{
 		public virtual TValue Value
 		{
-			get { return value; }
+			get { return GetValueFunc(); }
 			set
 			{
-				if (!EqualsTo(value))
+				if (!Equals(value))
 				{
-					this.value = value;
+					SetValueFunc(value);
 					NotifyValueChanged();
 				}
 			}
 		}
 		public virtual TValue ValueForceUpdate
 		{
-			get { return value; }
+			get { return GetValueFunc(); }
 			set
 			{
 				//PS:不检测是否与旧值相同，强制更新事件
-				this.value = value;
+				SetValueFunc(value);
 				NotifyValueChanged();
 			}
 		}
@@ -79,7 +79,7 @@ namespace Threeyes.Data
 			BasicData<TValue> realOther = other as BasicData<TValue>;
 			if (realOther != null)
 			{
-				realOther.value = value;
+				realOther.SetValueFunc(GetValueFunc());
 				realOther.defaultValue = defaultValue;
 				//PS:不能覆盖其UnityAction
 			}
@@ -89,6 +89,14 @@ namespace Threeyes.Data
 			}
 		}
 
+		protected virtual TValue GetValueFunc()
+		{
+			return value;
+		}
+		protected virtual void SetValueFunc(TValue value)
+		{
+			this.value = value;
+		}
 		public override void NotifyValueChanged(BasicDataState state = BasicDataState.Update)
 		{
 			actionValueChanged.Execute(Value);
@@ -101,29 +109,45 @@ namespace Threeyes.Data
 		}
 
 		#region Utility
+		public override int GetHashCode()
+		{
+			return value.GetHashCode();
+		}
+		public override bool Equals(object other)
+		{
+			//Check for null and compare run-time types.
+			if ((other == null) || !GetType().Equals(other.GetType()))
+			{
+				return false;
+			}
+			else
+			{
+				return EqualsFunc((TValue)other);
+			}
+		}
+
 		/// <summary>
 		/// 值是否相同
 		/// </summary>
 		/// <param name="otherValue"></param>
 		/// <returns></returns>
-		protected virtual bool EqualsTo(TValue otherValue)
+		protected virtual bool EqualsFunc(TValue otherValue)
 		{
 			return value.Equals(otherValue);
 		}
 		#endregion
 	}
 
-	public abstract class BasicData<TValue, TOption> : BasicData<TValue>
-		where TOption : IDataOption
+	public abstract class BasicData<TValue, TDataOption> : BasicData<TValue>, IDataOptionContainer<TDataOption>
+		where TDataOption : IDataOption
 	{
-		public virtual TOption Option { get { return option; } }
-		[SerializeField] protected TOption option;
+		public virtual IDataOption BaseDataOption { get { return option; } }
+		public virtual TDataOption DataOption { get { return option; } }
+		[SerializeField] protected TDataOption option;
 
 		public BasicData() : base() { }
 		public BasicData(TValue value) : base(value) { }
-
-
-		public BasicData(TValue value, TOption option) : base(value)
+		public BasicData(TValue value, TDataOption option) : base(value)
 		{
 			this.option = option;
 		}
@@ -160,7 +184,7 @@ namespace Threeyes.Data
 		public bool Clamp(TValue value, out TValue valueResult)
 		{
 			valueResult = Clamp(value, option.MinValue, option.MaxValue);
-			return !EqualsTo(valueResult);
+			return !EqualsFunc(valueResult);
 		}
 
 		protected abstract TValue Clamp(TValue value, TValue min, TValue max);
@@ -172,12 +196,23 @@ namespace Threeyes.Data
 			BasicData<TValue, TOption> realOther = other as BasicData<TValue, TOption>;
 			if (realOther != null)
 			{
-
-				realOther.Option.UseRange = this.Option.UseRange;
-				realOther.Option.MinValue = this.Option.MinValue;
-				realOther.Option.MaxValue = this.Option.MaxValue;
+				realOther.DataOption.UseRange = DataOption.UseRange;
+				realOther.DataOption.MinValue = DataOption.MinValue;
+				realOther.DataOption.MaxValue = DataOption.MaxValue;
 			}
 		}
+	}
+
+	/// <summary>
+	/// Bug: value 通过Json进行反序列化时会报错，暂不直接用于Json序列化（因为读取的为string而不是Enum格式）
+	/// </summary>
+	[Serializable]
+	public class EnumData : BasicData<Enum, DataOption_Enum>
+	{
+		public EnumData() { }
+		public EnumData(Enum value) : base(value) { }
+
+		public EnumData(Enum value, DataOption_Enum option) : base(value, option) { }
 	}
 
 	[Serializable]

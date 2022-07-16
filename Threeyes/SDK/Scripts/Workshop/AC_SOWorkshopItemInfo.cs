@@ -57,13 +57,13 @@ public sealed class AC_SOWorkshopItemInfo : ScriptableObject
 			//1.每个Tag只能是255字节内，且为可打印字符，具体规范：  https://partner.steamgames.com/doc/api/ISteamUGC#SetItemTags
 			// 2.管理平台配置：https://partner.steamgames.com/doc/features/inventory/itemtags
 			List<string> listTag = new List<string>();
-			listTag.Add(ageRatingType.ToString());
+			listTag.Add(ageRatingType.ToString());//必选唯一
 
-			listTag.AddRange(itemStyle.GetNames());
-			listTag.AddRange(itemGenre.GetNames());
-			listTag.AddRange(itemReference.GetNames());
-			listTag.AddRange(itemFeature.GetNames());
-			listTag.AddRange(itemSafety.GetNames());
+			listTag.AddRange(itemStyle.GetNamesEx());
+			listTag.AddRange(itemGenre.GetNamesEx());
+			listTag.AddRange(itemReference.GetNamesEx());
+			listTag.AddRange(itemFeature.GetNamesEx());
+			listTag.AddRange(itemSafety.GetNamesEx());
 
 			return listTag.ToArray();
 		}
@@ -85,7 +85,7 @@ public sealed class AC_SOWorkshopItemInfo : ScriptableObject
 	public AC_WSItemReference itemReference = AC_WSItemReference.None;
 	public AC_WSItemFeature itemFeature = AC_WSItemFeature.None;
 
-	[HideInInspector] public AC_WSItemAdvanced itemSafety = AC_WSItemAdvanced.None;
+	[HideInInspector] public AC_WSItemAdvance itemSafety = AC_WSItemAdvance.None;
 
 	//#唯一标识
 	[Header("Item Identity")]

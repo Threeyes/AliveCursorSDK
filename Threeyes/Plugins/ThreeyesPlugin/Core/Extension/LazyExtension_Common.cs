@@ -312,12 +312,12 @@ public static partial class LazyExtension_Common
     }
 
     /// <summary>
-    /// 获取值的具体枚举名称（仅适用于使用了Flag标记的Enum
+    /// 获取Enum值的具体枚举名称（仅适用于使用了Flag标记的Enum)
     /// </summary>
     /// <typeparam name="TEnumType"></typeparam>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static List<string> GetNames(this Enum value)
+    public static List<string> GetNamesEx(this Enum value)
     {
         List<string> result = new List<string>();
         Type enumType = value.GetType();
@@ -874,7 +874,7 @@ public static partial class LazyExtension_Common
         {
             Transform tfSon = tf.GetChild(0);
             tfSon.SetParent(null);
-            tfSon.Destroy();
+            tfSon.Destroy();//调用本类中的扩展方法，根据程序是否运行调用对应方法
         }
     }
 

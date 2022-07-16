@@ -7,77 +7,77 @@ using NaughtyAttributes;
 #endif
 namespace Threeyes.Data
 {
-    /// <summary>
-    /// Create relate DataOption
-    /// </summary>
-    public static class DataOptionFactory
-    {
-        public static DataOption_File CreateFile(MemberInfo memberInfo, Type assetType)
-        {
-            DataOption_File option = null;
+	/// <summary>
+	/// Create relate DataOption
+	/// </summary>
+	public static class DataOptionFactory
+	{
+		public static DataOption_File CreateFile(MemberInfo memberInfo, Type assetType)
+		{
+			DataOption_File option = null;
 
-            //ToUpdate:ºóÆÚÍ¨¹ı·´ÉäÖ±½ÓÀûÓÃType.IsSubclassOfËÑË÷¼Ì³ĞDataOption_File<TAsset>µÄÀà£¬±ãÓÚÓÃ»§×Ô¶¨ÒåDataOption
-            if (memberInfo != null && assetType != null)
-            {
-                switch (assetType.Name)
-                {
-                    case nameof(TextAsset): option = new DataOption_TextFile(); break;
-                    case nameof(SOBytesAsset): option = new DataOption_BytesFile(); break;
-                    case nameof(Texture): option = new DataOption_TextureFile(); break;
-                }
-            }
+			//ToUpdate:åæœŸé€šè¿‡åå°„ç›´æ¥åˆ©ç”¨Type.IsSubclassOfæœç´¢ç»§æ‰¿DataOption_File<TAsset>çš„ç±»ï¼Œä¾¿äºç”¨æˆ·è‡ªå®šä¹‰DataOption
+			if (memberInfo != null && assetType != null)
+			{
+				switch (assetType.Name)
+				{
+					case nameof(TextAsset): option = new DataOption_TextFile(); break;
+					case nameof(SOBytesAsset): option = new DataOption_BytesFile(); break;
+					case nameof(Texture): option = new DataOption_TextureFile(); break;
+				}
+			}
 
-            if (option == null)
-                option = new DataOption_File();
-            option?.Init(memberInfo);
-            return option;
-        }
+			if (option == null)
+				option = new DataOption_File();
+			option.Init(memberInfo);
+			return option;
+		}
 
 
-        /// <summary>
-        /// Õë¶ÔÓĞ¶îÍâÉèÖÃµÄÀàĞÍ£¬´´½¨ÌØÊâµÄOption£¨Èçbool¡¢Enum¡¢fileµÈ£©£»ÆäËûÆÕÍ¨ÀàĞÍÔòÊ¹ÓÃÄ¬ÈÏOption£¨Èç
-        /// </summary>
-        /// <param name="memberInfo"></param>
-        /// 
-        /// <returns></returns>
-        public static IDataOption Create(MemberInfo memberInfo = null)
-        {
-            IDataOption option = null;
-            if (memberInfo != null)
-            {
-                Type variableType = memberInfo.GetVariableType();//FieldInfo/PropertyInfoµÄÀàĞÍ
-                Type baseType = DataTool.GetBaseType(variableType);
-                switch (baseType.Name)
-                {
-                    case nameof(Int32): option = new DataOption_Int(); break;
-                    case nameof(Single): option = new DataOption_Float(); break;
-                    case nameof(Enum): option = new DataOption_EnumInfo(); break;
+		/// <summary>
+		/// é’ˆå¯¹æœ‰é¢å¤–è®¾ç½®çš„ç±»å‹ï¼Œåˆ›å»ºç‰¹æ®Šçš„Optionï¼ˆå¦‚boolã€Enumã€fileç­‰ï¼‰ï¼›å…¶ä»–æ™®é€šç±»å‹åˆ™ä½¿ç”¨é»˜è®¤Optionï¼ˆå¦‚
+		/// </summary>
+		/// <param name="memberInfo"></param>
+		/// 
+		/// <returns></returns>
+		public static IDataOption Create(MemberInfo memberInfo = null)
+		{
+			IDataOption option = null;
+			if (memberInfo != null)
+			{
+				Type variableType = memberInfo.GetVariableType();//FieldInfo/PropertyInfoçš„ç±»å‹
+				Type baseType = DataTool.GetBaseType(variableType);
+				switch (baseType.Name)
+				{
+					case nameof(Int32): option = new DataOption_Int(); break;
+					case nameof(Single): option = new DataOption_Float(); break;
+					case nameof(Enum): option = new DataOption_Enum(); break;
 
-                    default: option = new DataOption(); break;
-                }
-            }
-            if (option == null)
-                option = new DataOption();
+					default: option = new DataOption(); break;
+				}
+			}
+			if (option == null)//é¿å…è¿”å›ç©ºå€¼
+				option = new DataOption();
 
-            option?.Init(memberInfo);//¸ù¾İMemberµÄAttribute½øĞĞ³õÊ¼»¯£¨ÈçRange£©
-            return option;
-        }
+			option.Init(memberInfo);//æ ¹æ®Memberçš„Attributeè¿›è¡Œåˆå§‹åŒ–ï¼ˆå¦‚Rangeï¼‰
+			return option;
+		}
 
-        #region NaughtyAttributes
-        static Vector2? NaughtyAttributes_GetMinMaxRange(MemberInfo memberInfo)
-        {
-            Vector2? result = null;
+		#region NaughtyAttributes
+		static Vector2? NaughtyAttributes_GetMinMaxRange(MemberInfo memberInfo)
+		{
+			Vector2? result = null;
 #if USE_NaughtyAttributes
-            MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
-            MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
-            if (minValueAttribute != null && maxValueAttribute != null)
-            {
-                result = new Vector2(minValueAttribute.MinValue, maxValueAttribute.MaxValue);
-            }
+			MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
+			MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
+			if (minValueAttribute != null && maxValueAttribute != null)
+			{
+				result = new Vector2(minValueAttribute.MinValue, maxValueAttribute.MaxValue);
+			}
 #endif
-            return result;
-        }
-        #endregion
+			return result;
+		}
+		#endregion
 
-    }
+	}
 }

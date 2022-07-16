@@ -17,7 +17,8 @@ namespace Threeyes.Persistent.Test
     [DefaultExecutionOrder(-30000)]//Make sure listen Actions in Awake run before PD get Loaded
     public class TestPersistent : TestPersistentBase<SOTestPersistent, TestPersistent.ConfigInfo>
     {
-        public RawImage rawImage;
+
+		public RawImage rawImage;
         public MeshRenderer meshRenderer;
 
         private void Awake()
@@ -31,15 +32,15 @@ namespace Threeyes.Persistent.Test
             LoadUrlImage("https://lmg.jj20.com/up/allimg/tx01/0707201947657.jpg");
         }
 
-
-        private void Start()
+		private void Start()
         {
             //测试Collection是否为null
             Log("arrString Length: " + Config.arrString.Length);
             Log("listString Count: " + Config.listString.Count);
-        }
 
-        async void LoadUrlImage(string url)
+		}
+
+		async void LoadUrlImage(string url)
         {
             var result = await FileIO.ReadAllBytesFromWebExAsync(url);
         }
@@ -168,5 +169,16 @@ namespace Threeyes.Persistent.Test
 #endif
         [SerializeField] protected TSOConfig soOverrideConfig;//Override config
     }
+	[System.Flags]
+	public enum TestFlagType
+	{
+		None = 0,
 
+		Interactable = 1 << 0,//可交互/碰撞（如气球、弹球、扫雷、液体）
+		AudioVisualizer = 1 << 1,//音频可视化
+		Clock = 1 << 2,//时钟
+		Exhibition = 1 << 3,//展示用途（如条幅、官方或第三方制作的用于展示及循环播放的广告）
+
+		All = ~0
+	}
 }

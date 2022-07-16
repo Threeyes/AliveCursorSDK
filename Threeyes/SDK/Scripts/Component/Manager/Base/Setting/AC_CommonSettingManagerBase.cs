@@ -128,7 +128,7 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public FloatData cursorState_Bored_DelayTime = new FloatData(60, new DataOption_Float(true, 3, 3600));
 	public FloatData cursorState_Bored_Depth = new FloatData(5, new DataOption_Float(true, 0, 10));
 
-	[Header("General Setting")]
+	[Header("General Setting")]//PS:(以下Option不能用枚举代替，因为可能会有变化（如多语言））
 	public StringData generalSetting_Localization = new StringData("English");
 	public StringData generalSetting_Quality = new StringData("Ultra");
 	public StringData generalSetting_ProcessPriority = new StringData("High");

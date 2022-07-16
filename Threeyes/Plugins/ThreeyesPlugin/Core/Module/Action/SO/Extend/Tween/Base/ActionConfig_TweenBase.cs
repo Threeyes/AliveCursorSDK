@@ -49,8 +49,6 @@ namespace Threeyes.Action
         public bool autoKill = false;//通过代码Kill
         public bool isCompleteOnKill = false;//建议在Exit时设为true，避免Stop被杀掉
 
-        public override IActionOption BaseOption { get { return new ActionOption_Empty(); } }
-
         #endregion
 
         #region Editor Utility
@@ -111,8 +109,6 @@ namespace Threeyes.Action
         where TOption : ActionOptionBase, new()
     {
         #region Property & Field
-
-        public override IActionOption BaseOption { get { return Option; } }
 
         public virtual TOption Option { get { return option; } }
         [SerializeField] protected TOption option = new TOption();//Extra config

@@ -13,15 +13,15 @@ namespace Threeyes.Persistent
     //  SOWorkshopItemInfo+ItemStyle        (Flag)
 
     /// <summary>
-    /// Õë¶ÔÍ¨ÓÃµÄEnum
+    /// é’ˆå¯¹é€šç”¨çš„Enum
     /// 
     /// Warning:
-    /// ¡ª¡ª(ĞòÁĞ»¯Ê±ĞèÒª´æ´¢ÎªstringĞÎÊ½£¨eg£ºNewtonsoft.Json-for-UnityµÄÉèÖÃÖĞ£¬ÆôÓÃStringEnumConverter£©
-    /// ¡ª¡ªEnumEventĞèÒªÅäºÏReflectionValueChanger_EnumÊ¹ÓÃ
+    /// â€”â€”(åºåˆ—åŒ–æ—¶éœ€è¦å­˜å‚¨ä¸ºstringå½¢å¼ï¼ˆegï¼šNewtonsoft.Json-for-Unityçš„è®¾ç½®ä¸­ï¼Œå¯ç”¨StringEnumConverterï¼‰
+    /// â€”â€”EnumEventéœ€è¦é…åˆReflectionValueChanger_Enumä½¿ç”¨
     /// </summary>
-    public class PersistentData_Enum : PersistentDataBase<Enum, EnumEvent, DataOption_EnumInfo>
+    public class PersistentData_Enum : PersistentDataBase<Enum, EnumEvent, DataOption_Enum>
     {
-        //ÒòÎªEnum²»ÄÜĞòÁĞ»¯£¬ËùÒÔÍ¨¹ıstring»º´æ
+        //å› ä¸ºEnumä¸èƒ½åºåˆ—åŒ–ï¼Œæ‰€ä»¥é€šè¿‡stringç¼“å­˜
         public override Type RealValueType { get { return DefaultValue != null ? DefaultValue.GetType() : null; } }
         public override Enum DefaultValue { get { return dataOption.Parse(serializeDefaultValue); } set { serializeDefaultValue = value.ToString(); } }
         public override Enum PersistentValue { get { return dataOption.Parse(serializePersistentValue); } set { serializePersistentValue = value.ToString(); } }
@@ -48,7 +48,7 @@ namespace Threeyes.Persistent
 
 #if UNITY_EDITOR
 
-        //¡ª¡ªMenuItem¡ª¡ª
+        //â€”â€”MenuItemâ€”â€”
         static string instName = "EnumPD ";
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Enum", false, intBasicMenuOrder + 6)]
         public static void CreateInst()
@@ -56,10 +56,10 @@ namespace Threeyes.Persistent
             Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Enum>(instName);
         }
 
-        //¡ª¡ªHierarchy GUI¡ª¡ª
+        //â€”â€”Hierarchy GUIâ€”â€”
         public override string ShortTypeName { get { return "Enum"; } }
 
-        //¡ª¡ªInspector GUI¡ª¡ª
+        //â€”â€”Inspector GUIâ€”â€”
         public override void SetInspectorGUIHelpBox_Error(StringBuilder sB)
         {
             base.SetInspectorGUIHelpBox_Error(sB);

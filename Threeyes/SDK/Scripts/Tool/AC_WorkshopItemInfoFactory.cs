@@ -7,109 +7,114 @@ using UnityEngine;
 
 public static class AC_WorkshopItemInfoFactory
 {
-    /// <summary>
-    /// 
-    /// PS£º¡¾EditorOnly¡¿½öÔÚUnityEditor Build ModÊ±µ÷ÓÃ
-    /// </summary>
-    /// <param name="sOWorkshopItemInfo"></param>
-    public static AC_WorkshopItemInfo Create(AC_SOWorkshopItemInfo sOWorkshopItemInfo)
-    {
-        return new AC_WorkshopItemInfo()
-        {
-            //Set basic
-            title = sOWorkshopItemInfo.Title,
-            description = sOWorkshopItemInfo.Description,
-            itemVisibility = sOWorkshopItemInfo.ItemVisibility,
-            tags = sOWorkshopItemInfo.Tags,
-            modFileRelatePath = AC_WorkshopItemInfo.ItemModFileName,
-            previewFileRelatePath = sOWorkshopItemInfo.PreviewFilePath.NotNullOrEmpty() ? new FileInfo(sOWorkshopItemInfo.PreviewFilePath).Name : "",
+	/// <summary>
+	/// 
+	/// PSï¼šã€EditorOnlyã€‘ä»…åœ¨UnityEditor Build Modæ—¶è°ƒç”¨
+	/// </summary>
+	/// <param name="sOWorkshopItemInfo"></param>
+	public static AC_WorkshopItemInfo Create(AC_SOWorkshopItemInfo sOWorkshopItemInfo)
+	{
+		return new AC_WorkshopItemInfo()
+		{
+			//Set basic
+			title = sOWorkshopItemInfo.Title,
+			description = sOWorkshopItemInfo.Description,
+			itemVisibility = sOWorkshopItemInfo.ItemVisibility,
+			tags = sOWorkshopItemInfo.Tags,
+			modFileRelatePath = AC_WorkshopItemInfo.ItemModFileName,
+			previewFileRelatePath = sOWorkshopItemInfo.PreviewFilePath.NotNullOrEmpty() ? new FileInfo(sOWorkshopItemInfo.PreviewFilePath).Name : "",
 
-            //Set runtime
-            itemLocation = AC_WSItemLocation.UnityProject,
-            //id=//PS:id¿ÉÄÜÉĞÎ´ÉèÖÃ£¬ËùÒÔÔİ²»ÉèÖÃ
-            dirPath = sOWorkshopItemInfo.ItemDirPath,
-        };
-    }
+			//Set runtime
+			itemLocation = AC_WSItemLocation.UnityProject,
+			//id=//PS:idå¯èƒ½å°šæœªè®¾ç½®ï¼Œæ‰€ä»¥æš‚ä¸è®¾ç½®
+			dirPath = sOWorkshopItemInfo.ItemDirPath,
+		};
+	}
 
-    public static bool IsValidDir(string itemDirPath, AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded)
-    {
-        string jsonPath = Path.Combine(itemDirPath, AC_WorkshopItemInfo.ItemInfoFileName);
-        return File.Exists(jsonPath);
-    }
+	/// <summary>
+	/// é€šè¿‡æ‰“åŒ…åçš„Itemæ‰€åœ¨ç›®å½•ï¼Œç”ŸæˆWorkshopItemInfoã€‚
+	/// </summary>
+	/// <param name="itemDirPath"></param>
+	/// <param name="itemLocation">æœ‰æ•ˆå€¼ï¼šDownloaded/UnityExported</param>
+	/// <returns></returns>
+	public static AC_WorkshopItemInfo Create(string itemDirPath, AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded)
+	{
+		AC_WorkshopItemInfo inst = null;
 
-    /// <summary>
-    /// Í¨¹ı´ò°üºóµÄItemËùÔÚÄ¿Â¼£¬Éú³ÉWorkshopItemInfo¡£
-    /// </summary>
-    /// <param name="itemDirPath"></param>
-    /// <param name="itemLocation">ÓĞĞ§Öµ£ºDownloaded/UnityExported</param>
-    /// <returns></returns>
-    public static AC_WorkshopItemInfo Create(string itemDirPath, AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded)
-    {
-        AC_WorkshopItemInfo inst = null;
+		string jsonPath = GetItemJsonFileDir(itemDirPath);
+		if (File.Exists(jsonPath))
+		{
+			var result = File.ReadAllText(jsonPath);
+			inst = JsonConvert.DeserializeObject<AC_WorkshopItemInfo>(result);//è¯»å–Dirç›®å½•çš„å¯¹åº”jsonæ–‡ä»¶å¹¶ååºåˆ—åŒ–
 
-        string jsonPath = Path.Combine(itemDirPath, AC_WorkshopItemInfo.ItemInfoFileName);
-        if (File.Exists(jsonPath))
-        {
-            var result = File.ReadAllText(jsonPath);
-            inst = JsonConvert.DeserializeObject<AC_WorkshopItemInfo>(result);//¶ÁÈ¡DirÄ¿Â¼µÄ¶ÔÓ¦jsonÎÄ¼ş²¢·´ĞòÁĞ»¯
+			if (inst != null)
+			{
+				//Set runtime
+				inst.itemLocation = itemLocation;
+				if (itemLocation == AC_WSItemLocation.Downloaded)//å·²ä¸‹è½½èµ„æºæ‰æœ‰æ­£ç¡®çš„ID
+				{
+					inst.id = AC_WorkshopItemTool.GetId(itemDirPath);
+				}
+				else
+				{
+					//(Todo:é’ˆå¯¹æµ‹è¯•è·¯å¾„çš„Itemï¼Œé€šè¿‡titleç”Ÿæˆå”¯ä¸€çš„ID(ä»¥-å¼€å¤´ä½œä¸ºåŒºåˆ†ï¼‰ï¼ˆéå¿…è¦ï¼Œç»æŸ¥é˜…ï¼Œæ²¡æœ‰èƒ½å¤Ÿç”Ÿæˆå”¯ä¸€longçš„æ–¹æ³•ï¼‰
+				}
+				inst.dirPath = itemDirPath;
 
-            if (inst != null)
-            {
-                //Set runtime
-                inst.itemLocation = itemLocation;
-                if (itemLocation == AC_WSItemLocation.Downloaded)//ÒÑÏÂÔØ×ÊÔ´²ÅÓĞÕıÈ·µÄID
-                {
-                    inst.id = AC_WorkshopItemTool.GetId(itemDirPath);
-                }
-                else
-                {
-                    //(Todo:Õë¶Ô²âÊÔÂ·¾¶µÄItem£¬Í¨¹ıtitleÉú³ÉÎ¨Ò»µÄID(ÒÔ-¿ªÍ·×÷ÎªÇø·Ö£©£¨·Ç±ØÒª£¬¾­²éÔÄ£¬Ã»ÓĞÄÜ¹»Éú³ÉÎ¨Ò»longµÄ·½·¨£©
-                }
-                inst.dirPath = itemDirPath;
-
-                //ToUpdate: Èç¹û±¾µØÒÑ¾­´æÔÚItem.json, Ôò´ÓÖĞ»ñÈ¡fileSize
-                DirectoryInfo directoryInfo = new DirectoryInfo(itemDirPath);
-                if (directoryInfo.Exists)
-                    inst.fileSize = directoryInfo.EnumerateFiles().Sum(file => file.Length);
-            }
-        }
-        else
-        {
-            Debug.LogError($"Json file not exist in dir: {jsonPath}!");
-        }
-        return inst;
-    }
+				//ToUpdate: å¦‚æœæœ¬åœ°å·²ç»å­˜åœ¨Item.json, åˆ™ä»ä¸­è·å–fileSize
+				DirectoryInfo directoryInfo = new DirectoryInfo(itemDirPath);
+				if (directoryInfo.Exists)
+					inst.fileSize = directoryInfo.EnumerateFiles().Sum(file => file.Length);
+			}
+		}
+		else
+		{
+			Debug.LogError($"Json file not exist in dir: {jsonPath}!");
+		}
+		return inst;
+	}
 
 
-    /// <summary>
-    /// (PS:Ò»°ã²»ĞèÒªÊ¹ÓÃ£¬ºóÆÚÉ¾µô)
-    /// Í¨¹ıModÏÂÔØºóµÄJsonÎÄ¼ş·´ĞòÁĞ»¯
-    /// (ÒòÎªÊÇ·´ĞòÁĞ»¯£¬ËùÒÔÖ»ÄÜÍ¨¹ı¾²Ì¬·½·¨Éú³É£©
-    /// </summary>
-    /// <param name="item"></param>
-    /// <returns></returns>
-    public static AC_WorkshopItemInfo Create(Item item)
-    {
-        AC_WorkshopItemInfo inst = null;
+	/// <summary>
+	/// (PS:ä¸€èˆ¬ä¸éœ€è¦ä½¿ç”¨ï¼ŒåæœŸåˆ æ‰)
+	/// é€šè¿‡Modä¸‹è½½åçš„Jsonæ–‡ä»¶ååºåˆ—åŒ–
+	/// (å› ä¸ºæ˜¯ååºåˆ—åŒ–ï¼Œæ‰€ä»¥åªèƒ½é€šè¿‡é™æ€æ–¹æ³•ç”Ÿæˆï¼‰
+	/// </summary>
+	/// <param name="item"></param>
+	/// <returns></returns>
+	public static AC_WorkshopItemInfo Create(Item item)
+	{
+		AC_WorkshopItemInfo inst = null;
 
-        string itemDir = item.Directory;
-        string jsonPath = Path.Combine(itemDir, AC_WorkshopItemInfo.ItemInfoFileName);
-        if (File.Exists(jsonPath))
-        {
-            var result = File.ReadAllText(jsonPath);
-            inst = JsonConvert.DeserializeObject<AC_WorkshopItemInfo>(result);//¶ÁÈ¡DirÄ¿Â¼µÄ¶ÔÓ¦jsonÎÄ¼ş²¢·´ĞòÁĞ»¯
-            if (inst != null)
-            {
-                //Set runtime
-                inst.id = item.Id.Value;
-                inst.dirPath = itemDir;
-                inst.itemLocation = AC_WSItemLocation.Downloaded;
-            }
-        }
-        else
-        {
-            Debug.LogError($"Json file not exist for item {item.Title}!");
-        }
-        return inst;
-    }
+		string itemDir = item.Directory;
+		string jsonPath = Path.Combine(itemDir, AC_WorkshopItemInfo.ItemInfoFileName);
+		if (File.Exists(jsonPath))
+		{
+			var result = File.ReadAllText(jsonPath);
+			inst = JsonConvert.DeserializeObject<AC_WorkshopItemInfo>(result);//è¯»å–Dirç›®å½•çš„å¯¹åº”jsonæ–‡ä»¶å¹¶ååºåˆ—åŒ–
+			if (inst != null)
+			{
+				//Set runtime
+				inst.id = item.Id.Value;
+				inst.dirPath = itemDir;
+				inst.itemLocation = AC_WSItemLocation.Downloaded;
+			}
+		}
+		else
+		{
+			Debug.LogError($"Json file not exist for item {item.Title}!");
+		}
+		return inst;
+	}
+
+	public static bool IsValidItemDir(string itemDirPath)
+	{
+		return File.Exists(GetItemJsonFileDir(itemDirPath));
+	}
+	public static string GetItemJsonFileDir(string itemDirPath)
+	{
+		if (itemDirPath.IsNullOrEmpty())
+			return "";
+		return Path.Combine(itemDirPath, AC_WorkshopItemInfo.ItemInfoFileName);
+	}
 }

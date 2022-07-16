@@ -29,6 +29,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 	/// 1.（Bug）TextFiled/Label通过bingdingPath绑定ulong后会显示错误，因此暂时不显示ItemID（应该是官方的bug：https://forum.unity.com/threads/binding-ulong-serializedproperty-to-inotifyvaluechanged-long.1005417/）
 	/// 2.ViewDataKey只对特定UI有效（PS：This key only really applies to ScrollView, ListView, and Foldout. If you give any of these a unique key (not enforced, but recommended （https://forum.unity.com/threads/can-someone-explain-the-view-data-key-and-its-uses.855145/）)）
 	/// </summary>
+	[UModToolsWindow]
 	public class AC_ItemManagerWindow : EditorWindow
 	{
 		AC_SOAliveCursorSDKManager SOManagerInst { get { return AC_SOAliveCursorSDKManager.Instance; } }
@@ -771,7 +772,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 					//设置额外信息
 					ModContent modContent = result.BuiltMod.GetModContentMask();
 					{
-						sOWorkshopItemInfo.itemSafety = modContent.Has(ModContent.Scripts) ? AC_WSItemAdvanced.IncludeScripts : AC_WSItemAdvanced.None;
+						sOWorkshopItemInfo.itemSafety = modContent.Has(ModContent.Scripts) ? AC_WSItemAdvance.IncludeScripts : AC_WSItemAdvance.None;
 						EditorUtility.SetDirty(sOWorkshopItemInfo);
 					}
 

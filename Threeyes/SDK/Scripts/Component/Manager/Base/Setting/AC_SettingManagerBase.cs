@@ -1,9 +1,9 @@
-using NaughtyAttributes;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Threeyes.Data;
 using UnityEngine;
+using Threeyes.Data;
+using NaughtyAttributes;
+using System.Reflection;
+using System.Collections.Generic;
 
 public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerBase<T>
 	where T : AC_SettingManagerBase<T, TSOConfig, TConfig>

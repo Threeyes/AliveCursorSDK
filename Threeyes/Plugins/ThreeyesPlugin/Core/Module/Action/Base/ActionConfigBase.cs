@@ -8,7 +8,6 @@ namespace Threeyes.Action
 {
     public interface IActionConfig : ICloneableData
     {
-        IActionOption BaseOption { get; }
     }
 
     public abstract class ActionConfigBase<TValue> : CloneableDataBase, IActionConfig
@@ -24,8 +23,6 @@ namespace Threeyes.Action
         [ShowIf(nameof(IsShowDefaultEndValue))]
 #endif
         [SerializeField] protected TValue endValue;
-
-        public virtual IActionOption BaseOption { get; }
 
         #endregion
 
@@ -50,7 +47,6 @@ namespace Threeyes.Action
     }
 
     public interface IActionOption : System.ICloneable { }
-
 
     /// <summary>
     /// Extra option for config

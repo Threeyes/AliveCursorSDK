@@ -8,7 +8,7 @@ namespace Threeyes.Persistent
         //PS：
         //1.以下配置用于Runtime生成 ControllerOption.DirPath
         //2.配置不通用，所以不放到ControllerOption导致复杂性增加
-        [Header("Controller Config")]
+        //[Header("Controller Config")]
         public ExternalFileLocation externalFileLocation = ExternalFileLocation.CustomData;
         public string subDirPath;//The Abs/Relate dir path for each child Controller (eg:DataBase)
 
