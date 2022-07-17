@@ -38,11 +38,11 @@ namespace Threeyes.Editor
         /// <param name="buildTargetGroup"></param>
         public static void AddDefine(string define)
         {
-            var definesList = GetListDefine();
-            if (!definesList.Contains(define))
+            var listDefine = GetListDefine();
+            if (!listDefine.Contains(define))
             {
-                definesList.Add(define);
-                SetDefines(definesList);
+                listDefine.Add(define);
+                SetDefines(listDefine);
             }
         }
 
@@ -53,11 +53,11 @@ namespace Threeyes.Editor
         /// <param name="_buildTargetGroup"></param>
         public static void RemoveDefine(string define)
         {
-            var definesList = GetListDefine();
-            if (definesList.Contains(define))
+            var listDefine = GetListDefine();
+            if (listDefine.Contains(define))
             {
-                definesList.Remove(define);
-                SetDefines(definesList);
+                listDefine.Remove(define);
+                SetDefines(listDefine);
             }
         }
 

@@ -8,7 +8,7 @@ ___________________________________
 * Add/Remove extern support?
 	Open Tools/Threeyes/EventPlayer Setting, select the plugin you need to use, then click 'Apply'. Please ensure that you have those plugin and link to their .asmdef file (if exists) correctly.
 	
-* How to test the Example?
+* How to test the scenes in "Samples" folder?
 	Select the extern support as mention above, then add all demo scenes to the Build Setting, then hit play the first scene! You can see the explanation from [Remarker] Component.
 
 * Same file conflict after update to newer version?

@@ -57,7 +57,12 @@
     {
       "displayName": "Action",
       "description": "Action",
-      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/Action/Examples"   
+      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/Action/Samples"   
+    },
+    {
+      "displayName": "EventPlayer",
+      "description": "EventPlayer",
+      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/EventPlayer/Samples"   
     }
   ],
   "author": {

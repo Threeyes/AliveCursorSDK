@@ -31,8 +31,9 @@ MonoBehaviour:
       denyEntries:
       - System.AppDomain
       - System.Threading.Process
-      - PathTool
       - UnityEngine.Input
+      - Threeyes.IO.FileIO
+      - PathTool
     memberReferences:
       defaultBehaviour: 0
       allowEntries: []
