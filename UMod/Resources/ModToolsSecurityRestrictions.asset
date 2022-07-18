@@ -33,6 +33,7 @@ MonoBehaviour:
       - System.Threading.Process
       - UnityEngine.Input
       - Threeyes.IO.FileIO
+      - Threeyes.External.ExternalResources
       - PathTool
     memberReferences:
       defaultBehaviour: 0

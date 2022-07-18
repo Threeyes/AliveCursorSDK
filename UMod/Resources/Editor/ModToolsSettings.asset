@@ -156,7 +156,7 @@ MonoBehaviour:
     readOnly: 0
   gameLocking:
     allowGameLocking: 1
-    allowGameVersionLocking: 1
+    allowGameVersionLocking: 0
     gameLockingGUID: 1d77dfda-c0f3-4e00-862d-8f6043d10188
     readOnly: 0
   stripShaderNames: []

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Text;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -7,46 +7,54 @@ using Threeyes.Editor;
 
 namespace Threeyes.EventPlayer
 {
-    /// <summary>
-    /// Manage List EP
-    /// </summary>
-    public class Sequence_EventPlayer : SequenceForCompBase<EventPlayer>
+	public interface ISequence_EventPlayer
+	{
+		int FindIndexForDataEditor(EventPlayer data);
+	}
+	public class Sequence_EventPlayerBase<TEventPlayer> : SequenceForCompBase<TEventPlayer>
+		where TEventPlayer : EventPlayer
+	{
+		#region Inner Method
+
+		protected override void SetDataValid(TEventPlayer data)
+		{
+			data.IsActive = true;
+		}
+		protected override bool IsDataVaild(TEventPlayer data)
+		{
+			return data.IsActive;
+		}
+		protected override void SetDataFunc(TEventPlayer data, int index)
+		{
+			data.Play();
+			base.SetDataFunc(data, index);
+		}
+
+		protected override void ResetDataFunc(TEventPlayer data, int index)
+		{
+			data.Stop();
+			base.ResetDataFunc(data, index);
+		}
+
+		#endregion
+
+		public int FindIndexForDataEditor(EventPlayer data)
+		{
+			if (IsLoadChildOnAwake && data is TEventPlayer eventPlayerReal)
+			{
+				return GetComponentsFromChild().IndexOf(eventPlayerReal);
+			}
+			return -1;
+		}
+	}
+
+	/// <summary>
+	/// Manage List EP
+	/// </summary>
+	public class Sequence_EventPlayer : Sequence_EventPlayerBase<EventPlayer>
     {
-        #region Inner Method
-
-        protected override void SetDataValid(EventPlayer data)
-        {
-            data.IsActive = true;
-        }
-        protected override bool IsDataVaild(EventPlayer data)
-        {
-            return data.IsActive;
-        }
-        protected override void SetDataFunc(EventPlayer data, int index)
-        {
-            data.Play();
-            base.SetDataFunc(data, index);
-        }
-
-        protected override void ResetDataFunc(EventPlayer data, int index)
-        {
-            data.Stop();
-            base.ResetDataFunc(data, index);
-        }
-
-        #endregion
-
         #region Editor Method
 #if UNITY_EDITOR
-
-        public int FindIndexForDataEditor(EventPlayer data)
-        {
-            if (IsLoadChildOnAwake)
-            {
-                return GetComponentsFromChild().IndexOf(data);
-            }
-            return -1;
-        }
         //——MenuItem——
         static string instGroupName = "EPS ";
         [MenuItem(EventPlayer.strMenuItem_Root_Collection + "EventPlayerSequence", false, EventPlayer.intCollectionMenuOrder + 2)]

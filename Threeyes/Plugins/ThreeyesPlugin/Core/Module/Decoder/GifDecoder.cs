@@ -46,9 +46,7 @@ namespace Threeyes.Decoder
 								case GifStream.Token.Image:
 									GifFrameData gifFrameData = GetTexture(option, gifStream);
 									texture2DResult = gifFrameData.texture;
-									return texture2DResult;
-									break;
-
+									return texture2DResult;//仅返回第一帧
 								case GifStream.Token.Comment:
 									var commentText = gifStream.ReadComment();
 									//Debug.Log(commentText);
