@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEditor.Timeline;
-using Threeyes;
 using UnityEngine.Playables;
 
 namespace Threeyes.EventPlayer.Editor
@@ -25,7 +24,6 @@ namespace Threeyes.EventPlayer.Editor
             return clipOptions;
         }
 
-        bool hasEPReference = false;
         public override void GetSubTimelines(TimelineClip clip, PlayableDirector director, List<PlayableDirector> subTimelines)
         {
             EventPlayerClip eventPlayerClip = clip.asset as EventPlayerClip;

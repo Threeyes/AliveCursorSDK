@@ -276,7 +276,7 @@ namespace Threeyes.EventPlayer
 
         bool hasVideoPlayerInit = false;//Has the VideoPlayer Event init?
         bool isSeeking = false;//Is the video seeking?
-        bool isPrepareCompleted = false;
+        //bool isPrepareCompleted = false;
         void TryInitData()
         {
             if (!Application.isPlaying)
@@ -310,7 +310,7 @@ namespace Threeyes.EventPlayer
         protected virtual void PrepareCompleted(VideoPlayer source)
         {
             onPrepareCompleted.Invoke();
-            isPrepareCompleted = true;
+            //isPrepareCompleted = true;
         }
 
         protected virtual void SeekCompleted(VideoPlayer source)
