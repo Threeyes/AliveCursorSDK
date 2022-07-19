@@ -13,12 +13,10 @@ using UnityEngine.Events;
 /// Auto generate icosphere base on config, which can response to audio
 /// 
 /// Ref：Samples/ProBuilder/X.X.X/Runtime Examples/Icosphere FFT
-///
-/// ToAdd:通过Gizmo绘制运行时会显示的球体范围
 /// </summary>
 public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudioVisualizer_IcoSphereConfig, AC_AudioVisualizer_IcoSphere.ConfigInfo>
 	, IAC_SystemAudio_RawSampleDataChangedHandler
-	, IAC_SystemAudio_FFTDataChangedHandler
+	, IAC_SystemAudio_SpectrumDataChangedHandler
 	, IAC_ModHandler
 {
 	#region Property & Field
@@ -86,7 +84,7 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		UpdateWaveformSetting();
 	}
 
-	public void OnFFTDataChanged(float[] data)
+	public void OnSpectrumDataChanged(float[] data)
 	{
 		if (m_AnimatedSelections == null)
 			return;
@@ -97,7 +95,7 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		{
 			float normalizedIndex = (i / m_FaceLength);//Get normal index of face
 			int n = (int)(normalizedIndex * Config.fftBounds);
-			Vector3 displacement = m_AnimatedSelections[i].normal * data[n] / currentLoudness * (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f) * Config.maxExtrusion;
+			Vector3 displacement = m_AnimatedSelections[i].normal * data[n] * (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f) * Config.maxExtrusion;
 			foreach (int t in m_AnimatedSelections[i].indices)
 			{
 				m_DisplacedVertexPositions[t] = m_OriginalVertexPositions[t] + displacement;
@@ -106,21 +104,18 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter. 
 	}
 
-	float currentLoudness;//Debug:通过缓存音量，从而忽略音量导致频率变化
-
 	public void OnRawSampleDataChanged(float[] data)
 	{
 		if (!Config.showWaveform)
 			return;
 
-		currentLoudness = Manager.CalculateLoudness(data);
 		///Waveform
 		Vector3 vec = Vector3.zero;
 		float totalCount = data.Count();
 		for (int i = 0; i != totalCount; i++)
 		{
 			int n = i < totalCount - 1 ? i : 0;
-			float travel = Config.waveformRadius + Config.waveformHeight * data[n] / currentLoudness;
+			float travel = Config.waveformRadius + Config.waveformHeight * data[n];
 			vec.x = Mathf.Cos(n / totalCount * twoPi) * travel;
 			vec.z = Mathf.Sin(n / totalCount * twoPi) * travel;
 			vec.y = 0f;
@@ -250,14 +245,14 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		[JsonIgnore] public Material sphereMaterial;//Sphere's Material
 		[JsonIgnore] public List<Material> listMaterialPreset = new List<Material>();//Sphere's redefine materials
 		[PersistentOption(nameof(listMaterialPreset), nameof(sphereMaterial))] [PersistentValueChanged(nameof(OnMaterialChanged))] public int curMaterialPresetIndex = 0;
-		[Range(1f, 10f)] public float maxExtrusion = 1f;// The max distance a frequency range will extrude a face.
+		[Range(0, 1f)] public float maxExtrusion = 0.1f;// The max distance a frequency range will extrude a face.
 		[Range(8, 128)] public int fftBounds = 32;// An FFT returns a spectrum including frequencies that are out of human hearing range. This restricts the number of bins used from the spectrum to the lower bounds.
 
 		[PersistentValueChanged(nameof(OnWaveformSettingChanged))] public bool showWaveform = true;
 		[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public Gradient waveformGradient = new Gradient();
 		[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
 		[EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;// How far from the sphere should the waveform be.
-		[EnableIf(nameof(showWaveform))] public float waveformHeight = .05f;// The y size of the waveform.
+		[EnableIf(nameof(showWaveform))] public float waveformHeight = 1f;// The y size of the waveform.
 		[EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;// If true, the waveform ring will rotate around self.       
 		[EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, .01f, 0f);//Waveform ring's rotate speed.
 

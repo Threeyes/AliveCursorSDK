@@ -7,11 +7,6 @@ using NaughtyAttributes;
 #endif
 namespace Threeyes.Persistent
 {
-    //Enum to test:
-    //  UnityEngine.TextAlignment
-    //  UnityEngine.CameraType      (Flag)
-    //  SOWorkshopItemInfo+ItemStyle        (Flag)
-
     /// <summary>
     /// 针对通用的Enum
     /// 
@@ -22,7 +17,7 @@ namespace Threeyes.Persistent
     public class PersistentData_Enum : PersistentDataBase<Enum, EnumEvent, DataOption_Enum>
     {
         //因为Enum不能序列化，所以通过string缓存
-        public override Type RealValueType { get { return DefaultValue != null ? DefaultValue.GetType() : null; } }
+        public override Type ValueType { get { return DefaultValue != null ? DefaultValue.GetType() : null; } }
         public override Enum DefaultValue { get { return dataOption.Parse(serializeDefaultValue); } set { serializeDefaultValue = value.ToString(); } }
         public override Enum PersistentValue { get { return dataOption.Parse(serializePersistentValue); } set { serializePersistentValue = value.ToString(); } }
 #if USE_NaughtyAttributes

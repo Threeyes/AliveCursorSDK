@@ -913,7 +913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &740263133
 Transform:
   m_ObjectHideFlags: 0
@@ -943,6 +943,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 837df8633f43a3345a78107d6e855cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listGizmoDrawer:
+  - {fileID: 2044919112}
+  - {fileID: 1647500923}
 --- !u!1 &772418469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,12 +1664,12 @@ GameObject:
   - component: {fileID: 1647500923}
   - component: {fileID: 1647500924}
   m_Layer: 0
-  m_Name: GizmoDrawer_DummyCursor
+  m_Name: GizmoDrawer_CursorHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1647500922
 Transform:
   m_ObjectHideFlags: 0
@@ -1699,7 +1702,7 @@ MonoBehaviour:
   meshToDraw: {fileID: 4300000, guid: f276f77f1632fef44ae7cb2ab97ff01d, type: 2}
   color: {r: 0, g: 1, b: 1, a: 0.5019608}
   localEulerAngles: {x: 0, y: 0, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  scale: {x: 0.3, y: 0.3, z: 0.3}
   scaleRatio: 1
 --- !u!114 &1647500924
 MonoBehaviour:

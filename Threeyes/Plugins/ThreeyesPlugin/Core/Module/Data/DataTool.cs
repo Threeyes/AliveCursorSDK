@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 namespace Threeyes.Data
 {
 
-    public static class DataTool
+	public static class DataTool
     {
         /// <summary>
-        /// »ñÈ¡ÀàĞÍµÄ»ùÀà£¬³£ÓÃÓÚºóĞø·µ»Ø¶ÔÓ¦µÄDataOption
+        /// è·å–ç±»å‹çš„åŸºç±»ï¼Œå¸¸ç”¨äºåç»­è¿”å›å¯¹åº”çš„DataOption
         /// </summary>
         /// <param name="originType"></param>
         /// 
@@ -17,9 +14,9 @@ namespace Threeyes.Data
         {
             Type basicType = originType;
 
-            ///Õë¶ÔEnum¼°¶ÔÓ¦µÄenum¶¨Òå£º
-            /// 1.µ±originTypeÊÇenum¶¨Òå£ºIsEnum·µ»Øtrue
-            /// 2.µ±originTypeÊÇEnumÊ±£¬IsEnum·µ»Øfalse£¬´ËÊ±±¾ÀàĞÍ¾ÍÊÇÄ¿±êÖµ(Ô­Àí£ºÄÚ²¿µ÷ÓÃÁËIsSubclassOf£¬This method also returns false if c and the current Type are equal.£¨https://docs.microsoft.com/en-us/dotnet/api/system.type.issubclassof?view=net-6.0£©
+            ///é’ˆå¯¹EnumåŠå¯¹åº”çš„enumå®šä¹‰ï¼š
+            /// 1.å½“originTypeæ˜¯å…·ä½“æšä¸¾å®šä¹‰ï¼šIsEnumè¿”å›true
+            /// 2.å½“originTypeæ˜¯Enumæ—¶ï¼ŒIsEnumè¿”å›falseï¼Œæ­¤æ—¶æœ¬ç±»å‹å°±æ˜¯ç›®æ ‡å€¼(åŸç†ï¼šå†…éƒ¨è°ƒç”¨äº†IsSubclassOfï¼ŒThis method also returns false if c and the current Type are equal.ï¼ˆhttps://docs.microsoft.com/en-us/dotnet/api/system.type.issubclassof?view=net-6.0ï¼‰
             if (originType.IsEnum)
             {
                 basicType = typeof(Enum);

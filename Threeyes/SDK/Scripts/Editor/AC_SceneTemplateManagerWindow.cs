@@ -16,7 +16,7 @@ using UnityEngine.UIElements;
 /// Ref: UnityEditor.SceneTemplate.SceneTemplateDialog
 ///
 /// ToUpdate：
-/// 1.通过继承UnityEditor.SearchableEditorWindow，实现搜索功能
+/// 1.搜索功能：UIBuilder有默认的SerachFieldUI，可以直接使用
 /// </summary>
 public class AC_SceneTemplateManagerWindow : EditorWindow
 {

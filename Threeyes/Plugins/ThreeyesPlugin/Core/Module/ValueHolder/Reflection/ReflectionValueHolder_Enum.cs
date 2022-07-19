@@ -6,14 +6,14 @@ using UnityEngine;
 namespace Threeyes.ValueHolder
 {
     /// <summary>
-    /// (ÅäºÏEnumEventÊ¹ÓÃ£¨ÈçPersistentData_Enum)£©
+    /// (é…åˆEnumEventä½¿ç”¨ï¼ˆå¦‚PersistentData_Enum)ï¼‰
     /// </summary>
-    //ToUpdate:ÌáĞÑÓÃ»§SetÊ±ÒªÈ·±£´«ÈëÖµÊôÓÚÍ¬Ò»¸öÃ¶¾Ù£¨Ä¿Ç°Èç¹û²»Æ¥Åä£¬»á±¨´íÌáÊ¾£ºSystem.ArgumentException£©
+    //ToUpdate:æé†’ç”¨æˆ·Setæ—¶è¦ç¡®ä¿ä¼ å…¥å€¼å±äºåŒä¸€ä¸ªæšä¸¾ï¼ˆç›®å‰å¦‚æœä¸åŒ¹é…ï¼Œä¼šæŠ¥é”™æç¤ºï¼šSystem.ArgumentExceptionï¼‰
     public class ReflectionValueHolder_Enum : ReflectionValueHolder<Enum>
     {
         public override bool IsTypeMatch(Type targetType)
         {
-            return targetType.IsEnum;//PS£º½öÖ§³Ö¾ßÌåµÄÃ¶¾Ù¶¨Òå£¬²»°üÀ¨System.Enum
+            return targetType.IsEnum;//PSï¼šä»…æ”¯æŒå…·ä½“çš„æšä¸¾å®šä¹‰ï¼Œä¸åŒ…æ‹¬System.Enum
         }
     }
 }

@@ -57,8 +57,8 @@ public enum AC_KeyState
 public enum AC_ModifierKeys
 {
 	None = 0x0,//No modifiers are pressed.
-	Alt = 0x1,//The ALT key.
-	Control = 0x2,//The CTRL key.
+	Alt = 0x1,//The ALT key. (Alt key is a modifier key, is used to change (alternate) the function of other pressed keys)
+	Control = 0x2,//The CTRL key. () (This key does not have a function assigned to it, but if you combine it with other keys, you can perform a variety of commands)
 	Shift = 0x4,//The SHIFT key.
 				//Windows = 0x8//The Windows logo key.
 

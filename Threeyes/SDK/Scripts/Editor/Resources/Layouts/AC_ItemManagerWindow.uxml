@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Threeyes/AliveCursorSDK/Scripts/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
+    <Style src="project://database/Assets/Threeyes/SDK/Scripts/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
     <ui:VisualElement style="width: 100%; height: 100%; min-width: 350px; flex-wrap: nowrap;">
         <ui:ScrollView mode="Vertical" name="ScrollView" view-data-key="TopScrollView">
             <ui:VisualElement name="ItemManagerGroup" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
@@ -37,7 +37,7 @@
                         <uie:EnumFlagsField label="Feature (Multiple)" name="ItemFeatureEnumField" binding-path="itemFeature" />
                     </ui:Foldout>
                 </ui:VisualElement>
-                <ui:VisualElement name="Gap" class="gap" />
+                <ui:VisualElement name="Gap" class="HorizontalGap" />
                 <ui:VisualElement name="InteractionGroup">
                     <ui:VisualElement name="EditGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
                         <ui:Button text="Select Dir" display-tooltip-when-elided="true" name="SelectItemDirButton" focusable="true" style="overflow: visible; width: 49%;" />
@@ -47,14 +47,16 @@
                         <ui:Button text="Build" display-tooltip-when-elided="true" name="ItemBuildButton" focusable="true" style="overflow: visible; width: 49%;" />
                         <ui:Button text="Build All" display-tooltip-when-elided="true" name="ItemBuildAllButton" focusable="true" style="overflow: hidden; width: 49%;" />
                     </ui:VisualElement>
+                    <ui:VisualElement name="Gap" class="gap HorizontalGap" />
                     <ui:VisualElement name="UploadGroup" style="justify-content: flex-start; align-items: stretch;">
-                        <ui:Label text="By submitting this item, you agree to the &lt;color=#blue&gt;&lt;u&gt;workshop terms of service&lt;/u&gt;&lt;/color&gt;." display-tooltip-when-elided="true" enable-rich-text="true" name="AgreementLabel" tooltip="Workshop items will be hidden by default until you agrees to the Steam Workshop Legal Agreement. Click to open the detail page." />
+                        <ui:TextField picking-mode="Ignore" label="Change Log" value="filler text" name="ChangeLogTextField" multiline="true" style="flex-wrap: nowrap; white-space: nowrap;" />
                         <ui:VisualElement name="UploadButtonGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
                             <ui:Button text="Upload" display-tooltip-when-elided="true" name="ItemUploadButton" focusable="true" style="overflow: hidden; width: 49%;" />
                             <ui:Button text="Upload All" display-tooltip-when-elided="true" name="ItemUploadAllButton" focusable="true" style="overflow: hidden; width: 49%;" />
                         </ui:VisualElement>
                         <ui:ProgressBar title="50%" low-value="0" name="UploadProcessBar" />
                         <ui:Button text="Open Url..." display-tooltip-when-elided="true" name="ItemOpenUrlButton" />
+                        <ui:Label text="By submitting this item, you agree to the &lt;color=#blue&gt;&lt;u&gt;workshop terms of service&lt;/u&gt;&lt;/color&gt;." display-tooltip-when-elided="true" enable-rich-text="true" name="AgreementLabel" tooltip="Workshop items will be hidden by default until you agrees to the Steam Workshop Legal Agreement. Click to open the detail page." />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

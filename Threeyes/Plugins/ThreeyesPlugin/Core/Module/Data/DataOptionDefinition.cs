@@ -268,11 +268,14 @@ namespace Threeyes.Data
 		/// 2.只有未定义时，其EnumName为其数值的对应字符串；如果已经定义，则无需转换
 		/// </summary>
 		[JsonIgnore]
-		public readonly Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName = new Dictionary<string, string>
+		public static readonly Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName = new Dictionary<string, string>
 		{
-			{"0","Nothing" },
-			{"-1","Everything" }
+			{defaultNothingEnumName,"Nothing" },
+			{defaultEverythingEnumName,"Everything" }
 		};
+		public const string defaultNothingEnumName = "0";
+		public const string defaultEverythingEnumName = "-1";
+
 
 		public string DisplayNameToEnumName(string displayName, Dictionary<string, string> dicEnumNameToDisplayName = null)
 		{
@@ -312,6 +315,33 @@ namespace Threeyes.Data
 			return listResult;
 		}
 
+		public string GetEnumName(object value)
+		{
+			string enumName = "";
+
+			Type enumType = EnumType;
+			if (enumType != null)
+			{
+				if (UseFlag)
+				{
+					//如果Enume没有定义0/-1，则添加
+					if (value.Equals(0) && !Enum.IsDefined(enumType, 0))
+						return defaultNothingEnumName;
+					if (value.Equals(-1) && !Enum.IsDefined(enumType, -1))
+						return defaultEverythingEnumName;
+				}
+				try
+				{
+					enumName = Enum.GetName(enumType, value);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("GetEnumName failed:" + e);
+				}
+			}
+			return enumName;
+		}
+
 		/// <summary>
 		/// 每个Enum对应的string名称
 		///
@@ -331,9 +361,9 @@ namespace Threeyes.Data
 					{
 						//如果Enume没有定义0/-1，则添加
 						if (!Enum.IsDefined(EnumType, 0))
-							listResult.Add("0");
+							listResult.Add(defaultNothingEnumName);
 						if (!Enum.IsDefined(EnumType, -1))
-							listResult.Add("-1");
+							listResult.Add(defaultEverythingEnumName);
 					}
 					listResult.AddRange(Enum.GetNames(EnumType));
 				}

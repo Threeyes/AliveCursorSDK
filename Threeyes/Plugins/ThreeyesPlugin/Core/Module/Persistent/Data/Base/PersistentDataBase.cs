@@ -10,7 +10,7 @@ namespace Threeyes.Persistent
 {
 	public abstract partial class PersistentDataBase : MonoBehaviour, IPersistentData, IHierarchyViewInfo
 	{
-		public abstract Type RealValueType { get; }
+		public abstract Type ValueType { get; }
 		public string PersistentDirPath { get; set; }
 
 		public string Key { get { return key; } set { key = value; } }
@@ -90,7 +90,7 @@ namespace Threeyes.Persistent
 		public virtual TValue DefaultValue { get { return defaultValue; } set { defaultValue = value; } }
 		public virtual TValue PersistentValue { get { return persistentValue; } set { persistentValue = value; } }
 		public bool HasChanged { get { return hasSetValue; } set { hasSetValue = value; } }
-		public override Type RealValueType { get { return typeof(TValue); } }
+		public override Type ValueType { get { return typeof(TValue); } }
 
 		public UnityEvent<TValue> EventOnUIChanged { get { return onUIChanged; } }
 		public UnityEvent<TValue> EventOnValueChanged { get { return onValueChanged; } }

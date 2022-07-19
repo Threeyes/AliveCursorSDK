@@ -59,7 +59,7 @@ namespace Threeyes.Data
 			if (option == null)//避免返回空值
 				option = new DataOption();
 
-			option.Init(memberInfo);//根据Member的Attribute进行初始化（如Range）
+			option.Init(memberInfo);//根据Member的Attribute进行初始化（如Range、Enum类型等）
 			return option;
 		}
 

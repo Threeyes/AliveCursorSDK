@@ -21,7 +21,7 @@ MonoBehaviour:
       defaultValue: 0
       option:
         useRange: 1
-        minValue: 0.5
+        minValue: 0.1
         maxValue: 10
     cursorState_StandBy_IsActive:
       value: 1

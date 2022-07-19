@@ -23,11 +23,14 @@ namespace Threeyes.AliveCursor.SDK.Editor
 	/// <summary>
 	///
 	///ToAdd:
-	///1.临时的ChangeLog输入框，每次切换或上传后清空
+	///1.临时的
 	/// 
 	/// UIBuilder注意：
 	/// 1.（Bug）TextFiled/Label通过bingdingPath绑定ulong后会显示错误，因此暂时不显示ItemID（应该是官方的bug：https://forum.unity.com/threads/binding-ulong-serializedproperty-to-inotifyvaluechanged-long.1005417/）
 	/// 2.ViewDataKey只对特定UI有效（PS：This key only really applies to ScrollView, ListView, and Foldout. If you give any of these a unique key (not enforced, but recommended （https://forum.unity.com/threads/can-someone-explain-the-view-data-key-and-its-uses.855145/）)）
+	///
+	/// ToUpdate:
+	/// 1.ChangeLog输入框只有上传成功后才清空
 	/// </summary>
 	[UModToolsWindow]
 	public class AC_ItemManagerWindow : EditorWindow
@@ -51,10 +54,13 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 
 		//——Interaction Group——
+		//Build
 		Button buttonSelectItemDirButton;
 		Button buttonEditScene;
 		Button buttonItemBuild;
 		Button buttonItemBuildAll;
+		//Upload
+		TextField textFieldChangeLog;
 		Button buttonItemUpload;
 		Button buttonItemUploadAll;
 		Button buttonItemOpenUrl;
@@ -66,7 +72,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		//——Runtime——
 		public List<AC_SOWorkshopItemInfo> listValidItemInfo = new List<AC_SOWorkshopItemInfo>();//扫描到的信息
 		AC_SOWorkshopItemInfo curSOWorkshopItemInfo;
-		private static readonly Vector2 k_MinWindowSize = new Vector2(450, 650);
+		private static readonly Vector2 k_MinWindowSize = new Vector2(450, 700);
 
 		[MenuItem("Alive Cursor/Item Manager")]
 		public static void OpenWindow()
@@ -150,6 +156,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			buttonItemBuild.RegisterCallback<ClickEvent>(OnBuildButtonClick);
 			buttonItemBuildAll = rootVisualElement.Q<Button>("ItemBuildAllButton");
 			buttonItemBuildAll.RegisterCallback<ClickEvent>(OnBuildAllButtonClick);
+
+			textFieldChangeLog = rootVisualElement.Q<TextField>("ChangeLogTextField");
 			buttonItemUpload = rootVisualElement.Q<Button>("ItemUploadButton");//PS:只有所有必要信息填写完成后，按键才能点击
 			buttonItemUpload.RegisterCallback<ClickEvent>(OnUploadButtonClick);
 			buttonItemUploadAll = rootVisualElement.Q<Button>("ItemUploadAllButton");
@@ -290,7 +298,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		{
 			UpdatePreviewStateFunc();
 			UpdatePreviewHelperBoxStateFunc();
-			UpdateBuildAndUploadButtonStateFunc();//更新受该必须字段影响的UI
+			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
 		#endregion
 
@@ -407,7 +415,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		#region SOWorkshopItemInfo Group
 		private void OnTitleTextFieldChanged(ChangeEvent<string> evt)
 		{
-			UpdateBuildAndUploadButtonStateFunc();//更新受该必须字段影响的UI
+			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
 
 		#region Preview
@@ -417,7 +425,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			//更新对应的UI
 			UpdatePreviewStateFunc();
 			UpdatePreviewHelperBoxStateFunc();
-			UpdateBuildAndUploadButtonStateFunc();//更新受该必须字段影响的UI
+			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
 		private void OnSelectPreviewButtonClick(ClickEvent evt)
 		{
@@ -618,14 +626,18 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		/// <summary>
 		/// （当必须属性更新时）同步更新Build按钮的状态
 		/// </summary>
-		void UpdateBuildAndUploadButtonStateFunc()
+		void UpdateBuildAndUploadStateFunc()
 		{
+			textFieldChangeLog.value = "";
 			if (!curSOWorkshopItemInfo)
+			{
+				textFieldChangeLog.Show(false);
 				return;
+			}
 
 			//PS:这里调用的函数涉及FileInfo，所以要尽量减少调用频率
-
 			buttonItemBuild.SetInteractable(curSOWorkshopItemInfo.IsBuildValid); // 确保Build前所有必填内容都有效，否则禁用
+			textFieldChangeLog.Show(curSOWorkshopItemInfo.IsItemUploaded);
 			buttonItemUpload.SetInteractable(curSOWorkshopItemInfo.IsUploadValid);////PS:仅简单检查导出目录是否存在即可，具体错误在点击“Upload‘按键后会打印出来
 			buttonItemUploadAll.SetInteractable(listValidItemInfo.Any(so => so && so.IsItemUploaded));//确保任意Item已上传，则表示可以重新上传
 		}
@@ -864,7 +876,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 				}
 
 				//ToAdd:ChangeLog
-				string itemUploadErrorLog = await AC_WorkshopItemUploader.RemoteUploadItem(soWorkshopItemInfo, SetUploadProcessInfo);
+				string itemUploadErrorLog = await AC_WorkshopItemUploader.RemoteUploadItem(soWorkshopItemInfo, SetUploadProcessInfo, textFieldChangeLog.value);
 				if (itemUploadErrorLog.NotNullOrEmpty())
 				{
 					Debug.LogError($"Upload Item {soWorkshopItemInfo?.Title} with error: {itemUploadErrorLog}");

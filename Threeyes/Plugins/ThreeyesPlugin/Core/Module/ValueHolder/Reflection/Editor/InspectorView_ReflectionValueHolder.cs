@@ -35,18 +35,18 @@ namespace Threeyes.ValueHolder
                     if (_target.IsTypeMatch(fieldInfo.FieldType))
                         listFieldOption.Add(fieldInfo.Name);
                 }
-                DrawPopUp(new GUIContent("Field"), listFieldOption, ref _target.serializeFieldName);
+                DrawPopUp(new GUIContent("Field"), listFieldOption, ref _target.targetSerializeFieldName);
 
                 foreach (PropertyInfo propertyInfo in targetType.GetAllPropertys(ReflectionValueHolderBase.defaultBindingFlags))
                 {
                     if (_target.IsTypeMatch(propertyInfo.PropertyType))
                         listPropertyOption.Add(propertyInfo.Name);
                 }
-                DrawPopUp(new GUIContent("Property"), listPropertyOption, ref _target.serializePropertyName);
+                DrawPopUp(new GUIContent("Property"), listPropertyOption, ref _target.targetSerializePropertyName);
                 //显示Property是否可以 get/set 
-                if (_target.serializePropertyName.NotNullOrEmpty())
+                if (_target.targetSerializePropertyName.NotNullOrEmpty())
                 {
-                    PropertyInfo propertyInfoCurSelect = targetType.GetProperty(_target.serializePropertyName);
+                    PropertyInfo propertyInfoCurSelect = targetType.GetProperty(_target.targetSerializePropertyName);
                     if (propertyInfoCurSelect != null)
                     {
                         string warningTips = null;
@@ -69,8 +69,8 @@ namespace Threeyes.ValueHolder
                 }
 
 
-                DrawPopUp(new GUIContent("GetMethod"), listGetMethodOption, ref _target.serializeGetMethodName);
-                DrawPopUp(new GUIContent("SetMethod"), listSetMethodOption, ref _target.serializeSetMethodName);
+                DrawPopUp(new GUIContent("GetMethod"), listGetMethodOption, ref _target.targetSerializeGetMethodName);
+                DrawPopUp(new GUIContent("SetMethod"), listSetMethodOption, ref _target.targetSerializeSetMethodName);
             }
             else
             {

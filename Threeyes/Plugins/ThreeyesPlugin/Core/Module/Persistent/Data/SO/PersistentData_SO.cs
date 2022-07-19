@@ -33,7 +33,7 @@ namespace Threeyes.Persistent
 		private FilePathModifier_PD filePathModifier_PD;
 
 		public override bool IsValid { get { return TargetValue != null && base.IsValid; } }
-		public override Type RealValueType { get { return TargetValue != null ? TargetValue.GetType() : null; } }
+		public override Type ValueType { get { return TargetValue != null ? TargetValue.GetType() : null; } }
 		public ScriptableObject TargetValue { get { return targetValue; } set { targetValue = value; } }
 
 #if USE_NaughtyAttributes

@@ -9,6 +9,12 @@ namespace Threeyes.Persistent
 
 	public partial interface IPersistentData : IDisposable
 	{
+		/// <summary>
+		/// The real type of Value
+		/// PS: TValue may be the base type if the this class is for common usage (eg: Enum, SO))
+		/// </summary>
+		Type ValueType { get; }
+
 		string Key { get; set; }//唯一标识（针对每个Controller管理的区域内（如文件夹））
 		string Tooltip { get; set; }
 		bool IsValid { get; }//用于判断Option等设置是否有效
@@ -25,12 +31,6 @@ namespace Threeyes.Persistent
 	{
 		UnityEvent<TValue> EventOnValueChanged { get; }// Notify value changed
 		UnityEvent<TValue> EventOnUIChanged { get; }// Notify relate UI change
-
-		/// <summary>
-		/// The real type of Value
-		/// PS: TValue may be the base type if the this class is for common usage (eg: Enum, SO))
-		/// </summary>
-		Type RealValueType { get; }
 
 		TValue DefaultValue { get; set; }
 		TValue PersistentValue { get; set; }

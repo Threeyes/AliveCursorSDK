@@ -119,7 +119,7 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 {
 	[Header("Cursor Appearance")]
 	public BoolData cursorAppearance_IsHideOnTextInput = new BoolData(false);//输入模式时隐藏(适用于文字编辑、代码编辑等人群)
-	public FloatData cursorAppearance_CursorSize = new FloatData(1, new DataOption_Float(true, 0.1f, 5f));
+	public FloatData cursorAppearance_CursorSize = new FloatData(1, new DataOption_Float(true, 0.1f, 10f));
 
 	[Header("Cursor State")]
 	public BoolData cursorState_StandBy_IsActive = new BoolData(true);//待命：如果超过一定时间没有鼠标点击事件则隐藏（便于用户看电影或滚轮浏览网页）
