@@ -50,8 +50,9 @@
 + Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip) zip file, extract it and replace project's origin ProjectSettings folder.
 + Open the Project.
 
-## Problem
+## Possible Errors
 + If some error appear on first import, try cleanup or restart the project.
 + If some AliveCursorSDK's folder become empty, try reimport the package.
+
 ## Documentation
 Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
