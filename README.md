@@ -54,4 +54,4 @@
 + If some error appear on first import, try cleanup or restart the project.
 + If some AliveCursorSDK's folder become empty, try reimport the package.
 ## Documentation
-Please hold...
+Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
