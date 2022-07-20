@@ -266,13 +266,26 @@ namespace Threeyes.Data
 		/// PS：
 		/// 1.因为Enum不一定是int，因此统一通过string存储Enum值，便于转换）
 		/// 2.只有未定义时，其EnumName为其数值的对应字符串；如果已经定义，则无需转换
+		///
+		/// Warning:
+		/// 不能直接声明Dictionary为ReadOnly，否则UMod加载会报错
 		/// </summary>
 		[JsonIgnore]
-		public static readonly Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName = new Dictionary<string, string>
+		public static Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName
 		{
-			{defaultNothingEnumName,"Nothing" },
-			{defaultEverythingEnumName,"Everything" }
-		};
+			get
+			{
+				if (_defaultDicSpeicalEnumNameToDisplayName == null)
+					_defaultDicSpeicalEnumNameToDisplayName = new Dictionary<string, string>
+				{
+					{defaultNothingEnumName,"Nothing" },
+					{defaultEverythingEnumName,"Everything" }
+				};
+				return _defaultDicSpeicalEnumNameToDisplayName;
+			}
+		}
+		static Dictionary<string, string> _defaultDicSpeicalEnumNameToDisplayName;
+
 		public const string defaultNothingEnumName = "0";
 		public const string defaultEverythingEnumName = "-1";
 

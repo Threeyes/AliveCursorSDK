@@ -15,14 +15,14 @@ MonoBehaviour:
   toolsIconSmall: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsIconLarge: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsName: AliveCursorSDK
-  toolsVersion: 1.0.3
+  toolsVersion: 1.0.4
   firstRunWindow:
     assemblyQualifiedName: 
   developerName: Threeyes
   syncDeveloperName: 0
   gameName: AliveCursor
   syncGameName: 0
-  gameVersion: 3.0
+  gameVersion: 3.0.4
   syncGameVersion: 1
   modFileExtension: .umod
   commandLineLaunchFormat: +mod=$PATH
@@ -155,7 +155,7 @@ MonoBehaviour:
       type: 2}
     readOnly: 0
   gameLocking:
-    allowGameLocking: 1
+    allowGameLocking: 0
     allowGameVersionLocking: 0
     gameLockingGUID: 1d77dfda-c0f3-4e00-862d-8f6043d10188
     readOnly: 0
