@@ -1,8 +1,10 @@
 # Changelog
 
+## [1.0.5]
+- Add visualscripting&visualeffectgraph to package.json
+
 ## [1.0.4]
 - Fix PD_Enum will cause UMod failed to reflection (caused by Dictionary field).
-
 
 ## [1.0.3]
 - Remove codes that costs warning.
