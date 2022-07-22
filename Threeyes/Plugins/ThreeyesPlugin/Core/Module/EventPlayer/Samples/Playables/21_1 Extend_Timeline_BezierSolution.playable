@@ -4,27 +4,30 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 337831424, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
+  m_Script: {fileID: 11500000, guid: bfda56da833e2384a9677cd3c976a436, type: 3}
   m_Name: 21_1 Extend_Timeline_BezierSolution
   m_EditorClassIdentifier: 
-  m_NextId: 0
+  m_Version: 0
   m_Tracks:
   - {fileID: 114220388460767282}
   - {fileID: 114372194591137042}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
+    m_ScenePreview: 1
   m_DurationMode: 0
-  m_Version: 0
+  m_MarkerTrack: {fileID: 0}
 --- !u!114 &114026110824741894
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -72,21 +75,25 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Flip
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114847296737532120}
     m_Duration: 3
@@ -154,27 +161,31 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Flip
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114183577639425086
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114405601937931778}
     m_Duration: 3
@@ -242,13 +253,14 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Default
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114203565890224534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -296,17 +308,20 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1544527758, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
+  m_Script: {fileID: 11500000, guid: d0fc6f5187a81dc47999eefade6f0935, type: 3}
   m_Name: Basic Track Group
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
   m_Children:
   - {fileID: 114183577639425086}
@@ -316,26 +331,31 @@ MonoBehaviour:
   - {fileID: 114915343438470958}
   - {fileID: 114551716852825848}
   m_Clips: []
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114334303969985678
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Mirror Curve
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114747875004589708}
     m_Duration: 3
@@ -403,27 +423,31 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Mirror Curve
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114361126849554090
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: EaseInOut Curve
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114722692827407028}
     m_Duration: 3
@@ -491,49 +515,57 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Custom Curve
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114372194591137042
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1544527758, guid: 6a10b2909283487f913b00d94cd3faf5, type: 3}
+  m_Script: {fileID: 11500000, guid: d0fc6f5187a81dc47999eefade6f0935, type: 3}
   m_Name: Complex Track Group
   m_EditorClassIdentifier: 
-  m_Locked: 0
-  m_Muted: 1
-  m_CustomPlayableFullTypename: 
+  m_Version: 3
   m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
   m_Children:
   - {fileID: 114892378360085488}
   - {fileID: 114396375146494230}
   - {fileID: 114650466840850592}
   m_Clips: []
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114396375146494230
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Binding Override
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114372194591137042}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114511403291185648}
     m_Duration: 1
@@ -565,8 +597,8 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP1
-    m_Version: 1
-  - m_Start: 1
+  - m_Version: 1
+    m_Start: 1
     m_ClipIn: 0
     m_Asset: {fileID: 114026110824741894}
     m_Duration: 1
@@ -634,8 +666,8 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP2
-    m_Version: 1
-  - m_Start: 2
+  - m_Version: 1
+    m_Start: 2
     m_ClipIn: 0
     m_Asset: {fileID: 114433344553775548}
     m_Duration: 1
@@ -703,13 +735,14 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP3
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114405601937931778
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -757,7 +790,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -805,7 +839,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -853,7 +888,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -901,7 +937,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -949,21 +986,25 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Specify Clip Length
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114532628749324936}
     m_Duration: 3
@@ -1031,27 +1072,31 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Specify Clip Length
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114650466840850592
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Multi BezierSpline
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114372194591137042}
   m_Children: []
   m_Clips:
-  - m_Start: 1.5
+  - m_Version: 1
+    m_Start: 1.5
     m_ClipIn: 0
     m_Asset: {fileID: 114734509415374088}
     m_Duration: 1.5
@@ -1082,9 +1127,9 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
-    m_DisplayName: TimelineEP 2
-    m_Version: 1
-  - m_Start: 0
+    m_DisplayName: TimelineEP2
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114751510475439150}
     m_Duration: 1.5
@@ -1133,14 +1178,15 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: TimelineEP 1
-    m_Version: 1
-  m_Version: 1
+    m_DisplayName: TimelineEP1
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114722692827407028
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1188,7 +1234,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1236,7 +1283,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1284,7 +1332,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1332,7 +1381,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1380,7 +1430,8 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1428,21 +1479,25 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Reuse TL
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114372194591137042}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114428013890359124}
     m_Duration: 1.5
@@ -1491,9 +1546,9 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: TimelineEP Reuse TL
-    m_Version: 1
-  - m_Start: 1.5
+    m_DisplayName: TimelineEP
+  - m_Version: 1
+    m_Start: 1.5
     m_ClipIn: 0
     m_Asset: {fileID: 114203565890224534}
     m_Duration: 1.5
@@ -1542,28 +1597,32 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
-    m_DisplayName: TimelineEP Reuse TL
-    m_Version: 1
-  m_Version: 1
+    m_DisplayName: TimelineEP
+  m_Markers:
+    m_Objects: []
 --- !u!114 &114915343438470958
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d5a7925ae0e4b4e8b8142d0f880657, type: 3}
   m_Name: Mirror Curve + Flip
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
   m_Locked: 0
   m_Muted: 0
   m_CustomPlayableFullTypename: 
-  m_AnimClip: {fileID: 0}
+  m_Curves: {fileID: 0}
   m_Parent: {fileID: 114220388460767282}
   m_Children: []
   m_Clips:
-  - m_Start: 0
+  - m_Version: 1
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114815531285315082}
     m_Duration: 3
@@ -1631,5 +1690,5 @@ MonoBehaviour:
     m_PostExtrapolationTime: Infinity
     m_PreExtrapolationTime: 0
     m_DisplayName: TimelineEP Mirror Curve + Flip
-    m_Version: 1
-  m_Version: 1
+  m_Markers:
+    m_Objects: []

@@ -199,7 +199,7 @@ public sealed class AC_SOWorkshopItemInfo : ScriptableObject
 	//——Utility——
 	public static readonly string DataDirName = "Datas";
 	public static readonly string SceneDirName = "Scenes";
-	public static readonly string[] arrStrValidPreviewFileExtension = new string[] { "jpg", "jpeg", "png", "gif" };// 预览图支持的格式（Warning：Upload不支持大写后缀！）
+	public static readonly string[] arrStrValidPreviewFileExtension = new string[] { "jpg", "jpeg", "png", "gif" };// 预览图支持的格式（Warning：Workshop.Upload不支持大写后缀！）
 	public static readonly string DefaultPreviewName = "Preview";// 预览图名称
 	public static readonly string SceneName = "Entry";// 场景名称
 	public static readonly long MaxPreviewFileSize = 1048576;// 预览图文件上限，单位B (PS:预览图文件大小上限为1024KB【如果超过，则Upload时会报错：Result.LimitExceeded】)

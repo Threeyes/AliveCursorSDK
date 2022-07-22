@@ -52,7 +52,7 @@
                         <ui:TextField picking-mode="Ignore" label="Change Log" value="filler text" name="ChangeLogTextField" multiline="true" style="flex-wrap: nowrap; white-space: nowrap;" />
                         <ui:VisualElement name="UploadButtonGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
                             <ui:Button text="Upload" display-tooltip-when-elided="true" name="ItemUploadButton" focusable="true" style="overflow: hidden; width: 49%;" />
-                            <ui:Button text="Upload All" display-tooltip-when-elided="true" name="ItemUploadAllButton" focusable="true" style="overflow: hidden; width: 49%;" />
+                            <ui:Button text="Reupload All" display-tooltip-when-elided="true" name="ItemReuploadAllButton" focusable="true" style="overflow: hidden; width: 49%;" />
                         </ui:VisualElement>
                         <ui:ProgressBar title="50%" low-value="0" name="UploadProcessBar" />
                         <ui:Button text="Open Url..." display-tooltip-when-elided="true" name="ItemOpenUrlButton" />

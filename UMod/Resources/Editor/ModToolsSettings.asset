@@ -15,7 +15,7 @@ MonoBehaviour:
   toolsIconSmall: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsIconLarge: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsName: AliveCursorSDK
-  toolsVersion: 1.0.4
+  toolsVersion: 1.0.6
   firstRunWindow:
     assemblyQualifiedName: 
   developerName: Threeyes
@@ -29,7 +29,7 @@ MonoBehaviour:
   targetUnityVersion: 2021.3.5f1
   allowAnyUnityVersion: 1
   developerWebsiteURL: https://github.com/Threeyes
-  onlineDocumentationURL: https://github.com/Threeyes/AliveCursorSDK
+  onlineDocumentationURL: https://github.com/Threeyes/AliveCursorSDK/wiki
   onlineScriptingReferenceURL: https://github.com/Threeyes/AliveCursorSDK
   assetSharing:
     sharedAssetBundlePath: Resources/Editor/ModToolsSharedAssets.modbundle

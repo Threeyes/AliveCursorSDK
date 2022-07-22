@@ -34,23 +34,23 @@ public static class AC_WorkshopItemTool
     // 主Url
     public static string GetUrl(ulong itemId, bool isOpenViaWeb = true)
     {
-        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/?id=", itemId);
+        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/?id=", itemId, isOpenViaWeb);
     }
     public static string GetChangeLogUrl(ulong itemId, bool isOpenViaWeb = true)
     {
-        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/changelog/", itemId);
+        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/changelog/", itemId, isOpenViaWeb);
     }
     public static string GetCommentsUrl(ulong itemId, bool isOpenViaWeb = true)
     {
-        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/comments/", itemId);
+        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/comments/", itemId, isOpenViaWeb);
     }
     public static string GetDiscussUrl(ulong itemId, bool isOpenViaWeb = true)
     {
-        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/discussions/", itemId);
+        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/discussions/", itemId, isOpenViaWeb);
     }
     public static string GetStatsUrl(ulong itemId, bool isOpenViaWeb = true)
     {
-        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/stats/", itemId);
+        return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/stats/", itemId, isOpenViaWeb);
     }
 
     /// <summary>
@@ -64,7 +64,8 @@ public static class AC_WorkshopItemTool
     {
         if (itemId != 0)
         {
-            if (isOpenViaWeb)
+			//ToUpdate: 除GetUrl外的链接需要更新
+			if (isOpenViaWeb)
                 return strMainUrl + itemId.ToString();
             else
                 return $"steam://url/CommunityFilePage/" + itemId.ToString();//直接通过Steam窗口打开

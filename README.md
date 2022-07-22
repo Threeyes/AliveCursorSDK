@@ -17,7 +17,7 @@
 
 + Install [Git](https://git-scm.com/).
 + Create an empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe) (You can download it from [here](https://unity3d.com/get-unity/download/archive)).
-+ Merge the following snippet to `Packages/manifest.json` file in your project, or just download the latest [manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json) file and replace it. (Make sure "com.threeyes.alivecursor.sdk": "*<u>X.X.X</u>" set to the latest version):
++ Merge the following snippet to `Packages/manifest.json` file in your project, or just download the latest [manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json) file and replace it. (Make sure the version <u>X.X.X</u> has set to the latest version):
 ```json
 {
     "scopedRegistries": [

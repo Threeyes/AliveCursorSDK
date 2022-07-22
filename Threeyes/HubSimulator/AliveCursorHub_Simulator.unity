@@ -908,7 +908,7 @@ GameObject:
   - component: {fileID: 740263133}
   - component: {fileID: 740263134}
   m_Layer: 0
-  m_Name: Assistant Group
+  m_Name: AssistantManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

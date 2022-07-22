@@ -62,7 +62,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		//Upload
 		TextField textFieldChangeLog;
 		Button buttonItemUpload;
-		Button buttonItemUploadAll;
+		Button buttonItemReuploadAll;
 		Button buttonItemOpenUrl;
 		//进度条相关组件
 		ProgressBar progressBarUpload;
@@ -160,8 +160,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			textFieldChangeLog = rootVisualElement.Q<TextField>("ChangeLogTextField");
 			buttonItemUpload = rootVisualElement.Q<Button>("ItemUploadButton");//PS:只有所有必要信息填写完成后，按键才能点击
 			buttonItemUpload.RegisterCallback<ClickEvent>(OnUploadButtonClick);
-			buttonItemUploadAll = rootVisualElement.Q<Button>("ItemUploadAllButton");
-			buttonItemUploadAll.RegisterCallback<ClickEvent>(OnUploadAllButtonClick);
+			buttonItemReuploadAll = rootVisualElement.Q<Button>("ItemReuploadAllButton");
+			buttonItemReuploadAll.RegisterCallback<ClickEvent>(OnReuploadAllButtonClick);
 
 			buttonItemOpenUrl = rootVisualElement.Q<Button>("ItemOpenUrlButton");//PS:只有所有必要信息填写完成后，按键才能点击
 			buttonItemOpenUrl.RegisterCallback<ClickEvent>(OnOpenUrlButtonClick);
@@ -311,7 +311,10 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 		private void OnAgreementLabelClick(ClickEvent evt)
 		{
+			//https://partner.steamgames.com/doc/features/workshop/implementation#Legal
+			//string urlPath = "steam://url/CommunityFilePage/" +curSOWorkshopItemInfo.ItemID;//打开Item对应页面
 			Application.OpenURL("https://steamcommunity.com/sharedfiles/workshoplegalagreement");
+
 		}
 
 		private void OnProjectChange()
@@ -639,7 +642,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			buttonItemBuild.SetInteractable(curSOWorkshopItemInfo.IsBuildValid); // 确保Build前所有必填内容都有效，否则禁用
 			textFieldChangeLog.Show(curSOWorkshopItemInfo.IsItemUploaded);
 			buttonItemUpload.SetInteractable(curSOWorkshopItemInfo.IsUploadValid);////PS:仅简单检查导出目录是否存在即可，具体错误在点击“Upload‘按键后会打印出来
-			buttonItemUploadAll.SetInteractable(listValidItemInfo.Any(so => so && so.IsItemUploaded));//确保任意Item已上传，则表示可以重新上传
+			buttonItemReuploadAll.SetInteractable(listValidItemInfo.Any(so => so && so.IsItemUploaded));//确保任意Item已上传，则表示可以重新上传
 		}
 
 		void SetPreviewHelpBoxInfo(string content = "")
@@ -821,7 +824,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		}
 
 		bool isUploadingAll = false;
-		void OnUploadAllButtonClick(ClickEvent evt)
+		void OnReuploadAllButtonClick(ClickEvent evt)
 		{
 			if (isUploadingAll)
 				return;
@@ -892,7 +895,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			if (!curSOWorkshopItemInfo)
 				return;
 
-			string itemUrl = AC_WorkshopItemTool.GetUrl(curSOWorkshopItemInfo.itemId);
+			string itemUrl = AC_WorkshopItemTool.GetUrl(curSOWorkshopItemInfo.itemId);//默认使用浏览器的方式打开，避免需要调用Steam客户端
 			if (itemUrl != null)
 				Application.OpenURL(itemUrl);
 		}
