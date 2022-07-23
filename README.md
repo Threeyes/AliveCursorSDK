@@ -3,7 +3,6 @@
 <p align="center">
     <img src="https://github.com/Threeyes/AliveCursorSDK/blob/main/Threeyes/SDK/Textures/ACSDK%20Icon.png?raw=true" alt="Logo" width="200px" height="200px" />
     <br />
-    <i>SDK for AliveCursor.</i>
 </p>
 
 
