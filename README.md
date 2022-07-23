@@ -9,6 +9,7 @@
 
 <p align="center">
 	<a href="https://openupm.com/packages/com.threeyes.alivecursor.sdk/"><img src="https://img.shields.io/npm/v/com.threeyes.alivecursor.sdk?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
+	<a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
 </p>
 
 ## Installation via [OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)
