@@ -17,7 +17,8 @@ using Threeyes.Decoder;
 using Threeyes.IO;
 using UnityEngine.SceneManagement;
 using UMod.Shared;
-
+using UnityEditor.PackageManager;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 namespace Threeyes.AliveCursor.SDK.Editor
 {
 	/// <summary>
@@ -32,7 +33,6 @@ namespace Threeyes.AliveCursor.SDK.Editor
 	/// ToUpdate:
 	/// 1.ChangeLog输入框只有上传成功后才清空
 	/// </summary>
-	[UModToolsWindow]
 	public class AC_ItemManagerWindow : EditorWindow
 	{
 		AC_SOAliveCursorSDKManager SOManagerInst { get { return AC_SOAliveCursorSDKManager.Instance; } }
@@ -698,29 +698,110 @@ namespace Threeyes.AliveCursor.SDK.Editor
 				AC_SceneTemplateManagerWindow.ShowWindow(curSOWorkshopItemInfo);
 			}
 		}
-		static string cacheSimulatorSceneFilePath;
-		static bool OpenSimulatorScene_Solo()
+
+		static bool OpenSimulatorScene_Solo()//打开模拟场景
 		{
 			bool isSimulaterHubSceneLoaded = false;
 
-			if (cacheSimulatorSceneFilePath.IsNullOrEmpty())
+			try
 			{
-				string targetGUID = AssetDatabase.FindAssets(AC_SceneManagerSimulator.SimulatorSceneName).FirstOrDefault();
-				if (targetGUID.NotNullOrEmpty())
+				//不缓存，避免升级Sample版本导致缓存路径变化
+				string simulatorSceneAssetRealPath = null;
+
+				//查找项目中所以可能存在的资源文件路径
+				List<string> listSceneAssetPath = new List<string>();
+				foreach (string targetGUID in AssetDatabase.FindAssets(AC_SceneManagerSimulator.SimulatorSceneName))
 				{
-					cacheSimulatorSceneFilePath = AssetDatabase.GUIDToAssetPath(targetGUID);
+					if (targetGUID.NotNullOrEmpty())
+					{
+						string scenePath = AssetDatabase.GUIDToAssetPath(targetGUID);
+						listSceneAssetPath.Add(scenePath);
+					}
+				}
+
+				///查找首个可读写的Simulator场景文件，优先级如下：
+				///#1 可读写的Package中【Packages/com.threeyes.alivecursor.sdk/Threeyes/HubSimulator/AliveCursorHub_Simulator.unity】
+				string sceneAssetInPackage = listSceneAssetPath.FirstOrDefault((s) => s.StartsWith(PackageSDKPath));
+				if (sceneAssetInPackage.NotNullOrEmpty())
+				{
+					listSceneAssetPath.Remove(sceneAssetInPackage);
+					if (CheckIfPackageAssetReadWriteable(sceneAssetInPackage))//检查是否可读写
+					{
+						simulatorSceneAssetRealPath = sceneAssetInPackage;
+					}
+				}
+				///#2 Asset文件夹中，有以下2中存在形式：
+				///——Samples中【Assets/Samples/AliveCursorSDK/1.0.6/HubSimulator/AliveCursorHub_Simulator.unity】
+				///——开发程序中的位置
+				if (simulatorSceneAssetRealPath.IsNullOrEmpty())
+				{
+					string sceneAssetInAsset = listSceneAssetPath.FirstOrDefault();
+					if (sceneAssetInAsset.NotNullOrEmpty())
+					{
+						if (sceneAssetInAsset.StartsWith(SamplesSDKPath))//如果是Sample中的文件
+						{
+							//获取Sample文件夹中SDK的版本
+							string assetVersion = sceneAssetInAsset.Replace(SamplesSDKPath + "/", "");
+							assetVersion = assetVersion.Substring(0, assetVersion.IndexOf("/"));
+							PackageInfo packageInfoSDK = GetSDKPackageInfo();//获取当前SDK的version（PS：如果SDK在Project（管理程序），则返回可能为空）
+							if (packageInfoSDK != null)
+							{
+								string curSDKVersion = packageInfoSDK.version;
+								if (curSDKVersion != assetVersion)//如果Asset/Samples中的版本与Package中的版本不一致，则不报错，通过Warning提示更新。（Modder在PackageManager中点击Update后，会自动升级到最新版本并删除旧版本）
+								{
+									Debug.LogWarning($"Please open PackageManager window and update the Simulator assets to latest version [{curSDKVersion}] via AliveCursorSDK/Samples!");
+								}
+							}
+						}
+
+						simulatorSceneAssetRealPath = sceneAssetInAsset;
+					}
+					else//无法找到：提醒导入
+					{
+						Debug.LogError("Can't find Simulator Scene in project! Please open PackageManager window and import the latest Simulator assets via AliveCursorSDK/Samples!");
+					}
+				}
+
+				if (simulatorSceneAssetRealPath.NotNullOrEmpty())
+				{
+					//	Debug.Log("Find Simulator scene in " + simulatorSceneAssetRealPath);
+					EditorSceneManager.OpenScene(simulatorSceneAssetRealPath, OpenSceneMode.Single);
+					isSimulaterHubSceneLoaded = true;
 				}
 			}
-			if (cacheSimulatorSceneFilePath.NotNullOrEmpty())
+			catch (System.Exception e)
 			{
-				EditorSceneManager.OpenScene(cacheSimulatorSceneFilePath, OpenSceneMode.Single);
-				isSimulaterHubSceneLoaded = true;
-			}
-			else
-			{
-				Debug.LogError("Can't find Simulator Manager Scene!");
+				Debug.LogError("Failed to open Simulator scene with error: " + e);
 			}
 			return isSimulaterHubSceneLoaded;
+		}
+
+		const string SamplesSDKPath = "Assets/Samples/AliveCursorSDK";
+		const string PackageSDKPath = "Packages/com.threeyes.alivecursor.sdk";//在Package中的sdk路径（不管是否Embedded都是这个路径）
+		static PackageInfo GetSDKPackageInfo()
+		{
+			return PackageInfo.FindForAssetPath(PackageSDKPath);
+		}
+		/// <summary>
+		/// 检查Asset是否为ReadOnly（如存储在Library/PackageCache文件夹中）
+		/// </summary>
+		/// <param name="assetPath"></param>
+		static bool CheckIfPackageAssetReadWriteable(string assetPath)
+		{
+			bool canReadWrite = false;
+			if (assetPath.NotNullOrEmpty())
+			{
+				//检查是否为Package资源可读写的相关信息（https://forum.unity.com/threads/check-if-asset-inside-package-is-readonly.900902/）
+				PackageInfo packageInfo = PackageInfo.FindForAssetPath(assetPath);//通过资源找到对应的Package信息（后期可从中获取版本信息）（可能为空）
+				if (packageInfo != null)
+				{
+					var packageSource = packageInfo.source;
+					///只有local及embeded的文件可读写，原因：https://github.com/microsoft/MixedReality-WebRTC/issues/526）
+					///-注意事项：如果通过 Embedded 方式导入到Package文件夹中，则可以直接访问
+					canReadWrite = packageSource == PackageSource.Embedded || packageSource == PackageSource.Local;
+				}
+			}
+			return canReadWrite;
 		}
 
 		void OnBuildButtonClick(ClickEvent evt)

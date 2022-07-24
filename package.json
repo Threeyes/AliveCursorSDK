@@ -1,7 +1,7 @@
 {
   "name": "com.threeyes.alivecursor.sdk",
   "displayName": "AliveCursorSDK",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "unity": "2021.3",
   "description": "SDK for AliveCursor.",
   "keywords": [
@@ -51,6 +51,11 @@
     "com.unity.modules.wind": "1.0.0"
   },
   "samples": [
+    {
+      "displayName": "Simulator",
+      "description": "Simulator",
+      "path": "Threeyes/HubSimulator"
+    },
     {
       "displayName": "Liquid",
       "description": "Liquid",
