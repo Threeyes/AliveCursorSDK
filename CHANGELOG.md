@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.7]
+- Fix error when your try to open simulator scene from none embed package.
+- 
 ## [1.0.6]
 - Update EventPlayer samples.
 
