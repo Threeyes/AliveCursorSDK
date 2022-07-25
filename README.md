@@ -48,6 +48,10 @@
     }
 }
 ```
++ Make sure `Packages/manifest.json` contain one and only one External Script Editor that you are using in `Preferences` Window/External Tools (eg:VisualStudio):
+
+![image](https://user-images.githubusercontent.com/13210990/180822147-5a917199-279f-4cbb-a073-32e5078e2709.png)
+
 + Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip) zip file, extract it and replace project's origin ProjectSettings folder.
 + Open the project.
 
