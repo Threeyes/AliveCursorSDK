@@ -55,9 +55,11 @@ public class AC_StateMachineBehaviour : StateMachineBehaviour
 		CursorStateChanged.Execute(new AC_CursorStateInfoEx(cursorState, AC_CursorStateInfo.StateChange.Exit));
 	}
 
+#if UNITY_EDITOR
 	bool isDebugLog =
 	//true;
 	false;
+#endif
 	void DebugLog(string content)
 	{
 #if UNITY_EDITOR

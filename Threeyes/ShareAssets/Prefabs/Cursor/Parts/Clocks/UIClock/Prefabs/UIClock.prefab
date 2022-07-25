@@ -464,7 +464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4ac4e69019389b14aa1b5a6d19d1a045, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5b84379f71f1f1d4094367dfdadae1b7, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -878,6 +878,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be1f8439039aa5943a867d37288cbed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultConfig:
+    increaseTweenDuration: 1
+    increaseTweenEaseType: 24
+    rollbackTweenDuration: 1
+    rollbackTweenEaseType: 9
+  soOverrideConfig: {fileID: 0}
   onHourChange:
     m_PersistentCalls:
       m_Calls: []
@@ -932,8 +938,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  easeIncrease: 24
-  easeRollback: 9
   lastHour: 0
   curHour: 0
   lastMinute: 0

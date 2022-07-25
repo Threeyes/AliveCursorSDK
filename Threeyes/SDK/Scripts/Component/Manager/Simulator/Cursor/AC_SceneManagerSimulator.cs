@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class AC_SceneManagerSimulator : AC_SceneManagerBase<AC_SceneManagerSimulator>
 {
 	public const string SimulatorSceneName = "AliveCursorHub_Simulator";
-	public const string SimulatorScenePath = "Threeyes/HubSimulator/" + SimulatorSceneName;
 
 	private void Start()
 	{
