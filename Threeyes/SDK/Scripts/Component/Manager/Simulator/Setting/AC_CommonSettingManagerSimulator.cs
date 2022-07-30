@@ -1,9 +1,17 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Data;
 using UnityEngine;
 public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_CommonSettingManagerSimulator>
 {
+	[Space]
+	[InfoBox(
+	"-Press the following key to change setting value:\r\n" +
+	"'-' -> Shrink cursor\r\n" +
+	"'=' ->Enlarge cursor")]
+	public string dummyString;//Use this to make NaughtyAttributes work
+
 	void Start()
 	{
 		Init(false);//模拟被调用
@@ -31,6 +39,18 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 	{
 		if (!hasInit)
 			return;
+
+		///KeyChangeValue:
+		///#Change cursor size by -/=
+		if (Input.GetKeyDown(KeyCode.Minus))
+		{
+			Config.cursorAppearance_CursorSize.Value -= 0.5f;
+		}
+		if (Input.GetKeyDown(KeyCode.Equals))
+		{
+			Config.cursorAppearance_CursorSize.Value += 0.5f;
+		}
+
 
 		NotifyValueIfChanged(Config.cursorAppearance_IsHideOnTextInput, ref lastIsHideOnTextInput);
 		NotifyValueIfChanged(Config.cursorAppearance_CursorSize, ref lastCursorSize);
