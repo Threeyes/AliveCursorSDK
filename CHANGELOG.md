@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0]
+- Update AC_VisualEffectHelper.
+
+## [1.0.9]
+- Add shortcut key to change cursor size in simulator scene.
+
 ## [1.0.8]
 - Fix:
 >- 2D Clock missing BackGround Image.
