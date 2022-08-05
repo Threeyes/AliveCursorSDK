@@ -48,7 +48,7 @@ MonoBehaviour:
   soActionCollection: {fileID: 11400000, guid: 07013d2a8bb3f8a48b7516f72b206373, type: 2}
   actionTargetLeftButton: {fileID: 2412534872860645800}
   actionTargetRightButton: {fileID: 2412534872860645800}
-  actionTargetMiddleButton: {fileID: 0}
+  actionTargetMiddleButton: {fileID: 955969844067918127}
   actionTargetXButton1: {fileID: 0}
   actionTargetXButton2: {fileID: 0}
   actionTargetWheelScroll: {fileID: 0}

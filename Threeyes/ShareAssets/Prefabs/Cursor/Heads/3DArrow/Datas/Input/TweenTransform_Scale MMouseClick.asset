@@ -1,0 +1,488 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f9f7444bf081e641a867ac2af68ffe2, type: 3}
+  m_Name: TweenTransform_Scale MMouseClick
+  m_EditorClassIdentifier: 
+  remark: 
+  isActiveEnter: 1
+  isActiveExit: 1
+  enterConfig:
+    endValue: {x: 1, y: 1, z: 0.5}
+    duration: 0.15
+    delay: 0
+    easeType: 27
+    demonstrateEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.05
+        value: 0.21940884
+        inSlope: 4.388177
+        outSlope: 4.388177
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.1
+        value: 0.40882805
+        inSlope: 3.7883842
+        outSlope: 3.7883842
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.15
+        value: 0.5702837
+        inSlope: 3.2291129
+        outSlope: 3.2291129
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.2
+        value: 0.7058022
+        inSlope: 2.71037
+        outSlope: 2.71037
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.25
+        value: 0.8174097
+        inSlope: 2.23215
+        outSlope: 2.23215
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.3
+        value: 0.90713227
+        inSlope: 1.794451
+        outSlope: 1.794451
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.35
+        value: 0.9769962
+        inSlope: 1.3972788
+        outSlope: 1.3972788
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.4
+        value: 1.0290275
+        inSlope: 1.0406253
+        outSlope: 1.0406253
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.45
+        value: 1.0652525
+        inSlope: 0.72450185
+        outSlope: 0.72450185
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1.0876975
+        inSlope: 0.44889915
+        outSlope: 0.44889915
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.55
+        value: 1.0983884
+        inSlope: 0.2138185
+        outSlope: 0.2138185
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.6
+        value: 1.0993516
+        inSlope: 0.019264217
+        outSlope: 0.019264217
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.65
+        value: 1.0926133
+        inSlope: -0.13476624
+        outSlope: -0.13476624
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.7
+        value: 1.0801996
+        inSlope: -0.24827474
+        outSlope: -0.24827474
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.75
+        value: 1.0641365
+        inSlope: -0.3212618
+        outSlope: -0.3212618
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.8
+        value: 1.0464506
+        inSlope: -0.3537177
+        outSlope: -0.3537177
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.85
+        value: 1.0291677
+        inSlope: -0.34565917
+        outSlope: -0.34565917
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.9
+        value: 1.0143142
+        inSlope: -0.29706985
+        outSlope: -0.29706985
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.95
+        value: 1.0039163
+        inSlope: -0.20795818
+        outSlope: -0.20795818
+        tangentMode: 35
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    loopType: 0
+    loops: 1
+    id: 
+    isRelative: 0
+    isFrom: 0
+    isIndependentUpdate: 0
+    autoKill: 0
+    isCompleteOnKill: 0
+    options:
+      tweenType: 1
+      vibrato: 10
+      snapping: 0
+      elasticity: 1
+      randomness: 90
+      fadeOut: 1
+    tweenType: 1
+    vibrato: 10
+    snapping: 0
+    elasticity: 1
+    randomness: 90
+    fadeOut: 1
+    transformType: 3
+    isLocal: 1
+    rotateMode: 0
+  exitConfig:
+    endValue: {x: 1, y: 1, z: 1}
+    duration: 0.15
+    delay: 0
+    easeType: 6
+    demonstrateEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    loopType: 0
+    loops: 1
+    id: 
+    isRelative: 0
+    isFrom: 0
+    isIndependentUpdate: 0
+    autoKill: 0
+    isCompleteOnKill: 0
+    options:
+      tweenType: 1
+      vibrato: 10
+      snapping: 0
+      elasticity: 1
+      randomness: 90
+      fadeOut: 1
+    tweenType: 1
+    vibrato: 10
+    snapping: 0
+    elasticity: 1
+    randomness: 90
+    fadeOut: 1
+    transformType: 3
+    isLocal: 1
+    rotateMode: 0
+  savedEnterConfig:
+    endValue: {x: 0, y: 0, z: 0}
+    duration: 1
+    delay: 0
+    easeType: 6
+    demonstrateEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    loopType: 0
+    loops: 1
+    id: 
+    isRelative: 0
+    isFrom: 0
+    isIndependentUpdate: 0
+    autoKill: 0
+    isCompleteOnKill: 0
+    options:
+      tweenType: 1
+      vibrato: 10
+      snapping: 0
+      elasticity: 1
+      randomness: 90
+      fadeOut: 1
+    tweenType: 1
+    vibrato: 10
+    snapping: 0
+    elasticity: 1
+    randomness: 90
+    fadeOut: 1
+    transformType: 1
+    isLocal: 1
+    rotateMode: 0
+  savedExitConfig:
+    endValue: {x: 0, y: 0, z: 0}
+    duration: 1
+    delay: 0
+    easeType: 6
+    demonstrateEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customEaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    loopType: 0
+    loops: 1
+    id: 
+    isRelative: 0
+    isFrom: 0
+    isIndependentUpdate: 0
+    autoKill: 0
+    isCompleteOnKill: 0
+    options:
+      tweenType: 1
+      vibrato: 10
+      snapping: 0
+      elasticity: 1
+      randomness: 90
+      fadeOut: 1
+    tweenType: 1
+    vibrato: 10
+    snapping: 0
+    elasticity: 1
+    randomness: 90
+    fadeOut: 1
+    transformType: 1
+    isLocal: 1
+    rotateMode: 0
+  transformType: 3

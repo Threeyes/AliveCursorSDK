@@ -15,8 +15,10 @@ MonoBehaviour:
   soActionLeftButton: {fileID: 11400000, guid: 596c02da68bd35b40bc89782a70b45b8, type: 2}
   soActionRightButton: {fileID: 11400000, guid: d1e94889765913245b2afd0dcf5bbaa2,
     type: 2}
-  soActionMiddleButton: {fileID: 0}
+  soActionMiddleButton: {fileID: 11400000, guid: 3f6220edad547454ebc8a7c645f45ce3,
+    type: 2}
   soActionXButton1: {fileID: 0}
   soActionXButton2: {fileID: 0}
   soActionWheelScroll: {fileID: 0}
   soActionMove: {fileID: 0}
+  soActionDrag: {fileID: 0}
