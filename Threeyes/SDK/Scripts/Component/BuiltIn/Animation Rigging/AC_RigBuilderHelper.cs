@@ -14,7 +14,7 @@ using NaughtyAttributes;
 /// PS：更改光标大小/光标显隐后，RigBuilder的joints会出现错位（因为性能优化，更改缩放不会更新Joint： https://forum.unity.com/threads/how-can-i-override-scale-using-animation-rigging.770219/#post-7277947）
 /// </summary>
 public class AC_RigBuilderHelper : ComponentHelperBase<RigBuilder>,
-	IAC_CommonSetting_IsCursorActiveHandler,
+	IAC_CommonSetting_IsAliveCursorActiveHandler,
 	IAC_CommonSetting_CursorSizeHandler,
 	IAC_SystemWindow_ChangedHandler
 {
@@ -29,7 +29,7 @@ public class AC_RigBuilderHelper : ComponentHelperBase<RigBuilder>,
 	{
 		RebuildJoint();
 	}
-	public void OnIsCursorActiveChanged(bool isShow)
+	public void OnIsAliveCursorActiveChanged(bool isShow)
 	{
 		if (isShow)
 			RebuildJoint();

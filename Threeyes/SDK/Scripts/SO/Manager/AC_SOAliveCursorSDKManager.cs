@@ -42,26 +42,38 @@ public class AC_SOAliveCursorSDKManager : SOInstacneBase<AC_SOAliveCursorSDKMana
 			EditorUtility.SetDirty(Instance);
 		}
 	}
-	public bool HubSimulator_UseAssistant
+	public bool HubSimulator_ShowAssistantGizmo
 	{
 		get
 		{
-			return hubSimulator_UseAssistant;
+			return hubSimulator_ShowAssistantGizmo;
 		}
 		set
 		{
-			hubSimulator_UseAssistant = value;
+			hubSimulator_ShowAssistantGizmo = value;
 			EditorUtility.SetDirty(Instance);
 		}
 	}
-
+	public bool HubSimulator_ShowAssistantInfo
+	{
+		get
+		{
+			return hubSimulator_ShowAssistantInfo;
+		}
+		set
+		{
+			hubSimulator_ShowAssistantInfo = value;
+			EditorUtility.SetDirty(Instance);
+		}
+	}
 	[Expandable] [SerializeField] protected AC_SOWorkshopItemInfo curWorkshopItemInfo;
 
 	[Header("ItemManagerWindow")]
 	[SerializeField] protected bool itemWindow_IsPreviewGif = false;
 
 	[Header("HubSimulator")]
-	[SerializeField] protected bool hubSimulator_UseAssistant = false;
+	[SerializeField] protected bool hubSimulator_ShowAssistantGizmo = true;
+	[SerializeField] protected bool hubSimulator_ShowAssistantInfo = true;
 
 	#endregion
 }

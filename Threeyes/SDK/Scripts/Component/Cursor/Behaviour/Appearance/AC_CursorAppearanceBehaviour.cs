@@ -14,7 +14,8 @@ public class AC_CursorAppearanceBehaviour : AC_BehaviourBase,
 
 	//#Run Time
 	protected AC_SystemCursorAppearanceType lastMatchCursorAppearanceType = AC_SystemCursorAppearanceType.None;
-
+	protected bool lastSystemCursorShowingState = false;
+	public BoolEvent onSystemCursorShowHide;//Triggered when SystemCursor show/hide
 	public BoolEvent onAppearanceEnterExit;//Triggered when the target appearance enter/exit
 
 	#endregion
@@ -24,6 +25,14 @@ public class AC_CursorAppearanceBehaviour : AC_BehaviourBase,
 	bool isAppearanceChanged = false;
 	public virtual void OnSystemCursorAppearanceChanged(bool isSystemCursorShowing, AC_SystemCursorAppearanceInfo systemCursorAppearanceInfo)
 	{
+		//#1 SystemCursorShowingState
+		if (isSystemCursorShowing != lastSystemCursorShowingState)
+		{
+			onSystemCursorShowHide.Invoke(isSystemCursorShowing);
+			lastSystemCursorShowingState = isSystemCursorShowing;
+		}
+
+		//#2 SystemCursorAppearanceType
 		AC_SystemCursorAppearanceType curCursorAppearanceType = systemCursorAppearanceInfo.systemCursorAppearanceType;
 		///Logic:
 		///1.Change to desire appearance: Play

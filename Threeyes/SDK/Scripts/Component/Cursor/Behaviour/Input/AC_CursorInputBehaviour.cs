@@ -30,7 +30,8 @@ public class AC_CursorInputBehaviour : AC_BehaviourBase,
 	public FloatEvent onWheelScrollDownUp;//Triggered when wheel get scrolled (>0 is Up, <0 is Down)
 	public UnityEvent onMove;//Triggered when the mouse is moved
 	public BoolEvent onDragStartFinish;//Triggered when the mouse drag start/finish
-									   //ToAdd: onMouseMoveStartStop
+
+	//ToAdd: onMouseMoveStartStop
 
 	#endregion
 

@@ -69,10 +69,14 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 		Label labelAgreement;//Steam上传相关协议，可以点击
 
+		//——SDK Info Group——
+		Label labelSDKVersion;
+		Button buttonUpdateSDK;
+
 		//——Runtime——
 		public List<AC_SOWorkshopItemInfo> listValidItemInfo = new List<AC_SOWorkshopItemInfo>();//扫描到的信息
 		AC_SOWorkshopItemInfo curSOWorkshopItemInfo;
-		private static readonly Vector2 k_MinWindowSize = new Vector2(450, 700);
+		private static readonly Vector2 k_MinWindowSize = new Vector2(450, 600);
 
 		[MenuItem("Alive Cursor/Item Manager")]
 		public static void OpenWindow()
@@ -80,6 +84,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			var window = GetWindow<AC_ItemManagerWindow>("Item Manager");
 			window.minSize = k_MinWindowSize;
 		}
+
+
 		[MenuItem("Alive Cursor/Add Simulator Scene")]
 		public static void RunCurSceneWithSimulator()
 		{
@@ -171,9 +177,19 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			labelAgreement.RegisterCallback<ClickEvent>(OnAgreementLabelClick);
 			progressBarUpload = rootVisualElement.Q<ProgressBar>("UploadProcessBar");
 
+			//——SDK Info Group——
+			labelSDKVersion = rootVisualElement.Q<Label>("SDKVersionLabel");
+			buttonUpdateSDK = rootVisualElement.Q<Button>("UpdateSDKButton");
+			buttonUpdateSDK.RegisterCallback<ClickEvent>(OnUpdateSDKButtonClick);
+
 			//InitUI
 			InitUI(SOManagerInst.CurWorkshopItemInfo);
+
+
+			//版本提示。ToAdd：增加Package更新后执行
+			InitSDKVersionUI();
 		}
+
 
 		#region UpdateUI
 		/// <summary>
@@ -300,6 +316,32 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			UpdatePreviewHelperBoxStateFunc();
 			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
+
+		void InitSDKVersionUI()
+		{
+			buttonUpdateSDK.Show(false);
+
+			string labelContent = "";
+			PackageInfo packageInfoSDK = GetSDKPackageInfo();
+			if (packageInfoSDK != null)
+			{
+				labelContent = $"SDK Version: {packageInfoSDK.version}.";
+				string latestVersion = packageInfoSDK.versions?.latest;
+
+				if (latestVersion.NotNullOrEmpty() && packageInfoSDK.version != latestVersion)//有不同版本：提示更新
+				{
+					labelContent += $" The latest version is <color=orange>{latestVersion}</color>";
+					buttonUpdateSDK.Show(true);
+				}
+			}
+			labelSDKVersion.text = labelContent;
+
+		}
+		void OnUpdateSDKButtonClick(ClickEvent evt)
+		{
+			Client.Add(SDKIdentifier);//更新到最新版。（无论成功失败都会重新刷新UI并调用InitSDKVersionUI，因此不需要监听回调）
+		}
+
 		#endregion
 
 		#region Callback
@@ -679,8 +721,15 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			if (!curSOWorkshopItemInfo)
 				return;
 
+			//退出播放
+			if (EditorApplication.isPlaying)
+			{
+				EditorApplication.isPlaying = false;
+			}
+
 			if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())//提示用户保存Scene
 				return;
+
 
 			//#1 尝试打开模拟场景
 			bool isSimulaterHubSceneLoaded = OpenSimulatorScene_Solo();
@@ -708,7 +757,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 				//不缓存，避免升级Sample版本导致缓存路径变化
 				string simulatorSceneAssetRealPath = null;
 
-				//查找项目中所以可能存在的资源文件路径
+				//查找项目中所以可能存在的资源文件路径(Assets或Packages文件夹）
 				List<string> listSceneAssetPath = new List<string>();
 				foreach (string targetGUID in AssetDatabase.FindAssets(AC_SceneManagerSimulator.SimulatorSceneName))
 				{
@@ -776,8 +825,13 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			return isSimulaterHubSceneLoaded;
 		}
 
+		const string SDKIdentifier = "com.threeyes.alivecursor.sdk";
 		const string SamplesSDKPath = "Assets/Samples/AliveCursorSDK";
-		const string PackageSDKPath = "Packages/com.threeyes.alivecursor.sdk";//在Package中的sdk路径（不管是否Embedded都是这个路径）
+		const string PackageSDKPath = "Packages/" + SDKIdentifier;//在Package中的sdk路径（不管是否Embedded都是这个路径）
+		/// <summary>
+		/// 返回Packages中的SDK信息
+		/// </summary>
+		/// <returns></returns>
 		static PackageInfo GetSDKPackageInfo()
 		{
 			return PackageInfo.FindForAssetPath(PackageSDKPath);

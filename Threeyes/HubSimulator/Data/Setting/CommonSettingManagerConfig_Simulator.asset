@@ -69,8 +69,8 @@ MonoBehaviour:
         useRange: 0
         minValue: 0
         maxValue: 0
-    notifySetting_IsActiveAliveCursor:
-      value: 1
+    notifySetting_IsAliveCursorActive:
+      value: 0
       defaultValue: 0
     notifySetting_IsSupportMultiDisplay:
       value: 1

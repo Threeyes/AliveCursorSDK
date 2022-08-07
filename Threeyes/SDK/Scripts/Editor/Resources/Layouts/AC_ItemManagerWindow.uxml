@@ -61,5 +61,10 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>
+        <ui:VisualElement name="Gap" class="HorizontalGap" style="margin-left: 0; margin-right: 0; padding-top: 2px;" />
+        <ui:VisualElement name="SDKInfoGroup" style="align-items: stretch; justify-content: space-around; flex-direction: row;">
+            <ui:Label text="Version:" display-tooltip-when-elided="true" name="SDKVersionLabel" />
+            <ui:Button text="Update" display-tooltip-when-elided="true" name="UpdateSDKButton" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

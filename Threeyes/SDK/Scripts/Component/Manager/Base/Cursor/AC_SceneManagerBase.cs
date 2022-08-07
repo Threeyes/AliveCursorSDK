@@ -26,7 +26,9 @@ public class AC_SceneManagerBase<T> : AC_ManagerWithLifeCycleBase<T>, IAC_SceneM
 	{
 		//#1.调用Controller的Init       
 		aliveCursor.Init();//优先初始化AC
+
 		//按顺序调用各Manager.OnModInit
+		AC_ManagerHolder.CommonSettingManager.OnModInit(curModScene, aliveCursor);
 		AC_ManagerHolder.EnvironmentManager.OnModInit(curModScene, aliveCursor);
 		AC_ManagerHolder.TransformManager.OnModInit(curModScene, aliveCursor);
 		AC_ManagerHolder.StateManager.OnModInit(curModScene, aliveCursor);
@@ -38,6 +40,7 @@ public class AC_SceneManagerBase<T> : AC_ManagerWithLifeCycleBase<T>, IAC_SceneM
 	protected virtual void DeInitCursor(AC_AliveCursor aliveCursor)
 	{
 		//#1.调用Controller的Deinit
+		AC_ManagerHolder.CommonSettingManager.OnModDeinit(curModScene, aliveCursor);
 		AC_ManagerHolder.EnvironmentManager.OnModDeinit(curModScene, aliveCursor);
 		AC_ManagerHolder.TransformManager.OnModDeinit(curModScene, aliveCursor);
 		AC_ManagerHolder.StateManager.OnModDeinit(curModScene, aliveCursor);

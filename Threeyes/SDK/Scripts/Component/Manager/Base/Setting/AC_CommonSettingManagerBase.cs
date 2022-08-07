@@ -1,6 +1,7 @@
 using System;
 using Threeyes.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOCommonSettingManagerConfig, AC_CommonSettingConfigInfo>, IAC_CommonSettingManager
 	where T : AC_CommonSettingManagerBase<T>
@@ -21,10 +22,11 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 	public bool IsVSyncActive { get { return Config.generalSetting_IsActiveVSync.Value; } }
 	public int TargetFrameRate { get { return Config.generalSetting_TargetFrameRate.Value; } }
 
-	public bool IsCursorActive { get { return Config.notifySetting_IsActiveAliveCursor.Value; } }
+	public bool IsCursorActive { get { return Config.notifySetting_IsAliveCursorActive.Value; } }
 	public bool SupportMultiDisplay { get { return Config.notifySetting_IsSupportMultiDisplay.Value; } }
 	#endregion
 
+	#region Data Events
 	public override void InitEvent()
 	{
 		Config.cursorAppearance_IsHideOnTextInput.actionValueChanged += OnIsHideOnTextInputChanged;
@@ -42,7 +44,7 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 		Config.generalSetting_IsActiveVSync.actionValueChanged += OnIsVSyncChanged;
 		Config.generalSetting_TargetFrameRate.actionValueChanged += OnTargetFrameRateChanged;
 
-		Config.notifySetting_IsActiveAliveCursor.actionValueChanged += OnActiveAliveCursorChanged;
+		Config.notifySetting_IsAliveCursorActive.actionValueChanged += OnActiveAliveCursorChanged;
 		Config.notifySetting_IsSupportMultiDisplay.actionValueChanged += OnIsSupportMultiDisplayChanged;
 	}
 
@@ -99,12 +101,25 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 
 	protected virtual void OnActiveAliveCursorChanged(bool value)
 	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsCursorActiveHandler>(inst => inst.OnIsCursorActiveChanged(value), includeHubScene: true);
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(value), includeHubScene: true);
 	}
 	protected virtual void OnIsSupportMultiDisplayChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsSupportMultiDisplayHandler>(inst => inst.OnIsSupportMultiDisplayChanged(value), includeHubScene: true);
 	}
+	#endregion
+
+	#region Callback
+	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
+	{
+		//通知AC是否激活（PS：在程序启动且被禁用时会被调用；运行期间不会无法切换Item）
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(Config.notifySetting_IsAliveCursorActive.Value), includeHubScene: true);
+	}
+
+	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
+	{
+	}
+	#endregion
 }
 
 #region Define
@@ -136,7 +151,7 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public IntData generalSetting_TargetFrameRate = new IntData(90, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为120可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
 
 	[Header("Notify Setting")]
-	public BoolData notifySetting_IsActiveAliveCursor = new BoolData(true);//启用AC
+	public BoolData notifySetting_IsAliveCursorActive = new BoolData(true);//启用AC
 	public BoolData notifySetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕
 
 	public AC_CommonSettingConfigInfo() { }

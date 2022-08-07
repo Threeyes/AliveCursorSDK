@@ -3,7 +3,7 @@
 /// 
 /// ToDo:暴露所有设置
 /// </summary>
-public interface IAC_CommonSettingManager
+public interface IAC_CommonSettingManager : IAC_Manager_ModInitHandler
 {
 	/// <summary>
 	/// Is hide when the cursor's appearance is input style?
@@ -117,9 +117,9 @@ public interface IAC_CommonSetting_TargetFrameRateHandler
 	void OnTargetFrameRateChanged(int value);
 }
 
-public interface IAC_CommonSetting_IsCursorActiveHandler
+public interface IAC_CommonSetting_IsAliveCursorActiveHandler
 {
-	void OnIsCursorActiveChanged(bool isActive);
+	void OnIsAliveCursorActiveChanged(bool isActive);
 }
 public interface IAC_CommonSetting_IsSupportMultiDisplayHandler
 {

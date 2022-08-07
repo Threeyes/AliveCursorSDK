@@ -25,10 +25,6 @@ where T : AC_TransformManagerBase<T>
 	{
 		ActiveController.Teleport(AC_ManagerHolder.SystemCursorManager.WorldPosition);//MoveToTargetPointAtOnce
 	}
-	public virtual void SetCursorActive(bool isActive)
-	{
-		AC_AliveCursor.Instance?.gameObject.SetActive(isActive);
-	}
 	#endregion
 
 	#region Unity Method
@@ -49,7 +45,7 @@ where T : AC_TransformManagerBase<T>
 	{
 		///Warning：
 		///1.Controller直接通过alivecursor的单例直接调用方法，这样方便Modder随时在任意状态调用DefaultTransformController（如不想覆盖Bored状态）
-		SetCursorActive(AC_ManagerHolder.CommonSettingManager.IsCursorActive);//ToUpdate：移动到AC_AliveCursor的相关Manager中
+		///2.因为场景可能有多个Controller，因此需要由Manager决定需要调用哪一个，而不是使用SendMessage
 		modController = aliveCursor.GetComponent<IAC_TransformController>();//尝试获取
 		ActiveController.OnModControllerInit();//初始化引用等（注意不能提前调用，否则会报错）
 	}

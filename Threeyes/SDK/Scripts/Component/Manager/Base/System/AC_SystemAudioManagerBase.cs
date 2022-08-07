@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class AC_SystemAudioManagerBase<T> : AC_ManagerBase<T>
 	, IAC_SystemAudioManager
 	, IAC_Manager_ModInitHandler
-	, IAC_CommonSetting_IsCursorActiveHandler
+	, IAC_CommonSetting_IsAliveCursorActiveHandler
 where T : AC_SystemAudioManagerBase<T>
 {
 	#region Interface
@@ -63,7 +63,7 @@ where T : AC_SystemAudioManagerBase<T>
 	}
 
 	protected bool commonSetting_IsCursorActive = true;
-	public void OnIsCursorActiveChanged(bool isActive)
+	public void OnIsAliveCursorActiveChanged(bool isActive)
 	{
 		commonSetting_IsCursorActive = isActive;
 	}

@@ -8,7 +8,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 	, IAC_SystemCursorManager
 	, IAC_CommonSetting_IsHideOnTextInputHandler,
 	IAC_CommonSetting_BoredDepthHandler,
-	IAC_CommonSetting_IsCursorActiveHandler
+	IAC_CommonSetting_IsAliveCursorActiveHandler
 	where T : AC_SystemCursorManagerBase<T>
 {
 	#region Interface
@@ -109,7 +109,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		commonSetting_BoredDepth = value;
 	}
 
-	public void OnIsCursorActiveChanged(bool isActive)
+	public void OnIsAliveCursorActiveChanged(bool isActive)
 	{
 		SetAllSystemCursorActive(!isActive);//反向显隐系统光标
 	}
