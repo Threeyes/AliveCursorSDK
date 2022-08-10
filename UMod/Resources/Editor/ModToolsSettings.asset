@@ -22,7 +22,7 @@ MonoBehaviour:
   syncDeveloperName: 0
   gameName: AliveCursor
   syncGameName: 0
-  gameVersion: 3.1.0
+  gameVersion: 3.1.1
   syncGameVersion: 1
   modFileExtension: .umod
   commandLineLaunchFormat: +mod=$PATH

@@ -67,6 +67,9 @@ public class AC_SystemInputManagerBase<T> : AC_ManagerBase<T>, IAC_SystemInputMa
 	//Mouse
 	protected virtual void OnMouseMove(AC_MouseEventExtArgs e)
 	{
+		if (!isAliveCursorActived)
+			return;
+
 		UpdateMouseInputInfo();
 
 		curCursorLocation = e.Location;
@@ -79,14 +82,19 @@ public class AC_SystemInputManagerBase<T> : AC_ManagerBase<T>, IAC_SystemInputMa
 		lastMouseLocation = e.Location;
 		AC_EventCommunication.SendMessage<IAC_SystemInput_MouseMoveHandler>(inst => inst.OnMouseMove(e));
 	}
-
 	protected virtual void OnMouseDownUp(AC_MouseEventExtArgs e)
 	{
+		if (!isAliveCursorActived)
+			return;
+
 		UpdateMouseInputInfo();
 		AC_EventCommunication.SendMessage<IAC_SystemInput_MouseButtonHandler>(inst => inst.OnMouseButton(e));
 	}
 	protected virtual void OnMouseDragStartFinish(AC_MouseEventExtArgs e, bool isStart)
 	{
+		if (!isAliveCursorActived)
+			return;
+
 		//PS：IsDragStart/IsDragFinish是自行加上，所以需要在这里赋值
 		if (isStart)
 			e.IsDragStart = true;
@@ -96,8 +104,20 @@ public class AC_SystemInputManagerBase<T> : AC_ManagerBase<T>, IAC_SystemInputMa
 	}
 	protected virtual void OnMouseWheel(AC_MouseEventExtArgs e)
 	{
+		if (!isAliveCursorActived)
+			return;
+
 		UpdateMouseWheelInfo();
 		AC_EventCommunication.SendMessage<IAC_SystemInput_MouseWheelHandler>(inst => inst.OnMouseWheel(e));
+	}
+
+	//Key
+	protected virtual void OnKeyDownUp(KeyCode keyCode, AC_KeyState keyState)
+	{
+		if (!isAliveCursorActived)
+			return;
+
+		UpdateKeyInputInfo(keyCode, keyState);
 	}
 
 	/// <summary>
@@ -111,14 +131,6 @@ public class AC_SystemInputManagerBase<T> : AC_ManagerBase<T>, IAC_SystemInputMa
 	{
 		lastMouseWheelEventTime = Time.time;
 	}
-
-	//Key
-	protected virtual void OnKeyDownUp(KeyCode keyCode, AC_KeyState keyState)
-	{
-		UpdateKeyInputInfo(keyCode, keyState);
-		//Debug.LogError(keyCode + " " + keyState);
-	}
-
 	void UpdateKeyInputInfo(KeyCode keyCode, AC_KeyState keyState)
 	{
 		lastKeyInputEventTime = Time.time;

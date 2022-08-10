@@ -17,7 +17,7 @@ MonoBehaviour:
       value: 0
       defaultValue: 0
     cursorAppearance_CursorSize:
-      value: 2
+      value: 2.5
       defaultValue: 0
       option:
         useRange: 1
@@ -50,16 +50,16 @@ MonoBehaviour:
         useRange: 1
         minValue: 0
         maxValue: 10
-    generalSetting_Localization:
-      value: English
-      defaultValue: 
-    generalSetting_Quality:
-      value: Ultra
-      defaultValue: 
-    generalSetting_ProcessPriority:
-      value: High
-      defaultValue: 
-    generalSetting_IsActiveVSync:
+    generalSetting_IsAliveCursorActive:
+      value: 1
+      defaultValue: 0
+    generalSetting_IsRunAtStartUp:
+      value: 0
+      defaultValue: 0
+    generalSetting_IsSupportMultiDisplay:
+      value: 1
+      defaultValue: 0
+    generalSetting_IsVSyncActive:
       value: 0
       defaultValue: 0
     generalSetting_TargetFrameRate:
@@ -69,9 +69,12 @@ MonoBehaviour:
         useRange: 0
         minValue: 0
         maxValue: 0
-    notifySetting_IsAliveCursorActive:
-      value: 0
-      defaultValue: 0
-    notifySetting_IsSupportMultiDisplay:
-      value: 1
-      defaultValue: 0
+    generalSetting_Localization:
+      value: English
+      defaultValue: 
+    generalSetting_Quality:
+      value: Ultra
+      defaultValue: 
+    generalSetting_ProcessPriority:
+      value: High
+      defaultValue: 

@@ -96,6 +96,27 @@ public interface IAC_CommonSetting_BoredDepthHandler
 	void OnBoredDepthChanged(float value);
 }
 
+public interface IAC_CommonSetting_IsAliveCursorActiveHandler
+{
+	void OnIsAliveCursorActiveChanged(bool isActive);
+}
+public interface IAC_CommonSetting_IsRunAtStartUpHandler
+{
+	void OnIsRunAtStartUpChanged(bool isActive);
+}
+
+public interface IAC_CommonSetting_IsSupportMultiDisplayHandler
+{
+	void OnIsSupportMultiDisplayChanged(bool isActive);
+}
+public interface IAC_CommonSetting_IsVSyncActiveHandler
+{
+	void OnIsVSyncActiveChanged(bool isActive);
+}
+public interface IAC_CommonSetting_TargetFrameRateHandler
+{
+	void OnTargetFrameRateChanged(int value);
+}
 public interface IAC_CommonSetting_LocalizationHandler
 {
 	void OnLocalizationChanged(string value);
@@ -107,21 +128,4 @@ public interface IAC_CommonSetting_QualityHandler
 public interface IAC_CommonSetting_ProcessPriorityHandler
 {
 	void OnProcessPriorityChanged(string value);
-}
-public interface IAC_CommonSetting_IsVSyncActiveHandler
-{
-	void OnIsVSyncActiveChanged(bool isActive);
-}
-public interface IAC_CommonSetting_TargetFrameRateHandler
-{
-	void OnTargetFrameRateChanged(int value);
-}
-
-public interface IAC_CommonSetting_IsAliveCursorActiveHandler
-{
-	void OnIsAliveCursorActiveChanged(bool isActive);
-}
-public interface IAC_CommonSetting_IsSupportMultiDisplayHandler
-{
-	void OnIsSupportMultiDisplayChanged(bool isActive);
 }

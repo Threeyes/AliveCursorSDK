@@ -17,13 +17,16 @@ public static class AC_WorkshopItemTool
         ulong itemId = 0;
         if (Directory.Exists(itemDirPath))
         {
+			if (PathTool.IsProjectDir(itemDirPath))//可能原因：SteamingAssets/Export文件，因为未上传，因此id无效
+				return itemId;
+
             DirectoryInfo directoryInfo = new DirectoryInfo(itemDirPath);
             ulong valueID;
             if (ulong.TryParse(directoryInfo.Name, out valueID))//通过Mod文件夹名获取对应的ItemId
                 itemId = valueID;
             else
-                Debug.LogError("Failed to convert ID from item dir: " + itemDirPath);//可能原因：SteamingAssets/Export文件
-        }
+                Debug.LogError("Failed to convert ID from item dir: " + itemDirPath);//可能原因：未上传文件
+		}
         return itemId;
     }
 

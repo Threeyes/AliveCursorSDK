@@ -19,11 +19,11 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 		get
 		{
 			//if (Instance.config == null)
-			return Instance.config = Instance.soOverrideConfig != null ? Instance.soOverrideConfig.config : Instance.defaultConfig;
+			return /*Instance.config =*/ Instance.soOverrideConfig != null ? Instance.soOverrideConfig.config : Instance.defaultConfig;
 			//return Instance.config;
 		}
 	}
-	TConfig config;//PS:不能是state，便于程序重置时自动清空(Bug:不能使用，因为程序调用问题可能会导致提前销毁而无法保存）
+	//TConfig config;//PS:不能是state，便于程序重置时自动清空(Bug:不能使用，因为程序调用问题可能会导致提前销毁而无法保存）
 
 	[SerializeField] protected TConfig defaultConfig;//Default config
 	[Expandable] [SerializeField] protected TSOConfig soOverrideConfig;//Override config

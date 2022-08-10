@@ -43,6 +43,8 @@ namespace Threeyes.Data
 #endif
 	public class DataOption : IDataOption
 	{
+		public DataOption() { }
+
 		public virtual IDataOption Init(MemberInfo memberInfo) { return this; }
 	}
 

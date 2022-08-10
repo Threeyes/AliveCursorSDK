@@ -53,7 +53,7 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	public void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 		modController = aliveCursor.GetComponent<IAC_StateController>();//尝试获取
-		//ToAdd：调用Controller.SetState以便同步调用SOAction到最新状态
+																		//ToAdd：调用Controller.SetState以便同步调用SOAction到最新状态
 	}
 
 	public void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
@@ -134,6 +134,9 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 
 		while (true)
 		{
+			if (!isAliveCursorActived)//等待被激活
+				yield return null;
+
 			if (!this)
 				yield break;
 
@@ -248,7 +251,7 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	[Foldout(foldoutName_Debug)] public bool isDebugStayActive = false;
 	[Foldout(foldoutName_Debug)] public bool isDebugTopNumberKeysChangeState = false;//Number keys on the top of the alphanumeric keyboard (Active PadNumberKeys instead incase you need to change Inspector field via these keys)
 	[Foldout(foldoutName_Debug)] public bool isDebugPadNumberKeysChangeState = false;//Keys on NumberPad
-	[Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
+	[Header("Check this will affect some state switching (eg: working to bored)!")] [Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
 
 	readonly protected Dictionary<KeyCode, AC_CursorState> debugDicTopNumberKey2State = new Dictionary<KeyCode, AC_CursorState>()
 	{

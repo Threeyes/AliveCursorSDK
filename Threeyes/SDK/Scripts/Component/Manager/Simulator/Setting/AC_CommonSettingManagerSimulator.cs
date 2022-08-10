@@ -27,12 +27,12 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 	float lastBored_DelayTime;
 	float lastBored_Depth;
 
-	bool lastIsActiveAliveCursor;
+	bool lastIsAliveCursorActive;
 	public override void Init(bool isFirstInit)
 	{
 		base.Init(isFirstInit);
 		lastCursorSize = Config.cursorAppearance_CursorSize.Value;
-		lastIsActiveAliveCursor = Config.notifySetting_IsAliveCursorActive.Value;
+		lastIsAliveCursorActive = Config.generalSetting_IsAliveCursorActive.Value;
 	}
 
 	private void Update()
@@ -62,7 +62,7 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 		NotifyValueIfChanged(Config.cursorState_Bored_DelayTime, ref lastBored_DelayTime);
 		NotifyValueIfChanged(Config.cursorState_Bored_Depth, ref lastBored_Depth);
 
-		NotifyValueIfChanged(Config.notifySetting_IsAliveCursorActive, ref lastIsActiveAliveCursor);
+		NotifyValueIfChanged(Config.generalSetting_IsAliveCursorActive, ref lastIsAliveCursorActive);
 	}
 
 	static void NotifyValueIfChanged<TValue>(BasicData<TValue> basicData, ref TValue lastValue)

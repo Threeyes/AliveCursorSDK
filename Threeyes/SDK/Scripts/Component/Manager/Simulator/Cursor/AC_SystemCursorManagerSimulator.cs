@@ -5,7 +5,7 @@ public class AC_SystemCursorManagerSimulator : AC_SystemCursorManagerBase<AC_Sys
 	[Space]
 	[InfoBox(
 		"-Press Left/Right Arrow key to loop through [No, ArrowCD]\r\n" +
-		"-Press DownArrow key to switch between None and last valid type" +
+		"-Press DownArrow key to switch between None and last valid type\r\n" +
 		"-Press UpArrow key to toggle system cursor activation")]
 	[SerializeField] protected bool isSystemCursorShowing_Simulator = true;
 	[SerializeField] protected AC_SystemCursorAppearanceType curSCAType_Simulator = AC_SystemCursorAppearanceType.Arrow;//当前模拟的系统光标类型

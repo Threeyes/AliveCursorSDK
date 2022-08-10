@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBase<T>
 	, IAC_SystemCursorManager
 	, IAC_CommonSetting_IsHideOnTextInputHandler,
-	IAC_CommonSetting_BoredDepthHandler,
-	IAC_CommonSetting_IsAliveCursorActiveHandler
+	IAC_CommonSetting_BoredDepthHandler
 	where T : AC_SystemCursorManagerBase<T>
 {
 	#region Interface
@@ -109,8 +108,9 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		commonSetting_BoredDepth = value;
 	}
 
-	public void OnIsAliveCursorActiveChanged(bool isActive)
+	protected override void OnIsAliveCursorActiveChangedFunc(bool isActive)
 	{
+		base.OnIsAliveCursorActiveChangedFunc(isActive);
 		SetAllSystemCursorActive(!isActive);//反向显隐系统光标
 	}
 	#endregion

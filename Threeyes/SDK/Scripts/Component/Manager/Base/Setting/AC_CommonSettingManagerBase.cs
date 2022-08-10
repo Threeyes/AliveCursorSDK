@@ -19,93 +19,96 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 	public string Localization { get { return Config.generalSetting_Localization.Value; } }
 	public string Quality { get { return Config.generalSetting_Quality.Value; } }
 	public string ProcessPriority { get { return Config.generalSetting_ProcessPriority.Value; } }
-	public bool IsVSyncActive { get { return Config.generalSetting_IsActiveVSync.Value; } }
+	public bool IsVSyncActive { get { return Config.generalSetting_IsVSyncActive.Value; } }
 	public int TargetFrameRate { get { return Config.generalSetting_TargetFrameRate.Value; } }
 
-	public bool IsCursorActive { get { return Config.notifySetting_IsAliveCursorActive.Value; } }
-	public bool SupportMultiDisplay { get { return Config.notifySetting_IsSupportMultiDisplay.Value; } }
+	public bool IsCursorActive { get { return Config.generalSetting_IsAliveCursorActive.Value; } }
+	public bool SupportMultiDisplay { get { return Config.generalSetting_IsSupportMultiDisplay.Value; } }
 	#endregion
 
 	#region Data Events
 	public override void InitEvent()
 	{
-		Config.cursorAppearance_IsHideOnTextInput.actionValueChanged += OnIsHideOnTextInputChanged;
-		Config.cursorAppearance_CursorSize.actionValueChanged += OnCursorSizeChanged;
+		Config.cursorAppearance_IsHideOnTextInput.actionValueChanged += OnDataIsHideOnTextInputChanged;
+		Config.cursorAppearance_CursorSize.actionValueChanged += OnDataCursorSizeChanged;
 
-		Config.cursorState_StandBy_IsActive.actionValueChanged += OnIsStandByActiveChanged;
-		Config.cursorState_StandBy_DelayTime.actionValueChanged += OnStandByDelayTimeChanged;
-		Config.cursorState_Bored_IsActive.actionValueChanged += OnIsBoredActiveChanged;
-		Config.cursorState_Bored_DelayTime.actionValueChanged += OnBoredDelayTimeChanged;
-		Config.cursorState_Bored_Depth.actionValueChanged += OnBoredDepthChanged;
+		Config.cursorState_StandBy_IsActive.actionValueChanged += OnDataIsStandByActiveChanged;
+		Config.cursorState_StandBy_DelayTime.actionValueChanged += OnDataStandByDelayTimeChanged;
+		Config.cursorState_Bored_IsActive.actionValueChanged += OnDataIsBoredActiveChanged;
+		Config.cursorState_Bored_DelayTime.actionValueChanged += OnDataBoredDelayTimeChanged;
+		Config.cursorState_Bored_Depth.actionValueChanged += OnDataBoredDepthChanged;
 
-		Config.generalSetting_Localization.actionValueChanged += OnLocalizationChanged;
-		Config.generalSetting_Quality.actionValueChanged += OnQualityChanged;
-		Config.generalSetting_ProcessPriority.actionValueChanged += OnProcessPriorityChanged;
-		Config.generalSetting_IsActiveVSync.actionValueChanged += OnIsVSyncChanged;
-		Config.generalSetting_TargetFrameRate.actionValueChanged += OnTargetFrameRateChanged;
-
-		Config.notifySetting_IsAliveCursorActive.actionValueChanged += OnActiveAliveCursorChanged;
-		Config.notifySetting_IsSupportMultiDisplay.actionValueChanged += OnIsSupportMultiDisplayChanged;
+		Config.generalSetting_IsAliveCursorActive.actionValueChanged += OnDataIsAliveCursorActiveChanged;
+		Config.generalSetting_IsRunAtStartUp.actionValueChanged += OnDataIsRunAtStartUpChanged;
+		Config.generalSetting_IsSupportMultiDisplay.actionValueChanged += OnDataIsSupportMultiDisplayChanged;
+		Config.generalSetting_IsVSyncActive.actionValueChanged += OnDataIsVSyncActiveChanged;
+		Config.generalSetting_TargetFrameRate.actionValueChanged += OnDataTargetFrameRateChanged;
+		Config.generalSetting_Localization.actionValueChanged += OnDataLocalizationChanged;
+		Config.generalSetting_Quality.actionValueChanged += OnDataQualityChanged;
+		Config.generalSetting_ProcessPriority.actionValueChanged += OnDataProcessPriorityChanged;
 	}
 
-	protected virtual void OnIsHideOnTextInputChanged(bool value)
+	protected virtual void OnDataIsHideOnTextInputChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsHideOnTextInputHandler>(inst => inst.OnIsHideOnTextInputChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnCursorSizeChanged(float value)
+	protected virtual void OnDataCursorSizeChanged(float value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_CursorSizeHandler>(inst => inst.OnCursorSizeChanged(value), includeHubScene: true);
 	}
 
-	protected virtual void OnIsStandByActiveChanged(bool value)
+	protected virtual void OnDataIsStandByActiveChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsStandByActiveHandler>(inst => inst.OnIsStandByActiveChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnStandByDelayTimeChanged(float value)
+	protected virtual void OnDataStandByDelayTimeChanged(float value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_StandByDelayTimeHandler>(inst => inst.OnStandByDelayTimeChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnIsBoredActiveChanged(bool value)
+	protected virtual void OnDataIsBoredActiveChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsBoredActiveHandler>(inst => inst.OnIsBoredActiveChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnBoredDelayTimeChanged(float value)
+	protected virtual void OnDataBoredDelayTimeChanged(float value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_BoredDelayTimeHandler>(inst => inst.OnBoredDelayTimeChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnBoredDepthChanged(float value)
+	protected virtual void OnDataBoredDepthChanged(float value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_BoredDepthHandler>(inst => inst.OnBoredDepthChanged(value), includeHubScene: true);
 	}
 
-	protected virtual void OnLocalizationChanged(string value)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_LocalizationHandler>(inst => inst.OnLocalizationChanged(value), includeHubScene: true);
-	}
-	protected virtual void OnQualityChanged(string value)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_QualityHandler>(inst => inst.OnQualityChanged(value), includeHubScene: true);
-	}
-	protected virtual void OnProcessPriorityChanged(string value)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_ProcessPriorityHandler>(inst => inst.OnProcessPriorityChanged(value), includeHubScene: true);
-	}
-	protected virtual void OnIsVSyncChanged(bool isActive)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsVSyncActiveHandler>(inst => inst.OnIsVSyncActiveChanged(isActive), includeHubScene: true);
-	}
-	protected virtual void OnTargetFrameRateChanged(int value)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_TargetFrameRateHandler>(inst => inst.OnTargetFrameRateChanged(value), includeHubScene: true);
-	}
-
-	protected virtual void OnActiveAliveCursorChanged(bool value)
+	protected virtual void OnDataIsAliveCursorActiveChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(value), includeHubScene: true);
 	}
-	protected virtual void OnIsSupportMultiDisplayChanged(bool value)
+	protected virtual void OnDataIsRunAtStartUpChanged(bool value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsRunAtStartUpHandler>(inst => inst.OnIsRunAtStartUpChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataIsSupportMultiDisplayChanged(bool value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsSupportMultiDisplayHandler>(inst => inst.OnIsSupportMultiDisplayChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataIsVSyncActiveChanged(bool isActive)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsVSyncActiveHandler>(inst => inst.OnIsVSyncActiveChanged(isActive), includeHubScene: true);
+	}
+	protected virtual void OnDataTargetFrameRateChanged(int value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_TargetFrameRateHandler>(inst => inst.OnTargetFrameRateChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataLocalizationChanged(string value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_LocalizationHandler>(inst => inst.OnLocalizationChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataQualityChanged(string value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_QualityHandler>(inst => inst.OnQualityChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataProcessPriorityChanged(string value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_ProcessPriorityHandler>(inst => inst.OnProcessPriorityChanged(value), includeHubScene: true);
 	}
 	#endregion
 
@@ -113,7 +116,7 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 		//通知AC是否激活（PS：在程序启动且被禁用时会被调用；运行期间不会无法切换Item）
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(Config.notifySetting_IsAliveCursorActive.Value), includeHubScene: true);
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(Config.generalSetting_IsAliveCursorActive.Value), includeHubScene: true);
 	}
 
 	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
@@ -144,15 +147,16 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public FloatData cursorState_Bored_Depth = new FloatData(5, new DataOption_Float(true, 0, 10));
 
 	[Header("General Setting")]//PS:(以下Option不能用枚举代替，因为可能会有变化（如多语言））
+
+	//Todo:将General Setting放到不受IsAliveCursorActive影响的UI区域中
+	public BoolData generalSetting_IsAliveCursorActive = new BoolData(true);//启用AC
+	public BoolData generalSetting_IsRunAtStartUp = new BoolData(false);//系统运行时自动启动
+	public BoolData generalSetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕
+	public BoolData generalSetting_IsVSyncActive = new BoolData(false);//垂直同步（打开可以减少电脑发热现象；低刷新率的用户关闭以增加流畅度 ）
+	public IntData generalSetting_TargetFrameRate = new IntData(90, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为120可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
 	public StringData generalSetting_Localization = new StringData("English");
 	public StringData generalSetting_Quality = new StringData("Ultra");
 	public StringData generalSetting_ProcessPriority = new StringData("High");
-	public BoolData generalSetting_IsActiveVSync = new BoolData(false);//垂直同步（打开可以减少电脑发热现象。；低刷新率的用户关闭以增加流畅度 ）
-	public IntData generalSetting_TargetFrameRate = new IntData(90, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为120可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
-
-	[Header("Notify Setting")]
-	public BoolData notifySetting_IsAliveCursorActive = new BoolData(true);//启用AC
-	public BoolData notifySetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕
 
 	public AC_CommonSettingConfigInfo() { }
 }

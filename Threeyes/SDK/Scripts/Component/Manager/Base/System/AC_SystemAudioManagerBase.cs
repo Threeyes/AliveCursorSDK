@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class AC_SystemAudioManagerBase<T> : AC_ManagerBase<T>
 	, IAC_SystemAudioManager
 	, IAC_Manager_ModInitHandler
-	, IAC_CommonSetting_IsAliveCursorActiveHandler
 where T : AC_SystemAudioManagerBase<T>
 {
 	#region Interface
@@ -57,17 +56,11 @@ where T : AC_SystemAudioManagerBase<T>
 	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 		//ToAdd:Hub中搜索实现接口的组件数量，如果为0，则该组件不更新，节省资源
+
 	}
 	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 	}
-
-	protected bool commonSetting_IsCursorActive = true;
-	public void OnIsAliveCursorActiveChanged(bool isActive)
-	{
-		commonSetting_IsCursorActive = isActive;
-	}
-
 	#endregion
 
 	#region Inner Method

@@ -1,7 +1,7 @@
 {
   "name": "com.threeyes.alivecursor.sdk",
   "displayName": "AliveCursorSDK",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "unity": "2021.3",
   "description": "SDK for AliveCursor.",
   "keywords": [

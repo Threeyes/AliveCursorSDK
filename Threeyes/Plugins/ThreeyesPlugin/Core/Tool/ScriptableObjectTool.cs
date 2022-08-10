@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using System.Reflection;
 using System.Linq;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 /// <summary>
 /// Bug:
 /// 1.如果使用了List<SO>而且本地没有对应的PersistentData，那会因为TargetValue的List没有克隆，从而导致直接修改List中的SO；如果本地有PersistentData那就没有这个问题（因为是修改实时Load的数据）。因此强烈建议不要用嵌套的SO实现！
@@ -109,7 +112,7 @@ public static class ScriptableObjectTool
 	/// <param name="bindingAttr"></param>
 	/// <param name="funcCopyFilter"></param>
 	/// <param name="maxDepth"></param>
-	public static void CopyFields(object srcObj, object dstObj, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Func<Type, MemberInfo, bool> funcCopyFilter = null, int maxDepth = 7, bool includeUnityObject = false)
+	static void CopyFields(object srcObj, object dstObj, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Func<Type, MemberInfo, bool> funcCopyFilter = null, int maxDepth = 7, bool includeUnityObject = false)
 	{
 		if (maxDepth == -1)
 			return;
@@ -178,17 +181,30 @@ public static class ScriptableObjectTool
 			}
 			else if (fieldType.IsClass)// 自定义Class -> Recursion (克隆并筛选)
 			{
-				if (SetFieldClone_UnityClass(fieldInfo, srcObj, dstObj))//针对Unity定制Class进行Clone
+				if (SetFieldClone_UnityClass(fieldInfo, srcObj, dstObj))//Unity定制Class:进行特殊Clone
 				{
 
 				}
 				else
 				{
-					//ToUpdate：遍历class并Clone其中的Gradient)
 					var srcFieldValue = fieldInfo.GetValue(srcObj);
-					var dstFieldValue = fieldInfo.GetValue(dstObj);
 					if (srcFieldValue != null)
 					{
+						var dstFieldValue = fieldInfo.GetValue(dstObj);
+
+						//PS:如果dstFieldValue为Null，则为其创建实例（可能原因：更改或新增字段）
+						if (dstFieldValue == null)
+						{
+							try
+							{
+								dstFieldValue = srcFieldValue.Copy();//使用第三方插件进行类克隆，能够避免克隆出错
+								fieldInfo.SetValue(dstObj, dstFieldValue);
+							}
+							catch (Exception e)
+							{
+								Debug.LogError("Copy src failed: " + e);
+							}
+						}
 						CopyFields(srcFieldValue, dstFieldValue, bindingAttr, funcCopyFilter, maxDepth - 1);
 					}
 				}
@@ -367,7 +383,6 @@ public static class ScriptableObjectTool
 			!listIgnoreFieldType.Any(t => t == fieldType);
 	}
 
-
 	///ToDelete
 	/////缺点：
 	/////1.如果是List<SO>,那SO就被整个替代，原有的引用也都不存在
@@ -404,67 +419,81 @@ public static class ScriptableObjectTool
 	//    }
 	//}
 
-	////保留UnityObject的相关引用，穷举复制其他类/值
+	//保留UnityObject的相关引用，穷举复制其他类/值
 	//public static object DoCopy(object src, Func<Type, MemberInfo, bool> funcCopyFilter = null, int maxDepth = 7)
 	//{
-	//    if (src == null)
-	//        return null;
+	//	if (src == null)
+	//		return null;
 
-	//    maxDepth--;
-	//    var srcType = src.GetType();
+	//	maxDepth--;
+	//	var srcType = src.GetType();
 
-	//    // Value type
-	//    if (srcType.IsValueType || srcType == typeof(string))
-	//    {
-	//        return src;
-	//    }
-	//    //type是UnityEngine.Object的子类：返回原引用，避免丢失（如Asset中的GameObject，Material、AudioSource等）
-	//    else if (typeof(UnityEngine.Object).IsAssignableFrom(srcType))
-	//    {
-	//        return src;
-	//    }
-	//    //ToAdd：List
-	//    else if (srcType.IsArray)// Array
-	//    {
-	//        Type elementType = srcType.GetElementType();
-	//        var array = src as Array;
-	//        Array copied = Array.CreateInstance(elementType, array.Length);
-	//        for (int i = 0; i < array.Length; i++)
-	//        {
-	//            copied.SetValue(DoCopy(array.GetValue(i), maxDepth: maxDepth), i);
-	//        }
-	//        return Convert.ChangeType(copied, src.GetType());
-	//    }
-	//    else if (srcType.IsClass)// 自定义Class -> Recursion
-	//    {
-	//        ////ToDelete
-	//        //foreach (MemberInfo memberInfo in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-	//        //{
-	//        //    if (memberInfo.Name == "actionPersistentChanged")
-	//        //        Debug.LogError(memberInfo.Name);
-	//        //}
-	//        if (maxDepth == -1)//跳出循环，直接赋空值
-	//            return null;
+	//	// Value type
+	//	if (srcType.IsValueType || srcType == typeof(string))
+	//	{
+	//		return src;
+	//	}
+	//	//type是UnityEngine.Object的子类：返回原引用，避免丢失（如Asset中的GameObject，Material、AudioSource等）
+	//	else if (typeof(UnityEngine.Object).IsAssignableFrom(srcType))
+	//	{
+	//		return src;
+	//	}
+	//	//ToAdd：List
+	//	else if (srcType.IsArray)// Array
+	//	{
+	//		Type elementType = srcType.GetElementType();
+	//		var array = src as Array;
+	//		Array copied = Array.CreateInstance(elementType, array.Length);
+	//		for (int i = 0; i < array.Length; i++)
+	//		{
+	//			copied.SetValue(DoCopy(array.GetValue(i), maxDepth: maxDepth), i);
+	//		}
+	//		return Convert.ChangeType(copied, src.GetType());
+	//	}
+	//	else if (srcType.IsClass)// 自定义Class -> Recursion
+	//	{
+	//		////ToDelete
+	//		//foreach (MemberInfo memberInfo in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+	//		//{
+	//		//    if (memberInfo.Name == "actionPersistentChanged")
+	//		//        Debug.LogError(memberInfo.Name);
+	//		//}
+	//		if (maxDepth == -1)//跳出循环，直接赋空值
+	//			return null;
 
-	//        var copy = Activator.CreateInstance(src.GetType());
-	//        foreach (FieldInfo fieldInfo in srcType.GetAllFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-	//        {
-	//            if (funcCopyFilter != null && !funcCopyFilter(srcType, fieldInfo))//忽略不能复制的
-	//                continue;
+	//		//PS:因为是调用特定Constructor，因此要先判断
+	//		try
+	//		{
+	//			var copy = Activator.CreateInstance(srcType);
+	//			foreach (FieldInfo fieldInfo in srcType.GetAllFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+	//			{
+	//				if (funcCopyFilter != null && !funcCopyFilter(srcType, fieldInfo))//忽略不能复制的
+	//					continue;
 
-	//            var srcFieldValue = fieldInfo.GetValue(src);
-	//            if (srcFieldValue != null)
-	//            {
-	//                var dstFieldValue = DoCopy(srcFieldValue, maxDepth: maxDepth);
-	//                fieldInfo.SetValue(copy, dstFieldValue);
-	//            }
-	//        }
-	//        return copy;
-	//    }
-	//    // Fallback
-	//    else
-	//    {
-	//        throw new ArgumentException("Unknown type");
-	//    }
+	//				//ToAdd:忽略Action等
+	//				if (!IsTypeCopiable(fieldInfo))
+	//					continue;
+
+
+	//				var srcFieldValue = fieldInfo.GetValue(src);
+	//				if (srcFieldValue != null)
+	//				{
+	//					var dstFieldValue = DoCopy(srcFieldValue, maxDepth: maxDepth);
+	//					fieldInfo.SetValue(copy, dstFieldValue);
+	//				}
+	//			}
+	//			return copy;
+	//		}
+	//		catch (Exception e)
+	//		{
+	//			Debug.LogError($"CreateInstance for {srcType} failed: " + e);
+	//		}
+	//	}
+	//	// Fallback
+	//	else
+	//	{
+	//		throw new ArgumentException("Unknown type");
+	//	}
+	//	return null;
 	//}
 }

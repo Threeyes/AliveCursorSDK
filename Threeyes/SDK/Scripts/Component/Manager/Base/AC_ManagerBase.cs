@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 
 public class AC_ManagerBase<T> : InstanceBase<T>
+	, IAC_CommonSetting_IsAliveCursorActiveHandler
 where T : InstanceBase<T>
 {
 	protected override void SetInstanceFunc()
@@ -33,6 +34,19 @@ where T : InstanceBase<T>
 
 	#region NaughtyAttributes
 	protected const string foldoutName_Debug = "[Debug]";
+	#endregion
+
+	#region Callback
+	protected bool isAliveCursorActived = false;//缓存AC的激活状态，便于Manager自行决定是否执行后续任务(不直接读取CommonSettingManager的相关字段，是为了避免Update中频繁访问，降低性能）
+	public void OnIsAliveCursorActiveChanged(bool isActive)
+	{
+		isAliveCursorActived = isActive;
+		OnIsAliveCursorActiveChangedFunc(isActive);
+	}
+	protected virtual void OnIsAliveCursorActiveChangedFunc(bool isActive)
+	{
+		enabled = isActive;//通过disable，禁止Update等常用方法运行
+	}
 	#endregion
 }
 

@@ -32,11 +32,20 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 		//#Info Group
 		if (textCursorInfo.gameObject.activeInHierarchy)
 		{
-			textCursorInfo.text =
-		$"SystemCursor: {(AC_ManagerHolder.SystemCursorManager.IsSystemCursorShowing ? "Show" : "Hide") + "_" + AC_ManagerHolder.SystemCursorManager.CurSystemCursorAppearanceType}" + "\r\n" +
-		$"CursorSize: {AC_ManagerHolder.CommonSettingManager.CursorSize}" + "\r\n" +
-		$"CursorState: {AC_ManagerHolder.StateManager.CurCursorState}"
-		;
+			strCursorInfo =
+		$"SystemCursor (↕↔): {(AC_ManagerHolder.SystemCursorManager.IsSystemCursorShowing ? "Show" : "Hide") + "_" + AC_ManagerHolder.SystemCursorManager.CurSystemCursorAppearanceType}" +
+		"\r\n" + $"CursorState (1~7): {AC_ManagerHolder.StateManager.CurCursorState}" +
+		"\r\n" + $"CursorSize (-=): {AC_ManagerHolder.CommonSettingManager.CursorSize}";
+
+			if (!AC_StateManagerSimulator.Instance.isDebugIgnoreInput)
+			{
+				if (AC_ManagerHolder.CommonSettingManager.IsStandByActive)
+					strCursorInfo += "\r\n" + $"StandBy after: {AC_ManagerHolder.CommonSettingManager.StandByDelayTime.ToString("F2")}s";
+				if (AC_ManagerHolder.CommonSettingManager.IsBoredActive)
+					strCursorInfo += "\r\n" + $"Bored after: {AC_ManagerHolder.CommonSettingManager.BoredDelayTime.ToString("F2")}s";
+			}
+
+			textCursorInfo.text = strCursorInfo;
 		}
 	}
 }

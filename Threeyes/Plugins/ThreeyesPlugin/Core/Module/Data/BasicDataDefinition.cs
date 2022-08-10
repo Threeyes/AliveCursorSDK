@@ -54,6 +54,8 @@ namespace Threeyes.Data
 			}
 		}
 
+
+
 		[SerializeField] protected TValue value;
 		[SerializeField] protected TValue defaultValue;
 
@@ -87,6 +89,10 @@ namespace Threeyes.Data
 			{
 				Debug.LogError("The other is Null!");
 			}
+		}
+		public void SetValueWithoutNotify(TValue value)
+		{
+			SetValueFunc(value);
 		}
 
 		protected virtual TValue GetValueFunc()
