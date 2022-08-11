@@ -18,7 +18,7 @@ public static class AC_EventCommunication
 		//UnityEngine.Debug.LogError(typeof(TInterface) + " Count: " + result.Count);
 		if (includeHubScene)
 		{
-			result.AddRange(AC_ManagerHolder.SceneManager.HubScene.GetComponents<TInterface>());
+			result.AddRange(AC_ManagerHolder.SceneManager.HubScene.GetComponents<TInterface>(includeInactive));
 		}
 		for (int i = 0; i != result.Count; i++)
 		{
