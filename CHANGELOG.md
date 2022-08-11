@@ -1,4 +1,9 @@
 # Changelog
+## [1.1.1]
+- Update "com.yasirkula.beziersolution" to "2.3.2".
+- Disable Most Hub's Manager function when AC is disabled.
+- Add AC_CommonSettingBehaviour Component.
+- Improve UI hints on Simulator.
 
 ## [1.1.0]
 - Update AC_VisualEffectHelper.
