@@ -61,3 +61,8 @@
 
 ## Documentation
 Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
+
+## Samples
+To find out the possibility of AliveCursor, I also upload different kinds of mods to [workshop](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490), you can find the source project [here](https://github.com/Threeyes/AliveCursor_ModUploader);
+
+**PS**: Don't upload any exist items using this project because their id is settled in `WorkshopItemInfo.asset`! If you want to use or modify some items in this project, please create a new item in your project using `Item Manager` Window, then copy all assets under `Assets/Items/(DesireItemName)` folder to your project's new item dir except `WorkshopItemInfo.asset`. 
