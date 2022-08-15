@@ -15,7 +15,7 @@ MonoBehaviour:
   toolsIconSmall: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsIconLarge: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
   toolsName: AliveCursorSDK
-  toolsVersion: 1.1.1
+  toolsVersion: 1.1.2
   firstRunWindow:
     assemblyQualifiedName: 
   developerName: Threeyes

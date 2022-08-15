@@ -521,6 +521,10 @@ namespace Threeyes.AliveCursor.SDK.Editor
 				//camera.clearFlags = CameraClearFlags.Nothing;//避免背景为默认颜色
 
 				//ToUpdate:使用当前场景的相机（默认是SimulaterManager的相机，也可以是用户自定义相机）
+				//临时禁用Simulator的UI，避免截图会截到UI
+				assistantManagerSimulator = FindObjectOfType<AC_AssistantManagerSimulator>();//尝试查找该组件
+				if (assistantManagerSimulator)
+					assistantManagerSimulator.TempShowInfoGroup(false);
 
 				tempGOCaptureCamera = Camera.main;
 				if (!tempGOCaptureCamera)
@@ -539,6 +543,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		Vector3 cacheCameraLocalPos;
 		int delayFrameCaptureScreenshot = 0;//延后Capture及销毁相机
 		string absPreviewFilePath;//ToAdd:存储为默认预览图
+		AC_AssistantManagerSimulator assistantManagerSimulator;
 		private void Update()
 		{
 			if (delayFrameCaptureScreenshot > 0 && curSOWorkshopItemInfo)//CreateScreenshot
@@ -560,9 +565,11 @@ namespace Threeyes.AliveCursor.SDK.Editor
 						EditorUtility.SetDirty(curSOWorkshopItemInfo);
 					}
 				}
-				else if (delayFrameCaptureScreenshot == 0)//Complete
+				else if (delayFrameCaptureScreenshot == 0)//Reset
 				{
 					tempGOCaptureCamera.transform.localPosition = cacheCameraLocalPos;
+					if (assistantManagerSimulator)
+						assistantManagerSimulator.TempShowInfoGroup(true);
 				}
 			}
 		}

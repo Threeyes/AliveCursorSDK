@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.2]
+- Hide AssistantManagerSimulator's UI on Capture preview image;
+- Simulator scene's default EnvironmentControllerConfig's skybox type changed to default.
+
 ## [1.1.1]
 - Update "com.yasirkula.beziersolution" to "2.3.2".
 - Disable Most Hub's Manager function when AC is disabled.

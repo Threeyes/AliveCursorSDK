@@ -15,12 +15,28 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 	private void OnEnable()
 	{
 		//根据需要选择是否显示对应物体
+		ShowGameobjectWithoutSaving(tfGizmoGroup.gameObject, AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantGizmo);
+		ShowGameobjectWithoutSaving(tfInfoGroup.gameObject, AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantInfo);
+	}
 
-		tfGizmoGroup.gameObject.SetActive(AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantGizmo);
-		EditorUtility.ClearDirty(tfGizmoGroup.gameObject);//避免修改导致Scene需要保存
+	//因为某些原因需要临时隐藏UI
+	public void TempShowInfoGroup(bool isShow)
+	{
+		if (!isShow)
+		{
+			ShowGameobjectWithoutSaving(tfInfoGroup.gameObject, false);
+		}
+		else
+		{
+			ShowGameobjectWithoutSaving(tfInfoGroup.gameObject, AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantInfo);//根据设置决定是否临时显示
+		}
+	}
 
-		tfInfoGroup.gameObject.SetActive(AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantInfo);
-		EditorUtility.ClearDirty(tfInfoGroup.gameObject);//避免修改导致Scene需要保存
+	static void ShowGameobjectWithoutSaving(GameObject go, bool isShow)
+	{
+		go.SetActive(isShow);
+		EditorUtility.ClearDirty(go);//避免修改导致Scene需要保存
+
 	}
 
 	string strCursorInfo = "";
