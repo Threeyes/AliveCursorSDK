@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.3]
+- Fix ItemManager failed to get the latest SDK verison.
+
+
 ## [1.1.2]
 - Hide AssistantManagerSimulator's UI on Capture preview image;
 - Simulator scene's default EnvironmentControllerConfig's skybox type changed to default.

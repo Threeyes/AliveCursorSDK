@@ -19,6 +19,8 @@ using UnityEngine.SceneManagement;
 using UMod.Shared;
 using UnityEditor.PackageManager;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
+using UnityEditor.PackageManager.Requests;
+
 namespace Threeyes.AliveCursor.SDK.Editor
 {
 	/// <summary>
@@ -189,7 +191,11 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			//版本提示。ToAdd：增加Package更新后执行
 			InitSDKVersionUI();
 		}
-
+		private void Update()
+		{
+			Update_CreateScreenshot();
+			Update_PackageInfo();
+		}
 
 		#region UpdateUI
 		/// <summary>
@@ -317,26 +323,72 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
 
+		SearchRequest searchRequest;
 		void InitSDKVersionUI()
 		{
+			//Reset
 			buttonUpdateSDK.Show(false);
-
-			string labelContent = "";
-			PackageInfo packageInfoSDK = GetSDKPackageInfo();
-			if (packageInfoSDK != null)
+			labelSDKVersion.text = "";
+			searchRequest = Client.Search(SDKIdentifier, true);//在线查询
+		}
+		void Update_PackageInfo()
+		{
+			if (searchRequest != null)
 			{
-				labelContent = $"SDK Version: {packageInfoSDK.version}.";
-				string latestVersion = packageInfoSDK.versions?.latest;
-
-				if (latestVersion.NotNullOrEmpty() && packageInfoSDK.version != latestVersion)//有不同版本：提示更新
+				if (!searchRequest.IsCompleted)
 				{
-					labelContent += $" The latest version is <color=orange>{latestVersion}</color>";
-					buttonUpdateSDK.Show(true);
+					//Debug.Log("Waiting");
+				}
+				else
+				{
+					//Debug.Log("Completed");
+					if (searchRequest.Status == StatusCode.Success)//Success
+					{
+						if (!this)//被销毁
+							return;
+
+						string labelContent = "";
+						PackageInfo packageInfoSDKCache = GetCacheSDKPackageInfo();//获取本地缓存的版本
+						if (packageInfoSDKCache != null)
+						{
+							labelContent = $"SDK Version: {packageInfoSDKCache.version}.";
+
+							PackageInfo packageInfoSDKOnline = searchRequest.Result.FirstOrDefault();
+							if (packageInfoSDKOnline != null)
+							{
+								//检查是否需要更新
+								string latestVersion = packageInfoSDKOnline.versions?.latest;
+								if (latestVersion.NotNullOrEmpty())
+								{
+									try
+									{
+										System.Version versionCur = new System.Version(packageInfoSDKCache.version);
+										System.Version versionLatest = new System.Version(latestVersion);
+										if (versionLatest > versionCur)
+										{
+											labelContent += $" The latest version is <color=orange>{latestVersion}</color>";
+											buttonUpdateSDK.Show(true);
+										}
+									}
+									catch
+									{
+									}
+								}
+							}
+						}
+
+						labelSDKVersion.text = labelContent;
+					}
+					//else//Failed
+					//{
+					//Debug.LogError("Error receiving package info: " + searchRequest.Error.message);
+					//}
+					searchRequest = null;//重置
 				}
 			}
-			labelSDKVersion.text = labelContent;
 
 		}
+
 		void OnUpdateSDKButtonClick(ClickEvent evt)
 		{
 			Client.Add(SDKIdentifier);//更新到最新版。（无论成功失败都会重新刷新UI并调用InitSDKVersionUI，因此不需要监听回调）
@@ -544,9 +596,11 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		int delayFrameCaptureScreenshot = 0;//延后Capture及销毁相机
 		string absPreviewFilePath;//ToAdd:存储为默认预览图
 		AC_AssistantManagerSimulator assistantManagerSimulator;
-		private void Update()
+
+		void Update_CreateScreenshot()
 		{
-			if (delayFrameCaptureScreenshot > 0 && curSOWorkshopItemInfo)//CreateScreenshot
+			//CreateScreenshot
+			if (delayFrameCaptureScreenshot > 0 && curSOWorkshopItemInfo)
 			{
 				delayFrameCaptureScreenshot--;
 				if (delayFrameCaptureScreenshot == 2)//Capture
@@ -799,7 +853,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 							//获取Sample文件夹中SDK的版本
 							string assetVersion = sceneAssetInAsset.Replace(SamplesSDKPath + "/", "");
 							assetVersion = assetVersion.Substring(0, assetVersion.IndexOf("/"));
-							PackageInfo packageInfoSDK = GetSDKPackageInfo();//获取当前SDK的version（PS：如果SDK在Project（管理程序），则返回可能为空）
+							PackageInfo packageInfoSDK = GetCacheSDKPackageInfo();//获取当前SDK的version（PS：如果SDK在Project（管理程序），则返回可能为空）
 							if (packageInfoSDK != null)
 							{
 								string curSDKVersion = packageInfoSDK.version;
@@ -836,13 +890,15 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		const string SamplesSDKPath = "Assets/Samples/AliveCursorSDK";
 		const string PackageSDKPath = "Packages/" + SDKIdentifier;//在Package中的sdk路径（不管是否Embedded都是这个路径）
 		/// <summary>
-		/// 返回Packages中的SDK信息
+		/// 返回缓存到Packages中的SDK信息
 		/// </summary>
 		/// <returns></returns>
-		static PackageInfo GetSDKPackageInfo()
+		static PackageInfo GetCacheSDKPackageInfo()
 		{
 			return PackageInfo.FindForAssetPath(PackageSDKPath);
 		}
+
+
 		/// <summary>
 		/// 检查Asset是否为ReadOnly（如存储在Library/PackageCache文件夹中）
 		/// </summary>

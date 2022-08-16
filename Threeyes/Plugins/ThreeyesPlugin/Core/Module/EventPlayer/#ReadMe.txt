@@ -20,6 +20,8 @@ ___________________________________
 * Your unity version is 2018.4 or higher and want to use Timeline?
 	Because the new version of Unity has remove Timeline by default, you need to download Timeline from package Manager, and you are good to go. (If you are using asmdef, you will also need to reference the relate file: https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html )
 
+* Sample's material become purple on URP?
+	Select the target materials assets, then select Menu/Edit/Rendering/Materials/Convert selected Built-in Materials to URP
 ---------------------------   
       Version History      
 --------------------------- 
