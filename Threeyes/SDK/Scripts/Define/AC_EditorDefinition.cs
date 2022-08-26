@@ -20,6 +20,7 @@ public static class AC_EditorDefinition
 
 	//####
 	public const string MenuElement_Environment = "Environment/";
+	public const string MenuElement_PostProcessing = "PostProcessing/";
 	public const string MenuElement_Setting = "Setting/";
 	public const string MenuElement_Input = "Input/";
 	public const string MenuElement_Appearance = "Appearance/";
@@ -35,6 +36,7 @@ public static class AC_EditorDefinition
 	public const string ComponentMenuPrefix_AC_Cursor = ComponentMenuPrefix_Root + MenuElement_Cursor;
 	public const string ComponentMenuPrefix_AC_Cursor_Controller = ComponentMenuPrefix_AC_Cursor + MenuElement_Controller;
 	public const string ComponentMenuPrefix_AC_Cursor_Controller_Environment = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_Environment;
+	public const string ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_PostProcessing;
 	public const string ComponentMenuPrefix_AC_Cursor_Controller_State = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_State;
 	public const string ComponentMenuPrefix_AC_Cursor_Controller_Transform = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_Transform;
 	public const string ComponentMenuPrefix_AC_Cursor_Behaviour = ComponentMenuPrefix_AC_Cursor + MenuElement_Behaviour;
@@ -49,6 +51,7 @@ public static class AC_EditorDefinition
 	public const string Hierarchy_Root = "GameObject/";
 	public const string HierarchyMenuPrefix_Root = Hierarchy_Root + Menu_AliveCursor;
 	public const string HierarchyMenuPrefix_Cursor_Controller_Environment = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_Environment;
+	public const string HierarchyMenuPrefix_Cursor_Controller_PostProcessing = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing;
 	public const string HierarchyMenuPrefix_Cursor_Controller_State = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_State;
 	public const string HierarchyMenuPrefix_Cursor_Controller_Transform = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_Transform;
 	public const string HierarchyMenuPrefix_Cursor_Behaviour_Setting = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Behaviour_Setting;
@@ -68,6 +71,7 @@ public static class AC_EditorDefinition
 	public const string AssetMenuPrefix_AC_Cursor_Behaviour_State = ComponentMenuPrefix_AC_Cursor_Behaviour_State;
 	public const string AssetMenuPrefix_AC_Cursor_Controller = ComponentMenuPrefix_AC_Cursor_Controller;
 	public const string AssetMenuPrefix_AC_Cursor_Controller_Environment = ComponentMenuPrefix_AC_Cursor_Controller_Environment;
+	public const string AssetMenuPrefix_AC_Cursor_Controller_PostProcessing = ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing;
 	public const string AssetMenuPrefix_AC_Cursor_Controller_State = ComponentMenuPrefix_AC_Cursor_Controller_State;
 	public const string AssetMenuPrefix_AC_Cursor_Controller_State_Action = AssetMenuPrefix_AC_Cursor_Controller_State + MenuElement_Action;
 	public const string AssetMenuPrefix_AC_Cursor_Controller_Transform = ComponentMenuPrefix_AC_Cursor_Controller_Transform;

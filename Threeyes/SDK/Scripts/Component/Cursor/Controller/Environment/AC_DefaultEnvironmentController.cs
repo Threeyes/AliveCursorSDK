@@ -4,68 +4,84 @@ using System;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
-
+using DefaultValue = System.ComponentModel.DefaultValueAttribute;
 /// <summary>
 /// Control Environment Setting
 /// 
 /// PS:
 /// 1.Default Environment Lighting/Reflections Sources come from Skybox, inheric this class if your want to change them
+/// 2.If some new field not shown in json file, which will 
 /// </summary>
 [AddComponentMenu(AC_EditorDefinition.ComponentMenuPrefix_AC_Cursor_Controller + "AC_DefaultEnvironmentController")]
 public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_SODefaultEnvironmentControllerConfig, AC_DefaultEnvironmentController.ConfigInfo>
 {
 	#region Property & Field
 	public override bool IsUseReflection { get { return Config.isUseReflection; } }
-	public override bool IsOverrideLights { get { return Config.isOverrideLights; } }
-	public override bool IsOverrideSkybox { get { return Config.isOverrideSkybox; } }
+	public override bool IsUseLights { get { return Config.isUseLights; } }
+	public override bool IsUseSkybox { get { return Config.isUseSkybox; } }
 
 	//PS：以下是场景相关的配置，暂不需要通过EnableIf来激活
 	[Header("Lights")]
 	[Tooltip("The Root gameobject for all lights")] [SerializeField] protected GameObject goLightGroup;
 	[Tooltip("When the Skybox Material is a Procedural Skybox, use this setting to specify a GameObject with a directional Light component to indicate the direction of the sun (or whatever large, distant light source is illuminating your Scene). If this is set to None, the brightest directional light in the Scene is assumed to represent the sun. Lights whose Render Mode property is set to Not Important do not affect the Skybox.")] [SerializeField] protected Light sunSourceLight;//(Can be null)
+
+	[Header("Reflection")]
+	[Tooltip("The main ReflectionProbe")] [SerializeField] protected ReflectionProbe reflectionProbe;
 	#endregion
 
 	#region Unity Method
 	private void Awake()
 	{
-		Config.actionIsOverrideLightsChanged += OnIsOverrideLightsChanged;
-		Config.actionIsOverrideSkyboxChanged += OnIsOverrideSkyboxChanged;
-		Config.actionPersistentChanged += OnPersistentChanged;
+		Config.actionIsUseLightsChanged += OnIsUseLightsChanged;
+		Config.actionIsUseReflectionChanged += OnIsUseReflectionChanged;
+		Config.actionIsUseSkyboxChanged += OnIsUseSkyboxChanged;
+		Config.actionPersistentChanged += OnPersistentChanged;//Get called at last
 	}
 	private void OnDestroy()
 	{
-		Config.actionIsOverrideLightsChanged -= OnIsOverrideLightsChanged;
-		Config.actionIsOverrideSkyboxChanged -= OnIsOverrideSkyboxChanged;
+		Config.actionIsUseLightsChanged -= OnIsUseLightsChanged;
+		Config.actionIsUseReflectionChanged -= OnIsUseReflectionChanged;
+		Config.actionIsUseSkyboxChanged -= OnIsUseSkyboxChanged;
 		Config.actionPersistentChanged -= OnPersistentChanged;
 	}
 	#endregion
 
-	#region Callback
-	void OnIsOverrideLightsChanged(PersistentChangeState persistentChangeState)
+	#region Config Callback
+	void OnIsUseLightsChanged(PersistentChangeState persistentChangeState)
 	{
-		NotifyIsOverrideLightsChanged(Config.isOverrideLights);
 	}
-	void OnIsOverrideSkyboxChanged(PersistentChangeState persistentChangeState)
+	void OnIsUseReflectionChanged(PersistentChangeState persistentChangeState)
 	{
-		NotifyIsOverrideSkyboxChanged(Config.isOverrideSkybox);
+	}
+	void OnIsUseSkyboxChanged(PersistentChangeState persistentChangeState)
+	{
 	}
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
-		InitReflectionProbe(Config.isUseReflection);
-		InitLights(Config.isOverrideLights);
-		InitSkybox(Config.isOverrideSkybox);
+		SetLights(Config.isUseLights);
+		SetReflectionProbe(Config.isUseReflection);
+		SetSkybox(Config.isUseSkybox);
 	}
 	#endregion
 
 	#region Override
-	public override void InitReflectionProbe(bool isActive)
+	bool lastReflectionProbeUsed = false;//Cache state, avoid render multi times
+	public override void SetReflectionProbe(bool isUse)
 	{
-		Manager.SetReflectionProbeActive(isActive);
+		if (!reflectionProbe)
+			return;
+		bool activeStateChanged = lastReflectionProbeUsed != isUse;
+		lastReflectionProbeUsed = isUse;
+		reflectionProbe.gameObject.SetActive(isUse);
+		if (isUse && activeStateChanged)//在重新激活时要重新刷新
+			RefreshReflectionProbe();
+
+		base.SetReflectionProbe(isUse);
 	}
-	public override void InitLights(bool isOverride)
+	public override void SetLights(bool isUse)
 	{
-		goLightGroup?.SetActive(isOverride);
-		if (isOverride)
+		goLightGroup?.SetActive(isUse);
+		if (isUse)
 		{
 			RenderSettings.sun = sunSourceLight;
 			if (sunSourceLight)
@@ -75,33 +91,72 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 				sunSourceLight.color = Config.sunLightColor;
 			}
 		}
+		base.SetLights(isUse);
 	}
+
+	bool lastSkyboxUsed = false;//Cache state, avoid render multi times
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="isOverride"></param>
+	/// <param name="isUse"></param>
 	/// <returns>If skybox changed</returns>
-	public override bool InitSkybox(bool isOverride)
+	public override void SetSkybox(bool isUse)
 	{
-		bool needRefresh = false;
-		if (isOverride)
+		bool needRefresh = lastSkyboxUsed != isUse;
+		lastSkyboxUsed = isUse;
+		if (isUse)
 		{
-			needRefresh = UpdatePanoramaSkyboxMaterialTexture();//Update texture first
+			needRefresh |= UpdatePanoramaSkyboxMaterialTexture();//Try update texture first
 			needRefresh |= UpdatePanoramaSkyboxMaterialRotation();
 			if (RenderSettings.skybox != Config.SkyboxMaterial)//Check if skybox material changed
 			{
 				RenderSettings.skybox = Config.SkyboxMaterial;
 				needRefresh = true;
 			}
-			if (needRefresh)
-				DynamicGIUpdateEnvironment();
 		}
-		return needRefresh;
+		else
+		{
+			if (RenderSettings.skybox != null)
+			{
+				RenderSettings.skybox = null;
+				needRefresh = true;
+			}
+		}
+		if (needRefresh)
+			DynamicGIUpdateEnvironment();
+
+		base.SetSkybox(isUse);
 	}
 	#endregion
 
 	#region Utility
-
+	/// <summary>
+	/// Schedules an update of the environment cubemap.
+	/// 
+	/// Warning: Expensive operation! Only call it when the skybox changed
+	/// 
+	/// Ref: Changing the skybox at runtime will not update the ambient lighting automatically. You need to call DynamicGI.UpdateEnvironment() to let the engine know you want to update the ambient lighting. 
+	/// Warning: This is a relatively expensive operation, which is why it’s not done automatically while the game is running.
+	/// (https://forum.unity.com/threads/changing-skybox-materials-via-script.544854/#:~:text=Changing%20the%20skybox%20at%20runtime%20will%20not%20update,not%20done%20automatically%20while%20the%20game%20is%20running.)
+	/// 
+	/// PS:因为刷新GI会有损耗，因此只有当Skybox材质有变化时才调用该方法（注意不会更新Reflection，需要用户自行使用Reflection Probe实现）
+	/// </summary>
+	protected virtual void DynamicGIUpdateEnvironment()
+	{
+		RuntimeTool.ExecuteOnceInCurFrameAsync(DynamicGI.UpdateEnvironment);//Update environment cubemap
+		RefreshReflectionProbe();
+	}
+	/// <summary>
+	/// Update ReflectionProbe to refresh reflection
+	/// </summary>
+	void RefreshReflectionProbe()
+	{
+		if (!reflectionProbe)
+			return;
+		if (!lastReflectionProbeUsed)//PS:未激活时调用无效
+			return;
+		RuntimeTool.ExecuteOnceInCurFrameAsync(() => reflectionProbe.RenderProbe());//PS:RenderProbe会返回ID，可用于后续检查Render完成时间
+	}
 	/// <summary>
 	/// 
 	/// </summary>
@@ -110,7 +165,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 	bool UpdatePanoramaSkyboxMaterialTexture()
 	{
 		string panoMatTextureName = "_MainTex";
-		if (Config.panoramaSkyboxMaterial && Config.panoramaSkyboxMaterial.HasTexture(panoMatTextureName) && Config.PanoramaSkyboxTexture)
+		if (Config.panoramaSkyboxMaterial && Config.panoramaSkyboxMaterial.HasTexture(panoMatTextureName)/* && Config.PanoramaSkyboxTexture*/)//不管有无贴图，都需要更新，便于重置
 		{
 			if (Config.panoramaSkyboxMaterial.GetTexture(panoMatTextureName) != Config.PanoramaSkyboxTexture)
 			{
@@ -123,7 +178,6 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 	bool UpdatePanoramaSkyboxMaterialRotation()
 	{
 		string panoMatRotationName = "_Rotation";
-
 		if (Config.panoramaSkyboxMaterial && Config.panoramaSkyboxMaterial.HasFloat(panoMatRotationName) && Config.PanoramaSkyboxTexture)
 		{
 			if (Config.panoramaSkyboxMaterial.GetFloat(panoMatRotationName) != Config.panoramaSkyboxRotation)
@@ -139,48 +193,61 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 
 	#region Define
 
+	/// <summary>
+	///
+	///
+	/// Note:
+	/// 1.在1.1.4版本中，isUseLights及isUsePanoramicSkybox经过了重命名，因此需要使用[DefaultValue]及[JsonProperty]指定默认值，避免Json中无对应字段而使用false作为初始值
+	/// </summary>
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
 	public class ConfigInfo : AC_SerializableDataBase
 	{
-		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsOverrideLightsChanged;
-		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsOverrideSkyboxChanged;
+		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseReflectionChanged;
+		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseLightsChanged;
+		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseSkyboxChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 
 		public Material SkyboxMaterial { get { return skyboxType == SkyboxType.Default ? defaultSkyboxMaterial : panoramaSkyboxMaterial; } }
 		public Texture PanoramaSkyboxTexture { get { return externalPanoramaTexture ? externalPanoramaTexture : defaultPanoramaTexture; } }
 
-		[Header("ReflectionProbe")]
-		public bool isUseReflection = false;
-
 		[Header("Lights")]
-		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsOverrideLights))] public bool isOverrideLights = false;
-		[EnableIf(nameof(isOverrideLights))] [AllowNesting] public Vector3 sunLightRotation = new Vector3(30, 30, 240);
-		[EnableIf(nameof(isOverrideLights))] [AllowNesting] [Range(0, 8)] public float sunLightIntensity = 0.3f;
-		[EnableIf(nameof(isOverrideLights))] [AllowNesting] public Color sunLightColor = Color.white;
+		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseLights))] public bool isUseLights = true;
+		[EnableIf(nameof(isUseLights))] [AllowNesting] public Vector3 sunLightRotation = new Vector3(30, 30, 240);
+		[EnableIf(nameof(isUseLights))] [AllowNesting] [Range(0, 8)] public float sunLightIntensity = 0.3f;
+		[EnableIf(nameof(isUseLights))] [AllowNesting] public Color sunLightColor = Color.white;
+
+		[Header("ReflectionProbe")]
+		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseReflection))] public bool isUseReflection = true;
 
 		[Header("Skybox")]
-		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsOverrideSkybox))] public bool isOverrideSkybox = false;
-		[EnableIf(nameof(isOverrideSkybox))] public SkyboxType skyboxType = SkyboxType.Default;
+		[DefaultValue(true)] [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)] [PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseSkybox))] public bool isUseSkybox = true;
+		[EnableIf(nameof(isUseSkybox))] public SkyboxType skyboxType = SkyboxType.Default;
 		//Default
-		[ValidateInput(nameof(ValidateDefaultSkyboxMaterial), "The defaultSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isOverrideDefaultSkybox))] [AllowNesting] [JsonIgnore] public Material defaultSkyboxMaterial;
+		[ValidateInput(nameof(ValidateDefaultSkyboxMaterial), "The defaultSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isUseDefaultSkybox))] [AllowNesting] [JsonIgnore] public Material defaultSkyboxMaterial;
 		//Panorama  
-		[ValidateInput(nameof(ValidatePanoramaSkyboxMaterial), "The panoramaSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isOverridePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Material panoramaSkyboxMaterial;
+		[ValidateInput(nameof(ValidatePanoramaSkyboxMaterial), "The panoramaSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Material panoramaSkyboxMaterial;
 		///Skybox/Panoramic Shader中的全景图。（PS：Panorama类型的图片不要选中 "generate mipmaps"，否则会产生缝（外部加载的图片默认都不会生成））
-		[EnableIf(nameof(isOverridePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Texture defaultPanoramaTexture;
-		[EnableIf(nameof(isOverridePanoramicSkybox))] [ReadOnly] [AllowNesting] [JsonIgnore] public Texture externalPanoramaTexture;
-		[EnableIf(nameof(isOverridePanoramicSkybox))] [AllowNesting] [PersistentAssetFilePath(nameof(externalPanoramaTexture), true)] public string externalPanoramaTextureFilePath;
-		[EnableIf(nameof(isOverridePanoramicSkybox))] [AllowNesting] [Range(0, 360)] public float panoramaSkyboxRotation = 0;
+		[EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Texture defaultPanoramaTexture;
+		[EnableIf(nameof(isUsePanoramicSkybox))] [ReadOnly] [AllowNesting] [JsonIgnore] public Texture externalPanoramaTexture;
+		[EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [PersistentAssetFilePath(nameof(externalPanoramaTexture), true)] public string externalPanoramaTextureFilePath;
+		[EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [Range(0, 360)] public float panoramaSkyboxRotation = 0;
 		[HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
 
+
+
 		#region Callback
-		void OnPersistentValueChanged_IsOverrideLights(PersistentChangeState persistentChangeState)
+		void OnPersistentValueChanged_IsUseReflection(PersistentChangeState persistentChangeState)
 		{
-			actionIsOverrideLightsChanged.Execute(persistentChangeState);
+			actionIsUseReflectionChanged.Execute(persistentChangeState);
 		}
-		void OnPersistentValueChanged_IsOverrideSkybox(PersistentChangeState persistentChangeState)
+		void OnPersistentValueChanged_IsUseLights(PersistentChangeState persistentChangeState)
 		{
-			actionIsOverrideSkyboxChanged.Execute(persistentChangeState);
+			actionIsUseLightsChanged.Execute(persistentChangeState);
+		}
+		void OnPersistentValueChanged_IsUseSkybox(PersistentChangeState persistentChangeState)
+		{
+			actionIsUseSkyboxChanged.Execute(persistentChangeState);
 		}
 		void OnPersistentChanged(PersistentChangeState persistentChangeState)
 		{
@@ -189,8 +256,8 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		#endregion
 
 		#region NaughtAttribute
-		bool isOverrideDefaultSkybox { get { return isOverrideSkybox && skyboxType == SkyboxType.Default; } }
-		bool isOverridePanoramicSkybox { get { return isOverrideSkybox && skyboxType == SkyboxType.Panoramic; } }
+		bool isUseDefaultSkybox { get { return isUseSkybox && skyboxType == SkyboxType.Default; } }
+		bool isUsePanoramicSkybox { get { return isUseSkybox && skyboxType == SkyboxType.Panoramic; } }
 		//PS:用户可能会自定义SkyboxShader，同时系统会自动判断材质是否有效，而且其他类型的Shader也能用，因此不需要判断是否使用了Skybox类型Shader（仅作为提示，不限制使用或打包）
 		bool ValidateDefaultSkyboxMaterial(Material material)
 		{

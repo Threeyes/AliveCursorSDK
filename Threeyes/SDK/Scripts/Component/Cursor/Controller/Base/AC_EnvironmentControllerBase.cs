@@ -8,53 +8,44 @@ using UnityEngine.Events;
 /// </summary>
 public interface IAC_EnvironmentController : IAC_ModControllerHandler
 {
-    event UnityAction<bool> IsOverrideLightsChanged;
-    event UnityAction<bool> IsOverrideSkyboxChanged;
-
-    void InitLights(bool isOverride);
-    bool InitSkybox(bool isOverride);
-    void InitReflectionProbe(bool isUse);
+	event UnityAction<bool> IsUseReflectionChanged;
+	event UnityAction<bool> IsUseLightsChanged;
+	event UnityAction<bool> IsUseSkyboxChanged;
 }
 
 public abstract class AC_EnvironmentControllerBase<TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>, IAC_EnvironmentController
-        where TSOConfig : AC_SOConfigBase<TConfig>
+		where TSOConfig : AC_SOConfigBase<TConfig>
 {
-    public event UnityAction<bool> IsOverrideLightsChanged;
-    public event UnityAction<bool> IsOverrideSkyboxChanged;
-    public abstract bool IsOverrideLights { get; }
-    public abstract bool IsOverrideSkybox { get; }
-    public abstract bool IsUseReflection { get; }
 
-    protected IAC_EnvironmentManager Manager { get { return AC_ManagerHolder.EnvironmentManager; } }
+	//ModController override settings
+	public event UnityAction<bool> IsUseLightsChanged;
+	public event UnityAction<bool> IsUseReflectionChanged;
+	public event UnityAction<bool> IsUseSkyboxChanged;
+	public abstract bool IsUseLights { get; }
+	public abstract bool IsUseReflection { get; }
+	public abstract bool IsUseSkybox { get; }
 
-    public virtual void OnModControllerInit()
-    {
-        //Update self
-        InitReflectionProbe(IsUseReflection);//Update ReflectionProbe's state first
-        InitLights(IsOverrideLights);
-        InitSkybox(IsOverrideSkybox);
+	protected IAC_EnvironmentManager Manager { get { return AC_ManagerHolder.EnvironmentManager; } }
 
-        //Notify Manager to Update Hub.DefaultEnvironmentController
-        NotifyIsOverrideLightsChanged(IsOverrideLights);
-        NotifyIsOverrideSkyboxChanged(IsOverrideSkybox);
-    }
-    public virtual void OnModControllerDeinit() { }
+	public virtual void OnModControllerInit()
+	{
+		//Update self
+		SetLights(IsUseLights);
+		SetReflectionProbe(IsUseReflection);//Update ReflectionProbe's gameobject active state before skybox changes, or else the render may not update property
+		SetSkybox(IsUseSkybox);
+	}
+	public virtual void OnModControllerDeinit() { }
 
-    public abstract void InitReflectionProbe(bool isUse);
-    public abstract void InitLights(bool isOverride);
-    public abstract bool InitSkybox(bool isOverride);
-
-    protected void NotifyIsOverrideLightsChanged(bool isOverride)
-    {
-        IsOverrideLightsChanged.Execute(isOverride);
-    }
-    protected void NotifyIsOverrideSkyboxChanged(bool isOverride)
-    {
-        IsOverrideSkyboxChanged.Execute(isOverride);
-    }
-    protected virtual void DynamicGIUpdateEnvironment()
-    {
-        Manager.DynamicGIUpdateEnvironment();
-        //Create your own Reflection solution here (eg: ReflectionProbe)
-    }
+	public virtual void SetLights(bool isUse)
+	{
+		IsUseLightsChanged.Execute(isUse);
+	}
+	public virtual void SetReflectionProbe(bool isUse)
+	{
+		IsUseReflectionChanged.Execute(isUse);
+	}
+	public virtual void SetSkybox(bool isUse)
+	{
+		IsUseSkyboxChanged.Execute(isUse);
+	}
 }

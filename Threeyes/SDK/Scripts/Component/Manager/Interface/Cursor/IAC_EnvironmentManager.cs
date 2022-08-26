@@ -10,17 +10,6 @@ public interface IAC_EnvironmentManager : IAC_Manager_ModInitHandler, IManagerWi
 	Camera MainCamera { get; }
 
 	/// <summary>
-	/// Schedules an update of the environment cubemap
-	/// </summary>
-	void DynamicGIUpdateEnvironment();
-
-	/// <summary>
-	/// Active/DeActive global ReflectionProbe
-	/// </summary>
-	/// <param name="isActive"></param>
-	void SetReflectionProbeActive(bool isActive);
-
-	/// <summary>
 	/// Active/DeActive SmearEffect (Achieve by set camera's ClearFlags to Nothing)  
 	/// 
 	/// PS:

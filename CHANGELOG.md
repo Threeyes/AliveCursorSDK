@@ -1,7 +1,12 @@
 # Changelog
+
+## [3.2.0]
+- Sync version with the AliveCursor program.
+- Rename and add some fields for AC_DefaultEnvironmentController.ConfigInfo (Breaking change!).
+- Add PostProcessing support.
+
 ## [1.1.3]
 - Fix ItemManager failed to get the latest SDK verison.
-
 
 ## [1.1.2]
 - Hide AssistantManagerSimulator's UI on Capture preview image;

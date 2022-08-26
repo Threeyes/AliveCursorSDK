@@ -12,16 +12,12 @@ where T : InstanceBase<T>
 	{
 		base.SetInstanceFunc();
 
-		//通过反射，自动注册到AC_ManagerHolder(Todo:提炼出接口的通用父接口）（ToDelete）
+		//通过反射，自动注册到AC_ManagerHolder的对应字段中
 		Type typeACManagerInterface = typeof(T).GetInterfaces().FirstOrDefault(t => t.Name.StartsWith("IAC_") && t.Name.EndsWith("Manager"));
-		if (typeACManagerInterface == null)//PS:有些不需要在AC_ManagerHolder中暴露的Manager，可忽略
+		if (typeACManagerInterface == null)//PS:有些Manager不在AC_ManagerHolder中注册，可跳过
 			return;
 
-		PropertyInfo propertyInfoStatic = typeof(AC_ManagerHolder).GetProperties(BindingFlags.Public | BindingFlags.Static).FirstOrDefault((pI) =>
-		{
-			return pI.PropertyType == typeACManagerInterface;
-		}
-		);
+		PropertyInfo propertyInfoStatic = typeof(AC_ManagerHolder).GetProperties(BindingFlags.Public | BindingFlags.Static).FirstOrDefault((pI) => pI.PropertyType == typeACManagerInterface);
 		if (propertyInfoStatic != null)
 		{
 			propertyInfoStatic.SetValue(null, this);
@@ -85,11 +81,11 @@ public interface IManagerWithController<TControllerInterface>
 {
 	TControllerInterface ActiveController { get; }
 }
-public class AC_ManagerWithControllerBase<T, TControllerInterface, TController> : AC_ManagerBase<T>, IManagerWithController<TControllerInterface>
-	where T : AC_ManagerWithControllerBase<T, TControllerInterface, TController>
-	where TController : TControllerInterface
+public class AC_ManagerWithControllerBase<T, TControllerInterface, TDefaultController> : AC_ManagerBase<T>, IManagerWithController<TControllerInterface>
+	where T : AC_ManagerWithControllerBase<T, TControllerInterface, TDefaultController>
+	where TDefaultController : TControllerInterface
 {
 	public TControllerInterface ActiveController { get { return modController != null ? modController : defaultController; } }
 	protected TControllerInterface modController;//Mod自定义的Controller（可空）
-	[SerializeField] protected TController defaultController;//使用具体类型，便于场景引用
+	[SerializeField] protected TDefaultController defaultController;//使用具体类型，便于场景引用
 }
