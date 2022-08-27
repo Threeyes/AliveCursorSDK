@@ -4,6 +4,8 @@
 - Sync version with the AliveCursor program.
 - Rename and add some fields for AC_DefaultEnvironmentController.ConfigInfo (Breaking change!).
 - Add PostProcessing support.
+- Update "com.unity.2d.animation" to "7.0.7".
+- Update "com.unity.2d.psdimporter" to "6.0.5",
 
 ## [1.1.3]
 - Fix ItemManager failed to get the latest SDK verison.
