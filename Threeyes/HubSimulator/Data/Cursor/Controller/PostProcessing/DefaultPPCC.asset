@@ -18,5 +18,5 @@ MonoBehaviour:
     bloom_Threshold: 0.7
     bloom_Intensity: 1
     bloom_Scatter: 0.7
-    bloom_Tint: {r: 1, g: 1, b: 1, a: 1}
     bloom_Clamp: 65472
+    bloom_Tint: {r: 1, g: 1, b: 1, a: 1}

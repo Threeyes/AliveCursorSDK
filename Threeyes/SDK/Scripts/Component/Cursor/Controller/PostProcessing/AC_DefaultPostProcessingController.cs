@@ -19,7 +19,7 @@ public class AC_DefaultPostProcessingController : AC_PostProcessingControllerBas
 	public override bool IsUsePostProcessing { get { return Config.isUsePostProcessing; } }
 
 	[Header("PostProcessing")]
-	[Tooltip("The PostProcessing volume")] [SerializeField] protected Volume volume;
+	[Tooltip("The PostProcessing volume")] [Required] [SerializeField] protected Volume volume;
 
 	#region Unity Method
 	private void Awake()

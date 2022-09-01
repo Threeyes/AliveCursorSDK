@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using DG.Tweening;
 
-public class AC_Clock : AC_ConfigableComponentBase<AC_SOClockConfig, AC_Clock.ConfigInfo>
+public class AC_ClockController : AC_ConfigableComponentBase<AC_SOClockControllerConfig, AC_ClockController.ConfigInfo>
 {
 	//Use these event to display number
 	public IntEvent onHourChange;

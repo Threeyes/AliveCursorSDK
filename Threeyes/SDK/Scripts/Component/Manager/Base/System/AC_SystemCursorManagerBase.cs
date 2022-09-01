@@ -39,7 +39,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 	public Vector3 GetRandomPointInsideBoredBounds()
 	{
 		//Ref：https://answers.unity.com/questions/752253/spawn-object-at-random-points-within-camera-view.html
-		Vector3 viewPoint = new Vector3(UnityEngine.Random.Range(0, 1), UnityEngine.Random.Range(0, 1), UnityEngine.Random.Range(BoredStateCameraDepthRange.x, BoredStateCameraDepthRange.y));//ViewPoint中X、Y的的范围为[0,1]，Z代表与相机的距离
+		Vector3 viewPoint = new Vector3(Random.Range(0, 1), Random.Range(0, 1), Random.Range(BoredStateCameraDepthRange.x, BoredStateCameraDepthRange.y));//ViewPoint中X、Y的的范围为[0,1]，Z代表与相机的距离
 		return MainCamera.ViewportToWorldPoint(viewPoint);
 	}
 	public bool IsInsideBoredBounds(Vector3 worldPosition)

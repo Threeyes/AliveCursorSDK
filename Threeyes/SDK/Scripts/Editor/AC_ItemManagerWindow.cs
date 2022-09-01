@@ -391,6 +391,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 		void OnUpdateSDKButtonClick(ClickEvent evt)
 		{
+			Debug.Log("Begin update ACSDK on background...");
 			Client.Add(SDKIdentifier);//更新到最新版。（无论成功失败都会重新刷新UI并调用InitSDKVersionUI，因此不需要监听回调）
 		}
 

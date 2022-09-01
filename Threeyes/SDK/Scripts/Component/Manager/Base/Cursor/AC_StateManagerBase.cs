@@ -126,14 +126,17 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	}
 	IEnumerator IEDetectMouseNotMove()
 	{
-		if (AC_EditorSetting.GetDebugMode(isDebugIgnoreInput))
-			yield break;
 
 		float lastMouseInputTime = LastMouseInputEventTime;
 		float lastMouseOrKeyInputStartTime = LastAnyInputEventTime;
 
 		while (true)
 		{
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			if (AC_EditorSetting.GetDebugMode(isDebugIgnoreInput))
+				yield break;
+#endif
+
 			if (!isAliveCursorActived)//等待被激活
 				yield return null;
 
@@ -251,7 +254,7 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	[Foldout(foldoutName_Debug)] public bool isDebugStayActive = false;
 	[Foldout(foldoutName_Debug)] public bool isDebugTopNumberKeysChangeState = false;//Number keys on the top of the alphanumeric keyboard (Active PadNumberKeys instead incase you need to change Inspector field via these keys)
 	[Foldout(foldoutName_Debug)] public bool isDebugPadNumberKeysChangeState = false;//Keys on NumberPad
-	[Header("Check this will affect some state switching (eg: working to bored)!")] [Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
+	[Header("Check this will affect some state switching, require target state get actived (eg: from working to bored)!")] [Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
 
 	readonly protected Dictionary<KeyCode, AC_CursorState> debugDicTopNumberKey2State = new Dictionary<KeyCode, AC_CursorState>()
 	{

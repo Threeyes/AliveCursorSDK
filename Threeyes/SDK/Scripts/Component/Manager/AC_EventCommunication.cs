@@ -29,7 +29,7 @@ public static class AC_EventCommunication
 			catch (System.Exception e)
 			{
 				//将错误写入到Item对应目录中便于制作者查看
-				AC_ManagerHolder.SystemLogManager.LogError("SendMessage with error:" + e);
+				AC_ManagerHolder.SystemLogManager.LogError($"SendMessage for {typeof(TInterface)} with error:" + e);
 			}
 		}
 	}

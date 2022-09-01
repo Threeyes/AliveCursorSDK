@@ -26,13 +26,7 @@ public abstract class AC_ConfigableComponentBase<TSOConfig, TConfig> : MonoBehav
 	[Expandable] [SerializeField] protected TSOConfig soOverrideConfig;//Override config
 }
 
-/// <summary>
-/// Component with configable SO, along with different type of update method
-/// </summary>
-/// <typeparam name="TComp"></typeparam>
-/// <typeparam name="TSOConfig"></typeparam>
-/// <typeparam name="TConfig"></typeparam>
-public abstract class AC_ConfigableUpdateComponentBase<TComp, TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>
+public abstract class AC_ConfigableComponentBase<TComp, TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>
 	where TComp : Component
 	where TSOConfig : AC_SOConfigBase<TConfig>
 {
@@ -58,9 +52,19 @@ public abstract class AC_ConfigableUpdateComponentBase<TComp, TSOConfig, TConfig
 
 		return default(TComp);
 	}
+}
 
+/// <summary>
+/// Component with configable SO, along with different type of update method
+/// </summary>
+/// <typeparam name="TComp"></typeparam>
+/// <typeparam name="TSOConfig"></typeparam>
+/// <typeparam name="TConfig"></typeparam>
+public abstract class AC_ConfigableUpdateComponentBase<TComp, TSOConfig, TConfig> : AC_ConfigableComponentBase<TComp, TSOConfig, TConfig>
+	where TComp : Component
+	where TSOConfig : AC_SOConfigBase<TConfig>
+{
 	public UpdateMethodType updateMethodType = UpdateMethodType.Late;
-
 	protected float DeltaTime
 	{
 		get

@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6584623965424765804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd9c95e5086a1d34d8b5e84c7067eca6, type: 3}
+  m_Name: LiquidURPRenderComponent
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    IsEnabled: 1
+    InjectionPoint: 500
 --- !u!114 &-5958966970455162719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,7 +56,8 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: -5958966970455162719}
-  m_RendererFeatureMap: a100bcc11c7f4dad
+  - {fileID: -6584623965424765804}
+  m_RendererFeatureMap: a100bcc11c7f4dad943455e963b79ea4
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:

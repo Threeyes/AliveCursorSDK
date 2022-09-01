@@ -84,7 +84,7 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		UpdateWaveformSetting();
 	}
 
-	public void OnSpectrumDataChanged(float[] data)
+	public virtual void OnSpectrumDataChanged(float[] data)
 	{
 		if (m_AnimatedSelections == null)
 			return;
@@ -104,22 +104,45 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter. 
 	}
 
-	public void OnRawSampleDataChanged(float[] data)
+	public virtual void OnRawSampleDataChanged(float[] data)
 	{
 		if (!Config.showWaveform)
 			return;
 
 		///Waveform
 		Vector3 vec = Vector3.zero;
-		float totalCount = data.Count();
+		int totalCount = data.Length;
+		float fTotalCount = (float)totalCount;//Warning:后续需要使用float进行小数点计算，因此类型为float
 		for (int i = 0; i != totalCount; i++)
 		{
-			int n = i < totalCount - 1 ? i : 0;
+			if (i == totalCount - 1)//Make sure the rear point connected to head point
+			{
+				waveform.SetPosition(i, waveform.GetPosition(0));
+				return;
+			}
+
+			int n = i < fTotalCount - 1 ? i : 0;
 			float travel = Config.waveformRadius + Config.waveformHeight * data[n];
-			vec.x = Mathf.Cos(n / totalCount * twoPi) * travel;
-			vec.z = Mathf.Sin(n / totalCount * twoPi) * travel;
+			vec.x = Mathf.Cos(n / fTotalCount * twoPi) * travel;
+			vec.z = Mathf.Sin(n / fTotalCount * twoPi) * travel;
 			vec.y = 0f;
 
+			waveform.SetPosition(i, vec);
+		}
+	}
+	void InitWaveform()
+	{
+		//Init point positions
+		Vector3 vec = Vector3.zero;
+		int totalCount = waveform.positionCount;
+		float fTotalCount = totalCount;//Warning:后续需要使用float进行小数点计算，因此类型为float
+		for (int i = 0; i != totalCount; i++)
+		{
+			int n = i < fTotalCount - 1 ? i : 0;
+			float travel = Config.waveformRadius;
+			vec.x = Mathf.Cos(n / fTotalCount * twoPi) * travel;
+			vec.z = Mathf.Sin(n / fTotalCount * twoPi) * travel;
+			vec.y = 0f;
 			waveform.SetPosition(i, vec);
 		}
 	}
@@ -170,6 +193,8 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 
 		// Build the waveform ring.
 		waveform.positionCount = Manager.RawSampleCount;
+		InitWaveform();
+		//ToAdd:Init Point Position
 		UpdateWaveformSetting();
 	}
 	void UpdateMaterial()
@@ -203,8 +228,8 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 	}
 #endif
 	#endregion
-	#region Define
 
+	#region Define
 	/// <summary>
 	/// This is the container for each extruded column. We'll use it to apply offsets per-extruded face.
 	/// </summary>
@@ -252,7 +277,7 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public Gradient waveformGradient = new Gradient();
 		[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
 		[EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;// How far from the sphere should the waveform be.
-		[EnableIf(nameof(showWaveform))] public float waveformHeight = 1f;// The y size of the waveform.
+		[EnableIf(nameof(showWaveform))] public float waveformHeight = 0.2f;// The y size of the waveform.
 		[EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;// If true, the waveform ring will rotate around self.       
 		[EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, .01f, 0f);//Waveform ring's rotate speed.
 
@@ -260,6 +285,5 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		void OnMaterialChanged(PersistentChangeState persistentChangeState) { actionMaterialChanged.Execute(persistentChangeState); }
 		void OnWaveformSettingChanged(PersistentChangeState persistentChangeState) { actionWaveformSettingChanged.Execute(persistentChangeState); }
 	}
-
 	#endregion
 }

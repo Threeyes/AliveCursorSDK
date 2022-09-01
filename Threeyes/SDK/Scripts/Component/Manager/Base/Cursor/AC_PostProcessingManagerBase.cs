@@ -26,7 +26,7 @@ public class AC_PostProcessingManagerBase<T> : AC_ManagerWithControllerBase<T, I
 	#endregion
 
 	#region Callback
-	public void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
+	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 		modController = scene.GetComponents<IAC_PostProcessingController>().FirstOrDefault();
 		defaultController.gameObject.SetActive(modController == null);//两者互斥
@@ -38,7 +38,7 @@ public class AC_PostProcessingManagerBase<T> : AC_ManagerWithControllerBase<T, I
 
 		ActiveController.OnModControllerInit();//初始化
 	}
-	public void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
+	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
 	{
 		modController?.OnModControllerDeinit();
 		modController = null;//重置，否则会有引用残留

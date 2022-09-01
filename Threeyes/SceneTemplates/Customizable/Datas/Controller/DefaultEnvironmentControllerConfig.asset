@@ -19,7 +19,7 @@ MonoBehaviour:
     sunLightColor: {r: 1, g: 1, b: 1, a: 1}
     isUseReflection: 1
     isUseSkybox: 1
-    skyboxType: 1
+    skyboxType: 0
     defaultSkyboxMaterial: {fileID: 2100000, guid: 6a075527c9045204db03585cc6efed51,
       type: 2}
     panoramaSkyboxMaterial: {fileID: 2100000, guid: 4a99808d76702ec4fb43ecdc39b51bb3,

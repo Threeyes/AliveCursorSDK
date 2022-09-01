@@ -2100,7 +2100,7 @@ MonoBehaviour:
   isDebugStayActive: 0
   isDebugTopNumberKeysChangeState: 1
   isDebugPadNumberKeysChangeState: 1
-  isDebugIgnoreInput: 0
+  isDebugIgnoreInput: 1
   dummyString: 
 --- !u!1 &1326752289
 GameObject:

@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.2.1]
+- Rename AC_Clock to AC_ClockController.
+- Add ViewBoundsFitter prefab.
+- Add Zibra Liquids related Controller.
+
 ## [3.2.0]
 - Sync version with the AliveCursor program.
 - Rename and add some fields for AC_DefaultEnvironmentController.ConfigInfo (Breaking change!).

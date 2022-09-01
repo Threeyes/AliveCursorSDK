@@ -22,11 +22,11 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 
 	//PS：以下是场景相关的配置，暂不需要通过EnableIf来激活
 	[Header("Lights")]
-	[Tooltip("The Root gameobject for all lights")] [SerializeField] protected GameObject goLightGroup;
-	[Tooltip("When the Skybox Material is a Procedural Skybox, use this setting to specify a GameObject with a directional Light component to indicate the direction of the sun (or whatever large, distant light source is illuminating your Scene). If this is set to None, the brightest directional light in the Scene is assumed to represent the sun. Lights whose Render Mode property is set to Not Important do not affect the Skybox.")] [SerializeField] protected Light sunSourceLight;//(Can be null)
+	[Tooltip("The Root gameobject for all lights")] [Required] [SerializeField] protected GameObject goLightGroup;
+	[Tooltip("When the Skybox Material is a Procedural Skybox, use this setting to specify a GameObject with a directional Light component to indicate the direction of the sun (or whatever large, distant light source is illuminating your Scene). If this is set to None, the brightest directional light in the Scene is assumed to represent the sun. Lights whose Render Mode property is set to Not Important do not affect the Skybox.")] [Required] [SerializeField] protected Light sunSourceLight;//(Can be null)
 
 	[Header("Reflection")]
-	[Tooltip("The main ReflectionProbe")] [SerializeField] protected ReflectionProbe reflectionProbe;
+	[Tooltip("The main ReflectionProbe")] [Required] [SerializeField] protected ReflectionProbe reflectionProbe;
 	#endregion
 
 	#region Unity Method

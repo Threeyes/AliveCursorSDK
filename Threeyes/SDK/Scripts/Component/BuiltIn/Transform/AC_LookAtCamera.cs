@@ -1,6 +1,3 @@
-
-
-using Newtonsoft.Json;
 using UnityEngine;
 
 public class AC_LookAtCamera : AC_ConfigableUpdateComponentBase<Transform, AC_SOLookAtCameraConfig, AC_LookAtCamera.ConfigInfo>
