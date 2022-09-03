@@ -397,7 +397,7 @@ MonoBehaviour:
   soOverrideConfig: {fileID: 11400000, guid: fa3dfde73365f5c408a7525177b97709, type: 2}
   goLightGroup: {fileID: 1572035307}
   sunSourceLight: {fileID: 1567694475}
-  reflectionProbe: {fileID: 0}
+  reflectionProbe: {fileID: 545120130}
 --- !u!1 &399964909
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2097,8 @@ MonoBehaviour:
     stateChange: 0
   curCursorState: 0
   lastCursorState: 0
+  noMouseInputTimeSinceWorking: 0
+  notMouseOrKeyInputTimeSinceStandBy: 0
   isDebugStayActive: 0
   isDebugTopNumberKeysChangeState: 1
   isDebugPadNumberKeysChangeState: 1

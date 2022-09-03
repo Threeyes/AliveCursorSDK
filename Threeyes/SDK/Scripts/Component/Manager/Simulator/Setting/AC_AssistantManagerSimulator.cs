@@ -40,6 +40,8 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 	}
 
 	string strCursorInfo = "";
+
+	AC_StateManagerSimulator stateManagerSimulator { get { return AC_StateManagerSimulator.Instance; } }
 	void Update()
 	{
 		if (!Application.isPlaying)
@@ -48,12 +50,19 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 		//#Info Group
 		if (textCursorInfo.gameObject.activeInHierarchy)
 		{
+			//Appearance
 			strCursorInfo =
 		$"SystemCursor (↕↔): {(AC_ManagerHolder.SystemCursorManager.IsSystemCursorShowing ? "Show" : "Hide") + "_" + AC_ManagerHolder.SystemCursorManager.CurSystemCursorAppearanceType}" +
-		"\r\n" + $"CursorState (1~7): {AC_ManagerHolder.StateManager.CurCursorState}" +
 		"\r\n" + $"CursorSize (-=): {AC_ManagerHolder.CommonSettingManager.CursorSize}";
 
-			if (!AC_StateManagerSimulator.Instance.isDebugIgnoreInput)
+			//State
+			strCursorInfo += "\r\n" + $"CursorState {(stateManagerSimulator.isDebugNumberKeysChangeState ? "(1~7)" : "")}: {AC_ManagerHolder.StateManager.CurCursorState}";
+			if (stateManagerSimulator.isDebugNumberKeysChangeState && stateManagerSimulator.isDebugIgnoreInput)
+			{
+				strCursorInfo += "\r\n" + "(Ignoring Input)";
+
+			}
+			else
 			{
 				if (AC_ManagerHolder.CommonSettingManager.IsStandByActive)
 					strCursorInfo += "\r\n" + $"StandBy after: {AC_ManagerHolder.CommonSettingManager.StandByDelayTime.ToString("F2")}s";

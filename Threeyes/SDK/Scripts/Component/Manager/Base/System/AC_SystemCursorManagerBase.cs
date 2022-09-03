@@ -130,10 +130,11 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		//#1 更新 isCursorShowing、isLastCursorShowing
 		if (systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.None)//当前光标为非系统默认的光标（有可能是空，或者是程序/Game自定义的光标）：隐藏
 		{
+			isSystemCursorShowing = false;
 		}
 		else
 		{
-			if (commonSetting_IsHideOnTextInput && systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.IBeam)//当前为输入光标
+			if (commonSetting_IsHideOnTextInput && systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.IBeam)//当前为输入光标且设置符合：隐藏
 			{
 				isSystemCursorShowing = false;
 			}
@@ -141,6 +142,8 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 
 		//#2 更新 curCursorAppearanceType	
 		curSystemCursorAppearanceType = systemCursorAppearanceInfo.systemCursorAppearanceType;
+
+		//#3 更新 hasChanged
 		if (isLastCursorShowing != isSystemCursorShowing)
 		{
 			isLastCursorShowing = isSystemCursorShowing;

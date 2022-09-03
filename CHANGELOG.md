@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.2.2]
+- Fix Simulator scene's reflection missing problem.
+
 ## [3.2.1]
 - Rename AC_Clock to AC_ClockController.
 - Add ViewBoundsFitter prefab.

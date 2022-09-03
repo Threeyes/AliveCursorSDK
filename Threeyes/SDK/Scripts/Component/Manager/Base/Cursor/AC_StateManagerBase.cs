@@ -84,8 +84,11 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	}
 
 	//Appearance
+	protected bool isSystemCursorShown = false;//缓存系统光标的激活状态
 	public void OnSystemCursorAppearanceChanged(bool isSystemCursorShowing, AC_SystemCursorAppearanceInfo systemCursorAppearanceInfo)
 	{
+		isSystemCursorShown = isSystemCursorShowing;
+
 		if (Application.isEditor && isDebugStayActive)
 			return;
 
@@ -126,7 +129,6 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	}
 	IEnumerator IEDetectMouseNotMove()
 	{
-
 		float lastMouseInputTime = LastMouseInputEventTime;
 		float lastMouseOrKeyInputStartTime = LastAnyInputEventTime;
 
@@ -137,7 +139,10 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 				yield break;
 #endif
 
-			if (!isAliveCursorActived)//等待被激活
+			if (!isAliveCursorActived)//等待AC被激活
+				yield return null;
+
+			if (!isSystemCursorShown)//等待系统光标被激活
 				yield return null;
 
 			if (!this)
@@ -199,8 +204,8 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	#endregion
 
 	#region Inner Method
-	protected float noMouseInputTimeSinceWorking = 0;
-	protected float notMouseOrKeyInputTimeSinceStandBy = 0;
+	[ReadOnly] [SerializeField] float noMouseInputTimeSinceWorking = 0;
+	[ReadOnly] [SerializeField] float notMouseOrKeyInputTimeSinceStandBy = 0;
 
 	protected float LastMouseInputEventTime { get { return AC_ManagerHolder.SystemInputManager.LastMouseInputEventTime; } }
 	protected float LastMouseWheelEventTime { get { return AC_ManagerHolder.SystemInputManager.LastMouseWheelEventTime; } }
@@ -251,10 +256,11 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	#endregion
 
 	#region Debug
+	public bool isDebugNumberKeysChangeState { get { return isDebugTopNumberKeysChangeState || isDebugPadNumberKeysChangeState; } }
 	[Foldout(foldoutName_Debug)] public bool isDebugStayActive = false;
 	[Foldout(foldoutName_Debug)] public bool isDebugTopNumberKeysChangeState = false;//Number keys on the top of the alphanumeric keyboard (Active PadNumberKeys instead incase you need to change Inspector field via these keys)
 	[Foldout(foldoutName_Debug)] public bool isDebugPadNumberKeysChangeState = false;//Keys on NumberPad
-	[Header("Check this will affect some state switching, require target state get actived (eg: from working to bored)!")] [Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
+	[Header("Stop auto state switching via input (eg: from working to bored)!")] [Foldout(foldoutName_Debug)] [EnableIf(EConditionOperator.Or, nameof(isDebugTopNumberKeysChangeState), nameof(isDebugPadNumberKeysChangeState))] public bool isDebugIgnoreInput = false;//The Input won't affects State (Toggle via Alpha0 or Keypad0)
 
 	readonly protected Dictionary<KeyCode, AC_CursorState> debugDicTopNumberKey2State = new Dictionary<KeyCode, AC_CursorState>()
 	{

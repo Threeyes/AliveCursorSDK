@@ -84,7 +84,7 @@ public class AC_DefaultPostProcessingController : AC_PostProcessingControllerBas
 		[EnableIf(nameof(isUsePostProcessing))] [AllowNesting] public bool bloom_IsActive = false;
 		[Tooltip("Filters out pixels under this level of brightness. Value is in gamma-space.")] [EnableIf(nameof(isBloomValid))] [AllowNesting] public float bloom_Threshold = 0.9f;
 		[Tooltip("Strength of the bloom filter.")] [EnableIf(nameof(isBloomValid))] [AllowNesting] public float bloom_Intensity = 0f;
-		[Tooltip("Set the radius of the bloom effect")] [EnableIf(nameof(isBloomValid))] [AllowNesting] [Range(0, 1)] public float bloom_Scatter = 0.7f;
+		[Tooltip("Set the radius of the bloom effect")] [EnableIf(nameof(isBloomValid))] [AllowNesting] [Range(0, 1)] public float bloom_Scatter = 0.1f;
 		[Tooltip("Use the color picker to select a color for the Bloom effect to tint to.")] [EnableIf(nameof(isBloomValid))] [AllowNesting] public Color bloom_Tint = Color.white;
 		[Tooltip("Set the maximum intensity that Unity uses to calculate Bloom. If pixels in your Scene are more intense than this, URP renders them at their current intensity, but uses this intensity value for the purposes of Bloom calculations.")] [EnableIf(nameof(isBloomValid))] [AllowNesting] public float bloom_Clamp = 65472f;
 
