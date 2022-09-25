@@ -17,7 +17,7 @@ MonoBehaviour:
       value: 0
       defaultValue: 0
     cursorAppearance_CursorSize:
-      value: 2
+      value: 2.5
       defaultValue: 0
       option:
         useRange: 1

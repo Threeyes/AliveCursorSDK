@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.2.3]
+- Simulator add "Stay At Center" Toggle;
+- Change AC_WSItemAgeRating to Flag (Breaking change!).
+
 ## [3.2.2]
 - Fix Simulator scene's reflection missing problem.
 

@@ -138,13 +138,18 @@ public enum AC_WSItemVisibility
 //——Custom Tags——
 
 /// <summary>
-/// 年龄等级【必选】（Ref： https://rating-system.fandom.com/wiki/Australian_Classification_Board）
+/// 年龄等级【必选】【在Manager中为单选，但可以进行组合】（Ref： https://rating-system.fandom.com/wiki/Australian_Classification_Board）
 /// </summary>
+[System.Flags]
 public enum AC_WSItemAgeRating
 {
-	General,//Suitable for everyone
-	ParentalGuidance,// Suggested for younger viewers
-	Restricted//Children Under XX Require Accompanying Parent or Adult Guardian.
+	//None = 0,
+
+	General = 1 << 0,//Suitable for everyone
+	ParentalGuidance = 1 << 1,// Suggested for younger viewers
+	Restricted = 1 << 2,//Children Under XX Require Accompanying Parent or Adult Guardian.
+
+	//All = ~0//-1
 }
 
 /// <summary>

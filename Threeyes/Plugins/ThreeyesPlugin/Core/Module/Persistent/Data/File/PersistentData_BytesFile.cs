@@ -1,18 +1,17 @@
 using System.Text;
 using UnityEngine;
-using Threeyes.Decoder;
 using Threeyes.Data;
 
 namespace Threeyes.Persistent
 {
-    /// <summary>
-    /// Read bytes file, mainly for decoding (eg: gif、video)
-    /// (Basicly Support external file with any extension, but you can set the overrideFileFilterExtensions in Option to limit the valid file type) 
-    /// 
-    /// PS:
-    /// 1.SOBytesInfo仅用于链接Unity编辑器内部资源
-    /// </summary>
-    public class PersistentData_BytesFile : PersistentData_FileBase<SOBytesAsset, SOBytesAssetEvent, DataOption_BytesFile>
+	/// <summary>
+	/// Read bytes file, mainly for decoding (eg: gif、video)
+	/// (Basicly Support external file with any extension, but you can set the overrideFileFilterExtensions in Option to limit the valid file type) 
+	/// 
+	/// PS:
+	/// 1.SOBytesInfo仅用于链接Unity编辑器内部资源
+	/// </summary>
+	public class PersistentData_BytesFile : PersistentData_FileBase<SOBytesAsset, SOBytesAssetEvent, DataOption_BytesFile>
     {
         public override bool IsValid { get { return base.IsValid && DefaultAsset.textAsset; } }
         public override bool UseCache { get { return false; } }//PS:每次加载都需要从File中读取bytes，因此不能使用Cache

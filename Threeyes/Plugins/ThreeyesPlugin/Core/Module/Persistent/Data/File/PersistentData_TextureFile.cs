@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Threeyes.Decoder;
 using Threeyes.Data;
 
 namespace Threeyes.Persistent
 {
-    /// <summary>
-    /// Image file
-    /// </summary>
-    public class PersistentData_TextureFile : PersistentData_FileBase<Texture, TextureEvent, DataOption_TextureFile>
+	/// <summary>
+	/// Image file
+	/// </summary>
+	public class PersistentData_TextureFile : PersistentData_FileBase<Texture, TextureEvent, DataOption_TextureFile>
     {
         void Reset()
         {

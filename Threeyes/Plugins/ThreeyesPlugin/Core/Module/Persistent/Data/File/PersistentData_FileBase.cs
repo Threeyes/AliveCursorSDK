@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using Threeyes.Cache;
 using Threeyes.External;
 using Threeyes.Data;
-using Threeyes.IO;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
@@ -13,21 +12,21 @@ using NaughtyAttributes;
 namespace Threeyes.Persistent
 {
 
-    /// <summary>
-    /// Load Files from extern storage and convert to Asset type
-    /// Value represent external asset's relate/absolute path (eg: D:/A.png or ../A.png)
-    /// 
-    /// PS：
-    /// 1.DefaultValue should be DefaultAsset's filename with extension, so that when the Controller invoke SaveDefaultValue, the default persistent file will contain the correct external asset's relate path.（SubClass can set the field on Reset, see PersistentData_FileImage for more detail)
-    /// 2.路径格式要求：使用/分割
-    /// 
-    /// Warning：
-    /// 1.子类如果需要与UI等进行绑定，可以增加相应的helper，而不是直接在子类中实现
-    /// </summary>
-    /// <typeparam name="TAsset">Asset Type</typeparam>
-    /// <typeparam name="TAssetEvent"></typeparam>
-    /// <typeparam name="TOption"></typeparam>
-    public abstract class PersistentData_FileBase<TAsset, TAssetEvent, TOption> : PersistentDataBase<string, StringEvent, TOption>, IPersistentData_File<TAsset>
+	/// <summary>
+	/// Load Files from extern storage and convert to Asset type
+	/// Value represent external asset's relate/absolute path (eg: D:/A.png or ../A.png)
+	/// 
+	/// PS：
+	/// 1.DefaultValue should be DefaultAsset's filename with extension, so that when the Controller invoke SaveDefaultValue, the default persistent file will contain the correct external asset's relate path.（SubClass can set the field on Reset, see PersistentData_FileImage for more detail)
+	/// 2.路径格式要求：使用/分割
+	/// 
+	/// Warning：
+	/// 1.子类如果需要与UI等进行绑定，可以增加相应的helper，而不是直接在子类中实现
+	/// </summary>
+	/// <typeparam name="TAsset">Asset Type</typeparam>
+	/// <typeparam name="TAssetEvent"></typeparam>
+	/// <typeparam name="TOption"></typeparam>
+	public abstract class PersistentData_FileBase<TAsset, TAssetEvent, TOption> : PersistentDataBase<string, StringEvent, TOption>, IPersistentData_File<TAsset>
     where TAsset : Object
     where TOption : DataOption_File<TAsset>
     where TAssetEvent : UnityEvent<TAsset>
@@ -190,7 +189,7 @@ namespace Threeyes.Persistent
             base.SetInspectorGUIHelpBox_Error(sB);
             if (!DefaultAsset)//(Warning:这里不能用DefaultAsset==null代替，因为Object重载了bool operator （https://forum.unity.com/threads/null-null.327473/）
             {
-                sB.Append("DefaultAsset can't null!");
+                sB.Append("DefaultAsset can't be null!");
                 sB.Append("\r\n");
             }
         }

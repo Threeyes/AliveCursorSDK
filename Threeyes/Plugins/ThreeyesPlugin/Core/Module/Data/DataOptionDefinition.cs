@@ -372,15 +372,15 @@ namespace Threeyes.Data
 				List<string> listResult = new List<string>();
 				if (EnumType != null)
 				{
+					listResult.AddRange(Enum.GetNames(EnumType));
 					if (UseFlag)
 					{
-						//如果Enume没有定义0/-1，则添加
+						//如果Enume没有定义0/-1，则添加（需要注意顺序不能弄错）
 						if (!Enum.IsDefined(EnumType, 0))
-							listResult.Add(defaultNothingEnumName);
+							listResult.Insert(0, defaultNothingEnumName);
 						if (!Enum.IsDefined(EnumType, -1))
 							listResult.Add(defaultEverythingEnumName);
 					}
-					listResult.AddRange(Enum.GetNames(EnumType));
 				}
 				return listResult;
 			}

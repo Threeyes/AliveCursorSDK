@@ -152,7 +152,7 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public BoolData generalSetting_IsAliveCursorActive = new BoolData(true);//启用AC
 	public BoolData generalSetting_IsRunAtStartUp = new BoolData(false);//系统运行时自动启动
 	public BoolData generalSetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕
-	public BoolData generalSetting_IsVSyncActive = new BoolData(false);//垂直同步（打开可以减少电脑发热现象；低刷新率的用户关闭以增加流畅度 ）
+	public BoolData generalSetting_IsVSyncActive = new BoolData(true);//垂直同步（打开可以减少电脑发热现象及减少使用率；高屏幕刷新率的用户关闭以增加流畅度 ）
 	public IntData generalSetting_TargetFrameRate = new IntData(90, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为120可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
 	public StringData generalSetting_Localization = new StringData("English");
 	public StringData generalSetting_Quality = new StringData("Ultra");
