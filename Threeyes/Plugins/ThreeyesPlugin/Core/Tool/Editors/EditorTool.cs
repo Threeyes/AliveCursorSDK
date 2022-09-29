@@ -58,6 +58,27 @@ namespace Threeyes.Editor
         }
         #endregion
 
+        #region Hierarchy
+        /// <summary>
+        /// Expand Gameobjects on Hierarchy window
+        /// 
+        /// ref: 
+        /// </summary>
+        /// <param name="go"></param>
+        /// <param name="expand"></param>
+        public static void SetExpandedRecursive(GameObject go, bool expand)
+        {
+            System.Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.SceneHierarchyWindow");
+            MethodInfo methodInfo = type.GetMethod("SetExpandedRecursive");
+
+            EditorApplication.ExecuteMenuItem("Window/General/Hierarchy");
+
+            EditorWindow editorWindow = EditorWindow.focusedWindow;
+
+            methodInfo.Invoke(editorWindow, new object[] { go.GetInstanceID(), expand });
+        }
+        #endregion
+
         #region Scene
 
         public static T CreateGameObjectAsChild<T>(string name) where T : Component

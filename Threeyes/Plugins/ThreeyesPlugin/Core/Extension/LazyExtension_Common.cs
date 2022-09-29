@@ -772,10 +772,12 @@ public static partial class LazyExtension_Common
 
     #region GameObject
 
-    public static T InstantiatePrefab<T>(this GameObject obj, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion))
+    public static T InstantiatePrefab<T>(this GameObject obj, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion), Vector3? scale = null)
     {
-        return obj.InstantiatePrefab(tfParent, position, rotation).GetComponent<T>();
+        return obj.InstantiatePrefab(tfParent, position, rotation, scale).GetComponent<T>();
     }
+
+
     /// <summary>
     /// 生成一个保存预制物引用的新物体
     /// </summary>
@@ -783,15 +785,15 @@ public static partial class LazyExtension_Common
     /// <param name="obj"></param>
     /// <param name=""></param>
     /// <returns></returns>
-    public static GameObject InstantiatePrefab(this GameObject obj, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion))
+    public static GameObject InstantiatePrefab(this GameObject obj, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion), Vector3? scale = null)
     {
 
         GameObject goInst = UnityEngine.Object.Instantiate(obj);
-        SetupInstantiate(goInst, tfParent, position, rotation);
+        SetupInstantiate(goInst, tfParent, position, rotation, scale);
         return goInst;
     }
 
-    public static void SetupInstantiate(this GameObject goInst, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion))
+    public static void SetupInstantiate(this GameObject goInst, Transform tfParent = null, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion), Vector3? scale = null)
     {
         Transform tfInst = goInst.transform;
         if (tfParent)
@@ -799,12 +801,17 @@ public static partial class LazyExtension_Common
             tfInst.SetParent(tfParent, false);//scale prefab to UI scale 
             tfInst.localPosition = position;
             tfInst.localRotation = rotation;
+
         }
         else
         {
             tfInst.position = position;
             tfInst.rotation = rotation;
         }
+
+        //PS:默认不修改缩放，除非明确指定
+        if (scale.HasValue)
+            tfInst.localScale = scale.Value;
     }
 
     /// <summary>

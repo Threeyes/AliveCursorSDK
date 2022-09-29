@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.2.4]
+- Fix LazyExtension_Common.InstantiatePrefab param num change cause method not found problem.
+
 ## [3.2.3]
 - Simulator add "Stay At Center" Toggle;
 - Change AC_WSItemAgeRating to Flag (Breaking change!).

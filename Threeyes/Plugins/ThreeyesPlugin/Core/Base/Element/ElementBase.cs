@@ -11,11 +11,11 @@ public class ElementBase<TData> : MonoBehaviour, IPoolableHandler
 {
 	public TData data;
 	public UnityEvent onAfterInit;
-	public UnityEvent onBeforeDestroy;//BeforeDestroy（ToReName: onBeforeDestroy）
+	public UnityEvent onBeforeDestroy;//BeforeDestroy
 	public virtual void Init(TData tempData)
 	{
 		InitFunc(tempData);
-		onAfterInit.Invoke();
+		onAfterInit?.Invoke();
 	}
 
 	/// <summary>
@@ -39,7 +39,7 @@ public class ElementBase<TData> : MonoBehaviour, IPoolableHandler
 
 	public virtual void OnBeforeDestroy()
 	{
-		onBeforeDestroy.Invoke();//调用相关事件
+		onBeforeDestroy?.Invoke();//调用相关事件
 	}
 	protected virtual void OnDestroy()
 	{

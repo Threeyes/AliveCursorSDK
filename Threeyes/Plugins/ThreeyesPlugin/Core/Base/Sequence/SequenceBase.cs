@@ -23,11 +23,11 @@ public class SequenceBase<TData> : SequenceAbstract, IEnumerable<TData>
     {
         get
         {
-            if (CurIndex < ListData.Count)
+            if (CurIndex > 0 && CurIndex < ListData.Count)
             {
                 return ListData[CurIndex];
             }
-            Debug.LogError("Current data is null!");
+            //Debug.LogError("Current data is null!");
             return null;
         }
     }
@@ -295,6 +295,24 @@ public class SequenceBase<TData> : SequenceAbstract, IEnumerable<TData>
 
     #region Utility
 
+    //
+    /// <summary>
+    /// 【测试中】让用户自行初始化UnityEvent，避免随物体生成或AddComent时UnityEvent未初始化导致报错（https://forum.unity.com/threads/unity-event-is-null-right-after-addcomponent.819402/）
+    /// </summary>
+    public void InitUnityEvent()
+    {
+        onBeforeSet = new IntEvent();
+        onSet = new IntEvent();
+        onReset = new IntEvent();
+        onSetInvalid = new IntEvent();
+        onFirst = new UnityEvent();
+        onFinish = new UnityEvent();
+        onComplete = new UnityEvent();
+        onCanSetPrevious = new BoolEvent();
+        onCanSetNext = new BoolEvent();
+        onSetPageNumberText = new StringEvent();
+    }
+
     /// <summary>
     /// Update relate state after modify List or Data
     /// </summary>
@@ -318,10 +336,10 @@ public class SequenceBase<TData> : SequenceAbstract, IEnumerable<TData>
             canNext = CurIndex != listData.Count - 1;
         }
 
-        //Bug：Unity2018通过Hierarchy菜单创建会报错，但是整体不影响使用（原因：onCanSetPrevious为null）
-        onCanSetPrevious.Invoke(canPrevious);
-        onCanSetNext.Invoke(canNext);
-        onSetPageNumberText.Invoke(StrPageNumber);
+        //Bug：Unity2018通过Hierarchy菜单创建会报错，但是整体不影响使用（原因：当Gameobject首次被创建时，onCanSetPrevious等UnityEvent为null）
+        onCanSetPrevious?.Invoke(canPrevious);
+        onCanSetNext?.Invoke(canNext);
+        onSetPageNumberText?.Invoke(StrPageNumber);
     }
     #endregion
 }
