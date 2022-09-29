@@ -4,6 +4,9 @@
   "version": "3.2.4",
   "unity": "2021.3",
   "description": "SDK for AliveCursor.",
+  "documentationUrl": "https://github.com/Threeyes/AliveCursorSDK/wiki",
+  "changelogUrl": "https://github.com/Threeyes/AliveCursorSDK/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/Threeyes/AliveCursorSDK/blob/main/LICENSE",
   "keywords": [
     "AliveCursor"
   ],  
