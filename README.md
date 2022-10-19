@@ -42,7 +42,7 @@
         "com.coffee.ui-effect": "4.0.0-preview.9",
         "com.zibra.liquids-free": "1.4.5",
         "com.threeyes.alivecursor.sdk": "X.X.X",
-        "com.yasirkula.beziersolution": "2.3.1",
+        "com.yasirkula.beziersolution": "2.3.2",
         "com.dbrizov.naughtyattributes": "2.1.4",
         "jillejr.newtonsoft.json-for-unity.converters": "1.4.0"
     }
