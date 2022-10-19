@@ -11,7 +11,7 @@ using UnityEngine.Events;
 /// PS:
 /// 1. Use short name to avoid path length restriction
 /// </summary>
-public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponentBase<ZibraLiquidMaterialParameters, AC_SOZibraLiquidMaterialParametersControllerConfig, AC_ZibraLiquidMaterialParametersController.ConfigInfo>
+public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponentBase<ZibraLiquidMaterialParameters, AC_SOZibraLiquidMaterialParametersControllerConfig, AC_ZibraLiquidMaterialParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 {
 	#region Unity Method
@@ -37,7 +37,7 @@ public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponent
 			return;
 		UpdateSetting();
 	}
-	void UpdateSetting()
+	public void UpdateSetting()
 	{
 		Comp.Color = Config.color;
 		Comp.ReflectionColor = Config.reflectionColor;

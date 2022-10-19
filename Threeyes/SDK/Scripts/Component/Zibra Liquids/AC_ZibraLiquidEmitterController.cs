@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static com.zibra.liquid.Manipulators.ZibraLiquidEmitter;
 
-public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraLiquidEmitter, AC_SOZibraLiquidEmitterControllerConfig, AC_ZibraLiquidEmitterController.ConfigInfo>
+public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraLiquidEmitter, AC_SOZibraLiquidEmitterControllerConfig, AC_ZibraLiquidEmitterController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 {
 	#region Unity Method
@@ -34,7 +34,7 @@ public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraL
 			return;
 		UpdateSetting();
 	}
-	void UpdateSetting()
+	public void UpdateSetting()
 	{
 		Comp.VolumePerSimTime = Config.volumePerSimTime;
 		Comp.InitialVelocity = Config.initialVelocity;

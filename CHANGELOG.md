@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.2.5]
+- Fix Liquid Controller not init with PD data on load.
+
 ## [3.2.4]
 - Fix LazyExtension_Common.InstantiatePrefab param num change cause method not found problem.
 

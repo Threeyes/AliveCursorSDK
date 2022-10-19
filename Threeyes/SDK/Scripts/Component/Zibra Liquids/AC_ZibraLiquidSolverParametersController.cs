@@ -7,7 +7,7 @@ using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBase<ZibraLiquidSolverParameters, AC_SOZibraLiquidSolverParametersControllerConfig, AC_ZibraLiquidSolverParametersController.ConfigInfo>
+public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBase<ZibraLiquidSolverParameters, AC_SOZibraLiquidSolverParametersControllerConfig, AC_ZibraLiquidSolverParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 {
 	#region Unity Method
@@ -33,7 +33,7 @@ public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBa
 			return;
 		UpdateSetting();
 	}
-	void UpdateSetting()
+	public void UpdateSetting()
 	{
 		Comp.Gravity = Config.gravity;
 		Comp.FluidStiffness = Config.fluidStiffness;

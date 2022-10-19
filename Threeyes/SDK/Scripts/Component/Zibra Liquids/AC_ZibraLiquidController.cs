@@ -9,6 +9,7 @@ using Threeyes.Coroutine;
 using Threeyes.Persistent;
 using UnityEngine.Events;
 using Newtonsoft.Json;
+using System.Linq;
 /// <summary>
 /// [Required]
 /// Function:
@@ -22,7 +23,7 @@ using Newtonsoft.Json;
 /// Warning：
 /// 1.
 /// </summary>
-public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, AC_SOZibraLiquidControllerConfig, AC_ZibraLiquidController.ConfigInfo>
+public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, AC_SOZibraLiquidControllerConfig, AC_ZibraLiquidController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 	, IAC_SystemWindow_ChangedHandler
 {
@@ -68,20 +69,26 @@ public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, 
 			if (GetComponents<ZibraManipulatorManager>().Length > 1)
 				DestroyImmediate(Comp.manipulatorManager);
 			yield return null;//等待销毁完成
+
+			//重新绑定
 			Comp.materialParameters = GetComponent<ZibraLiquidMaterialParameters>();
 			Comp.solverParameters = GetComponent<ZibraLiquidSolverParameters>();
 			Comp.renderingParameters = GetComponent<ZibraLiquidAdvancedRenderParameters>();
 			Comp.manipulatorManager = GetComponent<ZibraManipulatorManager>();
-		}
 
+		}
 		//#2 更新设置
-		UpdateSetting();
-		//yield return null;
-		//await Task.Delay(1000);//需要等待，否则ZibraManipulatorManager会报错（Bug：未解决，可能是反序列化的问题）
+		//ToAdd通知场景所有与PD相关的Controller更新参数(通过查询指定接口并调用）
+		UnityEngine.SceneManagement.Scene scene = gameObject.scene;
+		IEnumerable<IAC_ZibraLiquidController_SettingHandler> controllers = scene.GetComponents<IAC_ZibraLiquidController_SettingHandler>(true);
+		controllers.ToList().ForEach(
+			(i) =>
+			{
+				i.UpdateSetting();
+			});
 	}
 
-	//Todo:通过PD回调时，尝试不用协程，在1帧中完成更新
-	void UpdateSetting()
+	public void UpdateSetting()
 	{
 		gameObject.SetActive(false);//禁用才能修改字段
 		UpdateContainerSize();

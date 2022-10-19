@@ -13,7 +13,7 @@ using static com.zibra.liquid.DataStructures.ZibraLiquidAdvancedRenderParameters
 /// Warning:
 /// 1.This related Component is rather complex, normally you don't need to expose the config to user.
 /// </summary>
-public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableComponentBase<ZibraLiquidAdvancedRenderParameters, AC_SOZibraLiquidAdvancedRenderParametersControllerConfig, AC_ZibraLiquidAdvancedRenderParametersController.ConfigInfo>
+public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableComponentBase<ZibraLiquidAdvancedRenderParameters, AC_SOZibraLiquidAdvancedRenderParametersControllerConfig, AC_ZibraLiquidAdvancedRenderParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 {
 	#region Unity Method
@@ -39,7 +39,7 @@ public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableCom
 			return;
 		UpdateSetting();
 	}
-	void UpdateSetting()
+	public void UpdateSetting()
 	{
 		Comp.RefractionQuality = Config.refractionQuality;
 		Comp.RefractionBounces = Config.refractionBounces;

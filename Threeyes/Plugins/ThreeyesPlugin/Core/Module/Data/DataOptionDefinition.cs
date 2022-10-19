@@ -205,6 +205,22 @@ namespace Threeyes.Data
 	}
 
 	/// <summary>
+	/// 引用类型（需要可序列化）
+	/// </summary>
+	[Serializable]
+	public class DataOption_Object : DataOption
+	{
+		/// <summary>
+		///注意：
+		///-如果是其他程序集中的类，需要带上其Assembly才能找到（https://stackoverflow.com/questions/3512319/resolve-type-from-class-name-in-a-different-assembly），如：
+		/// “TestRuntimeEdit+TestConfig, AliveCursor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null”
+		/// </summary>
+		[Tooltip("The full name of object type (eg: UnityEngine.UI.Slider)")]
+		public string objectTypeFullName;//枚举所在类型的FullName
+
+	}
+
+	/// <summary>
 	/// 枚举
 	/// </summary>
 	[Serializable]
