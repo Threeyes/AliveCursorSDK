@@ -35,7 +35,7 @@ namespace Threeyes.Data
 		/// </summary>
 		/// <param name="memberInfo">relate member (Field or Property)</param>
 		/// <returns></returns>
-		IDataOption Init(MemberInfo memberInfo);
+		IDataOption Init(MemberInfo memberInfo, object obj = null);
 	}
 
 #if USE_JsonDotNet
@@ -45,7 +45,7 @@ namespace Threeyes.Data
 	{
 		public DataOption() { }
 
-		public virtual IDataOption Init(MemberInfo memberInfo) { return this; }
+		public virtual IDataOption Init(MemberInfo memberInfo, object obj = null) { return this; }
 	}
 
 	/// <summary>
@@ -74,17 +74,29 @@ namespace Threeyes.Data
 	{
 		public DataOption_Int(bool useRange = false, int minValue = 0, int maxValue = 0) : base(useRange, minValue, maxValue) { }
 
-		public override IDataOption Init(MemberInfo memberInfo)
+		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
 		{
 			if (memberInfo != null)
 			{
 				Vector2? tempRange = null;
+				//# [Range]
 				RangeAttribute rangeAttribute = memberInfo.GetCustomAttribute<RangeAttribute>();
+				RangeExAttribute rangeExAttribute = memberInfo.GetCustomAttribute<RangeExAttribute>();
 				if (rangeAttribute != null)
+				{
 					tempRange = new Vector2(rangeAttribute.min, rangeAttribute.max);
+				}
+				else if (rangeExAttribute != null && obj != null)
+				{
+					float? minValue = rangeExAttribute.GetMinValue(obj);
+					float? maxValue = rangeExAttribute.GetMaxValue(obj);
+					if (minValue.HasValue && maxValue.HasValue)
+						tempRange = new Vector2(minValue.Value, maxValue.Value);
+				}
 #if USE_NaughtyAttributes
 				else
 				{
+					//# [MinValue][MaxValue]
 					MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
 					MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
 					if (minValueAttribute != null && maxValueAttribute != null)
@@ -108,17 +120,28 @@ namespace Threeyes.Data
 	{
 		public DataOption_Float(bool useRange = false, float minValue = 0, float maxValue = 0) : base(useRange, minValue, maxValue) { }
 
-		public override IDataOption Init(MemberInfo memberInfo)
+		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
 		{
 			if (memberInfo != null)
 			{
 				Vector2? tempRange = null;
 				RangeAttribute rangeAttribute = memberInfo.GetCustomAttribute<RangeAttribute>();
+				RangeExAttribute rangeExAttribute = memberInfo.GetCustomAttribute<RangeExAttribute>();
 				if (rangeAttribute != null)
+				{
 					tempRange = new Vector2(rangeAttribute.min, rangeAttribute.max);
+				}
+				else if (rangeExAttribute != null && obj != null)
+				{
+					float? minValue = rangeExAttribute.GetMinValue(obj);
+					float? maxValue = rangeExAttribute.GetMaxValue(obj);
+					if (minValue.HasValue && maxValue.HasValue)
+						tempRange = new Vector2(minValue.Value, maxValue.Value);
+				}
 #if USE_NaughtyAttributes
 				else
 				{
+					//暂时需要最小/最大同时出现
 					MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
 					MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
 					if (minValueAttribute != null && maxValueAttribute != null)
@@ -235,7 +258,7 @@ namespace Threeyes.Data
 		[Tooltip("The full name of enum type (eg: UnityEngine.UI.Slider+Direction)")]
 		public string enumTypeFullName;//枚举所在类型的FullName
 
-		public override IDataOption Init(MemberInfo memberInfo)
+		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
 		{
 			Type variableType = memberInfo.GetVariableType();
 			enumTypeFullName = variableType?.FullName;

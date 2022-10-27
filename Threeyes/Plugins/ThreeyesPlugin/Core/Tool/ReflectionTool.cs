@@ -115,7 +115,17 @@ public static class ReflectionTool
         return GetPropertyValue(obj, propertyName, typeof(T), defaultValue) as T;
     }
 
-    public static object GetPropertyValue(object obj, string propertyName, Type propertyType = null, object defaultValue = null)
+	/// <summary>
+	///
+	/// ToUpdate:
+	/// -目前仅支持引用类型（因为IsInherit），后期增加支持值类型
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <param name="propertyName"></param>
+	/// <param name="propertyType"></param>
+	/// <param name="defaultValue"></param>
+	/// <returns></returns>
+	public static object GetPropertyValue(object obj, string propertyName, Type propertyType = null, object defaultValue = null)
     {
         object result = defaultValue;
         if (obj == null || propertyName.IsNullOrEmpty())
@@ -124,10 +134,20 @@ public static class ReflectionTool
         //ToAdd
         Type objType = obj.GetType();
         PropertyInfo propertyInfo = objType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        if (propertyInfo != null && propertyInfo.CanRead && propertyInfo.PropertyType.IsInherit(propertyType))
+        if (propertyInfo != null && propertyInfo.CanRead  )
         {
-            if (!(propertyType != null && !propertyInfo.PropertyType.IsInherit(propertyType)))//ToTest
-                result = propertyInfo.GetValue(obj);
+			if(propertyInfo.PropertyType.IsValueType)
+			{
+				result = propertyInfo.GetValue(obj);
+			}
+			else
+			{
+				if(propertyInfo.PropertyType.IsInherit(propertyType))
+				{
+					if (!(propertyType != null && !propertyInfo.PropertyType.IsInherit(propertyType)))//ToTest，功能未知
+						result = propertyInfo.GetValue(obj);
+				}
+			}
         }
         return result != null ? result : defaultValue;
     }

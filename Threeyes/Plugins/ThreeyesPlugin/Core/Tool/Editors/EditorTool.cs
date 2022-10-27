@@ -208,7 +208,7 @@ namespace Threeyes.Editor
         #region Selection
 
         /// <summary> 
-        /// 得到选中文件的绝对路径
+        /// 得到选中文件的相对路径
         /// </summary>    
         /// <returns></returns>   
         public static List<string> GetSelectionAssetPaths()

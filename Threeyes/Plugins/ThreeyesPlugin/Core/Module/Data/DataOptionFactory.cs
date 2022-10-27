@@ -40,7 +40,7 @@ namespace Threeyes.Data
 		/// <param name="memberInfo"></param>
 		/// 
 		/// <returns></returns>
-		public static IDataOption Create(MemberInfo memberInfo = null)
+		public static IDataOption Create(MemberInfo memberInfo = null, object obj = null)
 		{
 			IDataOption option = null;
 			if (memberInfo != null)
@@ -56,10 +56,10 @@ namespace Threeyes.Data
 					default: option = new DataOption(); break;
 				}
 			}
-			if (option == null)//避免返回空值
+			if (option == null)//使用默认值，避免返回null
 				option = new DataOption();
 
-			option.Init(memberInfo);//根据Member的Attribute进行初始化（如Range、Enum类型等）
+			option.Init(memberInfo, obj);//根据Member的Attribute进行初始化（如Range、Enum类型等）
 			return option;
 		}
 

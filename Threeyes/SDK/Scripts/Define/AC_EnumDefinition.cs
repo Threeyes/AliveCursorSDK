@@ -209,6 +209,7 @@ public enum AC_WSItemReference
 	Book = 1 << 3,//书籍（如西游记）
 	Celebrity = 1 << 4,//名人（如鲁迅）
 	Software = 1 << 5,//软件（如Mac）
+	Festival = 1 << 6,//节日（如新年）
 	All = ~0
 }
 
