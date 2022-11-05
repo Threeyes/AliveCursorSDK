@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Threeyes.Coroutine;
 using UnityEngine;
 /// <summary>
-/// Control creeper's model
+/// Control Creeper's state
 /// </summary>
 public class AC_CreeperModelController : MonoBehaviour
 	, IAC_ModHandler
@@ -12,6 +12,7 @@ public class AC_CreeperModelController : MonoBehaviour
 	, IAC_CommonSetting_CursorSizeHandler
 	, IAC_SystemWindow_ChangedHandler
 {
+	public Transform tfParent;//Parent of this gameobject, Control Model Scale (Default scale must be one)
 	public AC_CreeperTransformController creeperTransformController;
 
 	#region Callback
@@ -77,8 +78,11 @@ public class AC_CreeperModelController : MonoBehaviour
 		//让Rig相关组件强制更新(缩放后需要重新显隐，否则RigBuilder不会更新)
 		gameObject.SetActive(false);
 		Vector3 targetScale =  Vector3.one * AC_ManagerHolder.CommonSettingManager.CursorSize;//同步缩放Leg组
-		transform.localScale = targetScale;
-		creeperTransformController.SetLocalScale(targetScale);
+
+		//To :直接缩放父物体
+		tfParent.localScale = targetScale;
+		//transform.localScale = targetScale;
+		//creeperTransformController.SetLocalScale(targetScale);
 
 		//更新关节
 		creeperTransformController.MoveAllLeg();

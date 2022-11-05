@@ -80,6 +80,7 @@ public static class AC_EditorDefinition
 	public const string AssetMenuPrefix_AC_Workshop = AssetMenuPrefix_Root + MenuElement_Workshop;
 	public const string AssetMenuPrefix_AC_Persistent = AssetMenuPrefix_Root + MenuElement_Persistent;
 	public const string AssetMenuPrefix_AC_Config = AssetMenuPrefix_Root + MenuElement_Config;
+	public const string AssetMenuPrefix_AC_Config_Feature = AssetMenuPrefix_AC_Config+"Feature/";
 
 	public const string AssetMenuPrefix_SO_Action = AssetMenuPrefix_Root + MenuElement_Action;
 	public const string AssetMenuPrefix_SO_Action_Common = AssetMenuPrefix_SO_Action + MenuElement_Common;

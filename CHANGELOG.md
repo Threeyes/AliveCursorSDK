@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.3.1]
+- Add Creeper Controller’s Configs.
+
 ## [3.3.0]
 - Add Creeper Controller.
 

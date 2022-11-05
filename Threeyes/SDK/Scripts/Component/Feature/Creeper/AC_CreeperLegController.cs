@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using DG.Tweening;
 using System.Threading.Tasks;
-using System.Linq;
 /// <summary>
+/// Control Creeper Leg's Movement
+/// 
 /// 功能：
 /// -标注Spider单个脚的落脚点，某个脚与落脚点的距离过大时，就开始挪动操作
 /// 
@@ -18,6 +19,7 @@ using System.Linq;
 ///
 /// ToAdd:
 /// -增加自由跟随模式，常用于停止移动后某个脚进行随机移动
+///
 /// </summary>
 public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 		, IAC_CommonSetting_CursorSizeHandler
@@ -42,23 +44,24 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 	public float curDistance;//Distance to EndPoint
 	public bool isExcessive = false;//距离过长（需要移动）
 	public bool isMoving = false;//正在移动
-	public Vector3 endPos;
+	public Vector3 targetPos;//当前目标位置
 
 	//Pivot
 	AC_CreeperTransformController creeperTransformController;
 	public Transform tfModelBody;//模型躯干
-	public Vector3 localPivotPos;//脚移动的轴心（相对于躯干的局部位置，注意因为缩放同步，因此不需要乘以光标尺寸）
+	public Vector3 localPivotPos;//脚移动的轴心（程序开始前，脚应该摆在该中心位置）（注意因为缩放同步，因此不需要乘以光标尺寸）
 	private void Awake()
 	{
 		//Init
 		tfEndPoint.position = tfSourceTarget.position = Comp.data.tip.position;//同步初始位置
-		endPos = tfEndPoint.position;
+		targetPos = tfEndPoint.position;
 		settingCursorSize = AC_ManagerHolder.CommonSettingManager.CursorSize;
 
 		//以脚末端及躯干的中点作为脚的锚点
 		creeperTransformController = transform.GetComponentInParent<AC_CreeperTransformController>(true);
 		tfModelBody = creeperTransformController.tfModelBody;
-		localPivotPos = tfModelBody.InverseTransformPoint((tfModelBody.position + tfSourceTarget.position) / 2);
+
+		localPivotPos = tfModelBody.InverseTransformPoint(tfSourceTarget.position);// -中点是程序开始时的默认点
 	}
 	private void Update()
 	{
@@ -68,7 +71,7 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 
 	public void Teleport()
 	{
-		transform.position = tfSourceTarget.position = endPos = tfEndPoint.position;
+		transform.position = tfSourceTarget.position = targetPos = tfEndPoint.position;
 	}
 
 	public async void TweenMoveAsync(bool forceUpdate = false)
@@ -89,13 +92,13 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 		//Todo:检查targetPos是否在可移动范围中
 		if ((vectorLength - MaxReachDistanceFinal) < 0)//在可移动区域内:直接使用目标位置
 		{
-			endPos = tfEndPoint.position;
+			targetPos = tfEndPoint.position;
 		}
 		else//在可移动区域外：使用连线最远点
 		{
 			Vector3 vectorNormal = vector.normalized;
 			vectorNormal.Scale(Vector3.one * MaxReachDistanceFinal);
-			endPos = worldPivotPos + vectorNormal;
+			targetPos = worldPivotPos + vectorNormal;
 		}
 
 		/// 挪动操作（针对ChainIKConstraint：
@@ -110,7 +113,7 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 				tweenEnter.onComplete +=
 				() =>
 				{
-					tfSourceTarget.position = endPos;
+					tfSourceTarget.position = targetPos;
 					isMoving = false;
 				};
 			};
@@ -137,10 +140,11 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 	private void OnDrawGizmos()
 	{
 		//绘制Pivot
-		if (tfModelBody)//青色：中点
+		if (tfModelBody)//青色：中点、启动距离及最远距离
 		{
-			Gizmos.color = Color.cyan;
-			Gizmos.DrawWireSphere(tfModelBody.TransformPoint(localPivotPos), gizmosRadius);
+			Gizmos.color = new Color(0f, 1f, 1f, 0.2f);//Cyan
+			Gizmos.DrawWireSphere(tfModelBody.TransformPoint(localPivotPos), UpdatePositionDistanceFinal);
+			Gizmos.DrawWireSphere(tfModelBody.TransformPoint(localPivotPos), MaxReachDistanceFinal);
 			Gizmos.color = Color.white;
 		}
 
@@ -151,18 +155,18 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 			Gizmos.color = Color.white;
 		}
 
-		Gizmos.DrawWireSphere(endPos, gizmosRadius);//白色：待移动位置
+		Gizmos.DrawWireSphere(targetPos, gizmosRadius);//白色：当前目标位置
 
-		if (Application.isPlaying && tfSourceTarget)//渐变色代表距离接近度
+		if (Application.isPlaying && tfSourceTarget)
 		{
-			float distancePercent = Vector3.Distance(endPos, tfSourceTarget.position) / MaxReachDistanceFinal;
-			Color color = Color.Lerp(Color.green, Color.red, distancePercent);
-			Gizmos.color = color;
-			if (gizmosShowDistance)
+			if (gizmosShowDistance)//渐变色代表距离接近度
 			{
+				float distancePercent = Vector3.Distance(targetPos, tfSourceTarget.position) / MaxReachDistanceFinal;
+				Color color = Color.Lerp(Color.green, Color.red, distancePercent);
+				Gizmos.color = color;
 				UnityEditor.Handles.Label(transform.position, $"{(int)(distancePercent * 100)}%");//绘制当前距离
 			}
-			Gizmos.DrawLine(endPos, tfSourceTarget.position);
+			Gizmos.DrawLine(targetPos, tfSourceTarget.position);
 		}
 	}
 	#endregion

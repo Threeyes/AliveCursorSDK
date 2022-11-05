@@ -3,20 +3,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
 /// <summary>
-/// Let the creeper Response To Audio
+/// Creeper response To Audio
 /// 
 /// 功能：
-/// 通过序号确定指定响应音频的Leg
+/// -通过序号确定指定响应音频的Leg
 /// </summary>
 public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeperAudioVisualizerConfig, AC_CreeperAudioVisualizer.ConfigInfo>
 	, IAC_SystemAudio_RawSampleDataChangedHandler
 {
 
 	public AC_CreeperTransformController creeperGhostController;
-	public List<AC_CreeperLegController> listCreeperLegGhostController { get { return creeperGhostController.ListComp; } }
+	public List<AC_CreeperLegController> listCreeperLegGhostController { get { return creeperGhostController.listLegController; } }
 
 	private void LateUpdate()
 	{
@@ -35,14 +33,12 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 	}
 
 	#region Callback
+	bool hasChangedInThisFrame = false;
 	/// <summary>
 	/// PS:
 	/// -只有当前有音频数据时才会进入
 	/// </summary>
 	/// <param name="data"></param>
-	//public void OnFFTDataChanged(float[] data)
-	//{
-	bool hasChangedInThisFrame = false;
 	public void OnRawSampleDataChanged(float[] data)
 	{
 		float volume = AC_ManagerHolder.SystemAudioManager.CalculateLoudness(data);
@@ -115,13 +111,13 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 		public Vector3 bodyRotateRange = new Vector3(5, 0, 5);
 		public bool canLegRaise = false;
 		[Range(0.1f, 1)] public float legRaiseRange = 1f;
-		[RangeEx(nameof(legRaiseIndex_Min), nameof(legRaiseIndex_Max))] public int legRaiseIndex = 0;//Which leg to raise
+		[RangeEx(nameof(LegRaiseMinIndex), nameof(LegRaiseMaxIndex))] public int legRaiseIndex = 0;//Which leg to raise
 
 		[Header("Set by Modder")]
 		[JsonIgnore] public int totalLegCount = 2;//[Modder] Set the totalLeg 
 
-		[JsonIgnore] float legRaiseIndex_Min { get { return 0; } }
-		[JsonIgnore] float legRaiseIndex_Max { get { return totalLegCount - 1; } }
+		[JsonIgnore] float LegRaiseMinIndex { get { return 0; } }
+		[JsonIgnore] float LegRaiseMaxIndex { get { return totalLegCount - 1; } }
 	}
 	#endregion
 }
