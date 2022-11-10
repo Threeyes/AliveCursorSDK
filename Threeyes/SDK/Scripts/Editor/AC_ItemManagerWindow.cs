@@ -924,11 +924,35 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 		void OnBuildButtonClick(ClickEvent evt)
 		{
+			string absItemSceneFilePath = curSOWorkshopItemInfo.SceneFilePath;
+			bool isModSceneLoaded = false;//Check if cur mod scene loaded
+			for (int i = 0; i != SceneManager.sceneCount; i++)
+			{
+				var scene = SceneManager.GetSceneAt(i);
+				if (absItemSceneFilePath.Contains(scene.path))
+				{
+					isModSceneLoaded = true;
+					break;
+				}
+			}
+
 			string errorLog;
 			BuildItemFunc(curSOWorkshopItemInfo, out errorLog);
-			if (errorLog != null)
+			if (errorLog != null)//打包失败
 			{
 				Debug.LogError($"Build Item {curSOWorkshopItemInfo?.Title} with error: {errorLog}");
+			}
+			else//打包成功
+			{
+				if (isModSceneLoaded)
+				{
+					//因为UMod打包完成后会把场景关掉，因此需要重新打开Mod场景
+					if (File.Exists(absItemSceneFilePath))
+					{
+						string relateFilePath = EditorPathTool.AbsToUnityRelatePath(absItemSceneFilePath);
+						EditorSceneManager.OpenScene(relateFilePath, OpenSceneMode.Additive);//不管管理器场景是否已经存在都可调用
+					}
+				}
 			}
 			RefreshItemInfoGroupUIState();
 		}

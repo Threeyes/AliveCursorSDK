@@ -388,8 +388,8 @@ public enum AC_MouseButtons
 	None = 0x0,
 	Right = 0x200000,//2097152
 	Middle = 0x400000,
-	XButton1 = 0x800000,//The first XButton (XBUTTON1) on Microsoft IntelliMouse Explorer was pressed. （eg：返回/前进键）
-	XButton2 = 0x1000000//The second XButton (XBUTTON2) on Microsoft IntelliMouse Explorer was pressed.
+	XButton1 = 0x800000,//The first XButton (XBUTTON1) on Microsoft IntelliMouse Explorer was pressed. (Back Key)
+	XButton2 = 0x1000000//The second XButton (XBUTTON2) on Microsoft IntelliMouse Explorer was pressed.(Forward Key)
 }
 
 #endregion

@@ -986,8 +986,41 @@ public static partial class LazyExtension_Common
     //    Type typeContainer = typeof(TContainer);
     //    typeContainer.GetField()
     //}
+
     /// <summary>
-    /// Cache Data
+    /// 获取实例中某个字段的Attribute
+    /// </summary>
+    /// <typeparam name="TAttribute"></typeparam>
+    /// <param name="objectType">实例类型</param>
+    /// <param name="fieldName">字段名称</param>
+    /// <returns></returns>
+    public static TAttribute GetCustomAttribute<TAttribute>(this Type objectType, string fieldName)
+        where TAttribute : class
+    {
+        object attribute = null;
+        if (string.IsNullOrEmpty(fieldName))//fieldName为空：直接检查object是否包含该Attribute
+        {
+            attribute = objectType.GetCustomAttributes(typeof(TAttribute), false).FirstOrDefault();
+        }
+        else
+        {
+            var propertyInfo = objectType.GetProperty(fieldName);
+            if (propertyInfo != null)
+            {
+                attribute = propertyInfo.GetCustomAttributes(typeof(TAttribute), false).FirstOrDefault();
+            }
+
+            var fieldInfo = objectType.GetField(fieldName);
+            if (fieldInfo != null)
+            {
+                attribute = fieldInfo.GetCustomAttributes(typeof(TAttribute), false).FirstOrDefault();
+            }
+        }
+        return attribute as TAttribute;
+    }
+
+    /// <summary>
+    /// Cache Attribute Data
     /// </summary>
     private static readonly Dictionary<string, string> Cache = new Dictionary<string, string>();
 
@@ -1036,9 +1069,7 @@ public static partial class LazyExtension_Common
         Func<T, string> attributeValueAction, string name)
     {
         var key = BuildKey(type, name);
-
         var value = GetValue(type, attributeValueAction, name);
-
         lock (key + "_attributeValueLockKey")
         {
             if (!Cache.ContainsKey(key))

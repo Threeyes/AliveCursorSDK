@@ -16,24 +16,7 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 	public AC_CreeperTransformController creeperGhostController;
 	public List<AC_CreeperLegController> listCreeperLegGhostController { get { return creeperGhostController.listLegController; } }
 
-	private void LateUpdate()
-	{
-		//Reset if no audio input
-		if (!hasChangedInThisFrame)
-		{
-			creeperGhostController.tfBodyMixer.localPosition = Vector3.zero;
-			creeperGhostController.tfBodyMixer.localEulerAngles = Vector3.zero;
-			listCreeperLegGhostController.ForEach(c =>
-			{
-				if (!c.isMoving)
-					c.CompWeight = 1;
-			});
-		}
-		hasChangedInThisFrame = false;//Reset
-	}
-
 	#region Callback
-	bool hasChangedInThisFrame = false;
 	/// <summary>
 	/// PS:
 	/// -只有当前有音频数据时才会进入
@@ -77,8 +60,6 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 				c.CompWeight = legControllerToRaise == c ? 1 - volume * Config.legRaiseRange : 1;//volume reach min== Weight is 1
 			}
 		});
-
-		hasChangedInThisFrame = true;//Mark as changed
 	}
 
 	AC_CreeperLegController GetLegControllerToRaise()
@@ -114,7 +95,7 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 		[RangeEx(nameof(LegRaiseMinIndex), nameof(LegRaiseMaxIndex))] public int legRaiseIndex = 0;//Which leg to raise
 
 		[Header("Set by Modder")]
-		[JsonIgnore] public int totalLegCount = 2;//[Modder] Set the totalLeg 
+		[JsonIgnore] public int totalLegCount = 2;//[Modder] Set the totalLeg （暂时放此处，因为无法访问其他Controller的Info）
 
 		[JsonIgnore] float LegRaiseMinIndex { get { return 0; } }
 		[JsonIgnore] float LegRaiseMaxIndex { get { return totalLegCount - 1; } }

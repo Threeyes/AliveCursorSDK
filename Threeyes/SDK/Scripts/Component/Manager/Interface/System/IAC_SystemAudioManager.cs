@@ -1,23 +1,23 @@
 using System;
 
-public interface IAC_SystemAudioManager
+public interface IAC_SystemAudioManager : IAC_Manager_ModInitHandler
 {
-    int RawSampleCount { get; }
-    int FFTCount { get; }
-    int SpectrumCount { get; }
+	int RawSampleCount { get; }
+	int FFTCount { get; }
+	int SpectrumCount { get; }
 
-    float CalculateLoudness(float[] rawSampleData);
+	float CalculateLoudness(float[] rawSampleData);
 }
 
 public interface IAC_SystemAudio_RawSampleDataChangedHandler
 {
-    void OnRawSampleDataChanged(float[] rawSampleData);
+	void OnRawSampleDataChanged(float[] rawSampleData);
 }
 public interface IAC_SystemAudio_FFTDataChangedHandler
 {
-    void OnFFTDataChanged(float[] fftData);
+	void OnFFTDataChanged(float[] fftData);
 }
 public interface IAC_SystemAudio_SpectrumDataChangedHandler
 {
-    void OnSpectrumDataChanged(float[] spectrumData);
+	void OnSpectrumDataChanged(float[] spectrumData);
 }

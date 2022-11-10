@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class AC_SystemAudioManagerBase<T> : AC_ManagerBase<T>
 	, IAC_SystemAudioManager
-	, IAC_Manager_ModInitHandler
 where T : AC_SystemAudioManagerBase<T>
 {
 	#region Interface
@@ -37,26 +36,26 @@ where T : AC_SystemAudioManagerBase<T>
 	#region Property & Field
 	///PS：
 	///1.存储的Data是左/右声的平均值
-	protected float[] rawSampleData;//(Data range: [-1, 1])（值为类似Sin函数的Y值。原理：https://answers.unity.com/questions/472188/what-does-getoutputdata-sample-float-represent.html）[PS:不应该暴露rawData，否则容易获取信息]
-	protected float[] fftData;//(Data range: [0.0, 1.0])
-	protected float[] spectrumData;//(Data range: [0.0, 1.0])
+	protected float[] rawSampleData, rawSampleDefaultData;//(Data range: [-1, 1])（值为类似Sin函数的Y值。原理：https://answers.unity.com/questions/472188/what-does-getoutputdata-sample-float-represent.html）[PS:不应该暴露rawData，否则容易获取信息]
+	protected float[] fftData, fftDefaultData;//(Data range: [0.0, 1.0])（傅里叶变换）
+	protected float[] spectrumData, spectrumDefaultData;//(Data range: [0.0, 1.0])（音谱）
 	#endregion
 
 	#region Unity Method
-
 	protected virtual void Awake()
 	{
 		rawSampleData = new float[RawSampleCount];
+		rawSampleDefaultData = new float[RawSampleCount];
 		fftData = new float[FFTCount];
+		fftDefaultData = new float[FFTCount];
 		spectrumData = new float[SpectrumCount];
+		spectrumDefaultData = new float[SpectrumCount];
 	}
 	#endregion
 
 	#region Callback
 	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
-		//ToAdd:Hub中搜索实现接口的组件数量，如果为0，则该组件不更新，节省资源
-
 	}
 	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
 	{
@@ -66,13 +65,16 @@ where T : AC_SystemAudioManagerBase<T>
 	#region Inner Method
 
 	protected bool isDataLocked = false;
+
+	/// <summary>
+	/// Invoke when data changed
+	/// </summary>
 	protected virtual void OnDataChanged()
 	{
 		// Since this is being changed on a seperate thread we do this to be safe
 		lock (spectrumData)
 		{
 			isDataLocked = true;
-			//临时注释
 			AC_EventCommunication.SendMessage<IAC_SystemAudio_RawSampleDataChangedHandler>((inst) => inst.OnRawSampleDataChanged(rawSampleData));
 			AC_EventCommunication.SendMessage<IAC_SystemAudio_FFTDataChangedHandler>((inst) => inst.OnFFTDataChanged(fftData));
 			AC_EventCommunication.SendMessage<IAC_SystemAudio_SpectrumDataChangedHandler>((inst) => inst.OnSpectrumDataChanged(spectrumData));
@@ -81,6 +83,15 @@ where T : AC_SystemAudioManagerBase<T>
 		}
 	}
 
+	/// <summary>
+	/// Invoke when data unchanged (eg: no audio input)
+	/// </summary>
+	protected virtual void OnDataUnChanged()
+	{
+		AC_EventCommunication.SendMessage<IAC_SystemAudio_RawSampleDataChangedHandler>((inst) => inst.OnRawSampleDataChanged(rawSampleDefaultData));
+		AC_EventCommunication.SendMessage<IAC_SystemAudio_FFTDataChangedHandler>((inst) => inst.OnFFTDataChanged(fftDefaultData));
+		AC_EventCommunication.SendMessage<IAC_SystemAudio_SpectrumDataChangedHandler>((inst) => inst.OnSpectrumDataChanged(spectrumDefaultData));
+	}
 	#endregion
 }
 //测试

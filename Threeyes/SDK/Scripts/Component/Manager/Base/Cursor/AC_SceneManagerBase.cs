@@ -34,7 +34,7 @@ public class AC_SceneManagerBase<T> : AC_ManagerWithLifeCycleBase<T>, IAC_SceneM
 		AC_ManagerHolder.TransformManager.OnModInit(curModScene, aliveCursor);
 		AC_ManagerHolder.StateManager.OnModInit(curModScene, aliveCursor);
 		AC_ManagerHolder.SystemCursorManager.OnModInit(curModScene, aliveCursor);
-
+		AC_ManagerHolder.SystemAudioManager.OnModInit(curModScene, aliveCursor);
 		//#2：调用其他通用组件的OnModInited
 		AC_EventCommunication.SendMessage<IAC_ModHandler>((inst) => inst.OnModInit());
 	}
@@ -47,6 +47,7 @@ public class AC_SceneManagerBase<T> : AC_ManagerWithLifeCycleBase<T>, IAC_SceneM
 		AC_ManagerHolder.TransformManager.OnModDeinit(curModScene, aliveCursor);
 		AC_ManagerHolder.StateManager.OnModDeinit(curModScene, aliveCursor);
 		AC_ManagerHolder.SystemCursorManager.OnModDeinit(curModScene, aliveCursor);
+		AC_ManagerHolder.SystemAudioManager.OnModDeinit(curModScene, aliveCursor);
 		//#2：调用其他通用组件的OnModDeinit
 		AC_EventCommunication.SendMessage<IAC_ModHandler>((inst) => inst.OnModDeinit());
 	}

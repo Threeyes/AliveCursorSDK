@@ -59,7 +59,7 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 			strCursorInfo += "\r\n" + $"CursorState {(stateManagerSimulator.isDebugNumberKeysChangeState ? "(1~7)" : "")}: {AC_ManagerHolder.StateManager.CurCursorState}";
 			if (stateManagerSimulator.isDebugNumberKeysChangeState && stateManagerSimulator.isDebugIgnoreInput)
 			{
-				strCursorInfo += "\r\n" + "(Ignoring Input)";
+				strCursorInfo += "\r\n" + "(State ignoring Input)";
 
 			}
 			else

@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.3.2]
+- Reopen Mod scene after build.
+- AudioManager won't invoke event if not related Handler.
+- AudioManager will invoke event event if not audio input.
+- InputSimulator add support for XButton1/ XButton2.
+
 ## [3.3.1]
 - Add Creeper Controller’s Configs.
 
