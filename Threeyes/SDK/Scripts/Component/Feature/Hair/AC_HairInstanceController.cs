@@ -108,27 +108,11 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 	}
 	private IEnumerator IEReBuild()
 	{
-		Debug.LogError("Rebuild");
 		gameObject.SetActive(false);
 		yield return null;
 		gameObject.SetActive(true);
 	}
 	#endregion
-
-	//ToDelete
-	public void SetStrandDiameter(float value)//[Range(0.01F, 100)](in millimeters)
-	{
-		Comp.strandGroupDefaults.settingsStrands.strandDiameter = value;
-	}
-	public void SetStrandMargin(float value)// [Range(0, 100)](in millimeters)
-	{
-		Comp.strandGroupDefaults.settingsStrands.strandMargin = value;
-	}
-	public void SetGravity(float value)
-	{
-		Comp.strandGroupDefaults.settingsSolver.gravity = value;
-	}
-
 
 	static bool IsHidingState(AC_CursorState cursorState)//（ToUpdate：改为通用方法）
 	{
