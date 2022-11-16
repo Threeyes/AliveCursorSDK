@@ -224,7 +224,7 @@ public enum AC_WSItemFeature
 	AudioVisualizer = 1 << 1,//音频可视化
 	Clock = 1 << 2,//时钟
 	Exhibition = 1 << 3,//展示用途（如条幅、官方或第三方制作的用于展示及循环播放的广告）
-
+	Experimental = 1 << 10,//实验性
 	All = ~0
 }
 

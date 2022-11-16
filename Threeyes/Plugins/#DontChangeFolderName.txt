@@ -1,3 +1,3 @@
 Reason: https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html?_ga=2.232777820.272267195.1638550317-1354911002.1622446634
 
-Why these plugin not in PackageManger: the author of plugin havn't fit in PackageManger yet.
+Why these plugins not placed in PackageManger: these plugin havn't fit in PackageManger format yet.

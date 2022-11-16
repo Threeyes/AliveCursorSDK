@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.3.3]
+- Add support for com.unity.demoteam.hair. (Warning: you should update your project's manifest.json file)
+- Delete Plugin 'UnityFurURP'.
+
+
 ## [3.3.2]
 - Reopen Mod scene after build.
 - AudioManager won't invoke event if not related Handler.

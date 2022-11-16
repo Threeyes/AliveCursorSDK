@@ -3674,7 +3674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   drawMeshType: 0
-  meshToDraw: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  meshToDraw: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 3}
   color: {r: 0, g: 0.31545973, b: 1, a: 0.2509804}
   localEulerAngles: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}

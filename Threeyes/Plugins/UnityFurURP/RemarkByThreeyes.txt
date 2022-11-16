@@ -1,3 +1,0 @@
-Source：https://github.com/hecomi/UnityFurURP
-Version：main
-License：https://github.com/hecomi/UnityFurURP
