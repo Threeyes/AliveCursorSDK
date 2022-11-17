@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.3.4]
+- Fix：Simulator scene not using the reflection probe.
+
 ## [3.3.3]
 - Add support for com.unity.demoteam.hair. (Warning: you should update your project's manifest.json file)
 - Delete Plugin 'UnityFurURP'.
