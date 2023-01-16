@@ -9,7 +9,6 @@ using UnityEngine.Events;
 using static com.zibra.liquid.Manipulators.ZibraLiquidEmitter;
 
 public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraLiquidEmitter, AC_SOZibraLiquidEmitterControllerConfig, AC_ZibraLiquidEmitterController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
-	, IAC_ModHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -23,11 +22,6 @@ public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraL
 	#endregion
 
 	#region  Callback
-	public void OnModDeinit()
-	{
-		UpdateSetting();
-	}
-	public void OnModInit() { }
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		if (persistentChangeState == PersistentChangeState.Load)

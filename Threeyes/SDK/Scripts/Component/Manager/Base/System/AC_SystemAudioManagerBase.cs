@@ -11,8 +11,8 @@ where T : AC_SystemAudioManagerBase<T>
 	public int RawSampleCount { get { return rawSampleCount; } }
 	public int FFTCount { get { return fftSize; } }
 	public int SpectrumCount { get { return spectrumCount; } }
-	protected const int rawSampleCount = 128;//源数据(256足够呈现波动，太多会有割裂感）
-	protected const int fftSize = 128;// 【受音量影响】Defines FFT data size constants that can be used for FFT calculations. (Note that only the half of the specified size can be used for visualizations.)   
+	protected const int rawSampleCount = 256;//源数据(256足够呈现波动，太多会有割裂感）
+	protected const int fftSize = 4096;// 【受音量影响】Defines FFT data size constants that can be used for FFT calculations. (Note that only the half of the specified size can be used for visualizations.)   
 	protected const int spectrumCount = 128;//柱状图（64已经足够细致，因为光标显示区域不大，不应该过于细分）
 
 	/// <summary>

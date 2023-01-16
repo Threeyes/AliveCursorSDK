@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.5]
+- Update hair's git to official site.
+- Increase AudioManager's fftSize to 4096.
+- Change realte file path's Naming rules.
+- Add HDR/Alpha support for RuntimeEdit Color field.
+- Fix RuntimeEdit not support nested List type.
+
 ## [3.3.4]
 - Fix：Simulator scene not using the reflection probe.
 

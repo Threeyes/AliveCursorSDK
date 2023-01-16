@@ -138,7 +138,7 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 		//-Geometry-
 		public bool staging = true;
 		[EnableIf(nameof(staging))] [AllowNesting] public StagingPrecision stagingPrecision = StagingPrecision.Half;
-		[EnableIf(nameof(staging))] [AllowNesting] [Range(0, 10)] public uint stagingSubdivision = 0;
+		[EnableIf(nameof(staging))] [AllowNesting] [Range(0, 10)] public int stagingSubdivision = 0;
 
 
 		[Header("SettingsSolver")]

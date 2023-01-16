@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Data;
 using UnityEngine;
 /// <summary>
 /// Creeper response To Audio
@@ -92,11 +93,12 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 		public Vector3 bodyRotateRange = new Vector3(5, 0, 5);
 		public bool canLegRaise = false;
 		[Range(0.1f, 1)] public float legRaiseRange = 1f;
-		[RangeEx(nameof(LegRaiseMinIndex), nameof(LegRaiseMaxIndex))] public int legRaiseIndex = 0;//Which leg to raise
+		[RangeEx(nameof(LegRaiseMinIndex), nameof(LegRaiseMaxIndex), nameof(UseRange))] public int legRaiseIndex = 0;//Which leg to raise
 
 		[Header("Set by Modder")]
 		[JsonIgnore] public int totalLegCount = 2;//[Modder] Set the totalLeg （暂时放此处，因为无法访问其他Controller的Info）
 
+		[JsonIgnore] bool UseRange { get { return false; } }
 		[JsonIgnore] float LegRaiseMinIndex { get { return 0; } }
 		[JsonIgnore] float LegRaiseMaxIndex { get { return totalLegCount - 1; } }
 	}

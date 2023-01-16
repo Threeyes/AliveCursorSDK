@@ -14,7 +14,6 @@ using static com.zibra.liquid.DataStructures.ZibraLiquidAdvancedRenderParameters
 /// 1.This related Component is rather complex, normally you don't need to expose the config to user.
 /// </summary>
 public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableComponentBase<ZibraLiquidAdvancedRenderParameters, AC_SOZibraLiquidAdvancedRenderParametersControllerConfig, AC_ZibraLiquidAdvancedRenderParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
-	, IAC_ModHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -28,11 +27,6 @@ public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableCom
 	#endregion
 
 	#region  Callback
-	public void OnModDeinit()
-	{
-		UpdateSetting();
-	}
-	public void OnModInit() { }
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		if (persistentChangeState == PersistentChangeState.Load)

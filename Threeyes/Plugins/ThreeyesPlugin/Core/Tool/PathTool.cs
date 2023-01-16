@@ -31,7 +31,7 @@ public partial class PathTool
     public static string GetAbsPath(string parentDir, string filePath)
     {
         if (parentDir.IsNullOrEmpty() && filePath.NotNullOrEmpty())
-            return "";
+            return filePath;
 
         if (IsUriPath(filePath))//Url通常为绝对路径
             return filePath;

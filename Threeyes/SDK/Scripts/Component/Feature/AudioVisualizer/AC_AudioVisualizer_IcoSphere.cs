@@ -84,10 +84,16 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		UpdateWaveformSetting();
 	}
 
+	float[] lastFrameSpectrumdata = new float[] { };
 	public virtual void OnSpectrumDataChanged(float[] data)
 	{
 		if (m_AnimatedSelections == null)
 			return;
+
+		if (lastFrameSpectrumdata.Length != data.Length)//Not set or length changed
+		{
+			lastFrameSpectrumdata = data;
+		}
 
 		//IcoSphere
 		//For each face, translate the vertices some distance depending on the frequency range assigned.
@@ -95,13 +101,20 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 		{
 			float normalizedIndex = (i / m_FaceLength);//Get normal index of face
 			int n = (int)(normalizedIndex * Config.fftBounds);
-			Vector3 displacement = m_AnimatedSelections[i].normal * data[n] * (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f) * Config.maxExtrusion;
+			Vector3 displacement =
+				m_AnimatedSelections[i].normal
+				* ((data[n] + lastFrameSpectrumdata[n]) * .5f)
+				* (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f)
+				* Config.maxExtrusion;
 			foreach (int t in m_AnimatedSelections[i].indices)
 			{
 				m_DisplacedVertexPositions[t] = m_OriginalVertexPositions[t] + displacement;
 			}
 		}
-		m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter. 
+		m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter.
+
+		//Cache
+		lastFrameSpectrumdata = data;
 	}
 
 	public virtual void OnRawSampleDataChanged(float[] data)

@@ -52,6 +52,7 @@ namespace Threeyes.Data
 					case nameof(Int32): option = new DataOption_Int(); break;
 					case nameof(Single): option = new DataOption_Float(); break;
 					case nameof(Enum): option = new DataOption_Enum(); break;
+					case nameof(Color): option = new DataOption_Color(); break;
 
 					default: option = new DataOption(); break;
 				}

@@ -13,7 +13,6 @@ using static com.zibra.liquid.Manipulators.ZibraLiquidForceField;
 /// 1.gameobject's cale will affect ZibraLiquidForceField (eg: scale to 0 will make liquid freeze)
 /// </summary>
 public class AC_ZibraLiquidForceFieldController : AC_ConfigableComponentBase<ZibraLiquidForceField, AC_SOZibraLiquidForceFieldControllerConfig, AC_ZibraLiquidForceFieldController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
-	, IAC_ModHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -27,11 +26,6 @@ public class AC_ZibraLiquidForceFieldController : AC_ConfigableComponentBase<Zib
 	#endregion
 
 	#region  Callback
-	public void OnModDeinit()
-	{
-		UpdateSetting();
-	}
-	public void OnModInit() { }
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		if (persistentChangeState == PersistentChangeState.Load)

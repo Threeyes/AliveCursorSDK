@@ -72,12 +72,14 @@ namespace Threeyes.Data
 	[Serializable]
 	public class DataOption_Int : DataOption_RangeBase<int>
 	{
-		public DataOption_Int(bool useRange = false, int minValue = 0, int maxValue = 0) : base(useRange, minValue, maxValue) { }
+		public DataOption_Int() { }
+		public DataOption_Int(bool useRange, int minValue = 0, int maxValue = 0) : base(useRange, minValue, maxValue) { }
 
 		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
 		{
 			if (memberInfo != null)
 			{
+				bool isUseRange = true;
 				Vector2? tempRange = null;
 				//# [Range]
 				RangeAttribute rangeAttribute = memberInfo.GetCustomAttribute<RangeAttribute>();
@@ -90,8 +92,12 @@ namespace Threeyes.Data
 				{
 					float? minValue = rangeExAttribute.GetMinValue(obj);
 					float? maxValue = rangeExAttribute.GetMaxValue(obj);
+					bool? useRange = rangeExAttribute.GetUseRangeValue(obj);
+
 					if (minValue.HasValue && maxValue.HasValue)
 						tempRange = new Vector2(minValue.Value, maxValue.Value);
+					if (useRange.HasValue)
+						isUseRange = useRange.Value;
 				}
 #if USE_NaughtyAttributes
 				else
@@ -107,7 +113,7 @@ namespace Threeyes.Data
 #endif
 				if (tempRange.HasValue)
 				{
-					useRange = true;
+					useRange = isUseRange;
 					minValue = (int)tempRange.Value.x;
 					maxValue = (int)tempRange.Value.y;
 				}
@@ -118,12 +124,14 @@ namespace Threeyes.Data
 	[Serializable]
 	public class DataOption_Float : DataOption_RangeBase<float>
 	{
-		public DataOption_Float(bool useRange = false, float minValue = 0, float maxValue = 0) : base(useRange, minValue, maxValue) { }
+		public DataOption_Float() { }
+		public DataOption_Float(bool useRange, float minValue = 0, float maxValue = 0) : base(useRange, minValue, maxValue) { }
 
 		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
 		{
 			if (memberInfo != null)
 			{
+				bool isUseRange = true;
 				Vector2? tempRange = null;
 				RangeAttribute rangeAttribute = memberInfo.GetCustomAttribute<RangeAttribute>();
 				RangeExAttribute rangeExAttribute = memberInfo.GetCustomAttribute<RangeExAttribute>();
@@ -133,10 +141,15 @@ namespace Threeyes.Data
 				}
 				else if (rangeExAttribute != null && obj != null)
 				{
+					//ToAdd：设置useRange
 					float? minValue = rangeExAttribute.GetMinValue(obj);
 					float? maxValue = rangeExAttribute.GetMaxValue(obj);
+					bool? useRange = rangeExAttribute.GetUseRangeValue(obj);
+
 					if (minValue.HasValue && maxValue.HasValue)
 						tempRange = new Vector2(minValue.Value, maxValue.Value);
+					if (useRange.HasValue)
+						isUseRange = useRange.Value;
 				}
 #if USE_NaughtyAttributes
 				else
@@ -152,9 +165,56 @@ namespace Threeyes.Data
 #endif
 				if (tempRange.HasValue)
 				{
-					useRange = true;
+					useRange = isUseRange;
 					minValue = tempRange.Value.x;
 					maxValue = tempRange.Value.y;
+				}
+			}
+			return this;
+		}
+	}
+
+
+	[Serializable]
+	public class DataOption_Color : DataOption
+	{
+		public bool UseAlpha { get { return useAlpha; } set { useAlpha = value; } }
+		public bool UseHDR { get { return useHDR; } set { useHDR = value; } }
+
+		[SerializeField] protected bool useAlpha = true;
+		[SerializeField] protected bool useHDR = false;
+
+		public DataOption_Color()
+		{
+			useAlpha = true;
+		}
+		public DataOption_Color(bool useAlpha, bool useHDR)
+		{
+			this.useAlpha = useAlpha;
+			this.useHDR = useHDR;
+		}
+
+		public override IDataOption Init(MemberInfo memberInfo, object obj = null)
+		{
+			if (memberInfo != null)
+			{
+				ColorUsageAttribute colorUsageAttribute = memberInfo.GetCustomAttribute<ColorUsageAttribute>();
+				ColorUsageExAttribute colorUsageExAttribute = memberInfo.GetCustomAttribute<ColorUsageExAttribute>();
+				if (colorUsageAttribute != null)
+				{
+					useAlpha = colorUsageAttribute.showAlpha;
+					UseHDR = colorUsageAttribute.hdr;
+				}
+				else if (colorUsageExAttribute != null && obj != null)
+				{
+					bool? useAlphaValue = colorUsageExAttribute.GetUseAlphaValue(obj);
+					bool? useHDRValue = colorUsageExAttribute.GetUseHdrValue(obj);
+
+
+					if (useAlphaValue.HasValue)
+						useAlpha = useAlphaValue.Value;
+					if (useHDRValue.HasValue)
+						UseHDR = useHDRValue.Value;
 				}
 			}
 			return this;
@@ -241,6 +301,9 @@ namespace Threeyes.Data
 		[Tooltip("The full name of object type (eg: UnityEngine.UI.Slider)")]
 		public string objectTypeFullName;//枚举所在类型的FullName
 
+		public DataOption_Object()
+		{
+		}
 	}
 
 	/// <summary>

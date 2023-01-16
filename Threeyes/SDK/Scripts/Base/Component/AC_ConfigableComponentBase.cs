@@ -2,6 +2,8 @@ using NaughtyAttributes;
 using UnityEngine;
 /// <summary>
 /// Component with configable SO
+///
+/// Todo：将常用的实现提炼到该类中（如Awake、OnDestroy等）
 /// </summary>
 /// <typeparam name="TSOConfig"></typeparam>
 /// <typeparam name="TConfig"></typeparam>

@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 using Threeyes.Data;
+using System.Collections;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
@@ -43,7 +44,6 @@ namespace Threeyes.Persistent
 
 
 		ScriptableObject cacheTargetValueClone;//【Editor only】保存TargetValue，便于退出时复原
-		ScriptableObject lastValue;//缓存上次的值，用于对比
 
 		public override void Init()
 		{
@@ -72,7 +72,9 @@ namespace Threeyes.Persistent
 
 		/// <summary>
 		/// 调用时机：
-		/// 1.Load/Set/Editor Reset
+		/// 1.Load/Set/EditorReset
+		///2.PersistentControllerBase.NotifyValueChanged
+		/// Warning：因为不一定通过RunEdit调用（如初始化），因此加载方法不能放到那个类中
 		/// </summary>
 		/// <param name="value"></param>
 		public override void OnValueChanged(ScriptableObject value, PersistentChangeState persistentChangeState)
@@ -81,8 +83,8 @@ namespace Threeyes.Persistent
 			{
 				///克隆值：value -> TargetValue
 
-				//#1 缓存新旧SO值及相关Attribute绑定方法（PS：因为RuntimeEdit.Set调用该方法时，value是TargetValue的克隆值，因此两者值对比一致；因此需要通过lastValue保存上次的值；如果当前为Load，则lastValue为null）
-				SetupSO(lastValue != null ? lastValue : TargetValue, value, persistentChangeState, true);
+				//#1 缓存新旧SO值及相关Attribute绑定方法
+				SetupSO(TargetValue, value, persistentChangeState, true);
 
 				//#2 只复制可持久化的字段，忽略其他字段，避免场景引用等信息丢失【主要是针对Load时的值同步】
 				Copy(value, TargetValue, SOFIeldCopyFilter);
@@ -92,8 +94,6 @@ namespace Threeyes.Persistent
 
 				//#4 通知外界Event
 				base.OnValueChanged(TargetValue, persistentChangeState);
-
-				lastValue = value;//缓存上次的值
 			}
 			catch (Exception e)
 			{
@@ -123,7 +123,8 @@ namespace Threeyes.Persistent
 			///2.在Set时，调用Attribute的方法等
 			RecursiveMember(originSO, newSO, persistentChangeState, isCacheOrSet);
 		}
-		private void RecursiveMember(object originObj, object newObj, PersistentChangeState persistentChangeState, bool isCacheOrSet, int maxDepth = 7)
+
+		private void RecursiveMember(object originObj, object newObj, PersistentChangeState persistentChangeState, bool isCacheOrSet, int maxDepth = 7, string parentChain = "")
 		{
 			if (maxDepth == -1) return;//限制迭代次数
 			if (originObj == null || newObj == null) return;
@@ -143,9 +144,26 @@ namespace Threeyes.Persistent
 			foreach (FieldInfo fieldInfo in objType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
 			{
 				Type fieldType = fieldInfo.FieldType;
+				string fieldPathChain = GetFieldPathChain(parentChain, fieldInfo);
+
 				if (fieldType.IsClass && fieldType != typeof(string))//PS:string、gradient等 也是 class，因此不能跳过之后的操作
 				{
-					RecursiveMember(fieldInfo.GetValue(originObj), fieldInfo.GetValue(newObj), persistentChangeState, isCacheOrSet, --maxDepth);
+					object originObjField = fieldInfo.GetValue(originObj);
+					if (originObjField is IList originObjList)//List<T>、T[]等引用合集（建议用户声明List<T>）
+					{
+						object newObjObjField = fieldInfo.GetValue(newObj);
+						if (newObjObjField is IList newObjList && originObjList.Count == newObjList.Count)//需要两者不为空且数量一致
+						{
+							for (int i = 0; i != originObjList.Count; i++)
+							{
+								RecursiveMember(originObjList[i], newObjList[i], persistentChangeState, isCacheOrSet, --maxDepth, GetFieldPathChain(parentChain, fieldInfo, i));
+							}
+						}
+					}
+					else
+					{
+						RecursiveMember(fieldInfo.GetValue(originObj), fieldInfo.GetValue(newObj), persistentChangeState, isCacheOrSet, --maxDepth, fieldPathChain);
+					}
 				}
 
 				//#1 缓存特定FieldInfo(PS:以下2个Attribute可以并行）PS:以下Attribute只有变化了才调用，避免多余调用
@@ -165,7 +183,7 @@ namespace Threeyes.Persistent
 							persistentChangeState = persistentChangeState
 						};
 
-						//为避免多余调用，确定调用Attribute方法的时机：Load Starte || 其他State&值不相等
+						//为避免多余调用，确定调用Attribute方法的时机：Load State || 其他State&值不相等
 						if (persistentChangeState == PersistentChangeState.Load || persistentChangeState != PersistentChangeState.Load && !fieldInfoDetail.IsValueEqual)
 						{
 							if (pOAttribute != null)
@@ -189,7 +207,9 @@ namespace Threeyes.Persistent
 						{
 							FieldInfoDetail targetFieldInfoDetail = listPAFPFieldInfoDetail.FirstOrDefault(mi => mi.UniqueID == FieldInfoDetail.GetUniqueID(fieldInfo));
 							if (targetFieldInfoDetail != null)//决定是否调用
-								pAFPAttribute.InvokeCallbackMethodInfo(fieldInfo, originObj, persistentChangeState);//自动加载资源到对应字段（PS:因为内部逻辑比较复杂，因此封装成Attribute方法）
+							{
+								object objAsset = pAFPAttribute.InvokeCallbackMethodInfo(fieldInfo, originObj, persistentChangeState, fieldPathChain);//自动加载资源到对应字段（PS:因为内部逻辑比较复杂，因此封装成Attribute方法）
+							}
 						}
 
 						if (pVCAttribute != null)//#[PersistentValueChanged]//需要最后调用，便于针对Field进行最后的修改
@@ -203,7 +223,6 @@ namespace Threeyes.Persistent
 					}
 				}
 			}
-
 
 			//#针对[PersistentChanged]（Class）（最后调用）
 			if (!isCacheOrSet)
@@ -230,6 +249,17 @@ namespace Threeyes.Persistent
 			return JsonDotNetTool.ShouldSerialize(objectType, memberInfo);
 		}
 
+
+		/// <summary>
+		/// 获取字段的唯一路径，用于对比不同字段
+		/// </summary>
+		/// <param name="parentChain"></param>
+		/// <param name="subFieldName"></param>
+		/// <returns></returns>
+		static string GetFieldPathChain(string parentChain, FieldInfo fieldInfo, int? indexValue = null)
+		{
+			return ReflectionTool.GetFieldPathChain(parentChain, fieldInfo, indexValue);
+		}
 
 		/// <summary>
 		/// 记录同一FieldInfo的新/旧信息

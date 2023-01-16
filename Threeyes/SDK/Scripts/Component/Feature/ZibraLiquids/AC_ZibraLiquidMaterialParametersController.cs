@@ -12,7 +12,6 @@ using UnityEngine.Events;
 /// 1. Use short name to avoid path length restriction
 /// </summary>
 public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponentBase<ZibraLiquidMaterialParameters, AC_SOZibraLiquidMaterialParametersControllerConfig, AC_ZibraLiquidMaterialParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
-	, IAC_ModHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -26,11 +25,6 @@ public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponent
 	#endregion
 
 	#region  Callback
-	public void OnModDeinit()
-	{
-		UpdateSetting();
-	}
-	public void OnModInit() { }
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		if (persistentChangeState == PersistentChangeState.Load)

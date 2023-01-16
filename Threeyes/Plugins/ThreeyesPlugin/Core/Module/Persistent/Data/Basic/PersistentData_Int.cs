@@ -1,5 +1,5 @@
-using Threeyes.Data;
 using UnityEngine;
+using Threeyes.Data;
 
 namespace Threeyes.Persistent
 {
@@ -26,7 +26,7 @@ namespace Threeyes.Persistent
 
 #if UNITY_EDITOR
 
-        //¡ª¡ªMenuItem¡ª¡ª
+        //â€”â€”MenuItemâ€”â€”
         static string instName = "IntPD ";
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Int", false, intBasicMenuOrder + 1)]
         public static void CreateInst()
@@ -34,7 +34,7 @@ namespace Threeyes.Persistent
             Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Int>(instName);
         }
 
-        //¡ª¡ªHierarchy GUI¡ª¡ª
+        //â€”â€”Hierarchy GUIâ€”â€”
         public override string ShortTypeName { get { return "Int"; } }
 
 #endif

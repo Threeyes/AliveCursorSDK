@@ -78,7 +78,7 @@ public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, 
 
 		}
 		//#2 更新设置
-		//ToAdd通知场景所有与PD相关的Controller更新参数(通过查询指定接口并调用）
+		//通知场景所有与PD相关的Controller更新参数(通过查询指定接口并调用）
 		UnityEngine.SceneManagement.Scene scene = gameObject.scene;
 		IEnumerable<IAC_ZibraLiquidController_SettingHandler> controllers = scene.GetComponents<IAC_ZibraLiquidController_SettingHandler>(true);
 		controllers.ToList().ForEach(

@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBase<ZibraLiquidSolverParameters, AC_SOZibraLiquidSolverParametersControllerConfig, AC_ZibraLiquidSolverParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
-	, IAC_ModHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -22,11 +21,6 @@ public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBa
 	#endregion
 
 	#region  Callback
-	public void OnModDeinit()
-	{
-		UpdateSetting();
-	}
-	public void OnModInit() { }
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		if (persistentChangeState == PersistentChangeState.Load)
