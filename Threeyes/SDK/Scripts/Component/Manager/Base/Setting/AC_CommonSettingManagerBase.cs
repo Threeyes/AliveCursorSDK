@@ -29,8 +29,9 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 	#region Data Events
 	public override void InitEvent()
 	{
-		Config.cursorAppearance_IsHideOnTextInput.actionValueChanged += OnDataIsHideOnTextInputChanged;
 		Config.cursorAppearance_CursorSize.actionValueChanged += OnDataCursorSizeChanged;
+		Config.cursorAppearance_IsHideOnUnknownCursor.actionValueChanged += OnDataIsHideOnUnknownCursorChanged;
+		Config.cursorAppearance_IsHideOnTextInput.actionValueChanged += OnDataIsHideOnTextInputChanged;
 
 		Config.cursorState_StandBy_IsActive.actionValueChanged += OnDataIsStandByActiveChanged;
 		Config.cursorState_StandBy_DelayTime.actionValueChanged += OnDataStandByDelayTimeChanged;
@@ -48,13 +49,17 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 		Config.generalSetting_ProcessPriority.actionValueChanged += OnDataProcessPriorityChanged;
 	}
 
-	protected virtual void OnDataIsHideOnTextInputChanged(bool value)
-	{
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsHideOnTextInputHandler>(inst => inst.OnIsHideOnTextInputChanged(value), includeHubScene: true);
-	}
 	protected virtual void OnDataCursorSizeChanged(float value)
 	{
 		AC_EventCommunication.SendMessage<IAC_CommonSetting_CursorSizeHandler>(inst => inst.OnCursorSizeChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataIsHideOnUnknownCursorChanged(bool value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsHideOnUnknownCursorHandler>(inst => inst.OnIsHideOnUnknownCursorChanged(value), includeHubScene: true);
+	}
+	protected virtual void OnDataIsHideOnTextInputChanged(bool value)
+	{
+		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsHideOnTextInputHandler>(inst => inst.OnIsHideOnTextInputChanged(value), includeHubScene: true);
 	}
 
 	protected virtual void OnDataIsStandByActiveChanged(bool value)
@@ -136,8 +141,9 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSettingConfigInfo>
 {
 	[Header("Cursor Appearance")]
-	public BoolData cursorAppearance_IsHideOnTextInput = new BoolData(false);//输入模式时隐藏(适用于文字编辑、代码编辑等人群)
 	public FloatData cursorAppearance_CursorSize = new FloatData(1, new DataOption_Float(true, 0.1f, 10f));
+	public BoolData cursorAppearance_IsHideOnUnknownCursor = new BoolData(true);//光标未知时隐藏(警告：游戏等自定义光标也算是未知，建议此时主动退出或禁用次选项)（Todo：需要向用户解析什么是已知光标）
+	public BoolData cursorAppearance_IsHideOnTextInput = new BoolData(false);//输入模式时隐藏(适用于文字编辑、代码编辑等人群)
 
 	[Header("Cursor State")]
 	public BoolData cursorState_StandBy_IsActive = new BoolData(true);//待命：如果超过一定时间没有鼠标点击事件则隐藏（便于用户看电影或滚轮浏览网页）

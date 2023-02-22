@@ -57,7 +57,9 @@ namespace Threeyes.Data
 			}
 
 			var value = GetMemberValue<float>(obj, MinMemberName);
-			return value != null ? (float)value : null;
+			if (value != null)
+				return (float)value;
+			return null;
 		}
 		public float? GetMaxValue(object obj)
 		{
@@ -79,7 +81,9 @@ namespace Threeyes.Data
 			}
 
 			var value = GetMemberValue<float>(obj, MaxMemberName);
-			return value != null ? (float)value : null;
+			if (value != null)
+				return (float)value;
+			return null;
 		}
 		public bool? GetUseRangeValue(object obj)
 		{
@@ -101,7 +105,9 @@ namespace Threeyes.Data
 			}
 
 			var value = GetMemberValue<bool>(obj, UseRangeMemberName);
-			return value != null ? (bool)value : null;
+			if (value != null)
+				return (bool)value;
+			return null;
 		}
 
 

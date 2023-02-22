@@ -66,13 +66,17 @@ public interface IAC_CommonSettingManager : IAC_Manager_ModInitHandler
 	bool SupportMultiDisplay { get; }
 }
 
-public interface IAC_CommonSetting_IsHideOnTextInputHandler
-{
-	void OnIsHideOnTextInputChanged(bool isActive);
-}
 public interface IAC_CommonSetting_CursorSizeHandler
 {
 	void OnCursorSizeChanged(float value);
+}
+public interface IAC_CommonSetting_IsHideOnUnknownCursorHandler
+{
+	void OnIsHideOnUnknownCursorChanged(bool isActive);
+}
+public interface IAC_CommonSetting_IsHideOnTextInputHandler
+{
+	void OnIsHideOnTextInputChanged(bool isActive);
 }
 
 public interface IAC_CommonSetting_IsStandByActiveHandler

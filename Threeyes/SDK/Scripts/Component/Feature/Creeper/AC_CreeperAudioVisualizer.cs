@@ -98,7 +98,7 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 		[Header("Set by Modder")]
 		[JsonIgnore] public int totalLegCount = 2;//[Modder] Set the totalLeg （暂时放此处，因为无法访问其他Controller的Info）
 
-		[JsonIgnore] bool UseRange { get { return false; } }
+		[JsonIgnore] bool UseRange { get { return true; } }
 		[JsonIgnore] float LegRaiseMinIndex { get { return 0; } }
 		[JsonIgnore] float LegRaiseMaxIndex { get { return totalLegCount - 1; } }
 	}

@@ -36,7 +36,9 @@ namespace Threeyes.Data
 			}
 
 			var value = GetMemberValue<bool>(obj, UseAlphaMemberName);
-			return value != null ? (bool)value : null;
+			if (value != null)
+				return (bool)value;
+			return null;
 		}
 		public bool? GetUseHdrValue(object obj)
 		{
@@ -54,7 +56,9 @@ namespace Threeyes.Data
 				}
 			}
 			var value = GetMemberValue<bool>(obj, UseHdrMemberName);
-			return value != null ? (bool)value : null;
+			if (value != null)
+				return (bool)value;
+			return null;
 		}
 
 	}

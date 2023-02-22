@@ -61,7 +61,7 @@ public class AC_CursorAppearanceIndicator : AC_CursorAppearanceBehaviourCollecti
 			return;
 		}
 		AC_SystemCursorAppearanceType curCursorAppearanceType = systemCursorAppearanceInfo.systemCursorAppearanceType;
-		if (isSystemCursorShowing && curCursorAppearanceType != AC_SystemCursorAppearanceType.None)//忽略系统光标显示或None的情况（因为这时候系统光标会显示，AC会隐藏）
+		if (isSystemCursorShowing /*&& curCursorAppearanceType != AC_SystemCursorAppearanceType.None*/)//忽略系统光标显示或None的情况（因为这时候系统光标会显示，AC会隐藏）
 		{
 			AC_SOCursorAppearanceInfo soCursorAppearanceInfo = soCursorAppearanceInfoCollection[curCursorAppearanceType];//查找是否包含待显示的类型
 			if (soCursorAppearanceInfo != null && soCursorAppearanceInfo != lastSOCursorAppearanceInfo)

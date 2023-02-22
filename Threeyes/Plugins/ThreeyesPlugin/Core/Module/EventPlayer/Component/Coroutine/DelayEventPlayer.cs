@@ -106,6 +106,8 @@ namespace Threeyes.EventPlayer
             }
 
             IsCoroutineRunning = false;//PS:PlayFunc will RefreshEditor
+            if (HasDestoryed)//In case get destroy
+                yield break;
             base.PlayFunc();
 
 #if UNITY_EDITOR

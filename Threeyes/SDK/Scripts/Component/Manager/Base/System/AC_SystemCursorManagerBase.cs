@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBase<T>
 	, IAC_SystemCursorManager
+	, IAC_CommonSetting_IsHideOnUnknownCursorHandler
 	, IAC_CommonSetting_IsHideOnTextInputHandler,
 	IAC_CommonSetting_BoredDepthHandler
 	where T : AC_SystemCursorManagerBase<T>
@@ -76,6 +77,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 	Camera mainCamera;
 
 	protected bool commonSetting_IsHideOnTextInput;
+	protected bool commonSetting_IsHideOnUnknownCursor;
 	protected float commonSetting_BoredDepth;
 	protected float curDepth = 10;//需要设置为默认值，否则运行时会进行位置变换
 
@@ -101,8 +103,15 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 	public virtual void OnIsHideOnTextInputChanged(bool isActiveSystemCursor_IBeam)
 	{
 		commonSetting_IsHideOnTextInput = isActiveSystemCursor_IBeam;
-		SetSystemCursorActive(AC_SystemCursorAppearanceType.IBeam, isActiveSystemCursor_IBeam);//单独激活IBeam  //Todo:移动到父类
+		SetSystemCursorActive(AC_SystemCursorAppearanceType.IBeam, isActiveSystemCursor_IBeam);//单独更新：是否显示系统IBeam光标
 	}
+
+	public virtual void OnIsHideOnUnknownCursorChanged(bool isActive)
+	{
+		commonSetting_IsHideOnUnknownCursor = isActive;
+		//ToAdd：调用SetSystemCursorActive
+	}
+
 	public virtual void OnBoredDepthChanged(float value)
 	{
 		commonSetting_BoredDepth = value;
@@ -128,11 +137,12 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		isSystemCursorShowing = isTempSystemCursorShowing;
 
 		//#1 更新 isCursorShowing、isLastCursorShowing
-		if (systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.None)//当前光标为非系统默认的光标（有可能是空，或者是程序/Game自定义的光标）：隐藏
+		if (systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.None)//当前光标为未知（有可能是空，或者是程序/Game等非系统默认或自定义的光标）：隐藏
 		{
-			isSystemCursorShowing = false;
+			if (commonSetting_IsHideOnUnknownCursor)
+				isSystemCursorShowing = false;
 		}
-		else
+		else//当前光标为已知
 		{
 			if (commonSetting_IsHideOnTextInput && systemCursorAppearanceInfo.systemCursorAppearanceType == AC_SystemCursorAppearanceType.IBeam)//当前为输入光标且设置符合：隐藏
 			{
@@ -184,7 +194,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		{
 			if (!isActive)//禁用时：
 			{
-				if (commonSetting_IsHideOnTextInput && cAT == AC_SystemCursorAppearanceType.IBeam)//根据设置决定是否不禁用系统光标IBeam
+				if (commonSetting_IsHideOnTextInput && cAT == AC_SystemCursorAppearanceType.IBeam)//根据设置，决定是否启用系统光标IBeam
 					continue;
 			}
 			SetSystemCursorActive(cAT, isActive);
