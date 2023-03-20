@@ -59,6 +59,9 @@
 ## Documentation
 Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
 
+## Contact
++ [QQ](https://im.qq.com/index/) Group: 673880395
+
 ## Samples
 To find out the possibility of AliveCursor, I also upload different kinds of mods to [workshop](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490), feel free to check out the [AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader) project.
 <p align="center">
