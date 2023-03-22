@@ -59,7 +59,7 @@
 + 如果`Package/AliveCursorSDK`中的某个子文件夹为空，请在`Package Manager`窗口重新导入该包。
 
 ## 文档
-请查阅[wiki](https://github.com/Threeyes/AliveCursorSDK/wiki)。
+请查阅[wiki](https://github.com/Threeyes/AliveCursorSDK/wiki/Home-zh-CN)。
 
 ## 联系方式
 + [QQ](https://im.qq.com/index/)群: 673880395
