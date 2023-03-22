@@ -65,7 +65,7 @@
 + [QQ](https://im.qq.com/index/)群: 673880395
 
 ## 案例
-为了发挥《AliveCursor》的潜力，我上传了不同类型的MOD到[创意工坊](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490)，你可以下载[AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader)以便参考。
+为了发挥《AliveCursor》的潜力，我上传了不同类型的MOD到[创意工坊](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490)，你可以下载[AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader)项目用作参考。
 <p align="center">
     <img src="https://user-images.githubusercontent.com/13210990/195757514-014d8d7d-b0bf-438c-9e53-40300185e1a2.gif" alt="Item图片墙" width="600px" height="450px" />
     <br />
