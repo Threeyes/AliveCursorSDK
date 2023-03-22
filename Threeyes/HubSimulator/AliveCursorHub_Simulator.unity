@@ -1303,9 +1303,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   defaultConfig:
-    cursorAppearance_IsHideOnTextInput:
-      value: 0
-      defaultValue: 0
     cursorAppearance_CursorSize:
       value: 1
       defaultValue: 0
@@ -1313,6 +1310,12 @@ MonoBehaviour:
         useRange: 1
         minValue: 0.5
         maxValue: 10
+    cursorAppearance_IsHideOnUnknownCursor:
+      value: 1
+      defaultValue: 0
+    cursorAppearance_IsHideOnTextInput:
+      value: 0
+      defaultValue: 0
     cursorState_StandBy_IsActive:
       value: 1
       defaultValue: 0
@@ -3674,7 +3677,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
   drawMeshType: 0
-  meshToDraw: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 3}
+  meshToDraw: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   color: {r: 0, g: 0.31545973, b: 1, a: 0.2509804}
   localEulerAngles: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
