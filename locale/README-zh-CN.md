@@ -1,7 +1,7 @@
 <h1 align="center">AliveCursorSDK</h1>
 
 <p align="center">
-    <img src="https://github.com/Threeyes/AliveCursorSDK/blob/main/Threeyes/SDK/Textures/ACSDK%20Icon.png?raw=true" alt="Logo" width="200px" height="200px" />
+    <a href="https://store.steampowered.com/app/1606490/Alive_Cursor/"><img src="https://github.com/Threeyes/AliveCursorSDK/blob/main/Threeyes/SDK/Textures/ACSDK%20Icon.png?raw=true" alt="Logo" width="200px" height="200px" />
     <br />
 	<a href="https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe"><img src="https://img.shields.io/badge/%20Unity-2021.3.5f1%20-blue" /></a>
 	<a href="https://openupm.com/packages/com.threeyes.alivecursor.sdk/"><img src="https://img.shields.io/npm/v/com.threeyes.alivecursor.sdk?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
@@ -16,7 +16,7 @@
 </p>
 
 ## 简介
-《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steamn的软件，它支持将系统光标替换成任意Mod。他有以下特点：
+《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steam的软件，它支持将系统光标替换成任意Mod。他有以下特点：
 + 提供完善的可视化功能模块，不懂编程也能快速实现常用功能；
 + 集成数十个稳定的[第三方开源库](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party-zh-CN)，方便实现更优秀的效果；
 + 支持热更新，可使用C#或VisualScripting编写逻辑；
