@@ -1,4 +1,10 @@
 # Changelog
+## [3.3.7]
+- Fix GizmoDrawer missing Mesh problem.
+
+## [3.3.6]
+-Fix AC_TiltByTargetMovement not flexible.
+-Add callback events.
 
 ## [3.3.5]
 - Update hair's git to official site.
