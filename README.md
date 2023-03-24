@@ -75,6 +75,6 @@ Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
 ## Samples
 To find out the possibility of AliveCursor, I also upload different kinds of mods to [workshop](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490), feel free to check out the [AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader) project.
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/13210990/195757514-014d8d7d-b0bf-438c-9e53-40300185e1a2.gif" alt="Item图片墙" width="600px" height="450px" />
+    <a href="https://github.com/Threeyes/AliveCursor_ModUploader"><img src="https://user-images.githubusercontent.com/13210990/195757514-014d8d7d-b0bf-438c-9e53-40300185e1a2.gif" alt="Item图片墙" width="600px" height="450px" />
     <br />
 </p>    
