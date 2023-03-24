@@ -20,7 +20,7 @@
 + 提供完善的可视化功能模块，不懂编程也能快速实现常用功能；
 + 集成数十个稳定的[第三方开源库](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party-zh-CN)，方便实现更优秀的效果；
 + 支持热更新，可使用C#或VisualScripting编写逻辑；
-+ 支持将各种参数（如基础数值、模型贴图、材质颜色等）暴露给用户，方便用户定制最终效果。
++ 支持将各种参数（如基础数值、模型贴图、材质颜色等）暴露给用户，方便用户自定义Mod效果。
 
 ## 通过[OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)安装
 + 安装[Git](https://git-scm.com/).
