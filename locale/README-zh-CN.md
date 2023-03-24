@@ -23,43 +23,13 @@
 + 支持将各种参数（如基础数值、模型贴图、材质颜色等）暴露给用户，方便用户自定义Mod效果。
 
 ## 通过[OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)安装
-+ 安装[Git](https://git-scm.com/).
-+ 使用[Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe)创建一个Windows空项目.
-+ 将以下内容合并到项目中的`Packages/manifest.json`文件中，或者直接下载最新的[manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json)文件并直接替换（需要确保<u>X.X.X</u>已经设置为最新的版本）:
-```json
-{
-    "scopedRegistries": [
-        {
-            "name": "package.openupm.com",
-            "url": "https://package.openupm.com",
-            "scopes": [
-                "com.openupm",
-                "com.beans.deform",
-                "com.coffee.ui-effect",
-                "com.zibra.liquids-free",
-                "com.threeyes.alivecursor.sdk",
-                "com.yasirkula.beziersolution",
-                "com.dbrizov.naughtyattributes",
-                "jillejr.newtonsoft.json-for-unity.converters"
-            ]
-        }
-    ],
-    "dependencies": {
-        "com.beans.deform": "1.2.1",
-        "com.coffee.ui-effect": "4.0.0-preview.9",
-        "com.zibra.liquids-free": "1.4.5",
-        "com.threeyes.alivecursor.sdk": "X.X.X",
-        "com.yasirkula.beziersolution": "2.3.2",
-        "com.dbrizov.naughtyattributes": "2.1.4",
-        "jillejr.newtonsoft.json-for-unity.converters": "1.4.0"
-    }
-}
-```
-+ 确保`PackagesManager`窗口包含**唯一**的脚本编辑器，并且与`Preferences` 窗口-External Tools中的设置一致（如VisualStudio）：
+1. 安装[Git](https://git-scm.com/).
+2. 使用[Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe)创建一个Windows版的空项目.
+3. 下载最新的[manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json)文件并替换`[项目根目录]/Packages`路径下的同名文件。
+4. 下载 [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip)压缩文件，解压后覆盖`[项目根目录]`路径下的同名文件夹。
+5. 打开该项目，确保`PackagesManager`窗口包含**唯一**的脚本编辑器，并且与`Preferences` 窗口-External Tools中的设置一致（如VisualStudio）：
 ![image](https://user-images.githubusercontent.com/13210990/180822147-5a917199-279f-4cbb-a073-32e5078e2709.png)
 
-+ 下载 [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip)压缩文件，解压后覆盖项目根目录的ProjectSettings文件夹。
-+ 打开该项目。
 
 ## 可能出现的错误
 + 如果第一次打开时出现错误，请尝试关闭程序，删掉`Library`文件夹然后重启项目。

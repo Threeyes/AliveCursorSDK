@@ -23,44 +23,13 @@
 + Support for exposing various parameters (eg: base values, textures or material colors) to users to facilitate customization of the final effect.
 
 ## Installation via [OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)
-+ Install [Git](https://git-scm.com/).
-+ Create an empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe).
-+ Merge the following snippet to `Packages/manifest.json` file in your project, or just download the latest [manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json) file and replace it. (Make sure the version <u>X.X.X</u> has set to the latest version):
-```json
-{
-    "scopedRegistries": [
-        {
-            "name": "package.openupm.com",
-            "url": "https://package.openupm.com",
-            "scopes": [
-                "com.openupm",
-                "com.beans.deform",
-                "com.coffee.ui-effect",
-                "com.zibra.liquids-free",
-                "com.threeyes.alivecursor.sdk",
-                "com.yasirkula.beziersolution",
-                "com.dbrizov.naughtyattributes",
-                "jillejr.newtonsoft.json-for-unity.converters"
-            ]
-        }
-    ],
-    "dependencies": {
-        "com.beans.deform": "1.2.1",
-        "com.coffee.ui-effect": "4.0.0-preview.9",
-        "com.zibra.liquids-free": "1.4.5",
-        "com.threeyes.alivecursor.sdk": "X.X.X",
-        "com.yasirkula.beziersolution": "2.3.2",
-        "com.dbrizov.naughtyattributes": "2.1.4",
-        "jillejr.newtonsoft.json-for-unity.converters": "1.4.0"
-    }
-}
-```
-+ Make sure `Packages/manifest.json` contain one and only one External Script Editor that you are using in `Preferences/External Tools` (eg, VisualStudio):
+1. Install [Git](https://git-scm.com/).
+2. Create an empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe).
+3. Download the latest [manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json) file and replace the file with the same name in the `[ProjectRootPath]/Packages` directory. 
+4. Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip) zip file, extract it and replace the folder with the same name in the `[ProjectRootPath]` directory. 
+5. Open the project, Make sure `Packages/manifest.json` contain one and only one External Script Editor that you are using in `Preferences/External Tools` (eg, VisualStudio):
 
 ![image](https://user-images.githubusercontent.com/13210990/180822147-5a917199-279f-4cbb-a073-32e5078e2709.png)
-
-+ Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip) zip file, extract it and replace your project's origin ProjectSettings folder.
-+ Open the project.
 
 ## Possible Errors
 + If some error appear on first import, try close the project, delete `Library` folder then reopen.
