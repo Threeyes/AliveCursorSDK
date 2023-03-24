@@ -16,7 +16,7 @@
 </p>
 
 ## Description
-《[AliveCursor](https://store.steampowered.com/app/1606490/Alive_Cursor/)》is a software released in Steam, it supports replacing the system cursor with any Mods. It has the following characteristics:
+[AliveCursor](https://store.steampowered.com/app/1606490/Alive_Cursor/)is a software released in Steam, it supports replacing the system cursor with any Mods. It has the following characteristics:
 + Provide a complete visual function module, which can quickly implement common functions without understanding programming.
 + Support dozens of stable [third-party open source libraries](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party) To facilitate achieving better results;
 + Support hot updates, you can write logic using C # or Visual Scripting;
