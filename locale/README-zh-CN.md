@@ -16,11 +16,11 @@
 </p>
 
 ## 简介
-《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steam的软件，它支持将系统光标替换成任意Mod。他有以下特点：
+《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steam的软件，它支持将系统光标替换成任意Mod。它有以下特点：
 + 提供完善的可视化功能模块，不懂编程也能快速实现常用功能；
-+ 集成数十个稳定的[第三方开源库](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party-zh-CN)，方便实现更优秀的效果；
-+ 支持热更新，可使用C#或VisualScripting编写逻辑；
-+ 支持将各种参数（如基础数值、模型贴图、材质颜色等）暴露给用户，方便用户自定义Mod效果。
++ 集成数十个稳定的[第三方开源库](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party-zh-CN)，可借此实现优秀的效果；
++ Mod支持热更新，可使用C#或VisualScripting编写逻辑；
++ 可将Mod各种参数（如基础数值、模型贴图、材质颜色等）提供给用户编辑，方便用户定制Mod的效果。
 
 ## 通过[OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)安装
 1. 安装[Git](https://git-scm.com/).
