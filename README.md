@@ -15,6 +15,13 @@
     <a href="https://github.com/Threeyes/AliveCursorSDK"><img src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/us.png"/></a>
 </p>
 
+## Description
+《[AliveCursor](https://store.steampowered.com/app/1606490/Alive_Cursor/)》is a software released in Steam, it supports replacing the system cursor with any Mods. It has the following characteristics:
++ Provide a complete visual function module, which can quickly implement common functions without understanding programming.
++ Support dozens of stable [third-party open source libraries](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party) To facilitate achieving better results;
++ Support hot updates, you can write logic using C # or Visual Scripting;
++ Support for exposing various parameters (eg: base values, textures or material colors) to users to facilitate customization of the final effect.
+
 ## Installation via [OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)
 + Install [Git](https://git-scm.com/).
 + Create an empty Win project with [Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe).
