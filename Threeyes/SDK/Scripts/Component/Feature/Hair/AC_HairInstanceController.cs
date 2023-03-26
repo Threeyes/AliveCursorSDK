@@ -101,8 +101,9 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 			ReBuild();
 		isLastHidingState = isCurHidingState;
 	}
+	#endregion
 
-	void ReBuild()
+	public void ReBuild()
 	{
 		CoroutineManager.StartCoroutineEx(IEReBuild());
 	}
@@ -112,8 +113,6 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 		yield return null;
 		gameObject.SetActive(true);
 	}
-	#endregion
-
 	static bool IsHidingState(AC_CursorState cursorState)//（ToUpdate：改为通用方法）
 	{
 		return cursorState == AC_CursorState.Exit || cursorState == AC_CursorState.Hide || cursorState == AC_CursorState.StandBy;

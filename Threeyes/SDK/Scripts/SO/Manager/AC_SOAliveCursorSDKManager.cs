@@ -30,6 +30,18 @@ public class AC_SOAliveCursorSDKManager : SOInstacneBase<AC_SOAliveCursorSDKMana
 	}
 
 	//——AC_ItemManagerWindow——
+	public string ItemWindow_ExePath
+	{
+		get
+		{
+			return itemWindow_ExePath;
+		}
+		set
+		{
+			itemWindow_ExePath = value;
+			EditorUtility.SetDirty(Instance);
+		}
+	}
 	public bool ItemWindow_IsPreviewGif
 	{
 		get
@@ -42,6 +54,7 @@ public class AC_SOAliveCursorSDKManager : SOInstacneBase<AC_SOAliveCursorSDKMana
 			EditorUtility.SetDirty(Instance);
 		}
 	}
+
 	public bool HubSimulator_ShowAssistantGizmo
 	{
 		get
@@ -69,6 +82,7 @@ public class AC_SOAliveCursorSDKManager : SOInstacneBase<AC_SOAliveCursorSDKMana
 	[Expandable] [SerializeField] protected AC_SOWorkshopItemInfo curWorkshopItemInfo;
 
 	[Header("ItemManagerWindow")]
+	[SerializeField] protected string itemWindow_ExePath = "";
 	[SerializeField] protected bool itemWindow_IsPreviewGif = false;
 
 	[Header("HubSimulator")]

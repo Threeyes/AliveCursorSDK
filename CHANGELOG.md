@@ -1,4 +1,12 @@
 # Changelog
+
+## [3.4.0]
+- Add AC_ImagePlayer for external image or gif files.
+- Add support for Mod's Run&Build.
+
+## [3.3.8]
+- Update Hair Plugin version to 0.10.0-exp.1 (Warning: You need to manual relpace the latest manifest.json file).
+
 ## [3.3.7]
 - Fix GizmoDrawer missing Mesh problem.
 

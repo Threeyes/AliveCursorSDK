@@ -121,6 +121,7 @@ public sealed class AC_SOWorkshopItemInfo : ScriptableObject
 	public bool IsItemUploaded { get { return itemId != 0; } }//Item是否已经上传
 
 	public bool IsBuildValid { get { string cacheValidResult; return CheckIfBuildValid(out cacheValidResult); } }
+	public bool IsExported { get { return Directory.Exists(ExportItemDirPath); } }//检查是否有导出目录
 	public bool IsUploadValid { get { return Directory.Exists(ExportItemDirPath); } }//PS:仅简单检查导出目录是否存在即可
 
 	public bool CheckIfBuildValid(out string errorLog)

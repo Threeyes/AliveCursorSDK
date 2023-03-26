@@ -37,7 +37,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 	/// </summary>
 	public class AC_ItemManagerWindow : EditorWindow
 	{
-		AC_SOAliveCursorSDKManager SOManagerInst { get { return AC_SOAliveCursorSDKManager.Instance; } }
+		static AC_SOAliveCursorSDKManager SOManagerInst { get { return AC_SOAliveCursorSDKManager.Instance; } }
 
 		private VisualTreeAsset uxmlAsset = default;
 
@@ -56,11 +56,17 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 
 		//——Interaction Group——
-		//Build
+		//Edit
 		Button buttonSelectItemDirButton;
 		Button buttonEditScene;
+
+		//Build
+		TextField textFieldExePath;
+		Button buttonSelectExe;
 		Button buttonItemBuild;
-		Button buttonItemBuildAll;
+		Button buttonItemBuildAndRun;
+		Button buttonItemRun;
+		//Button buttonItemBuildAll;
 		//Upload
 		TextField textFieldChangeLog;
 		Button buttonItemUpload;
@@ -80,14 +86,22 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		AC_SOWorkshopItemInfo curSOWorkshopItemInfo;
 		private static readonly Vector2 k_MinWindowSize = new Vector2(450, 600);
 
+		#region MenuItem
 		[MenuItem("Alive Cursor/Item Manager")]
 		public static void OpenWindow()
 		{
 			var window = GetWindow<AC_ItemManagerWindow>("Item Manager");
 			window.minSize = k_MinWindowSize;
 		}
-
-
+		[MenuItem("Alive Cursor/Build And Run %m")]
+		public static void BuildAndRunCurItem()
+		{
+			bool isBuildSuccess = BuildCurItem();
+			if (isBuildSuccess)
+			{
+				RunCurItem();
+			}
+		}
 		[MenuItem("Alive Cursor/Add Simulator Scene")]
 		public static void RunCurSceneWithSimulator()
 		{
@@ -114,6 +128,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			//#2 重新打开Item场景
 			EditorSceneManager.OpenScene(itemSceneFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);
 		}
+		#endregion
 
 		private void OnEnable()
 		{
@@ -160,10 +175,20 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			buttonSelectItemDirButton.RegisterCallback<ClickEvent>(OnSelectItemDirButtonClick);
 			buttonEditScene = rootVisualElement.Q<Button>("EditSceneButton");
 			buttonEditScene.RegisterCallback<ClickEvent>(OnEditSceneButtonClick);
+
+			textFieldExePath = rootVisualElement.Q<TextField>("ExePathTextField");
+			textFieldExePath.RegisterCallback<ChangeEvent<string>>(OnExePathTextFieldChanged);
+			textFieldExePath.value = SOManagerInst.ItemWindow_ExePath;
+			buttonSelectExe = rootVisualElement.Q<Button>("SelectExeButton");
+			buttonSelectExe.RegisterCallback<ClickEvent>(OnSelectExeButtonClick);
 			buttonItemBuild = rootVisualElement.Q<Button>("ItemBuildButton");
 			buttonItemBuild.RegisterCallback<ClickEvent>(OnBuildButtonClick);
-			buttonItemBuildAll = rootVisualElement.Q<Button>("ItemBuildAllButton");
-			buttonItemBuildAll.RegisterCallback<ClickEvent>(OnBuildAllButtonClick);
+			buttonItemBuildAndRun = rootVisualElement.Q<Button>("ItemBuildAndRunButton");
+			buttonItemBuildAndRun.RegisterCallback<ClickEvent>(OnBuildAndRunButtonClick);
+			buttonItemRun = rootVisualElement.Q<Button>("ItemRunButton");
+			buttonItemRun.RegisterCallback<ClickEvent>(OnRunButtonClick);
+			//buttonItemBuildAll = rootVisualElement.Q<Button>("ItemBuildAllButton");
+			//buttonItemBuildAll.RegisterCallback<ClickEvent>(OnBuildAllButtonClick);
 
 			textFieldChangeLog = rootVisualElement.Q<TextField>("ChangeLogTextField");
 			buttonItemUpload = rootVisualElement.Q<Button>("ItemUploadButton");//PS:只有所有必要信息填写完成后，按键才能点击
@@ -515,7 +540,6 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		{
 			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
 		}
-
 		#region Preview
 
 		private void OnPreviewObjectFieldChanged(ChangeEvent<Object> evt)
@@ -529,7 +553,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		{
 			if (!curSOWorkshopItemInfo)
 				return;
-			//打开默认文件夹里的选择菜单(ToUpdate:使用通用的工具类)
+			//打开默认文件夹里的选择菜单
 			DirectoryInfo directoryInfoDataPath = new DirectoryInfo(curSOWorkshopItemInfo.DataDirPath);
 			string resultFilePath = EditorUtility.OpenFilePanelWithFilters("Select Preview...", directoryInfoDataPath.FullName, new string[] { "Image files", AC_SOWorkshopItemInfo.arrStrValidPreviewFileExtension.ConnectToString(",") });
 			if (resultFilePath.NotNullOrEmpty())
@@ -744,6 +768,9 @@ namespace Threeyes.AliveCursor.SDK.Editor
 
 			//PS:这里调用的函数涉及FileInfo，所以要尽量减少调用频率
 			buttonItemBuild.SetInteractable(curSOWorkshopItemInfo.IsBuildValid); // 确保Build前所有必填内容都有效，否则禁用
+			buttonItemBuildAndRun.SetInteractable(curSOWorkshopItemInfo.IsBuildValid && IsExePathValid(SOManagerInst.ItemWindow_ExePath));//在上面的基础上，需要确定exe已经配置完成
+			buttonItemRun.SetInteractable(IsExePathValid(SOManagerInst.ItemWindow_ExePath) && curSOWorkshopItemInfo.IsExported);//确认exe已经Mod是否存在
+
 			textFieldChangeLog.Show(curSOWorkshopItemInfo.IsItemUploaded);
 			buttonItemUpload.SetInteractable(curSOWorkshopItemInfo.IsUploadValid);////PS:仅简单检查导出目录是否存在即可，具体错误在点击“Upload‘按键后会打印出来
 			buttonItemReuploadAll.SetInteractable(listValidItemInfo.Any(so => so && so.IsItemUploaded));//确保任意Item已上传，则表示可以重新上传
@@ -922,9 +949,80 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			return canReadWrite;
 		}
 
+		void OnExePathTextFieldChanged(ChangeEvent<string> evt)
+		{
+			SOManagerInst.ItemWindow_ExePath = evt.newValue;//存储选中的值
+			UpdateBuildAndUploadStateFunc();//更新受该必须字段影响的UI
+		}
+		void OnSelectExeButtonClick(ClickEvent evt)
+		{
+			string resultFilePath = EditorUtility.OpenFilePanelWithFilters("Select AliveCursor.exe...", Application.dataPath, new string[] { "Exe files", "exe" });
+			if (resultFilePath.NotNullOrEmpty())
+			{
+				FileInfo fileInfoSelected = new FileInfo(resultFilePath);
+				string exePath = fileInfoSelected.FullName;//目标文件;
+				if (IsExePathValid(exePath))
+				{
+					textFieldExePath.value = exePath;
+				}
+			}
+		}
 		void OnBuildButtonClick(ClickEvent evt)
 		{
-			string absItemSceneFilePath = curSOWorkshopItemInfo.SceneFilePath;
+			BuildCurItem();
+			RefreshItemInfoGroupUIState();
+		}
+		void OnBuildAndRunButtonClick(ClickEvent evt)
+		{
+			bool isBuildSuccess = BuildCurItem();
+			RefreshItemInfoGroupUIState();
+
+			if (isBuildSuccess)
+			{
+				RunCurItem();
+			}
+		}
+
+		void OnRunButtonClick(ClickEvent evt)
+		{
+			RunCurItem();
+		}
+		static bool IsExePathValid(string exePath)
+		{
+			if (exePath.NotNullOrEmpty())
+			{
+				if (File.Exists(exePath) && exePath.EndsWith("AliveCursor.exe"))
+					return true;
+			}
+			return false;
+		}
+		//void OnBuildAllButtonClick(ClickEvent evt)
+		//{
+		//	string sumError = null;
+		//	foreach (var so in listValidItemInfo)
+		//	{
+		//		string errorLog;
+		//		BuildItemFunc(so, out errorLog);
+		//		if (errorLog != null)
+		//		{
+		//			sumError += $"Build Item {so?.Title} with error: {errorLog}" + "\r\n";
+		//		}
+		//	}
+		//	//PS：因为每次打包单个Item完成后都会清空Log Console，因此需要先存储每个BuildItem的错误信息，最后再统一Log
+		//	if (sumError != null)
+		//	{
+		//		sumError = "Build All Complete, some Items are failed with error:\r\n" + sumError;
+		//		Debug.LogError(sumError);
+		//	}
+		//	RefreshItemInfoGroupUIState();
+		//}
+
+		static bool BuildCurItem()
+		{
+			if (!SOManagerInst.CurWorkshopItemInfo)
+				return false;
+
+			string absItemSceneFilePath = SOManagerInst.CurWorkshopItemInfo.SceneFilePath;
 			bool isModSceneLoaded = false;//Check if cur mod scene loaded
 			for (int i = 0; i != SceneManager.sceneCount; i++)
 			{
@@ -937,16 +1035,16 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			}
 
 			string errorLog;
-			BuildItemFunc(curSOWorkshopItemInfo, out errorLog);
+			bool isBuildSuccess = BuildItemFunc(SOManagerInst.CurWorkshopItemInfo, out errorLog);
 			if (errorLog != null)//打包失败
 			{
-				Debug.LogError($"Build Item {curSOWorkshopItemInfo?.Title} with error: {errorLog}");
+				Debug.LogError($"Build Item {SOManagerInst.CurWorkshopItemInfo?.Title} with error: {errorLog}");
 			}
 			else//打包成功
 			{
+				//因为UMod打包完成后会把场景关掉，因此需要重新打开Mod场景
 				if (isModSceneLoaded)
 				{
-					//因为UMod打包完成后会把场景关掉，因此需要重新打开Mod场景
 					if (File.Exists(absItemSceneFilePath))
 					{
 						string relateFilePath = EditorPathTool.AbsToUnityRelatePath(absItemSceneFilePath);
@@ -954,30 +1052,14 @@ namespace Threeyes.AliveCursor.SDK.Editor
 					}
 				}
 			}
-			RefreshItemInfoGroupUIState();
+			return isBuildSuccess;
 		}
-		void OnBuildAllButtonClick(ClickEvent evt)
+		static void RunCurItem()
 		{
-			string sumError = null;
-			foreach (var so in listValidItemInfo)
-			{
-				string errorLog;
-				BuildItemFunc(so, out errorLog);
-				if (errorLog != null)
-				{
-					sumError += $"Build Item {so?.Title} with error: {errorLog}" + "\r\n";
-				}
-			}
-			//PS：因为每次打包单个Item完成后都会清空Log Console，因此需要先存储每个BuildItem的错误信息，最后再统一Log
-			if (sumError != null)
-			{
-				sumError = "Build All Complete, some Items are failed with error:\r\n" + sumError;
-				Debug.LogError(sumError);
-			}
-			RefreshItemInfoGroupUIState();
+			var processStartInfo = new System.Diagnostics.ProcessStartInfo(SOManagerInst.ItemWindow_ExePath, $"-umod \"{SOManagerInst.CurWorkshopItemInfo.ExportItemDirPath}\"");
+			System.Diagnostics.Process.Start(processStartInfo);
 		}
-
-		bool BuildItemFunc(AC_SOWorkshopItemInfo sOWorkshopItemInfo, out string errorLog)
+		static bool BuildItemFunc(AC_SOWorkshopItemInfo sOWorkshopItemInfo, out string errorLog)
 		{
 			errorLog = null;
 			if (!sOWorkshopItemInfo)
@@ -1145,7 +1227,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		#region Mod Building
 		///PS:Mod的配置应该是一致的：
 		///名称：Scene.acmod
-		public void SetUpExportProfileSettings(AC_SOWorkshopItemInfo so, ExportProfileSettings exportProfileSettings)
+		static void SetUpExportProfileSettings(AC_SOWorkshopItemInfo so, ExportProfileSettings exportProfileSettings)
 		{
 			// 设置当前Profile为SO的对应信息
 			exportProfileSettings.ModAssetsPath = so.ItemDirPath;
