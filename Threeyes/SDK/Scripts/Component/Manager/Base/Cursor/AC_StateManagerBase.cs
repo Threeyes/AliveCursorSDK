@@ -21,6 +21,11 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	public AC_CursorStateInfo CurCursorStateInfo { get { return curCursorStateInfo; } }
 	public AC_CursorState CurCursorState { get { return curCursorState; } }//单独以字段保存，而不是从curCursorStateInfo中获取，避免空引用或引用被修改
 	public AC_CursorState LastCursorState { get { return lastCursorState; } }
+
+	public bool IsVanishState(AC_CursorState cursorState)
+	{
+		return cursorState == AC_CursorState.Exit || cursorState == AC_CursorState.Hide || cursorState == AC_CursorState.StandBy;
+	}
 	public bool IsCurStateActionComplete(ActionState actionState)
 	{
 		return ActiveController.IsCurStateActionComplete(actionState);

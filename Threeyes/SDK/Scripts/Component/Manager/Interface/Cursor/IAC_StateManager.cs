@@ -10,6 +10,12 @@ public interface IAC_StateManager : IAC_Manager_ModInitHandler, IManagerWithCont
 	AC_CursorState LastCursorState { get; }
 
 	/// <summary>
+	/// Check if AC is vanished in specify state (Exit、Hide、StandBy)
+	/// </summary>
+	/// <param name="cursorState"></param>
+	/// <returns></returns>
+	bool IsVanishState(AC_CursorState cursorState);
+	/// <summary>
 	/// Check if target ActionState Completed
 	/// </summary>
 	/// <param name="actionState"></param>

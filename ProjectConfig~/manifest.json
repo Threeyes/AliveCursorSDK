@@ -16,7 +16,7 @@
     }
   ],
   "dependencies": {
-    "com.threeyes.alivecursor.sdk": "3.4.0",
+    "com.threeyes.alivecursor.sdk": "3.5.0",
 	  "com.unity.demoteam.hair": "https://github.com/Unity-Technologies/com.unity.demoteam.hair.git#0.10.0-exp.1",
     "com.beans.deform": "1.2.1",
     "com.coffee.ui-effect": "4.0.0-preview.9",

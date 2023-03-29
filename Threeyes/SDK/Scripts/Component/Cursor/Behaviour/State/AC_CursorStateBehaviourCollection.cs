@@ -15,6 +15,7 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 	[Foldout(foldoutName_ActionTarget)] public GameObject actionTargetWorkingState;
 	[Foldout(foldoutName_ActionTarget)] public GameObject actionTargetStandByState;
 	[Foldout(foldoutName_ActionTarget)] public GameObject actionTargetBoredState;
+	[Foldout(foldoutName_ActionTarget)] public GameObject actionTargetVanishState;
 
 	//Triggered when the target CursorState enter/exit
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onEnterStateEnterExit;
@@ -24,6 +25,8 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onWorkingStateEnterExit;
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onStandByStateEnterExit;
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onBoredStateEnterExit;
+	[Foldout(foldoutName_UnityEvent)] public BoolEvent onVanishStateEnterExit;
+
 	#endregion
 
 	#region Callback
@@ -41,6 +44,9 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 			case AC_CursorState.StandBy: InvokeBehaviour(actionTargetStandByState, cursorStateInfo, onStandByStateEnterExit); break;
 			case AC_CursorState.Bored: InvokeBehaviour(actionTargetBoredState, cursorStateInfo, onBoredStateEnterExit); break;
 		}
+
+		bool isVanishState = AC_ManagerHolder.StateManager.IsVanishState(curCursorState);
+		onVanishStateEnterExit.Invoke(isVanishState);
 	}
 	#endregion
 
@@ -68,6 +74,7 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 		else if (stateChange == StateChange.Exit)
 			boolEvent.Invoke(false);
 	}
+
 	#endregion
 
 	#region Editor Method

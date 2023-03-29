@@ -43,7 +43,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     reachThreshold: 0.05
     isFixedAngle: 1
-    workingAngle: 0
+    workingAngle: 30
     boredMovementConfig:
       moveSpeed: 1
       rotateSpeed: 3

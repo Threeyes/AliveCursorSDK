@@ -32,7 +32,7 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 			return GetWorldPosition(curDepth);
 		}
 	}
-	public Vector3 MousePosition { get { return Input.mousePosition; } }////与new InputSystem Mouse.current.position.ReadValue结果相同
+	public virtual Vector3 MousePosition { get { return Input.mousePosition; } }////与new InputSystem Mouse.current.position.ReadValue结果相同
 	public float CurDepth { get { return curDepth; } set { curDepth = value; } }
 	public float WorkingStateCameraDepth { get { return 10f; } }//光标在Woring状态时相对相机的深度
 	public Vector2 BoredStateCameraDepthRange { get { return new Vector2(WorkingStateCameraDepth, WorkingStateCameraDepth + commonSetting_BoredDepth); } }//光标在Bored状态时相对相机的深度范围
@@ -54,7 +54,9 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 	}
 	public Vector3 GetWorldPosition(float depth)//使用自定义深度
 	{
-		return MainCamera.ScreenToWorldPoint(new Vector3(MousePosition.x, MousePosition.y, depth));
+		Vector3 worldPos = MousePosition;
+		worldPos.z = depth;
+		return MainCamera.ScreenToWorldPoint(worldPos);
 	}
 	/// <summary>
 	/// 检查指定体积的物体是否在相机视野内

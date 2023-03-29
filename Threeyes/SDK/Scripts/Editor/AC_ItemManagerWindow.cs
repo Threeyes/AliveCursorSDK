@@ -177,8 +177,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			buttonEditScene.RegisterCallback<ClickEvent>(OnEditSceneButtonClick);
 
 			textFieldExePath = rootVisualElement.Q<TextField>("ExePathTextField");
-			textFieldExePath.RegisterCallback<ChangeEvent<string>>(OnExePathTextFieldChanged);
 			textFieldExePath.value = SOManagerInst.ItemWindow_ExePath;
+			textFieldExePath.RegisterCallback<ChangeEvent<string>>(OnExePathTextFieldChanged);
 			buttonSelectExe = rootVisualElement.Q<Button>("SelectExeButton");
 			buttonSelectExe.RegisterCallback<ClickEvent>(OnSelectExeButtonClick);
 			buttonItemBuild = rootVisualElement.Q<Button>("ItemBuildButton");

@@ -89,6 +89,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 				sunSourceLight.transform.eulerAngles = Config.sunLightRotation;
 				sunSourceLight.intensity = Config.sunLightIntensity;
 				sunSourceLight.color = Config.sunLightColor;
+				sunSourceLight.shadows = Config.lightShadowType;
 			}
 		}
 		base.SetLights(isUse);
@@ -216,6 +217,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		[EnableIf(nameof(isUseLights))] [AllowNesting] public Vector3 sunLightRotation = new Vector3(30, 30, 240);
 		[EnableIf(nameof(isUseLights))] [AllowNesting] [Range(0, 8)] public float sunLightIntensity = 0.3f;
 		[EnableIf(nameof(isUseLights))] [AllowNesting] public Color sunLightColor = Color.white;
+		[EnableIf(nameof(isUseLights))] public LightShadows lightShadowType = LightShadows.None;
 
 		[Header("ReflectionProbe")]
 		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseReflection))] public bool isUseReflection = true;

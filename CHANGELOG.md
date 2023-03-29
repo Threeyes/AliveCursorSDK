@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.5.0]
+- Fix ItemManager error on editor start.
+- Fix Rigidbody moving lag problem.
+- Add config for skylight's shadow.
+
 ## [3.4.0]
 - Add AC_ImagePlayer for external image or gif files.
 - Add support for Mod's Run&Build.

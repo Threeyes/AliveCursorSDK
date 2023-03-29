@@ -44,7 +44,7 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	public Transform CursorTransform { get { return cursorTransform; } }
 	protected Transform cursorTransform;//Cursor's transform
 
-	protected float deltaTime { get { return CursorRigidbody ? Time.fixedDeltaTime : Time.deltaTime; } }
+	protected float deltaTime { get { return/* CursorRigidbody ? Time.fixedDeltaTime : */Time.deltaTime; } }
 	protected Vector3 SystemCursorPosition { get { return AC_ManagerHolder.SystemCursorManager.WorldPosition; } }
 
 	#region Callback
@@ -73,16 +73,17 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 		if (!CurAliveCursor)
 			return;
 
-		if (!cursorRigidbody)
-			UpdateMovement();
+		//if (!cursorRigidbody)
+		UpdateMovement();
 	}
 	public virtual void FixedUpdateFunc()
 	{
-		if (!CurAliveCursor)
-			return;
+		//ToDelete:会导致跟随系统光标延迟的问题，统一改为移动Transform组件
+		//if (!CurAliveCursor)
+		//	return;
 
-		if (cursorRigidbody)
-			UpdateMovement();
+		//if (cursorRigidbody)
+		//	UpdateMovement();
 	}
 	public abstract void UpdateMovement();
 	public virtual void Teleport(Vector3 position)
@@ -98,17 +99,17 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	protected virtual void UpdateCursorPosition(Vector3 value)
 	{
 		//根据物体有无Rigidbody，调用对应方法
-		if (cursorRigidbody)
-			cursorRigidbody.MovePosition(value);
-		else if (cursorTransform)
-			cursorTransform.position = value;
+		//if (cursorRigidbody)
+		//	cursorRigidbody.MovePosition(value);
+		//else if (cursorTransform)
+		cursorTransform.position = value;
 	}
 	protected virtual void UpdateCursorRotation(Quaternion value)
 	{
-		if (cursorRigidbody)
-			cursorRigidbody.MoveRotation(value);
-		else
-			cursorTransform.rotation = value;
+		//if (cursorRigidbody)
+		//	cursorRigidbody.MoveRotation(value);
+		//else
+		cursorTransform.rotation = value;
 	}
 }
 
