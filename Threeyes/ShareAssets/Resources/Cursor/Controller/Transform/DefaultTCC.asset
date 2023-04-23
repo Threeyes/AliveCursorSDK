@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefaultTCC
   m_EditorClassIdentifier: 
   config:
+    dimensionType: 1
     commonMovementConfig:
       moveSpeed: 30
       rotateSpeed: 15

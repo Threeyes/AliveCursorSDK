@@ -292,7 +292,6 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 	protected virtual void DebugInputChangeStateFunc(KeyCode keyCode, AC_KeyState mouseKeyState, Dictionary<KeyCode, AC_CursorState> dicKey2State)
 	{
 		//ToUpdate:针对按下、抬起可以有不同效果
-
 		if (mouseKeyState == AC_KeyState.Down)
 		{
 			if (!dicKey2State.ContainsKey(keyCode))
@@ -305,7 +304,7 @@ public class AC_StateManagerBase<T> : AC_ManagerWithControllerBase<T, IAC_StateC
 				return;
 			}
 
-			//按下键盘对应数字，切换模式
+			//按下键盘对应数字，切换模式(注意：需要勾选isDebugIgnoreInput，否则跟时间相关的状态会被不断激活)
 			//键位名称就是对应位置：https://docs.unity3d.com/2018.4/Documentation/Manual/ConventionalGameInput.html?_ga=2.204127448.93138317.1615045368-1235783780.1524321557
 			AC_CursorState aC_CursorState = dicKey2State[keyCode];
 			ForceSetAnimatorState(aC_CursorState);

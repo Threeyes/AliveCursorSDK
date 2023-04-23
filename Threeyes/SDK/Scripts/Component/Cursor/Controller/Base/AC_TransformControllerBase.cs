@@ -1,8 +1,12 @@
+using NaughtyAttributes;
 using System;
 using UnityEngine;
 
 public interface IAC_TransformController : IAC_ModControllerHandler
 {
+	AC_TransformControllerConfigInfoBase BaseConfig { get; }
+	Transform CursorTransform { get; }
+	float DeltaTime { get; }
 	void UpdateFunc();
 	void FixedUpdateFunc();
 
@@ -19,6 +23,8 @@ public interface IAC_TransformController : IAC_ModControllerHandler
 	/// <param name="size"></param>
 	/// <param name="unitScale"></param>
 	void SetLocalScale(float size, Vector3 unitScale);
+	void UpdateCursorPosition(Vector3 value);
+	void UpdateCursorRotation(Quaternion value);
 }
 
 /// <summary>
@@ -31,10 +37,9 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	IAC_TransformController,
 	IAC_CommonSetting_CursorSizeHandler
 	where TSOConfig : AC_SOConfigBase<TConfig>
+	where TConfig : AC_TransformControllerConfigInfoBase
 {
-	protected IAC_TransformManager TransformManager { get { return AC_ManagerHolder.TransformManager; } }
-	protected IAC_StateManager StateManager { get { return AC_ManagerHolder.StateManager; } }
-	protected IAC_SystemCursorManager SystemCursorManager { get { return AC_ManagerHolder.SystemCursorManager; } }
+	public AC_TransformControllerConfigInfoBase BaseConfig { get { return Config; } }
 
 	public AC_AliveCursor CurAliveCursor { get { if (!curAliveCursor) curAliveCursor = AC_AliveCursor.Instance; return curAliveCursor; } }
 	protected AC_AliveCursor curAliveCursor;
@@ -44,8 +49,14 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	public Transform CursorTransform { get { return cursorTransform; } }
 	protected Transform cursorTransform;//Cursor's transform
 
-	protected float deltaTime { get { return/* CursorRigidbody ? Time.fixedDeltaTime : */Time.deltaTime; } }
-	protected Vector3 SystemCursorPosition { get { return AC_ManagerHolder.SystemCursorManager.WorldPosition; } }
+	public AC_SOAction_CursorBoredBase SOBoredAction { get { return soBoredAction; } }
+	[Expandable] public AC_SOAction_CursorBoredBase soBoredAction;
+	public float DeltaTime { get { return/* CursorRigidbody ? Time.fixedDeltaTime : */Time.deltaTime; } }
+
+	protected IAC_TransformManager TransformManager { get { return AC_ManagerHolder.TransformManager; } }
+	protected IAC_StateManager StateManager { get { return AC_ManagerHolder.StateManager; } }
+	protected IAC_SystemCursorManager SystemCursorManager { get { return AC_ManagerHolder.SystemCursorManager; } }
+	protected virtual Vector3 SystemCursorPosition { get { return AC_ManagerHolder.SystemCursorManager.WorldPosition; } }
 
 	#region Callback
 	protected AC_CursorState lastSavedCursorState = AC_CursorState.None;
@@ -67,7 +78,6 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	}
 	#endregion
 
-	//根据是否使用Rigidbody，决定对应调用的Update方法
 	public virtual void UpdateFunc()
 	{
 		if (!CurAliveCursor)
@@ -78,7 +88,7 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 	}
 	public virtual void FixedUpdateFunc()
 	{
-		//ToDelete:会导致跟随系统光标延迟的问题，统一改为移动Transform组件
+		//根据是否使用Rigidbody，决定对应调用的Update方法。【ToDelete】:会导致跟随系统光标延迟的问题，统一改为移动Transform组件
 		//if (!CurAliveCursor)
 		//	return;
 
@@ -96,7 +106,7 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 			cursorTransform.localScale = size * unitScale;
 	}
 
-	protected virtual void UpdateCursorPosition(Vector3 value)
+	public virtual void UpdateCursorPosition(Vector3 value)
 	{
 		//根据物体有无Rigidbody，调用对应方法
 		//if (cursorRigidbody)
@@ -104,12 +114,23 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 		//else if (cursorTransform)
 		cursorTransform.position = value;
 	}
-	protected virtual void UpdateCursorRotation(Quaternion value)
+	public virtual void UpdateCursorRotation(Quaternion value)
 	{
 		//if (cursorRigidbody)
 		//	cursorRigidbody.MoveRotation(value);
 		//else
 		cursorTransform.rotation = value;
+	}
+}
+
+[System.Serializable]
+public class AC_TransformControllerConfigInfoBase : AC_SerializableDataBase
+{
+	public DimensionType dimensionType = DimensionType.ThreeD;
+	public enum DimensionType
+	{
+		TwoD,
+		ThreeD
 	}
 }
 

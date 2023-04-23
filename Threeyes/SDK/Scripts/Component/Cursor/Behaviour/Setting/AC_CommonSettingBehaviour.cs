@@ -10,16 +10,24 @@ using Threeyes.Editor;
 [AddComponentMenu(AC_EditorDefinition.ComponentMenuPrefix_AC_Cursor_Behaviour_Setting + "AC_CommonSettingBehaviour", 0)]
 public class AC_CommonSettingBehaviour : AC_BehaviourBase,
 	IAC_CommonSetting_IsAliveCursorActiveHandler
+	, IAC_CommonSetting_CursorSizeHandler
 {
 	#region Property & Field
 	public BoolEvent onAliveCursorActiveDeactive;
-	#endregion
+	public FloatEvent onCursorSizeChanged;
+	public Vector3Event onCursorSizeChangedVector3;
 
+	#endregion
 
 	#region Callback
 	public void OnIsAliveCursorActiveChanged(bool isActive)
 	{
 		onAliveCursorActiveDeactive.Invoke(isActive);
+	}
+	public void OnCursorSizeChanged(float value)
+	{
+		onCursorSizeChanged.Invoke(value);
+		onCursorSizeChangedVector3.Invoke(value * Vector3.one);
 	}
 	#endregion
 
@@ -45,7 +53,6 @@ public class AC_CommonSettingBehaviour : AC_BehaviourBase,
 
 		group.listProperty.Add(new GUIProperty(nameof(onAliveCursorActiveDeactive)));
 	}
-
 #endif
 	#endregion
 }

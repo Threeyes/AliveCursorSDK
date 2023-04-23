@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,18 +9,33 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class AC_AssistantManagerSimulator : MonoBehaviour
 {
+	public AC_DefaultTransformController defaultTransformController;
 	public Transform tfGizmoGroup;//显示光标默认边界及热点
 	public Transform tfInfoGroup;//显示光标信息
 
+	public Toggle toggleFixedAngle;
+	public Text textToggleFixedAngle;
+	public Slider sliderCursorWorkingAngle;
 	public Text textCursorInfo;
+
 	private void OnEnable()
 	{
-		//根据需要选择是否显示对应物体
+		//根据需要选择是否显示对应物体(通过ExecuteInEditMode调用)
 		ShowGameobjectWithoutSaving(tfGizmoGroup.gameObject, AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantGizmo);
 		ShowGameobjectWithoutSaving(tfInfoGroup.gameObject, AC_SOAliveCursorSDKManager.Instance.HubSimulator_ShowAssistantInfo);
 	}
+	private void Start()
+	{
+		if (!Application.isPlaying)
+			return;
+		sliderCursorWorkingAngle.SetValueWithoutNotify(defaultTransformController.Config.workingAngle);
+		sliderCursorWorkingAngle.onValueChanged.AddListener(OnCursorWorkingAngleChanged);
+		toggleFixedAngle.SetIsOnWithoutNotify(defaultTransformController.Config.isFixedAngle);
+		toggleFixedAngle.onValueChanged.AddListener(OnFixedAngleToggleChanged);
+		UpdateUIState();
+	}
 
-	//因为某些原因需要临时隐藏UI
+	//因为某些原因需要临时隐藏UI（如截图）
 	public void TempShowInfoGroup(bool isShow)
 	{
 		if (!isShow)
@@ -32,15 +48,7 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 		}
 	}
 
-	static void ShowGameobjectWithoutSaving(GameObject go, bool isShow)
-	{
-		go.SetActive(isShow);
-		EditorUtility.ClearDirty(go);//避免修改导致Scene需要保存
-
-	}
-
 	string strCursorInfo = "";
-
 	AC_StateManagerSimulator stateManagerSimulator { get { return AC_StateManagerSimulator.Instance; } }
 	void Update()
 	{
@@ -73,5 +81,33 @@ public class AC_AssistantManagerSimulator : MonoBehaviour
 			textCursorInfo.text = strCursorInfo;
 		}
 	}
+
+	#region UI Callback
+	private void OnFixedAngleToggleChanged(bool isOn)
+	{
+		defaultTransformController.Config.isFixedAngle = isOn;
+		UpdateUIState();
+	}
+	private void OnCursorWorkingAngleChanged(float value)
+	{
+		defaultTransformController.Config.workingAngle = value;
+		UpdateUIState();
+	}
+	void UpdateUIState()
+	{
+		bool isFixedAngle = defaultTransformController.Config.isFixedAngle;
+		sliderCursorWorkingAngle.gameObject.SetActive(isFixedAngle);
+
+		textToggleFixedAngle.text = $"FixedAngle" + (isFixedAngle ? "[" + (int)defaultTransformController.Config.workingAngle + "]" : "");
+	}
+	#endregion
+
+	#region Utility
+	static void ShowGameobjectWithoutSaving(GameObject go, bool isShow)
+	{
+		go.SetActive(isShow);
+		EditorUtility.ClearDirty(go);//避免修改导致Scene需要保存
+	}
+	#endregion
 }
 #endif

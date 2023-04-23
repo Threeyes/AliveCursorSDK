@@ -17,7 +17,6 @@ public abstract class AC_StateControllerBase<TSOConfig, TConfig> : AC_Configable
 	public abstract bool IsCurStateActionComplete(ActionState actionState);
 	#endregion
 
-
 	#region Callback
 	public virtual void OnModControllerInit()
 	{

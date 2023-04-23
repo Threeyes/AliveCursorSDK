@@ -52,7 +52,13 @@ public abstract class AC_SystemCursorManagerBase<T> : AC_ManagerWithLifeCycleBas
 		}
 		return false;
 	}
-	public Vector3 GetWorldPosition(float depth)//使用自定义深度
+
+	/// <summary>
+	/// Get mouse position on desire depth
+	/// </summary>
+	/// <param name="depth"></param>
+	/// <returns></returns>
+	public Vector3 GetWorldPosition(float depth)
 	{
 		Vector3 worldPos = MousePosition;
 		worldPos.z = depth;

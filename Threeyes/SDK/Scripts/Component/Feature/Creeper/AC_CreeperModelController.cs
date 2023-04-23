@@ -6,7 +6,6 @@ using UnityEngine;
 /// Control Creeper's state
 /// </summary>
 public class AC_CreeperModelController : MonoBehaviour
-	, IAC_ModHandler
 	, IAC_CommonSetting_IsAliveCursorActiveHandler
 	, IAC_CursorState_ChangedHandler
 	, IAC_CommonSetting_CursorSizeHandler
@@ -16,12 +15,6 @@ public class AC_CreeperModelController : MonoBehaviour
 	public AC_CreeperTransformController creeperTransformController;
 
 	#region Callback
-	public void OnModInit()
-	{
-		Resize();
-	}
-	public void OnModDeinit() { }
-
 	public void OnIsAliveCursorActiveChanged(bool isActive)
 	{
 		if (isActive)
@@ -34,10 +27,10 @@ public class AC_CreeperModelController : MonoBehaviour
 	public void OnCursorStateChanged(AC_CursorStateInfo cursorStateInfo)
 	{
 		//在相关隐藏State时，临时隐藏该物体
-		bool isCurHidingState = IsHidingState(cursorStateInfo.cursorState);
+		bool isCurHidingState =AC_ManagerHolder.StateManager.IsVanishState(cursorStateInfo.cursorState);
 		if (isCurHidingState)
 		{
-			TryStopResizeCoroutine();
+			TryStopCoroutine_Resize();
 			gameObject.SetActive(false);
 		}
 		else
@@ -65,10 +58,10 @@ public class AC_CreeperModelController : MonoBehaviour
 	protected Coroutine cacheEnumResize;
 	public void Resize()
 	{
-		TryStopResizeCoroutine();
+		TryStopCoroutine_Resize();
 		cacheEnumResize = CoroutineManager.StartCoroutineEx(IEResize());
 	}
-	protected virtual void TryStopResizeCoroutine()
+	protected virtual void TryStopCoroutine_Resize()
 	{
 		if (cacheEnumResize != null)
 			CoroutineManager.StopCoroutineEx(cacheEnumResize);
@@ -79,20 +72,12 @@ public class AC_CreeperModelController : MonoBehaviour
 		gameObject.SetActive(false);
 		Vector3 targetScale =  Vector3.one * AC_ManagerHolder.CommonSettingManager.CursorSize;//同步缩放Leg组
 
-		//To :直接缩放父物体
+		//直接缩放父物体
 		tfParent.localScale = targetScale;
-		//transform.localScale = targetScale;
-		//creeperTransformController.SetLocalScale(targetScale);
 
 		//更新关节
 		creeperTransformController.MoveAllLeg();
-		//yield return new WaitForSeconds(0.1f);//等待缩放不为0才能激活，否则会报错
-		yield return null;
+		yield return null;//等待缩放不为0才能激活，否则会报错
 		gameObject.SetActive(true);
-	}
-
-	static bool IsHidingState(AC_CursorState cursorState)//（ToUpdate：改为通用方法）
-	{
-		return cursorState == AC_CursorState.Exit || cursorState == AC_CursorState.Hide || cursorState == AC_CursorState.StandBy;
 	}
 }

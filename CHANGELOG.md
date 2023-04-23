@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.5.2]
+- AC_TransformControllerBase require exter bored action, add dimension setting.
+- AC_CommonSettingBehaviour add cursor size callback.
+- Update Creeper related Components.
+
 ## [3.5.0]
 - Fix ItemManager error on editor start.
 - Fix Rigidbody moving lag problem.

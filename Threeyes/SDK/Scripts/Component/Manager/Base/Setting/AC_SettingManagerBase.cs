@@ -28,7 +28,6 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 	[SerializeField] protected TConfig defaultConfig;//Default config
 	[Expandable] [SerializeField] protected TSOConfig soOverrideConfig;//Override config
 
-
 	public bool HasInit { get { return hasInit; } set { hasInit = value; } }
 	protected bool hasInit;
 	public virtual void Init(bool isFirstInit)
@@ -45,6 +44,14 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 	{
 		//PS：【Editor】模式下，BasicData中的Action会在Replay后自动清空。如果需要实现Reload HubScene的功能，可以增加Config.ClearAllDataEvent并在此调用
 		Config.ClearAllDataEvent();
+	}
+
+	public virtual void InitEvent()
+	{
+	}
+	public virtual void ResetConfigToDefault()
+	{
+
 	}
 
 	protected virtual void UpdateConfig(bool isFirstInit)
@@ -68,9 +75,6 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 		//调用对应的UIManager
 	}
 
-	public virtual void InitEvent()
-	{
-	}
 }
 
 #region Define

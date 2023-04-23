@@ -120,8 +120,11 @@ public class AC_CommonSettingManagerBase<T> : AC_SettingManagerBase<T, AC_SOComm
 	#region Callback
 	public virtual void OnModInit(Scene scene, AC_AliveCursor aliveCursor)
 	{
-		//通知AC是否激活（PS：在程序启动且被禁用时会被调用；运行期间不会无法切换Item）
-		AC_EventCommunication.SendMessage<IAC_CommonSetting_IsAliveCursorActiveHandler>(inst => inst.OnIsAliveCursorActiveChanged(Config.generalSetting_IsAliveCursorActive.Value), includeHubScene: true);
+		///通知:
+		///-AC是否激活（PS：在程序启动且被禁用时会被调用；运行期间不会无法切换Item）
+		///-初始化尺寸设置
+		OnDataIsAliveCursorActiveChanged(Config.generalSetting_IsAliveCursorActive.Value);
+		OnDataCursorSizeChanged(Config.cursorAppearance_CursorSize.Value);
 	}
 
 	public virtual void OnModDeinit(Scene scene, AC_AliveCursor aliveCursor)
@@ -163,6 +166,8 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public StringData generalSetting_Localization = new StringData("English");
 	public StringData generalSetting_Quality = new StringData("Ultra");
 	public StringData generalSetting_ProcessPriority = new StringData("High");
+	public StringData generalSetting_Hotkeys_OpenBrowser = new StringData("");
+	public StringData generalSetting_Hotkeys_OpenSetting = new StringData("");
 
 	public AC_CommonSettingConfigInfo() { }
 }

@@ -34,7 +34,15 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 		lastCursorSize = Config.cursorAppearance_CursorSize.Value;
 		lastIsAliveCursorActive = Config.generalSetting_IsAliveCursorActive.Value;
 	}
-
+	void ChangeCursorSize(bool isIncrease)
+	{
+		float timesValue = 0.5f;
+		float newSize = Config.cursorAppearance_CursorSize.Value;
+		newSize += isIncrease ? timesValue : -timesValue;
+		float left = newSize % timesValue;//避免0.1f等情况
+		newSize -= left;
+		Config.cursorAppearance_CursorSize.Value = newSize;
+	}
 	private void Update()
 	{
 		if (!hasInit)
@@ -42,13 +50,14 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 
 		///KeyChangeValue:
 		///#Change cursor size by -/=
+
 		if (Input.GetKeyDown(KeyCode.Minus))
 		{
-			Config.cursorAppearance_CursorSize.Value -= 0.5f;
+			ChangeCursorSize(false);
 		}
 		if (Input.GetKeyDown(KeyCode.Equals))
 		{
-			Config.cursorAppearance_CursorSize.Value += 0.5f;
+			ChangeCursorSize(true);
 		}
 
 

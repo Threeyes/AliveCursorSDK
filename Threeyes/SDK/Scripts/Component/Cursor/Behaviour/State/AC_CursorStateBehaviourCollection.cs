@@ -25,7 +25,9 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onWorkingStateEnterExit;
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onStandByStateEnterExit;
 	[Foldout(foldoutName_UnityEvent)] public BoolEvent onBoredStateEnterExit;
-	[Foldout(foldoutName_UnityEvent)] public BoolEvent onVanishStateEnterExit;
+	
+	//Mixed
+	[Foldout(foldoutName_UnityEvent)] public BoolEvent onCursorAppearDisappear;//Cursor disappeared on state[Exit, Hide, StandBy]
 
 	#endregion
 
@@ -46,7 +48,7 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 		}
 
 		bool isVanishState = AC_ManagerHolder.StateManager.IsVanishState(curCursorState);
-		onVanishStateEnterExit.Invoke(isVanishState);
+		onCursorAppearDisappear.Invoke(!isVanishState);
 	}
 	#endregion
 

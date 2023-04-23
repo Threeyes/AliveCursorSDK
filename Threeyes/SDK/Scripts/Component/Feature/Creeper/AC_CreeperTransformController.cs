@@ -18,10 +18,11 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 	public Transform tfModelBody { get { return creeperModelController.transform; } }//模型躯干（根物体）
 
 	public AC_CreeperModelController creeperModelController;
-	[Header("Body")] public bool testIsSyncOrLookAt = true;//(Experimental) GhostBody是同步tfEndPoint的旋转，还是朝向该目标
-	public Vector3 testLocalBodyUp = new Vector3(0, 1, 0);//(Experimental) 
-
-	public Transform tfEndPoint;//躯干的终点
+	[Header("Body")]
+	public bool isSyncRotOrLookAt = true;// GhostBody是同步tfEndPoint的旋转，还是朝向该目标
+	public Vector3 localBodyUp = new Vector3(0, 1, 0);//GhostBody的局部Up轴
+	public Transform tfPosEndPoint;//躯干位置的终点
+	public Transform tfLookEndPoint;//躯干朝向的目标
 	public Transform tfGhostBody;//Root ghost body
 	public Transform tfBodyMixer;//叠加影响躯体的位移及旋转（单独使用一个物体控制躯干的好处是，对躯干的修改不会影响到脚）（更改该物体的位置、旋转可实现跳跃、蹲下、转身等动作）
 
@@ -46,7 +47,7 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 	{
 		//——Body——
 		tfGhostBody.position =
-		 Vector3.MoveTowards(tfGhostBody.position, tfEndPoint.position, Config.ghostBodyMoveSpeed * Time.deltaTime * AC_ManagerHolder.CommonSettingManager.CursorSize);//以固定速度移动Ghost
+		 Vector3.MoveTowards(tfGhostBody.position, tfPosEndPoint.position, Config.ghostBodyMoveSpeed * Time.deltaTime * AC_ManagerHolder.CommonSettingManager.CursorSize);//以固定速度移动Ghost
 
 		baseBodyPosition = Vector3.Lerp(baseBodyPosition, tfGhostBody.position, Time.deltaTime * Config.bodyMoveSpeed);//躯干向GhostBody逐渐移动，更加真实
 
@@ -58,13 +59,21 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 		//ToAdd：增加testSyncOrLookAt选项，可以决定tfGhostBody的朝向是直接同步tfEndPoint，还是朝向tfEndPoint以便做指向路线行为（如猫）
 
 		//通过tfGhostBody控制躯干的旋转
-		if (testIsSyncOrLookAt)
+		if (isSyncRotOrLookAt)
 		{
-			ghostBodyRotation = tfEndPoint.rotation;
+			ghostBodyRotation = tfLookEndPoint.rotation;
 		}
-		else//LookAt（Bug：会有突然翻转的问题，应在一定距离后才有效）
+		else//LookAt
 		{
-			ghostBodyRotation = Quaternion.LookRotation(tfEndPoint.position - tfGhostBody.position, tfGhostBody.TransformDirection(testLocalBodyUp));
+			Vector3 direction = tfLookEndPoint.position - tfGhostBody.position;
+			if (direction.sqrMagnitude > 0.001f)//移动中
+			{
+				ghostBodyRotation = Quaternion.LookRotation(tfLookEndPoint.position - tfGhostBody.position, tfGhostBody.TransformDirection(localBodyUp));
+			}
+			else//距离为0：使用tfEndPoint的旋转值或逐渐趋向
+			{
+				ghostBodyRotation = tfLookEndPoint.rotation;
+			}
 			//tfGhostBody.LookAt(tfEndPoint, tfGhostBody.TransformDirection(testLocalBodyUp));
 		}
 
@@ -149,9 +158,6 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 		float _averageDistance;
 		public List<AC_CreeperLegController> listLegController = new List<AC_CreeperLegController>();
 	}
-	#endregion
-
-	#region Define
 	[System.Serializable]
 	public class ConfigInfo : AC_SerializableDataBase
 	{

@@ -27,10 +27,10 @@ public class AC_CursorStateBehaviour : AC_BehaviourBase,
             return;
 
         isStateChanged = true;
-        AC_CursorStateInfo.StateChange smbState = cursorStateInfo.stateChange;
-        if (smbState == AC_CursorStateInfo.StateChange.Enter)
+        AC_CursorStateInfo.StateChange stateChange = cursorStateInfo.stateChange;
+        if (stateChange == AC_CursorStateInfo.StateChange.Enter)
             Play();
-        else if (smbState == AC_CursorStateInfo.StateChange.Exit)
+        else if (stateChange == AC_CursorStateInfo.StateChange.Exit)
             Stop();
         isStateChanged = false;
     }

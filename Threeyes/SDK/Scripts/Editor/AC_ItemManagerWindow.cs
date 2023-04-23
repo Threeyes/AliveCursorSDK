@@ -956,7 +956,11 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		}
 		void OnSelectExeButtonClick(ClickEvent evt)
 		{
-			string resultFilePath = EditorUtility.OpenFilePanelWithFilters("Select AliveCursor.exe...", Application.dataPath, new string[] { "Exe files", "exe" });
+			string defaultDir = SOManagerInst.ItemWindow_ExePath;
+			if (defaultDir.IsNullOrEmpty())
+				defaultDir = Application.dataPath;
+
+			string resultFilePath = EditorUtility.OpenFilePanelWithFilters("Select AliveCursor.exe...", defaultDir, new string[] { "Exe files", "exe" });
 			if (resultFilePath.NotNullOrEmpty())
 			{
 				FileInfo fileInfoSelected = new FileInfo(resultFilePath);
@@ -1056,6 +1060,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		}
 		static void RunCurItem()
 		{
+			///PS:
+			///-WorkingDirectory可以设置程序的运行路径（UseShellExecute要设置为false）（https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo.workingdirectory?view=net-7.0）
 			var processStartInfo = new System.Diagnostics.ProcessStartInfo(SOManagerInst.ItemWindow_ExePath, $"-umod \"{SOManagerInst.CurWorkshopItemInfo.ExportItemDirPath}\"");
 			System.Diagnostics.Process.Start(processStartInfo);
 		}

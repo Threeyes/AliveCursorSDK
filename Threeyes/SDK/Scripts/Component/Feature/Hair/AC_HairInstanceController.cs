@@ -96,7 +96,7 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 	bool isLastHidingState;
 	public void OnCursorStateChanged(AC_CursorStateInfo cursorStateInfo)
 	{
-		bool isCurHidingState = IsHidingState(cursorStateInfo.cursorState);
+		bool isCurHidingState = AC_ManagerHolder.StateManager.IsVanishState(cursorStateInfo.cursorState);
 		if (isLastHidingState && !isCurHidingState)
 			ReBuild();
 		isLastHidingState = isCurHidingState;
@@ -113,11 +113,6 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 		yield return null;
 		gameObject.SetActive(true);
 	}
-	static bool IsHidingState(AC_CursorState cursorState)//（ToUpdate：改为通用方法）
-	{
-		return cursorState == AC_CursorState.Exit || cursorState == AC_CursorState.Hide || cursorState == AC_CursorState.StandBy;
-	}
-
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
