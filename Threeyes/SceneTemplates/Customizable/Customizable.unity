@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultConfig:
+    dimensionType: 1
     commonMovementConfig:
       moveSpeed: 30
       rotateSpeed: 15
@@ -366,13 +367,8 @@ MonoBehaviour:
     reachThreshold: 0.05
     isFixedAngle: 1
     workingAngle: 0
-    boredMovementConfig:
-      moveSpeed: 1
-      rotateSpeed: 3
-    boredTargetMaxForce: 1
-    boredTargetTurnFrequency: 0.02
-    boredTargetTurnPower: 1
   soOverrideConfig: {fileID: 11400000, guid: 6afa0b71b7cffad47839b71bcad848ca, type: 2}
+  soBoredAction: {fileID: 11400000, guid: 629be11c42739c24d8f274a54e635a8b, type: 2}
 --- !u!114 &557360119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,6 +543,7 @@ MonoBehaviour:
     sunLightRotation: {x: 30, y: 30, z: 240}
     sunLightIntensity: 0.3
     sunLightColor: {r: 1, g: 1, b: 1, a: 1}
+    lightShadowType: 0
     isUseReflection: 0
     isUseSkybox: 1
     skyboxType: 1

@@ -1,7 +1,10 @@
 # Changelog
 
+## [3.5.3]
+- Add Whiteboard feature (Including presets).
+
 ## [3.5.2]
-- AC_TransformControllerBase require exter bored action, add dimension setting.
+- AC_TransformControllerBase require exter bored action, with extra dimension setting.
 - AC_CommonSettingBehaviour add cursor size callback.
 - Update Creeper related Components.
 

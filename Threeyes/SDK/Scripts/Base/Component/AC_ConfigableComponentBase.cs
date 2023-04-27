@@ -28,6 +28,27 @@ public abstract class AC_ConfigableComponentBase<TSOConfig, TConfig> : MonoBehav
 	[Expandable] [SerializeField] protected TSOConfig soOverrideConfig;//Override config
 }
 
+public abstract class AC_ConfigableInstanceBase<T, TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>, ISetInstance
+	where T : AC_ConfigableInstanceBase<T, TSOConfig, TConfig>
+	where TSOConfig : AC_SOConfigBase<TConfig>
+{
+	public static T Instance { get { return instance; } protected set { instance = value; } }
+	private static T instance;
+	bool isInit = false;
+	public virtual void SetInstance()
+	{
+		if (!isInit)
+		{
+			SetInstanceFunc();
+		}
+	}
+
+	protected virtual void SetInstanceFunc()
+	{
+		Instance = this as T;
+		isInit = true;
+	}
+}
 public abstract class AC_ConfigableComponentBase<TComp, TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>
 	where TComp : Component
 	where TSOConfig : AC_SOConfigBase<TConfig>

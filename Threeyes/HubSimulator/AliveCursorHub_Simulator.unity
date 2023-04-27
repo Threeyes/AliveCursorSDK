@@ -1697,6 +1697,12 @@ MonoBehaviour:
     generalSetting_ProcessPriority:
       value: High
       defaultValue: 
+    generalSetting_Hotkeys_OpenBrowser:
+      value: 
+      defaultValue: 
+    generalSetting_Hotkeys_OpenSetting:
+      value: 
+      defaultValue: 
   soOverrideConfig: {fileID: 11400000, guid: 2be66ab4afb4538439bd4677883a9aba, type: 2}
   dummyString: 
 --- !u!114 &685300541

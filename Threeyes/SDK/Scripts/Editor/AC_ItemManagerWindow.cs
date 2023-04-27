@@ -128,6 +128,11 @@ namespace Threeyes.AliveCursor.SDK.Editor
 			//#2 重新打开Item场景
 			EditorSceneManager.OpenScene(itemSceneFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);
 		}
+		[MenuItem("Alive Cursor/SDK Wiki", priority = 1000)]
+		public static void OpenSDKWiki()
+		{
+			Application.OpenURL("https://github.com/Threeyes/AliveCursorSDK/wiki");
+		}
 		#endregion
 
 		private void OnEnable()
@@ -868,9 +873,9 @@ namespace Threeyes.AliveCursor.SDK.Editor
 						simulatorSceneAssetRealPath = sceneAssetInPackage;
 					}
 				}
-				///#2 Asset文件夹中，有以下2中存在形式：
-				///——Samples中【Assets/Samples/AliveCursorSDK/1.0.6/HubSimulator/AliveCursorHub_Simulator.unity】
-				///——开发程序中的位置
+				///#2 Asset文件夹中，有以下2种存在形式：
+				///——Hub程序中的位置
+				///——Samples中【Assets/Samples/AliveCursorSDK/X.X.X/HubSimulator/AliveCursorHub_Simulator.unity】
 				if (simulatorSceneAssetRealPath.IsNullOrEmpty())
 				{
 					string sceneAssetInAsset = listSceneAssetPath.FirstOrDefault();
@@ -887,7 +892,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 								string curSDKVersion = packageInfoSDK.version;
 								if (curSDKVersion != assetVersion)//如果Asset/Samples中的版本与Package中的版本不一致，则不报错，通过Warning提示更新。（Modder在PackageManager中点击Update后，会自动升级到最新版本并删除旧版本）
 								{
-									Debug.LogWarning($"Please open PackageManager window and update the Simulator assets to latest version [{curSDKVersion}] via AliveCursorSDK/Samples!");
+									Debug.LogWarning($"[AliveCursor] Simulator assets obsolete! Please open PackageManager window and update AliveCursorSDK/Samples to latest version [{curSDKVersion}]!");
 								}
 							}
 						}
