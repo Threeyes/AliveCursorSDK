@@ -68,7 +68,7 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 			Vector3 direction = tfLookEndPoint.position - tfGhostBody.position;
 			if (direction.sqrMagnitude > 0.001f)//移动中
 			{
-				ghostBodyRotation = Quaternion.LookRotation(tfLookEndPoint.position - tfGhostBody.position, tfGhostBody.TransformDirection(localBodyUp));
+				ghostBodyRotation = Quaternion.LookRotation(direction, tfGhostBody.TransformDirection(localBodyUp));
 			}
 			else//距离为0：使用tfEndPoint的旋转值或逐渐趋向
 			{

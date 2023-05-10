@@ -194,7 +194,7 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 		public bool distanceLRA = true;
 		[Tooltip("Enable 'follow the leader' distance constraint (hard particle-particle distance, non-physical)")]
 		public bool distanceFTL = false;
-		[EnableIf(nameof(distanceFTLDamping))]
+		[EnableIf(nameof(distanceFTL))]
 		[AllowNesting]
 		[Range(0.0f, 1.0f), Tooltip("FTL correction / damping factor")]
 		public float distanceFTLDamping = 0.8f;

@@ -8,9 +8,14 @@ using System.Threading.Tasks;
 /// Control Creeper Leg's Movement
 /// 
 /// 功能：
-/// -标注Spider单个脚的落脚点，某个脚与落脚点的距离过大时，就开始挪动操作
+/// -标注Spider单个脚的落脚点，某个脚与落脚点的距离过大时，就开始挪动操作。原理类似于牵线木偶，先控制身体移动，关节随后跟随移动
+/// 
+/// PS:
+/// -当ChainIKConstraint.Weight为0时，对应关节使用当前动画的位置/旋转值，因此可以给模型制作静态的抬脚动画（命名为Idle），从而实现平滑的抬脚过渡
+/// -ChainIKConstant中的Tip应该是针对最终的骨骼，这样能够避免Target旋转导致指尖关节意外偏转。
 /// 
 /// Todo:
+/// -【优先】增加可选的最大扭转容忍度，如果当前旋转值与初始旋转值偏离过大时也会强制移动，避免过扭（如猫后腿）。同时要增加移动/旋转对触发移动的比重字段（参考CanvasScaler.Match）；curDistance使用curOffset封装，包含了位移及偏转基于权重的值
 /// -也需要保存当前脚的固定点，这样即使挪动整个身体，脚也是固定在原地
 /// -不要跟踪对应GhostLeg目标，而是当父物体偏移达到一定值就自动移动，这样能解决Bored时快速旋转导致脚扭成一团的问题
 /// -弄成局部坐标的长度（或者乘以SpiderGhostController的缩放）
@@ -41,10 +46,10 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 	public Ease easeLegDown = Ease.Linear;
 
 	[Header("Runtime")]
-	public float curDistance;//Distance to EndPoint
-	public bool isExcessive = false;//距离过长（需要移动）
-	public bool isMoving = false;//正在移动
 	public Vector3 targetPos;//当前目标位置
+	public float curDistance;//Distance to EndPoint
+	public bool isExcessive = false;//是否过度（如距离过长）（需要移动）
+	public bool isMoving = false;//正在移动
 
 	//Pivot
 	AC_CreeperTransformController creeperTransformController;
@@ -102,9 +107,9 @@ public class AC_CreeperLegController : ComponentHelperBase<ChainIKConstraint>
 		}
 
 		/// 挪动操作（针对ChainIKConstraint：
-		/// -将Weight设置为0
-		/// -将Target的位置设置为落脚点
-		/// -将Weight设置为1（可以通过Tween）
+		/// 1.模拟抬脚动作：将Weight设置为0
+		/// 2.将Target的位置设置为落脚点
+		/// 3.将Weight设置为1（通过Tween）
 		var tweenExit = DOTween.To(() => CompWeight, (val) => CompWeight = val, weightRange.x, tweenDuration / 2).SetEase(easeLegUp);
 		tweenExit.onComplete +=
 			() =>

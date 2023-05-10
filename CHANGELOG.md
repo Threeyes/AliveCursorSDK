@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.5.4]
+- Fix error UIcolor in 'WhiteboardToolbar Canvas.prefab'.
+- Add Character Controller related Scripts.
+
 ## [3.5.3]
 - Add Whiteboard feature (Including presets).
 

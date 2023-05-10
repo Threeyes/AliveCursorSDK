@@ -52,6 +52,8 @@ public class AC_CommonSettingBehaviour : AC_BehaviourBase,
 		group.listProperty.Add(new GUIProperty(nameof(onActiveDeactive)));
 
 		group.listProperty.Add(new GUIProperty(nameof(onAliveCursorActiveDeactive)));
+		group.listProperty.Add(new GUIProperty(nameof(onCursorSizeChanged)));
+		group.listProperty.Add(new GUIProperty(nameof(onCursorSizeChangedVector3)));
 	}
 #endif
 	#endregion

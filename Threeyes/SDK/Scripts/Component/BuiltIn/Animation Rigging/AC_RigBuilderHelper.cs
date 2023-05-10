@@ -5,7 +5,7 @@ using UnityEngine.Animations.Rigging;
 using Threeyes.Coroutine;
 using NaughtyAttributes;
 /// <summary>
-/// Make sure joints relation don't break when cursor size changed
+/// Make sure joints relation don't break when cursor size changed (Mainly for DampTransform or ChainIK)
 /// 
 /// How to save joints' Initialization info:
 /// 1. Setup joints
