@@ -76,7 +76,7 @@ public class AC_ObjectMovement_FollowTarget : AC_ConfigableComponentBase<AC_SOOb
 		[Min(0.01f)] public float maxMoveSpeed = 1;//Max move speed per second
 		public Vector3 localUpAxis = new Vector3(0, 0, -1);//Up axis base on tfPosTarget
 		public bool isInstantRotate = true;
-		[DisableIf(nameof(isInstantRotate))] public float rotateSpeed = 360;//Max rotate speed per second
+		[DisableIf(nameof(isInstantRotate))] [AllowNesting] public float rotateSpeed = 360;//Max rotate speed per second
 	}
 	#endregion
 }

@@ -81,7 +81,7 @@ public class AC_CharacterAnimatorController : AC_ConfigableComponentBase<Animato
 	{
 		public string paramName;
 		[Min(1)] public int totalAnimation = 1;//Total animation in the target BlendTree
-		[Range(0, 1)] public int defaultValue = 1;
+		[Range(0, 1)] public float defaultValue = 1;
 
 		public bool changeAtRuntime = true;//Change at runtime
 		[EnableIf(nameof(changeAtRuntime))] [AllowNesting] public bool changeOnMove = false;//Change when object moving

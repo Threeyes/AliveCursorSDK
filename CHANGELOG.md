@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.6.1]
+- Fix error type define about AC_CharacterAnimatorController.RandomParamInfo.defaultValue.
+
 ## [3.5.4]
 - Fix error UIcolor in 'WhiteboardToolbar Canvas.prefab'.
 - Add Character Controller related Scripts.
