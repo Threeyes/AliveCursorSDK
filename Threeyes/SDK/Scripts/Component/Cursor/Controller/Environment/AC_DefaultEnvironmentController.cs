@@ -27,6 +27,10 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 
 	[Header("Reflection")]
 	[Tooltip("The main ReflectionProbe")] [Required] [SerializeField] protected ReflectionProbe reflectionProbe;
+
+	[Header("Others")]
+	[Tooltip("Ground for receive shadows, Optional")] [SerializeField] protected GameObject goGround;
+
 	#endregion
 
 	#region Unity Method
@@ -35,6 +39,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		Config.actionIsUseLightsChanged += OnIsUseLightsChanged;
 		Config.actionIsUseReflectionChanged += OnIsUseReflectionChanged;
 		Config.actionIsUseSkyboxChanged += OnIsUseSkyboxChanged;
+		Config.actionIsUseGroundChanged += OnIsUseGroundChanged;
 		Config.actionPersistentChanged += OnPersistentChanged;//Get called at last
 	}
 	private void OnDestroy()
@@ -42,6 +47,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		Config.actionIsUseLightsChanged -= OnIsUseLightsChanged;
 		Config.actionIsUseReflectionChanged -= OnIsUseReflectionChanged;
 		Config.actionIsUseSkyboxChanged -= OnIsUseSkyboxChanged;
+		Config.actionIsUseGroundChanged -= OnIsUseGroundChanged;
 		Config.actionPersistentChanged -= OnPersistentChanged;
 	}
 	#endregion
@@ -56,11 +62,15 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 	void OnIsUseSkyboxChanged(PersistentChangeState persistentChangeState)
 	{
 	}
+	void OnIsUseGroundChanged(PersistentChangeState persistentChangeState)
+	{
+	}
 	void OnPersistentChanged(PersistentChangeState persistentChangeState)
 	{
 		SetLights(Config.isUseLights);
 		SetReflectionProbe(Config.isUseReflection);
 		SetSkybox(Config.isUseSkybox);
+		SetGround(Config.isUseGround);
 	}
 	#endregion
 
@@ -127,6 +137,11 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 			DynamicGIUpdateEnvironment();
 
 		base.SetSkybox(isUse);
+	}
+
+	public virtual void SetGround(bool isUse)
+	{
+		goGround?.SetActive(isUse);
 	}
 	#endregion
 
@@ -207,6 +222,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseReflectionChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseLightsChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseSkyboxChanged;
+		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseGroundChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 
 		public Material SkyboxMaterial { get { return skyboxType == SkyboxType.Default ? defaultSkyboxMaterial : panoramaSkyboxMaterial; } }
@@ -236,6 +252,9 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		[EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [Range(0, 360)] public float panoramaSkyboxRotation = 0;
 		[HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
 
+		[Header("Others")]
+		[PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseGround))] public bool isUseGround = false;
+
 
 
 		#region Callback
@@ -250,6 +269,10 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		void OnPersistentValueChanged_IsUseSkybox(PersistentChangeState persistentChangeState)
 		{
 			actionIsUseSkyboxChanged.Execute(persistentChangeState);
+		}
+		void OnPersistentValueChanged_IsUseGround(PersistentChangeState persistentChangeState)
+		{
+			actionIsUseGroundChanged.Execute(persistentChangeState);
 		}
 		void OnPersistentChanged(PersistentChangeState persistentChangeState)
 		{

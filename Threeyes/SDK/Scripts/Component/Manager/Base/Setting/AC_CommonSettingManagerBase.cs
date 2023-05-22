@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Threeyes.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -162,7 +163,7 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public BoolData generalSetting_IsRunAtStartUp = new BoolData(false);//系统运行时自动启动
 	public BoolData generalSetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕
 	public BoolData generalSetting_IsVSyncActive = new BoolData(true);//垂直同步（打开可以减少电脑发热现象及减少使用率；高屏幕刷新率的用户关闭以增加流畅度 ）
-	public IntData generalSetting_TargetFrameRate = new IntData(90, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为120可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
+	public IntData generalSetting_TargetFrameRate = new IntData(125, new DataOption_Int(true, 60, 360));//垂直同步关闭后的默认帧率（设置为鼠标默认采样率125可以增加流畅度，有需要的可以自行设置）（Todo：暴露在UI中）
 	public StringData generalSetting_Localization = new StringData("English");
 	public StringData generalSetting_Quality = new StringData("Ultra");
 	public StringData generalSetting_ProcessPriority = new StringData("High");
@@ -170,5 +171,13 @@ public class AC_CommonSettingConfigInfo : AC_SettingConfigInfoBase<AC_CommonSett
 	public StringData generalSetting_Hotkeys_OpenSetting = new StringData("");
 
 	public AC_CommonSettingConfigInfo() { }
+
+
+	public override List<BasicData> GetListBaseData_Reset()
+	{
+		//忽略多语言
+		return GetListBaseData(new List<string>() { nameof(generalSetting_Localization) });
+
+	}
 }
 #endregion

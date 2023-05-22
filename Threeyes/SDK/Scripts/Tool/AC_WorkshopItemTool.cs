@@ -37,6 +37,7 @@ public static class AC_WorkshopItemTool
 	// 主Url
 	public static string GetUrl(ulong itemId, bool isOpenViaWeb = true)
 	{
+		//"steam://url/CommunityFilePage/" + itemId//PS:需要调用Steam
 		return GetUrlFunc("http://steamcommunity.com/sharedfiles/filedetails/?id=", itemId, isOpenViaWeb);
 	}
 	public static string GetChangeLogUrl(ulong itemId, bool isOpenViaWeb = true)

@@ -25,6 +25,7 @@ namespace Threeyes.Data
 	{
 		public abstract void CloneTo(ref object other);
 		public abstract void NotifyValueChanged(BasicDataState state = BasicDataState.Update);
+		public abstract void ResetToDefaultValue();
 		public abstract void ClearEvent();
 	}
 
@@ -63,6 +64,8 @@ namespace Threeyes.Data
 		[JsonIgnore]
 #endif
 		public UnityAction<TValue> actionValueChanged;
+		public UnityAction<TValue> actionValueReset;
+
 #if USE_JsonDotNet
 		[JsonIgnore]
 #endif
@@ -107,6 +110,13 @@ namespace Threeyes.Data
 		{
 			actionValueChanged.Execute(Value);
 			actionValueChangedEx.Execute(Value, state);
+		}
+
+
+		public override void ResetToDefaultValue()
+		{
+			Value = defaultValue;
+			actionValueReset.Execute(defaultValue);
 		}
 		public override void ClearEvent()
 		{

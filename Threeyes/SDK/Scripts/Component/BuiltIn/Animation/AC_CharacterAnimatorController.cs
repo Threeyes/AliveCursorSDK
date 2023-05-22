@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using NaughtyAttributes;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Function：
@@ -90,9 +91,9 @@ public class AC_CharacterAnimatorController : AC_ConfigableComponentBase<Animato
 		[EnableIf(nameof(changeAtRuntime))] [AllowNesting] public float transitionDuration = 0.2f;//duration for Tween random value, set to zero if you need this
 
 		//[Header("Runtime")]
-		Animator cacheAnimator;
-		float nextChangeRandomInterval = 5;
-		float lastChangeRandomTime;
+		[JsonIgnore] Animator cacheAnimator;
+		[JsonIgnore] float nextChangeRandomInterval = 5;
+		[JsonIgnore] float lastChangeRandomTime;
 
 		public RandomParamInfo()
 		{

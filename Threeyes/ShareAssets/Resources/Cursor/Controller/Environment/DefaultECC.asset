@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DefaultECC
   m_EditorClassIdentifier: 
   config:
-    isUsePostProcessing: 0
-    isUseReflection: 1
     isUseLights: 1
     sunLightRotation: {x: 30, y: 30, z: 240}
     sunLightIntensity: 0.3
     sunLightColor: {r: 1, g: 1, b: 1, a: 1}
+    lightShadowType: 2
+    isUseReflection: 1
     isUseSkybox: 1
     skyboxType: 0
     defaultSkyboxMaterial: {fileID: 2100000, guid: 6a075527c9045204db03585cc6efed51,
@@ -29,4 +29,5 @@ MonoBehaviour:
     externalPanoramaTexture: {fileID: 0}
     externalPanoramaTextureFilePath: 
     panoramaSkyboxRotation: 0
-    PersistentDirPath: 
+    PersistentDirPath: I:\Unity Group\My Group\App Group\AliveCursor/Data/Save/Item/Global/Persistent
+    isUseGround: 0

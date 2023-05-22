@@ -37,7 +37,6 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 		InitEvent();//监听Config事件
 		InitUI();//基于Config初始化UI
 
-		Config.NotifyAllDataEvent(BasicDataState.Init);//#外部已经监听完毕，且值已经设置完毕，通知所有监听BaseData的方法，从而进行初始化
 		hasInit = true;
 	}
 	public virtual void DeInit()
@@ -51,7 +50,8 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 	}
 	public virtual void ResetConfigToDefault()
 	{
-
+		//重置配置为默认值
+		Config.ResetAllDataToDefault();
 	}
 
 	protected virtual void UpdateConfig(bool isFirstInit)
@@ -83,6 +83,19 @@ public abstract class AC_SettingConfigInfoBase<TRealType> : AC_SerializableDataB
 {
 	public Version version = new Version("3.0");//Warning：格式必须是A.B，否则报错！（The major and minor components are required; the build and revision components are optional）
 
+	public virtual void ResetAllDataToDefault()
+	{
+		///Todo:使用默认值进行重置，同时会调用actionValueReset从而静默更新UI
+		try
+		{
+			GetListBaseData_Reset().ForEach((bd) =>
+			bd.ResetToDefaultValue());
+		}
+		catch (Exception e)
+		{
+			Debug.LogError("ResetAllData with error:\r\n" + e);
+		}
+	}
 	public void ClearAllDataEvent()
 	{
 		try
@@ -94,28 +107,17 @@ public abstract class AC_SettingConfigInfoBase<TRealType> : AC_SerializableDataB
 			Debug.LogError("ClearAllDataEvent with error:\r\n" + e);
 		}
 	}
-	public void NotifyAllDataEvent(BasicDataState state = BasicDataState.Update)
-	{
-		{
-			GetListBaseData().ForEach((bd) =>
-			{
-				try
-				{
-					bd.NotifyValueChanged(state);
-				}
-				catch (Exception e)
-				{
-					Debug.LogError($"NotifyAllDataEvent {bd} on state {state} with error:\r\n" + e);
-				}
-			});
-		}
-	}
 
+
+	public virtual List<BasicData> GetListBaseData_Reset()
+	{
+		return GetListBaseData();
+	}
 	/// <summary>
 	/// 获取所有的数据类实例
 	/// </summary>
 	/// <returns></returns>
-	public List<BasicData> GetListBaseData()
+	public List<BasicData> GetListBaseData(List<string> listIgnoreFieldName = null)
 	{
 		List<BasicData> listBD = new List<BasicData>();
 
@@ -125,6 +127,10 @@ public abstract class AC_SettingConfigInfoBase<TRealType> : AC_SerializableDataB
 			var fieldValue = fieldInfo.GetValue(this);//真实值
 			if (fieldValue.GetType().IsSubclassOf(typeof(BasicData)))
 			{
+				if (listIgnoreFieldName != null && listIgnoreFieldName.Contains(fieldInfo.Name))//忽略指定字段
+				{
+					continue;
+				}
 				BasicData inst = fieldValue as BasicData;
 				listBD.Add(inst);
 			}

@@ -437,7 +437,8 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		private void OnAgreementLabelClick(ClickEvent evt)
 		{
 			//https://partner.steamgames.com/doc/features/workshop/implementation#Legal
-			//string urlPath = "steam://url/CommunityFilePage/" +curSOWorkshopItemInfo.ItemID;//打开Item对应页面
+			//	string agreementUrlPath=https://steamcommunity.com/sharedfiles/workshoplegalagreement;
+			//string urlPath = "steam://url/CommunityFilePage/" + curSOWorkshopItemInfo.ItemID;//打开Item对应页面
 			Application.OpenURL("https://steamcommunity.com/sharedfiles/workshoplegalagreement");
 
 		}

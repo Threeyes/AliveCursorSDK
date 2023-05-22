@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0]
+- Fix missing characters in NotoSansSC-Regular SDF fonts.
+- Ignore fields' serialization in AC_CharacterAnimatorController.RandomParamInfo.
+- Add ground config on AC_DefaultEnvironmentController.
+- Add TransparentShadowReceiver shader.
+- Update shadow resolution on High UrpPipeline.
+
 ## [3.6.1]
 - Fix error type define about AC_CharacterAnimatorController.RandomParamInfo.defaultValue.
 

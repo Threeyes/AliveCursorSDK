@@ -327,6 +327,12 @@ namespace Threeyes.Data
 			enumTypeFullName = variableType?.FullName;
 			return this;
 		}
+
+		/// <summary>
+		/// 通过传入的枚举类型，自动初始化
+		/// </summary>
+		/// <param name="enumType"></param>
+		/// <returns></returns>
 		public virtual IDataOption Init(Type enumType)
 		{
 			enumTypeFullName = enumType?.FullName;

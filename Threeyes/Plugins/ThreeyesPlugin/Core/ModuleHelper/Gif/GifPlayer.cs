@@ -13,7 +13,7 @@ public class GifPlayer : MonoBehaviour
 	public TextureEvent onInitTexture;//设置初始值（如图像比例）
 	public TextureEvent onUpdateTexture;
 	public Texture textureOnReset;//重置时需要设置的默认图片，可以为Null
-	//Runtime
+								  //Runtime
 	CancellationTokenSource selfCancellationTokenSource;
 	CancellationTokenRegistration ctr;
 	int curIndex = 0;
@@ -92,7 +92,7 @@ public class GifPlayer : MonoBehaviour
 	}
 	public void ResetUI()
 	{
-		onUpdateTexture.Invoke(textureOnReset);//重置UI显示
+		onUpdateTexture?.Invoke(textureOnReset);//重置UI显示(需要避免onUpdateTexture为null导致报错)
 	}
 	void OnDestroy()
 	{
