@@ -1,7 +1,7 @@
 {
   "name": "com.threeyes.alivecursor.sdk",
   "displayName": "AliveCursorSDK",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "unity": "2021.3",
   "description": "SDK for AliveCursor.",
   "documentationUrl": "https://github.com/Threeyes/AliveCursorSDK/wiki",
@@ -67,12 +67,12 @@
     {
       "displayName": "Action",
       "description": "Action",
-      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/Action/Samples"   
+      "path": "Threeyes/Plugins/ThreeyesPlugin/Module/Action/Samples"   
     },
     {
       "displayName": "EventPlayer",
       "description": "EventPlayer",
-      "path": "Threeyes/Plugins/ThreeyesPlugin/Core/Module/EventPlayer/Samples"   
+      "path": "Threeyes/Plugins/ThreeyesPlugin/Module/EventPlayer/Samples"   
     }
   ],
   "author": {

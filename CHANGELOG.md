@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.0]
+Warning: breaking change! you may need to reupload your mod item and fix the missing link about scripts inside Module folder!
+- ThreeyesPlugin: Move 'Module' folder outside of folder 'Core', and add extra asmdef file.
+
 ## [3.7.0]
 - Fix missing characters in NotoSansSC-Regular SDF fonts.
 - Ignore fields' serialization in AC_CharacterAnimatorController.RandomParamInfo.

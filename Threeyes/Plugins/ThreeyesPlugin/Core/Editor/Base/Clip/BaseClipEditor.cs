@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 
 using System.Collections.Generic;
 using UnityEditor;
@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Threeyes.Editor
 {
     /// <summary>
-    /// 绘制Clip所引用的其他剩余组件
+    /// 用途：绘制TimelineClip所引用的其他剩余组件
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class BaseClipEditor<T> : BaseEditor<T> where T : class
