@@ -10,6 +10,8 @@ using Threeyes.Persistent;
 using UnityEngine.Events;
 using Newtonsoft.Json;
 using System.Linq;
+using Threeyes.Config;
+
 /// <summary>
 /// [Required]
 /// Function:
@@ -23,7 +25,7 @@ using System.Linq;
 /// Warning：
 /// 1.
 /// </summary>
-public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, AC_SOZibraLiquidControllerConfig, AC_ZibraLiquidController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
+public class AC_ZibraLiquidController : ConfigurableComponentBase<ZibraLiquid, AC_SOZibraLiquidControllerConfig, AC_ZibraLiquidController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 	, IAC_ModHandler
 	, IAC_SystemWindow_ChangedHandler
 {
@@ -116,7 +118,7 @@ public class AC_ZibraLiquidController : AC_ConfigableComponentBase<ZibraLiquid, 
 	#region Define
 	[System.Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 

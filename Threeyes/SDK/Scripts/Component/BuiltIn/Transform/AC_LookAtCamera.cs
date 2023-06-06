@@ -1,6 +1,7 @@
+using Threeyes.Config;
 using UnityEngine;
 
-public class AC_LookAtCamera : AC_ConfigableUpdateComponentBase<Transform, AC_SOLookAtCameraConfig, AC_LookAtCamera.ConfigInfo>
+public class AC_LookAtCamera : AC_ConfigurableUpdateComponentBase<Transform, AC_SOLookAtCameraConfig, AC_LookAtCamera.ConfigInfo>
 {
     protected override void UpdateFunc()
     {
@@ -10,7 +11,7 @@ public class AC_LookAtCamera : AC_ConfigableUpdateComponentBase<Transform, AC_SO
 
     #region Define
     [System.Serializable]
-    public class ConfigInfo : AC_SerializableDataBase
+    public class ConfigInfo : SerializableDataBase
     {
         public Vector3 worldUp = Vector3.up;
     }

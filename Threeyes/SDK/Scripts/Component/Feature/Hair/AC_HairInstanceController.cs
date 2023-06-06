@@ -7,12 +7,13 @@ using Threeyes.Persistent;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 using NaughtyAttributes;
+using Threeyes.Config;
 using static Unity.DemoTeam.Hair.HairInstance.SettingsStrands;
 using static Unity.DemoTeam.Hair.HairSim.SolverSettings;
 using static Unity.DemoTeam.Hair.HairInstance;
 using static Unity.DemoTeam.Hair.HairSim;
 
-public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance, AC_SOHairInstanceControllerConfig, AC_HairInstanceController.ConfigInfo>
+public class AC_HairInstanceController : ConfigurableComponentBase<HairInstance, AC_SOHairInstanceControllerConfig, AC_HairInstanceController.ConfigInfo>
 	, IAC_CommonSetting_IsAliveCursorActiveHandler,
 	IAC_CursorState_ChangedHandler
 {
@@ -116,7 +117,7 @@ public class AC_HairInstanceController : AC_ConfigableComponentBase<HairInstance
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase//(PS: default values ref from struct constructor)
+	public class ConfigInfo : SerializableDataBase//(PS: default values ref from struct constructor)
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 

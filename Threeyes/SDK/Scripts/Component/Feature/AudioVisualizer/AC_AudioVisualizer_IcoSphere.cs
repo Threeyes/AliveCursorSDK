@@ -8,13 +8,14 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine.Events;
+using Threeyes.Config;
 
 /// <summary>
 /// Auto generate icosphere base on config, which can response to audio
 /// 
 /// Ref：Samples/ProBuilder/X.X.X/Runtime Examples/Icosphere FFT
 /// </summary>
-public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudioVisualizer_IcoSphereConfig, AC_AudioVisualizer_IcoSphere.ConfigInfo>
+public class AC_AudioVisualizer_IcoSphere : ConfigurableComponentBase<AC_SOAudioVisualizer_IcoSphereConfig, AC_AudioVisualizer_IcoSphere.ConfigInfo>
 	, IAC_SystemAudio_RawSampleDataChangedHandler
 	, IAC_SystemAudio_SpectrumDataChangedHandler
 	, IAC_ModHandler
@@ -267,7 +268,7 @@ public class AC_AudioVisualizer_IcoSphere : AC_ConfigableComponentBase<AC_SOAudi
 	}
 
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionGeneratePersistentChanged;//Any Generate field change
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionMaterialChanged;

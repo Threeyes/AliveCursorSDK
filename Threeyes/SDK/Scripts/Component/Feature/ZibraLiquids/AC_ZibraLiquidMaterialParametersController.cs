@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Config;
+
 /// <summary>
 ///
 /// PS:
 /// 1. Use short name to avoid path length restriction
 /// </summary>
-public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponentBase<ZibraLiquidMaterialParameters, AC_SOZibraLiquidMaterialParametersControllerConfig, AC_ZibraLiquidMaterialParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
+public class AC_ZibraLiquidMaterialParametersController : ConfigurableComponentBase<ZibraLiquidMaterialParameters, AC_SOZibraLiquidMaterialParametersControllerConfig, AC_ZibraLiquidMaterialParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -52,7 +54,7 @@ public class AC_ZibraLiquidMaterialParametersController : AC_ConfigableComponent
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 

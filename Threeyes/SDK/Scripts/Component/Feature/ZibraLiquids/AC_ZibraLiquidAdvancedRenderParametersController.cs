@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Config;
+
 using static com.zibra.liquid.DataStructures.ZibraLiquidAdvancedRenderParameters;
 /// <summary>
 ///
@@ -13,7 +15,7 @@ using static com.zibra.liquid.DataStructures.ZibraLiquidAdvancedRenderParameters
 /// Warning:
 /// 1.This related Component is rather complex, normally you don't need to expose the config to user.
 /// </summary>
-public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableComponentBase<ZibraLiquidAdvancedRenderParameters, AC_SOZibraLiquidAdvancedRenderParametersControllerConfig, AC_ZibraLiquidAdvancedRenderParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
+public class AC_ZibraLiquidAdvancedRenderParametersController : ConfigurableComponentBase<ZibraLiquidAdvancedRenderParameters, AC_SOZibraLiquidAdvancedRenderParametersControllerConfig, AC_ZibraLiquidAdvancedRenderParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -55,7 +57,7 @@ public class AC_ZibraLiquidAdvancedRenderParametersController : AC_ConfigableCom
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 

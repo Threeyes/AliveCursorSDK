@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.8.1]
+- Internal SDK changed.
+
 ## [3.8.0]
 Warning: breaking change! you may need to reupload your mod item and fix the missing link about scripts inside Module folder!
 - ThreeyesPlugin: Move 'Module' folder outside of folder 'Core', and add extra asmdef file.

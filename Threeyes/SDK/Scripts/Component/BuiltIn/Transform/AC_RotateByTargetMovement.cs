@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Threeyes.Config;
 using UnityEngine;
 
 /// <summary>
@@ -7,7 +8,7 @@ using UnityEngine;
 /// PS:
 /// 1.Will take Cursor Size into account
 /// </summary>
-public class AC_RotateByTargetMovement : AC_ConfigableUpdateComponentBase<Transform, AC_SORotateByTargetMovementConfig, AC_RotateByTargetMovement.ConfigInfo>
+public class AC_RotateByTargetMovement : AC_ConfigurableUpdateComponentBase<Transform, AC_SORotateByTargetMovementConfig, AC_RotateByTargetMovement.ConfigInfo>
 {
     public Transform target;
 
@@ -34,7 +35,7 @@ public class AC_RotateByTargetMovement : AC_ConfigableUpdateComponentBase<Transf
     #region Define
 
     [System.Serializable]
-    public class ConfigInfo : AC_SerializableDataBase
+    public class ConfigInfo : SerializableDataBase
     {
         public float rotateSpeed = 360f;//rotate speed when the cursor size is 1
     }

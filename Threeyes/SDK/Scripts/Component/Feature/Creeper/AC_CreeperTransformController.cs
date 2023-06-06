@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Threeyes.Config;
+
 /// <summary>
 /// Control Creeper Body's Movement
 /// 
@@ -13,7 +15,7 @@ using System.Linq;
 /// -不需要将所有脚都弄成IK，比如螃蟹就可以保留2个自由活动的前手关节
 /// -每个LegController的参数独立，因此不使用Config
 /// </summary>
-public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCreeperTransformControllerConfig, AC_CreeperTransformController.ConfigInfo>
+public class AC_CreeperTransformController : ConfigurableComponentBase<AC_SOCreeperTransformControllerConfig, AC_CreeperTransformController.ConfigInfo>
 {
 	public Transform tfModelBody { get { return creeperModelController.transform; } }//模型躯干（根物体）
 
@@ -159,7 +161,7 @@ public class AC_CreeperTransformController : AC_ConfigableComponentBase<AC_SOCre
 		public List<AC_CreeperLegController> listLegController = new List<AC_CreeperLegController>();
 	}
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[Header("Body")]
 		public float bodyMoveSpeed = 3;

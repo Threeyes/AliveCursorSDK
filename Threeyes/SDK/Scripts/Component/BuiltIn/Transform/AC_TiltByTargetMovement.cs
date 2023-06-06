@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
+using Threeyes.Config;
 using UnityEngine;
 
 /// <summary>
 /// Tilt rotate around the axis
 ///
 /// </summary>
-public class AC_TiltByTargetMovement : AC_ConfigableUpdateComponentBase<Transform, AC_SOTiltByTargetMovementConfig, AC_TiltByTargetMovement.ConfigInfo>
+public class AC_TiltByTargetMovement : AC_ConfigurableUpdateComponentBase<Transform, AC_SOTiltByTargetMovementConfig, AC_TiltByTargetMovement.ConfigInfo>
 {
 	public Transform target;//Movement target
 
@@ -54,7 +55,7 @@ public class AC_TiltByTargetMovement : AC_ConfigableUpdateComponentBase<Transfor
 	#region Define
 
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		public float increaseSpeed = 0.3f;
 		public float decreaseSpeed = 0.1f;

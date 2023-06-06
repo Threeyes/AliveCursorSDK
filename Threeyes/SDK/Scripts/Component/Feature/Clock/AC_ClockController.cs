@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
+using Threeyes.Config;
 
-public class AC_ClockController : AC_ConfigableComponentBase<AC_SOClockControllerConfig, AC_ClockController.ConfigInfo>
+public class AC_ClockController : ConfigurableComponentBase<AC_SOClockControllerConfig, AC_ClockController.ConfigInfo>
 {
 	//Use these event to display number
 	public IntEvent onHourChange;
@@ -224,7 +225,7 @@ public class AC_ClockController : AC_ConfigableComponentBase<AC_SOClockControlle
 
 	#region Define
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[Range(0, 1)] public float increaseTweenDuration = 1;
 		public Ease increaseTweenEaseType = Ease.OutElastic;//Ease type when Time increase

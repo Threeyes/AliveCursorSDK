@@ -1018,7 +1018,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
 		//			sumError += $"Build Item {so?.Title} with error: {errorLog}" + "\r\n";
 		//		}
 		//	}
-		//	//PS：因为每次打包单个Item完成后都会清空Log Console，因此需要先存储每个BuildItem的错误信息，最后再统一Log
+		//	//PS：因为每次打包单个Item完成后都会清空Log Console，因此需要先存储每个BuildItem的错误信息，最后再统一Log（Todo：如果报错就直接终止后续打包）
 		//	if (sumError != null)
 		//	{
 		//		sumError = "Build All Complete, some Items are failed with error:\r\n" + sumError;

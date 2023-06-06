@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using Newtonsoft.Json;
+using Threeyes.Config;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,7 +19,7 @@ using UnityEngine.Events;
 /// 2. Set values in [Model] Group, then Invoke SetShaderModelConfig method in ContextMenu
 /// 3.Set material's FillAmount field
 /// </summary>
-public class AC_LiquidController : AC_ConfigableUpdateComponentBase<Renderer, AC_SOLiquidControllerConfig, AC_LiquidController.ConfigInfo>
+public class AC_LiquidController : AC_ConfigurableUpdateComponentBase<Renderer, AC_SOLiquidControllerConfig, AC_LiquidController.ConfigInfo>
 	, IAC_ModHandler
 {
 	#region Property & Field
@@ -207,7 +208,7 @@ public class AC_LiquidController : AC_ConfigableUpdateComponentBase<Renderer, AC
 
 	[System.Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionAppearanceSettingChanged;

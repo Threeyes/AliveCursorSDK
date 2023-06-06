@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
+using Threeyes.Config;
 using UnityEngine;
 /// <summary>
 /// Set world rotation to fixed value
 /// 
 /// Use case: 2D UI
 /// </summary>
-public class AC_FixedRotation : AC_ConfigableUpdateComponentBase<Transform, AC_SOFixedRotationConfig, AC_FixedRotation.ConfigInfo>
+public class AC_FixedRotation : AC_ConfigurableUpdateComponentBase<Transform, AC_SOFixedRotationConfig, AC_FixedRotation.ConfigInfo>
 {
     protected override void UpdateFunc()
     {
@@ -15,7 +16,7 @@ public class AC_FixedRotation : AC_ConfigableUpdateComponentBase<Transform, AC_S
 
     #region Define
     [System.Serializable]
-    public class ConfigInfo : AC_SerializableDataBase
+    public class ConfigInfo : SerializableDataBase
     {
         public Vector3 targetWorldAngle = Vector3.zero;
     }

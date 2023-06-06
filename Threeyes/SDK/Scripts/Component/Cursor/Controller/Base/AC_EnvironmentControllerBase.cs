@@ -1,3 +1,4 @@
+using Threeyes.Config;
 using UnityEngine.Events;
 /// <summary>
 /// Control Cursor Environment
@@ -13,8 +14,8 @@ public interface IAC_EnvironmentController : IAC_ModControllerHandler
 	event UnityAction<bool> IsUseSkyboxChanged;
 }
 
-public abstract class AC_EnvironmentControllerBase<TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>, IAC_EnvironmentController
-		where TSOConfig : AC_SOConfigBase<TConfig>
+public abstract class AC_EnvironmentControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IAC_EnvironmentController
+		where TSOConfig : SOConfigBase<TConfig>
 {
 
 	//ModController override settings

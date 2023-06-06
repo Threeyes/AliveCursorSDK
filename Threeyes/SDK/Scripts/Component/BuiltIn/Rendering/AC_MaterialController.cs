@@ -6,13 +6,14 @@ using Threeyes.Data;
 using UnityEngine;
 using UnityEngine.Events;
 using Newtonsoft.Json;
+using Threeyes.Config;
 /// <summary>
 /// Control Material's value
 ///
 /// ToUpdate：
 /// -后期另外做一个类似的通用克隆版Controller，去掉AC的监听，放到RuntimeEdit中
 /// </summary>
-public class AC_MaterialController : AC_ConfigableComponentBase<AC_SOMaterialControllerConfig, AC_MaterialController.ConfigInfo>
+public class AC_MaterialController : ConfigurableComponentBase<AC_SOMaterialControllerConfig, AC_MaterialController.ConfigInfo>
 	, IAC_ModHandler
 {
 	public Material Material
@@ -114,7 +115,7 @@ public class AC_MaterialController : AC_ConfigableComponentBase<AC_SOMaterialCon
 
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 
@@ -131,7 +132,7 @@ public class AC_MaterialController : AC_ConfigableComponentBase<AC_SOMaterialCon
 		#endregion
 	}
 
-	public class ShaderPropertyBase : AC_SerializableDataBase
+	public class ShaderPropertyBase : SerializableDataBase
 	{
 		public string name;//shader field name, set by modder（如：_BaseMap）（Todo【非必要，可以供用户动态修改】：runtimeEdit时不可编辑，但在UnityEditor可编辑。如有必要可自行写一个Attribute，增加一个bool值：editorEditableonly）
 	}

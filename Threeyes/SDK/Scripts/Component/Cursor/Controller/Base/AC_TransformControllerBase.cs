@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using Threeyes.Config;
 using UnityEngine;
 
 public interface IAC_TransformController : IAC_ModControllerHandler
@@ -33,10 +34,10 @@ public interface IAC_TransformController : IAC_ModControllerHandler
 /// PS:
 /// 1. Must attached to the AliveCursor gameobject
 /// </summary>
-public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_ConfigableComponentBase<TSOConfig, TConfig>,
+public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>,
 	IAC_TransformController,
 	IAC_CommonSetting_CursorSizeHandler
-	where TSOConfig : AC_SOConfigBase<TConfig>
+	where TSOConfig : SOConfigBase<TConfig>
 	where TConfig : AC_TransformControllerConfigInfoBase
 {
 	public AC_TransformControllerConfigInfoBase BaseConfig { get { return Config; } }
@@ -124,7 +125,7 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : AC_Config
 }
 
 [System.Serializable]
-public class AC_TransformControllerConfigInfoBase : AC_SerializableDataBase
+public class AC_TransformControllerConfigInfoBase : SerializableDataBase
 {
 	public DimensionType dimensionType = DimensionType.ThreeD;
 	public enum DimensionType

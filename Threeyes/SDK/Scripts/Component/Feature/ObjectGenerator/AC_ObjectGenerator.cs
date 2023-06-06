@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 using UnityEngine;
+using Threeyes.Config;
 
-
-public class AC_ObjectGenerator : AC_ConfigableComponentBase<AC_SOObjectGeneratorConfig, AC_ObjectGenerator.ConfigInfo>
+public class AC_ObjectGenerator : ConfigurableComponentBase<AC_SOObjectGeneratorConfig, AC_ObjectGenerator.ConfigInfo>
 {
     public int curPrefabIndex = 0;
     protected virtual GameObject GetPrefab()
@@ -30,7 +30,7 @@ public class AC_ObjectGenerator : AC_ConfigableComponentBase<AC_SOObjectGenerato
 
     #region Define
     [System.Serializable]
-    public class ConfigInfo : AC_SerializableDataBase
+    public class ConfigInfo : SerializableDataBase
     {
         [Header("Generate")]
         [JsonIgnore] public AC_SOPrefabGroup soPrefabGroup;

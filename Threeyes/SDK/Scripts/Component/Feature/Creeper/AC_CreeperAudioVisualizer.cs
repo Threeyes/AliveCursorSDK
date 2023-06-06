@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Data;
+using Threeyes.Config;
 using UnityEngine;
 /// <summary>
 /// Creeper response To Audio
@@ -10,7 +11,7 @@ using UnityEngine;
 /// 功能：
 /// -通过序号确定指定响应音频的Leg
 /// </summary>
-public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeperAudioVisualizerConfig, AC_CreeperAudioVisualizer.ConfigInfo>
+public class AC_CreeperAudioVisualizer : ConfigurableComponentBase<AC_SOCreeperAudioVisualizerConfig, AC_CreeperAudioVisualizer.ConfigInfo>
 	, IAC_SystemAudio_RawSampleDataChangedHandler
 {
 
@@ -85,7 +86,7 @@ public class AC_CreeperAudioVisualizer : AC_ConfigableComponentBase<AC_SOCreeper
 	/// -增加限制legRaiseIndex的方法（利用RangeExAttribute，然后通过方法返回maxLegCount对应值）
 	/// </summary>
 	[Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		public bool canBodyMove = false;
 		public Vector3 bodyMoveRange = new Vector3(0.05f, 0.05f, 0);

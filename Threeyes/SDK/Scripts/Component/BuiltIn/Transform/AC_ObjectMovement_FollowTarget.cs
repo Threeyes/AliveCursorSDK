@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
-
+using Threeyes.Config;
 
 /// <summary>
 /// Follow and look at target
@@ -10,7 +10,7 @@ using NaughtyAttributes;
 /// 要求：
 /// -跟随某一点移动
 /// </summary>
-public class AC_ObjectMovement_FollowTarget : AC_ConfigableComponentBase<AC_SOObjectMovement_FollowTargetConfig, AC_ObjectMovement_FollowTarget.ConfigInfo>, IAC_ObjectMovement
+public class AC_ObjectMovement_FollowTarget : ConfigurableComponentBase<AC_SOObjectMovement_FollowTargetConfig, AC_ObjectMovement_FollowTarget.ConfigInfo>, IAC_ObjectMovement
 {
 	public bool IsMoving { get { return isMoving; } }
 	public float CurMoveSpeedPercent { get { return CurMoveSpeed / MaxMoveSpeed; } }
@@ -71,7 +71,7 @@ public class AC_ObjectMovement_FollowTarget : AC_ConfigableComponentBase<AC_SOOb
 
 	#region Define
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[Min(0.01f)] public float maxMoveSpeed = 1;//Max move speed per second
 		public Vector3 localUpAxis = new Vector3(0, 0, -1);//Up axis base on tfPosTarget

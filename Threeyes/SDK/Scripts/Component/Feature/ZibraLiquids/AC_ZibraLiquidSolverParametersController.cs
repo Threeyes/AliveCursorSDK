@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Config;
 
-public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBase<ZibraLiquidSolverParameters, AC_SOZibraLiquidSolverParametersControllerConfig, AC_ZibraLiquidSolverParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
+public class AC_ZibraLiquidSolverParametersController : ConfigurableComponentBase<ZibraLiquidSolverParameters, AC_SOZibraLiquidSolverParametersControllerConfig, AC_ZibraLiquidSolverParametersController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -40,7 +41,7 @@ public class AC_ZibraLiquidSolverParametersController : AC_ConfigableComponentBa
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 

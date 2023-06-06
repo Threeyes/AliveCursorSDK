@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Action;
+using Threeyes.Config;
 using UnityEngine;
 /// <summary>
 /// Control cursor state action
@@ -69,7 +70,7 @@ public class AC_DefaultStateController : AC_StateControllerBase<AC_SODefaultStat
 
 	#region Define
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] [Expandable] public AC_SOCursorStateActionCollection soCursorStateActionCollection;
 	}

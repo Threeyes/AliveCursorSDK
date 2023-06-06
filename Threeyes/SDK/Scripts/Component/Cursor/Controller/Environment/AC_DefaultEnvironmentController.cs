@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using Newtonsoft.Json;
 using System;
+using Threeyes.Config;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
@@ -50,8 +51,13 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 		Config.actionIsUseGroundChanged -= OnIsUseGroundChanged;
 		Config.actionPersistentChanged -= OnPersistentChanged;
 	}
-	#endregion
+    #endregion
 
+    public override void OnModControllerInit()
+    {
+        base.OnModControllerInit();
+		SetGround(Config.isUseGround);
+	}
 	#region Config Callback
 	void OnIsUseLightsChanged(PersistentChangeState persistentChangeState)
 	{
@@ -217,7 +223,7 @@ public class AC_DefaultEnvironmentController : AC_EnvironmentControllerBase<AC_S
 	/// </summary>
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseReflectionChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseLightsChanged;

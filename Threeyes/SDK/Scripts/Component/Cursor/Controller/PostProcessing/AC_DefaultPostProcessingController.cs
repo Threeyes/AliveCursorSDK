@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using Newtonsoft.Json;
 using System;
+using Threeyes.Config;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,7 +70,7 @@ public class AC_DefaultPostProcessingController : AC_PostProcessingControllerBas
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionIsUsePostProcessingChanged;
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;

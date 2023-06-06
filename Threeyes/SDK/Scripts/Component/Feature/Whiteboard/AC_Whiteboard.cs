@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Threeyes.Config;
+
 /// <summary>
 /// Ref:https://git.fh-aachen.de/MakeItTrue2/VR/-/blob/ea8b3e6728db29fd229603b12b3a5f88c315fa54/unity-game/Assets/Scripts/WhiteBoard/Whiteboard.cs
 /// 
 /// ToUpdate:
 /// -Support UGUI-Image:https://forum.unity.com/threads/how-to-raycast-onto-a-unity-canvas-ui-image.855259/
 /// </summary>
-public class AC_Whiteboard : AC_ConfigableInstanceBase<AC_Whiteboard, AC_SOWhiteboardConfig, AC_Whiteboard.ConfigInfo>
+public class AC_Whiteboard : ConfigurableInstanceBase<AC_Whiteboard, AC_SOWhiteboardConfig, AC_Whiteboard.ConfigInfo>
 {
 	//Runtime
 	private Texture2D texture;
@@ -127,7 +129,7 @@ public class AC_Whiteboard : AC_ConfigableInstanceBase<AC_Whiteboard, AC_SOWhite
 	/// -Reload the mod after you change these settings
 	/// </summary>
 	[System.Serializable]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		public Vector2 textureSize = new Vector2(2880, 1440);//默认2：1，能够覆盖大多数16屏幕
 		public Color defaultPenColor = new Color(1, 1, 1, 0.5f);//默认半透明，避免遮挡背景

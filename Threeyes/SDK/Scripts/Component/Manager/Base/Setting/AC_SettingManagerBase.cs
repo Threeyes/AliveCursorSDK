@@ -4,10 +4,11 @@ using Threeyes.Data;
 using NaughtyAttributes;
 using System.Reflection;
 using System.Collections.Generic;
+using Threeyes.Config;
 
 public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerBase<T>
 	where T : AC_SettingManagerBase<T, TSOConfig, TConfig>
-	where TSOConfig : AC_SOConfigBase<TConfig>
+	where TSOConfig : SOConfigBase<TConfig>
 	where TConfig : AC_SettingConfigInfoBase<TConfig>
 {
 	/// <summary>
@@ -37,6 +38,7 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 		InitEvent();//监听Config事件
 		InitUI();//基于Config初始化UI
 
+		Config.NotifyAllDataEvent(BasicDataState.Init);//【不能删掉】#外部已经监听完毕，且值已经设置完毕，通知所有监听BaseData的方法，从而进行初始化（如generalSetting_IsSupportMultiDisplay）
 		hasInit = true;
 	}
 	public virtual void DeInit()
@@ -78,7 +80,7 @@ public abstract class AC_SettingManagerBase<T, TSOConfig, TConfig> : AC_ManagerB
 }
 
 #region Define
-public abstract class AC_SettingConfigInfoBase<TRealType> : AC_SerializableDataBase
+public abstract class AC_SettingConfigInfoBase<TRealType> : SerializableDataBase
  where TRealType : AC_SettingConfigInfoBase<TRealType>
 {
 	public Version version = new Version("3.0");//Warning：格式必须是A.B，否则报错！（The major and minor components are required; the build and revision components are optional）
@@ -107,7 +109,22 @@ public abstract class AC_SettingConfigInfoBase<TRealType> : AC_SerializableDataB
 			Debug.LogError("ClearAllDataEvent with error:\r\n" + e);
 		}
 	}
-
+	public void NotifyAllDataEvent(BasicDataState state = BasicDataState.Update)
+	{
+		{
+			GetListBaseData().ForEach((bd) =>
+			{
+				try
+				{
+					bd.NotifyValueChanged(state);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"NotifyAllDataEvent {bd} on state {state} with error:\r\n" + e);
+				}
+			});
+		}
+	}
 
 	public virtual List<BasicData> GetListBaseData_Reset()
 	{

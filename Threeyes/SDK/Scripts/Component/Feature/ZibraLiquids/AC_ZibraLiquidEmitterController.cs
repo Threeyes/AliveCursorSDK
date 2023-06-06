@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Config;
+
 using static com.zibra.liquid.Manipulators.ZibraLiquidEmitter;
 
-public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraLiquidEmitter, AC_SOZibraLiquidEmitterControllerConfig, AC_ZibraLiquidEmitterController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
+public class AC_ZibraLiquidEmitterController : ConfigurableComponentBase<ZibraLiquidEmitter, AC_SOZibraLiquidEmitterControllerConfig, AC_ZibraLiquidEmitterController.ConfigInfo>, IAC_ZibraLiquidController_SettingHandler
 {
 	#region Unity Method
 	private void Awake()
@@ -40,7 +42,7 @@ public class AC_ZibraLiquidEmitterController : AC_ConfigableComponentBase<ZibraL
 	#region Define
 	[Serializable]
 	[PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-	public class ConfigInfo : AC_SerializableDataBase
+	public class ConfigInfo : SerializableDataBase
 	{
 		[JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 
