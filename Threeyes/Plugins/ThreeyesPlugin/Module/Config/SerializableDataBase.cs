@@ -1,11 +1,9 @@
+#if USE_JsonDotNet
 using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+#endif
 
 namespace Threeyes.Config
 {
-
     /// <summary>
     /// Base class for all data that are Serializable via Json
     /// </summary>

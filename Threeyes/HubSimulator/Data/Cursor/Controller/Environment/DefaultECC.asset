@@ -17,7 +17,6 @@ MonoBehaviour:
     sunLightRotation: {x: 30, y: 30, z: 240}
     sunLightIntensity: 0.3
     sunLightColor: {r: 1, g: 1, b: 1, a: 1}
-    lightShadowType: 0
     isUseReflection: 1
     isUseSkybox: 1
     skyboxType: 0
@@ -30,4 +29,3 @@ MonoBehaviour:
     externalPanoramaTextureFilePath: 
     panoramaSkyboxRotation: 0
     PersistentDirPath: 
-    isUseGround: 1

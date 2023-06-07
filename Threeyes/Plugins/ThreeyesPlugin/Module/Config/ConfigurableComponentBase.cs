@@ -1,6 +1,7 @@
-using NaughtyAttributes;
 using UnityEngine;
-
+#if USE_NaughtyAttributes
+using NaughtyAttributes;
+#endif
 namespace Threeyes.Config
 {
 	/// <summary>
@@ -27,7 +28,10 @@ namespace Threeyes.Config
 		public TSOConfig SOOverrideConfig { get { return soOverrideConfig; } set { soOverrideConfig = value; } }
 		[Header("Config")]
 		[SerializeField] protected TConfig defaultConfig;//Default config
-		[Expandable] [SerializeField] protected TSOConfig soOverrideConfig;//Override config
+#if USE_NaughtyAttributes
+		[Expandable]
+#endif
+		[SerializeField] protected TSOConfig soOverrideConfig;//Override config
 	}
 
 	public abstract class ConfigurableComponentBase<TComp, TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>

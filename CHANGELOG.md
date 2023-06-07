@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.2]
+- Improve shadow resolution.
+- Update AC_ObjectMovement_FollowTarget.ConfigInfo.
+
 ## [3.8.1]
 - Internal SDK changed.
 
