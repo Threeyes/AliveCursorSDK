@@ -38,6 +38,9 @@
 ## 文档
 请查阅[wiki](https://github.com/Threeyes/AliveCursorSDK/wiki/Home-zh-CN)。
 
+## SDK什么时候会更新
+![SDK更新规则](https://github.com/Threeyes/AliveCursorSDK/assets/13210990/46dfa4c5-4a4e-4846-926d-2877808973cd)
+
 ## 联系方式
 + [QQ](https://im.qq.com/index/)群: 673880395
 
