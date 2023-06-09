@@ -38,6 +38,9 @@
 ## Documentation
 Check out [wiki](https://github.com/Threeyes/AliveCursorSDK/wiki).
 
+## When will the SDK be updated
+![SDK更新规则](https://github.com/Threeyes/AliveCursorSDK/assets/13210990/46dfa4c5-4a4e-4846-926d-2877808973cd)
+
 ## Contact
 + [QQ](https://im.qq.com/index/) Group: 673880395
 
