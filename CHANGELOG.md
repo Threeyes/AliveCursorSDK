@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.9.0]
+Note: Mod using old Unity Version (Unity 2021.3.5f1LTS) is still supported, however it is recommended to submit using the latest version.
+- Update to Unity 2022.3.4f1 LTS
+- com.unity.2d.animation: 7.0.7→9.0.3
+- com.unity.2d.psdimporter: 6.0.5→8.0.2
+- com.unity.animation.rigging: 1.1.1→1.2.1
+- com.unity.nuget.newtonsoft-json: 3.0.2→3.2.1
+- com.unity.probuilder: 5.0.6→5.1.0
+- com.unity.timeline: 1.6.4→1.7.5
+- com.unity.visualeffectgraph/com.unity.render-pipelines.universal: 12.1.7→14.0.8
+- com.unity.visualscripting: 1.7.8→1.8.0
+- Add com.unity.splines: 2.3.0
+
 ## [3.8.2]
 - Improve shadow resolution.
 - Update AC_ObjectMovement_FollowTarget.ConfigInfo.
