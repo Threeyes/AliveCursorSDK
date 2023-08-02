@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Threeyes.Steamworks;
 
 ///Todo：
 /// 1.本地查询只实现基本的Tag、文件名搜索（需要自己实现）。
@@ -19,25 +20,7 @@ using Newtonsoft.Json;
 /// </summary>
 [System.Serializable]
 [JsonObject(MemberSerialization.OptIn)]
-public sealed class AC_WorkshopItemInfo
+public sealed class AC_WorkshopItemInfo : WorkshopItemInfo<AC_WorkshopItemInfo>
 {
-    //#Basic Info
-    [JsonProperty] public string title;
-    [JsonProperty] public string description;
-    [JsonProperty] public string modFileRelatePath;//局部的Mod文件路径
-    [JsonProperty] public string previewFileRelatePath;//局部预览图路径                                   
-    [JsonProperty] public AC_WSItemVisibility itemVisibility = AC_WSItemVisibility.Public;
-    [JsonProperty] public string[] tags;//PS:因为最终呈现的形式都是tags，所以不需要存储枚举，以免后续有更改
-
-    //#Runtime Info
-    public AC_WSItemLocation itemLocation = AC_WSItemLocation.Downloaded;//标识Mod位置，便于区分
-    public ulong id;//Item ID
-    public string dirPath;//Item所在文件夹路径
-    public long fileSize;//文件总大小
-
-    public static readonly string ItemInfoFileName = "ItemInfo.json";//序列化的WorkshopItemInfo
-    public static readonly string ItemModName = "Scene";//打包后的Mod名称
-    public static readonly string ItemModFileName = ItemModName + ".umod";//Mod文件
-   
-    public AC_WorkshopItemInfo() { }//PS：便于Json反序列化调用的默认构造函数
+    public AC_WorkshopItemInfo():base() { }//PS：便于Json反序列化调用的默认构造函数
 }

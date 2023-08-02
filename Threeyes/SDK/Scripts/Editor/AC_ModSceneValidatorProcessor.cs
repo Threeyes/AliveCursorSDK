@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 using Threeyes.Persistent;
 using Threeyes.Editor;
+using Threeyes.Steamworks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class AC_ModSceneValidatorProcessor : BuildEngineProcessor
 {
     public override void ProcessAsset(BuildContext context, BuildPipelineAsset asset)
     {
-        if (!asset.FullPath.Contains(AC_SOWorkshopItemInfo.SceneName))//只处理与ItemScene名称相关
+        if (!asset.FullPath.Contains(SOWorkshopItemInfo.SceneName))//只处理与ItemScene名称相关
             return;
 
         // Load the scene into the editor

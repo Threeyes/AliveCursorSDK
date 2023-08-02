@@ -124,16 +124,7 @@ public enum AC_SystemCursorAppearanceType
 
 //——Workshop提供的选项——
 
-/// <summary>
-/// Ref: 对应Steamworks.RemoteStoragePublishedFileVisibility
-/// </summary>
-public enum AC_WSItemVisibility
-{
-	Public = 0,
-	FriendsOnly = 1,
-	Private = 2,
-	Unlisted = 3,
-}
+
 
 //——Custom Tags——
 
@@ -247,18 +238,5 @@ public enum AC_WSItemAdvance
 	All = ~0
 }
 
-
-//——Internal——
-/// <summary>
-/// 本地Item所在位置
-/// </summary>
-public enum AC_WSItemLocation
-{
-	Downloaded,//Steam下载后的文件。包括SteamingAssets中内置的Item
-
-	//Editor（调试用）
-	UnityExported,//Unity导出的文件（已打包）
-	UnityProject,//UnityProject内部的原始文件(未打包）
-}
 
 #endregion

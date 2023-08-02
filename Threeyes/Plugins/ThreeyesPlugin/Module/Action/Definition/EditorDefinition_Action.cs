@@ -4,7 +4,10 @@ namespace Threeyes.Action
     {
         //——Asset Menu——
         public const string AssetMenuPrefix_Action = "Action/";
-       
+
+        //#Common
+        public const string AssetMenuPrefix_Action_Common = AssetMenuPrefix_Action+"Common/";
+
         //#BuiltIn
         public const string AssetMenuPrefix_Action_BuiltIn = AssetMenuPrefix_Action + "BuiltIn/";
         public const string AssetMenuPrefix_Action_BuiltIn_Animator = AssetMenuPrefix_Action_BuiltIn + "Animator/";

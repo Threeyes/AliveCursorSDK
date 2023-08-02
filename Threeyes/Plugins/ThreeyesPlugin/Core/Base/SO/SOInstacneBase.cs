@@ -13,7 +13,8 @@ using UnityEditor;
 /// ScriptableObject资源单例类
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class SOInstacneBase<T> : ScriptableObject where T : SOInstacneBase<T>
+public class SOInstacneBase<T> : ScriptableObject
+    where T : SOInstacneBase<T>
 {
     /// <summary>
     /// 
@@ -63,7 +64,7 @@ public class SOInstacneBase<T> : ScriptableObject where T : SOInstacneBase<T>
                 AssetDatabase.Refresh();
             }
 
-			//PS:此时文件夹已经创建，但是Unity未完全刷新，不影响后续操作
+            //PS:此时文件夹已经创建，但是Unity未完全刷新，不影响后续操作
             //if (!AssetDatabase.IsValidFolder(localDirectoryPath))
             //{
             //    Debug.LogError("Directory not found! Try to manual refresh the editor !");
@@ -107,4 +108,31 @@ public class SOInstacneBase<T> : ScriptableObject where T : SOInstacneBase<T>
 
     }
 
+}
+
+public class SOInstacneBase<T, TInfo> : SOInstacneBase<T>
+    where T : SOInstacneBase<T, TInfo>
+    where TInfo : SOInstacneInfo, new()
+{
+    #region Instance
+    public static T Instance
+    {
+        get
+        {
+            return GetOrCreateInstance(ref instance, info.defaultName, info.pathInResources);
+        }
+    }
+    private static T instance;
+    public static readonly TInfo info = new TInfo();
+
+    #endregion
+}
+
+/// <summary>
+/// 自定义默认路径等信息
+/// </summary>
+public abstract class SOInstacneInfo
+{
+    public abstract string defaultName { get; }
+    public abstract string pathInResources { get; }
 }

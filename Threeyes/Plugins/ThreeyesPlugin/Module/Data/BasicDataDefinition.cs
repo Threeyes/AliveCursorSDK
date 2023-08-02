@@ -60,16 +60,9 @@ namespace Threeyes.Data
 		[SerializeField] protected TValue value;
 		[SerializeField] protected TValue defaultValue;
 
-#if USE_JsonDotNet
-		[JsonIgnore]
-#endif
-		public UnityAction<TValue> actionValueChanged;
-		public UnityAction<TValue> actionValueReset;
-
-#if USE_JsonDotNet
-		[JsonIgnore]
-#endif
-		public UnityAction<TValue, BasicDataState> actionValueChangedEx;
+		[JsonIgnore] public UnityAction<TValue> actionValueChanged;
+		[JsonIgnore] public UnityAction<TValue> actionValueReset;
+		[JsonIgnore] public UnityAction<TValue, BasicDataState> actionValueChangedEx;
 
 		public BasicData()//用于反射调用
 		{

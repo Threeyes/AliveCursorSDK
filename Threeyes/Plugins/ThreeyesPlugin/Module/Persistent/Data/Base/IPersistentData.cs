@@ -34,6 +34,7 @@ namespace Threeyes.Persistent
 
 		TValue DefaultValue { get; set; }
 		TValue PersistentValue { get; set; }
+		TValue ValueToSaved { get; }
 		bool HasChanged { get; set; }
 
 		void OnValueChanged(TValue value, PersistentChangeState persistentChangeState);

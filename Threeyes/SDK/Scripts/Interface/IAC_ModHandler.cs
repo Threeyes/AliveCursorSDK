@@ -1,17 +1,9 @@
+using Threeyes.Steamworks;
 /// <summary>
 /// Mod lifecycle event
+/// 
+/// Warning：该接口只是为了保证兼容性，真正有效的是IModControllerHandler接口
 /// </summary>
-public interface IAC_ModHandler
+public interface IAC_ModHandler : IModHandler
 {
-    /// <summary>
-    /// PS:
-    /// 1.Get call right after PersistentData is Loaded
-    /// </summary>
-    void OnModInit();
-
-    /// <summary>
-    /// PS:
-    /// 1.Get call right after PersistentData is Saved
-    /// </summary>
-    void OnModDeinit();
-}   
+}

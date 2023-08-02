@@ -4,17 +4,15 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 #if Threeyes_UnityGifDecoder
-//ToUpdate:增加专属宏定义
 using ThreeDISevenZeroR.UnityGifDecoder;
-using ThreeDISevenZeroR.UnityGifDecoder.Model;
 #endif
 namespace Threeyes.Decoder
 {
-	/// <summary>
-	/// Warning：
-	/// 1.因为贴图是临时生成，因此需要手动调用Dispose清除！
-	/// </summary>
-	public class GifDecoder : DecoderBase<List<GifFrameData>>
+    /// <summary>
+    /// Warning：
+    /// 1.因为贴图是临时生成，因此需要手动调用Dispose清除！
+    /// </summary>
+    public class GifDecoder : DecoderBase<List<GifFrameData>>
 	{
 		#region Interface
 		public override DecodeResult<List<GifFrameData>> DecodeEx(byte[] data, IDecodeOption option = null)
@@ -232,6 +230,19 @@ namespace Threeyes.Decoder
 			{
 				value = new List<GifFrameData>();//避免为null导致后续访问错误
 			}
+		}
+	}
+
+	[Serializable]
+	public class GifFrameData : IDisposable
+	{
+		public Texture2D texture;
+		public float frameDelaysSeconds;//DelayTime
+
+		public void Dispose()
+		{
+			if (texture)
+				UnityEngine.Object.Destroy(texture);
 		}
 	}
 }

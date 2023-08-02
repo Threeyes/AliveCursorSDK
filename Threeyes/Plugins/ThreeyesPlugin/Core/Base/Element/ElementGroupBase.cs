@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 /// <summary>
-/// 存储相同的一系列数据
+/// 存储相同的一系列元件
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ElementGroupBase<T> : MonoBehaviour where T : class
@@ -16,7 +16,7 @@ public class ElementGroupBase<T> : MonoBehaviour where T : class
     }
 }
 
-//适用于带
+//适用于带数据的元件
 public abstract class ElementGroupBase<TElement, TEleData> : MonoBehaviour
     where TElement : ElementBase<TEleData>
     where TEleData : class

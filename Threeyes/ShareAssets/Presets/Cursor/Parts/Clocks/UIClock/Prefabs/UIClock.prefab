@@ -859,7 +859,7 @@ RectTransform:
   - {fileID: 4328671095619904933}
   - {fileID: 4328671095165321308}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -875,7 +875,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4328671095579632281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be1f8439039aa5943a867d37288cbed9, type: 3}
+  m_Script: {fileID: 11500000, guid: a83c2421d0b594e4f92e30108c9aa6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   defaultConfig:
@@ -963,7 +963,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 30000
   m_TargetDisplay: 0

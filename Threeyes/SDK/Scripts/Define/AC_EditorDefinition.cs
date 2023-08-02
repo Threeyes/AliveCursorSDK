@@ -5,13 +5,12 @@ public static class AC_EditorDefinition
 	///1.Use the origin File name because that's what will show on Inspector
 	///2.Should Match the path to SDK/../Component
 
-	public const string Menu_AliveCursor = "Alive Cursor/";
+	public const string Menu_Root = "Alive Cursor/";
 
 	//##
 	public const string MenuElement_Cursor = "Cursor/";
 	public const string MenuElement_Common = "Common/";
 	public const string MenuElement_Workshop = "Workshop/";
-	public const string MenuElement_Config = "Config/";
 	public const string MenuElement_Persistent = "Persistent/";
 
 	//###
@@ -29,65 +28,58 @@ public static class AC_EditorDefinition
 	public const string MenuElement_BoredAction = "BoredAction/";
 
 	//##Others
-	public const string MenuElement_SO = "SO/";
 	public const string MenuElement_Action = "Action/";
 
 	//——Component Menu——
-	public const string ComponentMenuPrefix_Root = Menu_AliveCursor;
-	public const string ComponentMenuPrefix_AC_Cursor = ComponentMenuPrefix_Root + MenuElement_Cursor;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller = ComponentMenuPrefix_AC_Cursor + MenuElement_Controller;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller_Environment = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_Environment;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_PostProcessing;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller_State = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_State;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller_Transform = ComponentMenuPrefix_AC_Cursor_Controller + MenuElement_Transform;
-	public const string ComponentMenuPrefix_AC_Cursor_Controller_Transform_BoredAction = ComponentMenuPrefix_AC_Cursor_Controller_Transform + MenuElement_BoredAction;
-	public const string ComponentMenuPrefix_AC_Cursor_Behaviour = ComponentMenuPrefix_AC_Cursor + MenuElement_Behaviour;
-	public const string ComponentMenuPrefix_AC_Cursor_Behaviour_Setting = ComponentMenuPrefix_AC_Cursor_Behaviour + MenuElement_Setting;
-	public const string ComponentMenuPrefix_AC_Cursor_Behaviour_Input = ComponentMenuPrefix_AC_Cursor_Behaviour + MenuElement_Input;
-	public const string ComponentMenuPrefix_AC_Cursor_Behaviour_Appearance = ComponentMenuPrefix_AC_Cursor_Behaviour + MenuElement_Appearance;
-	public const string ComponentMenuPrefix_AC_Cursor_Behaviour_State = ComponentMenuPrefix_AC_Cursor_Behaviour + MenuElement_State;
+	public const string ComponentMenuPrefix_Root = Menu_Root;
+	public const string ComponentMenuPrefix_Root_Cursor = ComponentMenuPrefix_Root + MenuElement_Cursor;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller = ComponentMenuPrefix_Root_Cursor + MenuElement_Controller;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller_Environment = ComponentMenuPrefix_Root_Cursor_Controller + MenuElement_Environment;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller_PostProcessing = ComponentMenuPrefix_Root_Cursor_Controller + MenuElement_PostProcessing;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller_State = ComponentMenuPrefix_Root_Cursor_Controller + MenuElement_State;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller_Transform = ComponentMenuPrefix_Root_Cursor_Controller + MenuElement_Transform;
+	public const string ComponentMenuPrefix_Root_Cursor_Controller_Transform_BoredAction = ComponentMenuPrefix_Root_Cursor_Controller_Transform + MenuElement_BoredAction;
+	public const string ComponentMenuPrefix_Root_Cursor_Behaviour = ComponentMenuPrefix_Root_Cursor + MenuElement_Behaviour;
+	public const string ComponentMenuPrefix_Root_Cursor_Behaviour_Setting = ComponentMenuPrefix_Root_Cursor_Behaviour + MenuElement_Setting;
+	public const string ComponentMenuPrefix_Root_Cursor_Behaviour_Input = ComponentMenuPrefix_Root_Cursor_Behaviour + MenuElement_Input;
+	public const string ComponentMenuPrefix_Root_Cursor_Behaviour_Appearance = ComponentMenuPrefix_Root_Cursor_Behaviour + MenuElement_Appearance;
+	public const string ComponentMenuPrefix_Root_Cursor_Behaviour_State = ComponentMenuPrefix_Root_Cursor_Behaviour + MenuElement_State;
 	public const string ComponentMenuPrefix_Persistent = ComponentMenuPrefix_Root + MenuElement_Persistent;
 
 
 	//——Hierarchy Menu——
-	public const string Hierarchy_Root = "GameObject/";
-	public const string HierarchyMenuPrefix_Root = Hierarchy_Root + Menu_AliveCursor;
-	public const string HierarchyMenuPrefix_Cursor_Controller_Environment = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_Environment;
-	public const string HierarchyMenuPrefix_Cursor_Controller_PostProcessing = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing;
-	public const string HierarchyMenuPrefix_Cursor_Controller_State = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_State;
-	public const string HierarchyMenuPrefix_Cursor_Controller_Transform = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_Transform;
-	public const string HierarchyMenuPrefix_Cursor_Controller_Transform_BoredAction = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Controller_Transform_BoredAction;
-	public const string HierarchyMenuPrefix_Cursor_Behaviour_Setting = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Behaviour_Setting;
-	public const string HierarchyMenuPrefix_Cursor_Behaviour_Input = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Behaviour_Input;
-	public const string HierarchyMenuPrefix_Cursor_Behaviour_Appearance = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Behaviour_Appearance;
-	public const string HierarchyMenuPrefix_Cursor_Behaviour_State = Hierarchy_Root + ComponentMenuPrefix_AC_Cursor_Behaviour_State;
-	public const string HierarchyMenuPrefix_Persistent = Hierarchy_Root + ComponentMenuPrefix_Persistent;
+	public const string Hierarchy_GameObject = "GameObject/";
+	public const string HierarchyMenuPrefix_Root_Cursor_Controller_Environment = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Controller_Environment;
+	public const string HierarchyMenuPrefix_Root_Cursor_Controller_PostProcessing = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Controller_PostProcessing;
+	public const string HierarchyMenuPrefix_Root_Cursor_Controller_State = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Controller_State;
+	public const string HierarchyMenuPrefix_Root_Cursor_Controller_Transform = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Controller_Transform;
+	public const string HierarchyMenuPrefix_Root_Cursor_Controller_Transform_BoredAction = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Controller_Transform_BoredAction;
+	public const string HierarchyMenuPrefix_Root_Cursor_Behaviour_Setting = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Behaviour_Setting;
+	public const string HierarchyMenuPrefix_Root_Cursor_Behaviour_Input = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Behaviour_Input;
+	public const string HierarchyMenuPrefix_Root_Cursor_Behaviour_Appearance = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Behaviour_Appearance;
+	public const string HierarchyMenuPrefix_Root_Cursor_Behaviour_State = Hierarchy_GameObject + ComponentMenuPrefix_Root_Cursor_Behaviour_State;
+	public const string HierarchyMenuPrefix_Persistent = Hierarchy_GameObject + ComponentMenuPrefix_Persistent;
 
 	//——Asset Menu——
 	///PS:
 	///1.因为Asset菜单默认是创建文件，因此不需要增加SO的前缀
-	public const string AssetMenuPrefix_Root = Menu_AliveCursor;
+	public const string AssetMenuPrefix_Root = Menu_Root;
 
-	public const string AssetMenuPrefix_AC_Cursor = ComponentMenuPrefix_AC_Cursor;
-	public const string AssetMenuPrefix_AC_Cursor_Behaviour_Input = ComponentMenuPrefix_AC_Cursor_Behaviour_Input;
-	public const string AssetMenuPrefix_AC_Cursor_Behaviour_Appearance = ComponentMenuPrefix_AC_Cursor_Behaviour_Appearance;
-	public const string AssetMenuPrefix_AC_Cursor_Behaviour_State = ComponentMenuPrefix_AC_Cursor_Behaviour_State;
-	public const string AssetMenuPrefix_AC_Cursor_Controller = ComponentMenuPrefix_AC_Cursor_Controller;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_Environment = ComponentMenuPrefix_AC_Cursor_Controller_Environment;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_PostProcessing = ComponentMenuPrefix_AC_Cursor_Controller_PostProcessing;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_State = ComponentMenuPrefix_AC_Cursor_Controller_State;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_State_Action = AssetMenuPrefix_AC_Cursor_Controller_State + MenuElement_Action;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_Transform = ComponentMenuPrefix_AC_Cursor_Controller_Transform;
-	public const string AssetMenuPrefix_AC_Cursor_Controller_Transform_BoredAction = ComponentMenuPrefix_AC_Cursor_Controller_Transform_BoredAction;
+	public const string AssetMenuPrefix_Root_Cursor = ComponentMenuPrefix_Root_Cursor;
+	public const string AssetMenuPrefix_Root_Cursor_Behaviour_Input = ComponentMenuPrefix_Root_Cursor_Behaviour_Input;
+	public const string AssetMenuPrefix_Root_Cursor_Behaviour_Appearance = ComponentMenuPrefix_Root_Cursor_Behaviour_Appearance;
+	public const string AssetMenuPrefix_Root_Cursor_Behaviour_State = ComponentMenuPrefix_Root_Cursor_Behaviour_State;
+	public const string AssetMenuPrefix_Root_Cursor_Controller = ComponentMenuPrefix_Root_Cursor_Controller;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_Environment = ComponentMenuPrefix_Root_Cursor_Controller_Environment;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_PostProcessing = ComponentMenuPrefix_Root_Cursor_Controller_PostProcessing;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_State = ComponentMenuPrefix_Root_Cursor_Controller_State;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_State_Action = AssetMenuPrefix_Root_Cursor_Controller_State + MenuElement_Action;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_Transform = ComponentMenuPrefix_Root_Cursor_Controller_Transform;
+	public const string AssetMenuPrefix_Root_Cursor_Controller_Transform_BoredAction = ComponentMenuPrefix_Root_Cursor_Controller_Transform_BoredAction;
 
-	public const string AssetMenuPrefix_AC_Common = AssetMenuPrefix_Root + MenuElement_Common;
-	public const string AssetMenuPrefix_AC_Workshop = AssetMenuPrefix_Root + MenuElement_Workshop;
-	public const string AssetMenuPrefix_AC_Persistent = AssetMenuPrefix_Root + MenuElement_Persistent;
-	public const string AssetMenuPrefix_AC_Config = AssetMenuPrefix_Root + MenuElement_Config;
-	public const string AssetMenuPrefix_AC_Config_BuiltIn = AssetMenuPrefix_Root + MenuElement_Config + "BuiltIn/";
-	public const string AssetMenuPrefix_AC_Config_Feature = AssetMenuPrefix_AC_Config + "Feature/";
-
-	public const string AssetMenuPrefix_SO_Action = AssetMenuPrefix_Root + MenuElement_Action;
-	public const string AssetMenuPrefix_SO_Action_Common = AssetMenuPrefix_SO_Action + MenuElement_Common;
+	public const string AssetMenuPrefix_Root_Common = AssetMenuPrefix_Root + MenuElement_Common;
+	public const string AssetMenuPrefix_Root_Workshop = AssetMenuPrefix_Root + MenuElement_Workshop;
+	public const string AssetMenuPrefix_Root_Persistent = AssetMenuPrefix_Root + MenuElement_Persistent;
+	public const string AssetMenuPrefix_Root_BuiltIn = AssetMenuPrefix_Root + "BuiltIn/";
+	public const string AssetMenuPrefix_Root_Feature = AssetMenuPrefix_Root + "Feature/";
 }
-//测试

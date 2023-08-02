@@ -605,7 +605,7 @@ PlayerSettings:
     Lumin: UNITY_POST_PROCESSING_STACK_V2
     Nintendo Switch: UNITY_POST_PROCESSING_STACK_V2
     PS4: UNITY_POST_PROCESSING_STACK_V2
-    Standalone: USE_DOTween;USE_NaughtyAttributes;USE_JsonDotNet;Threeyes_UnityGifDecoder;UNITY_PIPELINE_URP;Threeyes_Timeline;Threeyes_VideoPlayer;Threeyes_BezierSolution
+    Standalone: USE_DOTween;USE_NaughtyAttributes;USE_JsonDotNet;USE_VFX;Threeyes_UnityGifDecoder;UNITY_PIPELINE_URP;Threeyes_Timeline;Threeyes_VideoPlayer;Threeyes_BezierSolution
     WebGL: UNITY_POST_PROCESSING_STACK_V2
     XboxOne: UNITY_POST_PROCESSING_STACK_V2
     tvOS: UNITY_POST_PROCESSING_STACK_V2

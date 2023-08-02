@@ -2,7 +2,7 @@
 
 ## [4.0.0]
 - Add 'USE_VFX' Define on Project Settings.
-- 
+- Move most common script into 'Assets/Threeyes/Plugins/ThreeyesPluginExpert/Module/Steamworks'.
 
 ## [3.9.0]
 Note: Mod using old Unity Version (Unity 2021.3.5f1LTS) is still supported, however it is recommended to submit using the latest version.
