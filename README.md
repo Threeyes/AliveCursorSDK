@@ -32,7 +32,7 @@
 ![image](https://user-images.githubusercontent.com/13210990/180822147-5a917199-279f-4cbb-a073-32e5078e2709.png)
 
 ## Possible Errors
-+ If some error appear on first import, try close the project, delete `Library` folder then reopen.
++ If some error appear or key components missing on first import, try close the project, delete `Library` folder then reopen.
 + If some subfolder in `Package/AliveCursorSDK` become empty, try reimport the package on `Package Manager` window.
 
 ## Documentation

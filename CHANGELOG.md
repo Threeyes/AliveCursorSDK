@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.0.0]
+- Add 'USE_VFX' Define on Project Settings.
+- 
+
 ## [3.9.0]
 Note: Mod using old Unity Version (Unity 2021.3.5f1LTS) is still supported, however it is recommended to submit using the latest version.
 - Update to Unity 2022.3.4f1 LTS
