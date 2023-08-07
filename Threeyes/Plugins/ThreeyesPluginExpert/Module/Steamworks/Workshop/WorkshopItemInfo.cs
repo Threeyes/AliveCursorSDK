@@ -5,7 +5,9 @@ using UnityEngine;
 
 namespace Threeyes.Steamworks
 {
-
+    /// <summary>
+    /// 用于序列化，可通过SOWorkshopItemInfo/Item转化
+    /// </summary>
     [System.Serializable]
     [JsonObject(MemberSerialization.OptIn)]
     public class WorkshopItemInfo
@@ -26,6 +28,7 @@ namespace Threeyes.Steamworks
         public long fileSize;//文件总大小
 
         //#Built Info
+        public static string LcoalUgcItemFileName { get { return "UgcItem.json"; } }
         public static string ItemInfoFileName { get { return "ItemInfo.json"; } }//序列化的WorkshopItemInfo
         public virtual string ItemModName { get { return "Scene"; } }//打包后的Mod名称，子类可自定义
         public virtual string ItemModFileName { get { return ItemModName + ".umod"; } }//Mod文件
@@ -41,5 +44,4 @@ namespace Threeyes.Steamworks
     {
         public static readonly T Default = new T();//功能：用于获取实例中的override字段    
     }
-
 }

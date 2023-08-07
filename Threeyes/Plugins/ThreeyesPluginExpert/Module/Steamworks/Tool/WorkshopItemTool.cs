@@ -8,6 +8,18 @@ namespace Threeyes.Steamworks
 	/// </summary>
 	public static class WorkshopItemTool
 	{
+		//——Path——
+		public static bool IsValidItemDir(string itemDirPath)
+		{
+			return File.Exists(GetItemJsonFileDir(itemDirPath));
+		}
+		public static string GetItemJsonFileDir(string itemDirPath)
+		{
+			if (itemDirPath.IsNullOrEmpty())
+				return "";
+			return Path.Combine(itemDirPath, WorkshopItemInfo.ItemInfoFileName);
+		}
+
 		//——Id——
 
 		/// <summary>

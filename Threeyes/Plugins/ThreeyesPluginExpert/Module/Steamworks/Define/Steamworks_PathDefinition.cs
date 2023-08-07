@@ -11,6 +11,10 @@ namespace Threeyes.Steamworks
     public static class Steamworks_PathDefinition
     {
         #region  ——Common——
+        /// <summary>
+        /// The Root Folder for streamingAssetsPath
+        /// </summary>
+        public static string StreamingAssetsFolder { get { return PathTool.ConvertToSystemFormat(Application.streamingAssetsPath); } }
         public static string appNameWithoutExtension { get { return SORuntimeSettingManager.Instance.productName; } }
         public static string appName { get { return appNameWithoutExtension + ".exe"; } }
         public static string appFilePath
@@ -29,6 +33,8 @@ namespace Threeyes.Steamworks
                 }
             }
         }
+
+        public static string licenseFilePath { get { return StreamingAssetsFolder + @"\Licenses\LicenseCollection.md"; } }
 
         /// <summary>
         /// The folder for Windows Notify icons
@@ -131,12 +137,6 @@ namespace Threeyes.Steamworks
                 }
             }
         }
-
-
-        /// <summary>
-        /// The Root Folder for streamingAssetsPath
-        /// </summary>
-        public static string StreamingAssetsFolder { get { return PathTool.ConvertToSystemFormat(Application.streamingAssetsPath); } }
 
         /// <summary>
         /// The folder for BuiltIn Items

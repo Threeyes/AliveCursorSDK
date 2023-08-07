@@ -12,7 +12,10 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 	"'=' ->Enlarge cursor")]
 	public string dummyString;//Use this to make NaughtyAttributes work
 
-	void Start()
+    protected override void InitUI()
+    {
+    }
+    void Start()
 	{
 		Init(false);//模拟被调用
 	}

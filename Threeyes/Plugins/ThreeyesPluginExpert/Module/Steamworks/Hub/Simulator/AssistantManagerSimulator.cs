@@ -5,6 +5,10 @@ using UnityEditor;
 using UnityEngine;
 namespace Threeyes.Steamworks
 {
+    /// <summary>
+    /// 在Simulator场景中提供Mod调试信息
+    /// </summary>
+
     public class AssistantManagerSimulator : MonoBehaviour
     {
         /// <summary>

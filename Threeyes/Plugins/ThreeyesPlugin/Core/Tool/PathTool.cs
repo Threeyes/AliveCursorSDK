@@ -399,7 +399,7 @@ public partial class PathTool
 	/// 打开文件所在位置
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <param name="isSelect"></param>
+	/// <param name="isSelect">true：选中；false：打开</param>
 	public static void OpenFile(string filePath, bool isSelect = true)
 	{
 		string cmd = "explorer.exe";

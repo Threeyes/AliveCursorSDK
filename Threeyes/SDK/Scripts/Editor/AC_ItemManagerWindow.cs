@@ -28,7 +28,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
         {
             BuildAndRunCurItem();
         }
-        [MenuItem("Alive Cursor/Build All %m", priority = 2)]
+        [MenuItem("Alive Cursor/Build All", priority = 2)]
         public static void AC_BuildAll()
         {
             BuildAll();

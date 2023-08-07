@@ -29,26 +29,21 @@ namespace Threeyes.Steamworks
         [Header("Reflection")]
         [Tooltip("The main ReflectionProbe")] [Required] [SerializeField] protected ReflectionProbe reflectionProbe;
 
-        [Header("Others")]
-        [Tooltip("Ground for receive shadows, Optional")] [SerializeField] protected GameObject goGround;
-
         #endregion
 
         #region Unity Method
-        private void Awake()
+        protected virtual void Awake()
         {
             Config.actionIsUseLightsChanged += OnIsUseLightsChanged;
             Config.actionIsUseReflectionChanged += OnIsUseReflectionChanged;
             Config.actionIsUseSkyboxChanged += OnIsUseSkyboxChanged;
-            Config.actionIsUseGroundChanged += OnIsUseGroundChanged;
             Config.actionPersistentChanged += OnPersistentChanged;//Get called at last
         }
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             Config.actionIsUseLightsChanged -= OnIsUseLightsChanged;
             Config.actionIsUseReflectionChanged -= OnIsUseReflectionChanged;
             Config.actionIsUseSkyboxChanged -= OnIsUseSkyboxChanged;
-            Config.actionIsUseGroundChanged -= OnIsUseGroundChanged;
             Config.actionPersistentChanged -= OnPersistentChanged;
         }
         #endregion
@@ -67,9 +62,6 @@ namespace Threeyes.Steamworks
         void OnIsUseSkyboxChanged(PersistentChangeState persistentChangeState)
         {
         }
-        void OnIsUseGroundChanged(PersistentChangeState persistentChangeState)
-        {
-        }
         void OnPersistentChanged(PersistentChangeState persistentChangeState)
         {
             UpdateSetting();
@@ -80,7 +72,6 @@ namespace Threeyes.Steamworks
             SetLights(Config.isUseLights);
             SetReflectionProbe(Config.isUseReflection);//Update ReflectionProbe's gameobject active state before skybox changes, or else the render may not update property
             SetSkybox(Config.isUseSkybox);
-            SetGround(Config.isUseGround);
         }
         #endregion
 
@@ -143,12 +134,6 @@ namespace Threeyes.Steamworks
             if (needRefresh)
                 DynamicGIUpdateEnvironment();
         }
-
-        public virtual void SetGround(bool isUse)
-        {
-            if (goGround)
-                goGround.SetActive(isUse);
-        }
         #endregion
 
         #region Utility
@@ -210,9 +195,7 @@ namespace Threeyes.Steamworks
             }
             return false;
         }
-
         #endregion
-
     }
 
     #region Define
@@ -231,7 +214,6 @@ namespace Threeyes.Steamworks
         [JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseReflectionChanged;
         [JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseLightsChanged;
         [JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseSkyboxChanged;
-        [JsonIgnore] public UnityAction<PersistentChangeState> actionIsUseGroundChanged;
         [JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
 
         public Material SkyboxMaterial { get { return skyboxType == SkyboxType.Default ? defaultSkyboxMaterial : panoramaSkyboxMaterial; } }
@@ -261,8 +243,6 @@ namespace Threeyes.Steamworks
         [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [Range(0, 360)] public float panoramaSkyboxRotation = 0;
         [HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
 
-        [Header("Others")]
-        [PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseGround))] public bool isUseGround = false;
 
         #region Callback
         void OnPersistentValueChanged_IsUseReflection(PersistentChangeState persistentChangeState)
@@ -277,10 +257,7 @@ namespace Threeyes.Steamworks
         {
             actionIsUseSkyboxChanged.Execute(persistentChangeState);
         }
-        void OnPersistentValueChanged_IsUseGround(PersistentChangeState persistentChangeState)
-        {
-            actionIsUseGroundChanged.Execute(persistentChangeState);
-        }
+
         void OnPersistentChanged(PersistentChangeState persistentChangeState)
         {
             actionPersistentChanged.Execute(persistentChangeState);

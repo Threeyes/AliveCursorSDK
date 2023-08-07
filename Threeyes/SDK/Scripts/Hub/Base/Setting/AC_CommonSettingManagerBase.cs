@@ -5,7 +5,7 @@ using Threeyes.Steamworks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AC_CommonSettingManagerBase<T> : HubSettingManagerBase<T, AC_SOCommonSettingManagerConfig, AC_CommonSettingConfigInfo>, IAC_CommonSettingManager
+public abstract class AC_CommonSettingManagerBase<T> : HubSettingManagerBase<T, AC_SOCommonSettingManagerConfig, AC_CommonSettingConfigInfo>, IAC_CommonSettingManager
     where T : AC_CommonSettingManagerBase<T>
 {
     #region Interface

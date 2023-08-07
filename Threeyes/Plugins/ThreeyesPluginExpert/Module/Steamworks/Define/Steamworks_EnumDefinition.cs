@@ -30,8 +30,8 @@ namespace Threeyes.Steamworks
 		Downloaded,//Steam下载后的文件。包括SteamingAssets中内置的Item
 
 		//Editor（调试用）
-		UnityExported,//Unity导出的文件（已打包）
-		UnityProject,//UnityProject内部的原始文件(未打包）
+		UnityExported,//【已打包】Unity导出的文件
+		UnityProject,//【未打包】UnityProject内部的原始文件
 	}
     #endregion
 

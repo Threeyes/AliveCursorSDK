@@ -10,7 +10,7 @@ using UnityEditor;
 namespace Threeyes.Steamworks
 {
     /// <summary>
-    /// 通过SO存储WorkshopItem的信息，便于可视化及序列化
+    /// 通过SO存储WorkshopItem的信息，便于Unity可视化及转化成WorkshopItemInfo
     /// </summary>
     public abstract class SOWorkshopItemInfo : ScriptableObject
     {

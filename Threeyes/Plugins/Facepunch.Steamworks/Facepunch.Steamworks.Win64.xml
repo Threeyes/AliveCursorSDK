@@ -2207,6 +2207,31 @@
             Default is 524288 bytes (512k).
             </summary>
         </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.SendRateMin">
+            <summary>
+            Minimum send rate clamp, 0 is no limit.
+            This value will control the min allowed sending rate that 
+            bandwidth estimation is allowed to reach.  Default is 0 (no-limit)
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.SendRateMax">
+            <summary>
+            Maximum send rate clamp, 0 is no limit.
+            This value will control the max allowed sending rate that 
+            bandwidth estimation is allowed to reach.  Default is 0 (no-limit)
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.NagleTime">
+            <summary>
+            Nagle time, in microseconds.  When SendMessage is called, if
+            the outgoing message is less than the size of the MTU, it will be
+            queued for a delay equal to the Nagle timer value.  This is to ensure
+            that if the application sends several small messages rapidly, they are
+            coalesced into a single packet.
+            See historical RFC 896.  Value is in microseconds. 
+            Default is 5000us (5ms).
+            </summary>
+        </member>
         <member name="P:Steamworks.SteamNetworkingUtils.AllowWithoutAuth">
             <summary>
             Don't automatically fail IP connections that don't have
@@ -2232,6 +2257,36 @@
             You should not let users modify it in production.  (But note that it requires
             the peer to also modify their value in order for encryption to be disabled.)
             </para>
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelAckRTT">
+            <summary>
+            Log RTT calculations for inline pings and replies.
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelPacketDecode">
+            <summary>
+            Log SNP packets send.
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelMessage">
+            <summary>
+            Log each message send/recv.
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelPacketGaps">
+            <summary>
+            Log dropped packets.
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelP2PRendezvous">
+            <summary>
+            Log P2P rendezvous messages.
+            </summary>
+        </member>
+        <member name="P:Steamworks.SteamNetworkingUtils.DebugLevelSDRRelayPings">
+            <summary>
+            Log ping relays.
             </summary>
         </member>
         <member name="P:Steamworks.SteamNetworkingUtils.DebugLevel">
@@ -2911,7 +2966,12 @@
         </member>
         <member name="E:Steamworks.SteamUser.OnGetAuthSessionTicketResponse">
             <summary>
-            Used internally for <see cref="M:Steamworks.SteamUser.GetAuthSessionTicketAsync(System.Double)"/>.
+            Used internally for <see cref="M:Steamworks.SteamUser.GetAuthSessionTicketAsync(Steamworks.Data.NetIdentity,System.Double)"/>.
+            </summary>
+        </member>
+        <member name="E:Steamworks.SteamUser.OnGetTicketForWebApiResponse">
+            <summary>
+            Used internally for <see cref="M:Steamworks.SteamUser.GetAuthTicketForWebApiAsync(System.String,System.Double)"/>.
             </summary>
         </member>
         <member name="E:Steamworks.SteamUser.OnMicroTxnAuthorizationResponse">
@@ -2979,12 +3039,25 @@
             Advanced and potentially fastest version - incase you know what you're doing
             </summary>
         </member>
-        <member name="M:Steamworks.SteamUser.GetAuthSessionTicket">
+        <member name="M:Steamworks.SteamUser.GetAuthSessionTicket(Steamworks.Data.NetIdentity)">
             <summary>
             Retrieve an authentication ticket to be sent to the entity who wishes to authenticate you.
             </summary>
         </member>
-        <member name="M:Steamworks.SteamUser.GetAuthSessionTicketAsync(System.Double)">
+        <member name="M:Steamworks.SteamUser.GetAuthSessionTicketAsync(Steamworks.Data.NetIdentity,System.Double)">
+            <summary>
+            Retrieve a authentication ticket to be sent to the entity who wishes to authenticate you.
+            This waits for a positive response from the backend before returning the ticket. This means
+            the ticket is definitely ready to go as soon as it returns. Will return <see langword="null"/> if the callback
+            times out or returns negatively.
+            </summary>
+        </member>
+        <member name="M:Steamworks.SteamUser.GetAuthTicketForWebApi(System.String)">
+            <summary>
+            Retrieve an authentication ticket to be sent to the entity who wishes to authenticate you.
+            </summary>
+        </member>
+        <member name="M:Steamworks.SteamUser.GetAuthTicketForWebApiAsync(System.String,System.Double)">
             <summary>
             Retrieve a authentication ticket to be sent to the entity who wishes to authenticate you.
             This waits for a positive response from the backend before returning the ticket. This means
@@ -3826,10 +3899,14 @@
             https://partner.steamgames.com/doc/features/workshop/implementation#Legal
             </summary>
         </member>
+        <member name="P:Steamworks.Ugc.Item.Details">
+            <summary>
+            #添加 获取Item详细信息，主要用于序列化
+            </summary>
+        </member>
         <member name="P:Steamworks.Ugc.Item.FileSize">
             <summary>
-            #添加
-            获取文件大小
+            #添加 获取文件大小
             </summary>
         </member>
         <member name="P:Steamworks.Ugc.Item.Id">

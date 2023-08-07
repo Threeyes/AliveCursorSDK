@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Threeyes.Log;
+using System;
 
 namespace Threeyes.Steamworks
 {
@@ -13,6 +14,8 @@ namespace Threeyes.Steamworks
     /// </summary>
     public static class ManagerHolder
     {
+        public static Func<List<IHubManagerModInitHandler>> GetListManagerModInitOrder;//Get each Manager to init mod by order
+
         public static ILogManager LogManager { get; internal set; }
 
         //——System——

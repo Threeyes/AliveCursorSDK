@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.0.1]
+- Update Facepunch.Steamworks.
+- Mod Scripts improvement.
+
 ## [4.0.0]
 - Add 'USE_VFX' Define on Project Settings.
 - Move most common script into 'Assets/Threeyes/Plugins/ThreeyesPluginExpert/Module/Steamworks'.

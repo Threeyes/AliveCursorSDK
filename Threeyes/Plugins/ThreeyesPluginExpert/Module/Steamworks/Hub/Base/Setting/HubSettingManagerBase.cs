@@ -52,16 +52,21 @@ namespace Threeyes.Steamworks
         }
         public virtual void ResetConfigToDefault()
         {
+            ///Bug:
+            ///-偶尔会使用各Field默认值
+           
             //重置配置为默认值
             ResetAllDataToDefault();
         }
 
+        /// <summary>
+        /// 更新Config中的特殊字段（如Version）,也可以在这里针对旧版本的配置属性进行修改
+        /// </summary>
+        /// <param name="isFirstInit"></param>
         protected virtual void UpdateConfig(bool isFirstInit)
         {
             try
             {
-                //PS:可以在这里针对旧版本的配置属性进行修改
-
                 //更新本地配置的版本值
                 Version curVersion = new Version(strAppVersion);
                 if (curVersion != Config.version)
@@ -72,10 +77,7 @@ namespace Threeyes.Steamworks
                 Debug.LogError("UpdateConfig failed: " + e);
             }
         }
-        protected virtual void InitUI()
-        {
-            //调用对应的UIManager
-        }
+        protected abstract void InitUI();
 
         #region Data
 
