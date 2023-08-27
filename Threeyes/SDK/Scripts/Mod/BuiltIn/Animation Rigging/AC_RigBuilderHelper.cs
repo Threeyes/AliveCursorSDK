@@ -16,11 +16,28 @@ using Threeyes.Steamworks;
 /// </summary>
 public class AC_RigBuilderHelper : RigBuilderHelper
        , IAC_CommonSetting_CursorSizeHandler
+    ,IAC_CursorState_ChangedHandler
 {
     #region CallBack
     public void OnCursorSizeChanged(float value)
     {
         RebuildJoint();
+    }
+    bool isLastHidingState;
+    public void OnCursorStateChanged(AC_CursorStateInfo cursorStateInfo)
+    {
+        ///避免：光标通过更改尺寸重新显示时，Joint会错位的问题
+        bool isCurHidingState = AC_ManagerHolder.StateManager.IsVanishState(cursorStateInfo.cursorState);
+        if (isCurHidingState)
+        {
+            TryStopCoroutine();
+        }
+        else
+        {
+            if (isLastHidingState)//只有从隐藏切换到显示，才需要更新
+                RebuildJoint();
+        }
+        isLastHidingState = isCurHidingState;
     }
     #endregion
 }

@@ -23,7 +23,7 @@ public class SequenceBase<TData> : SequenceAbstract, IEnumerable<TData>
     {
         get
         {
-            if (CurIndex > 0 && CurIndex < ListData.Count)
+            if (CurIndex >= 0 && CurIndex < ListData.Count)
             {
                 return ListData[CurIndex];
             }

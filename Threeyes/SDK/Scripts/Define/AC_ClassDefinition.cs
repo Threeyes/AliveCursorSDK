@@ -402,6 +402,7 @@ public enum AC_MouseButtons
 /// </summary>
 public class AC_WindowEventExtArgs : WindowEventExtArgs
 {
+    //ToAdd：独特的信息
     public AC_WindowEventExtArgs(Cause cause, StateChange stateChange) : base(cause, stateChange)
     {
     }

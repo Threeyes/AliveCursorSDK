@@ -3,9 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Threeyes.Steamworks
 {
-    //——Mod Common——
-
-    //——Manager Common——
+    #region 用于ManagerHolder，包含各Manager的核心字段/方法
 
     /// <summary>
     /// Manager Init Mod
@@ -36,7 +34,16 @@ namespace Threeyes.Steamworks
         /// <param name="isActive"></param>
         void OnProgramActiveChanged(bool isActive);
     }
-
+    public interface IHubSystemWindow_ChangedHandler
+    {
+        /// <summary>
+        /// Called before and after screen switching/resolution change
+        /// 
+        /// PS:Convert to real type if you need extra info
+        /// </summary>
+        /// <param name="e"></param>
+        public void OnWindowChanged(WindowEventExtArgs e);
+    }
     public interface IHubSystemWindow_ChangeCompletedHandler
     {
         /// <summary>
@@ -45,7 +52,6 @@ namespace Threeyes.Steamworks
         public void OnWindowChangeCompleted();
     }
 
-    #region SystemAudioManager
     public interface IHubSystemAudioManager
     {
         int RawSampleCount { get; }
@@ -65,7 +71,6 @@ namespace Threeyes.Steamworks
     {
         void OnSpectrumDataChanged(float[] spectrumData);
     }
-    #endregion
 
     //——ModManager——
     public interface IHubEnvironmentManager
@@ -80,4 +85,26 @@ namespace Threeyes.Steamworks
         Scene HubScene { get; }
         public Scene CurModScene { get; }
     }
+    #endregion
+
+    #region 供各Manager继承
+
+    //——SystemManager——
+    public interface ISystemAudioManager : IHubSystemAudioManager, IHubManagerModInitHandler
+    {
+    }
+
+    //——ModManager——
+    public interface IEnvironmentManager :
+    IHubManagerWithController<IEnvironmentController>
+    , IHubEnvironmentManager
+    , IHubManagerModInitHandler
+    {
+    }
+    public interface IPostProcessingManager : IHubManagerModInitHandler, IHubManagerWithController<IPostProcessingController>
+    {
+    }
+
+
+    #endregion
 }

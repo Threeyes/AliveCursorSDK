@@ -9,7 +9,7 @@ public class AC_ManagerHolderManager : ManagerHolderManager
 {
     protected override void InitWorkshopItemInfoFactory()
     {
-        var inst = AC_WorkshopItemInfoFactory.Instance;//调用其构造函数并注册到ManagerHolder
+        SteamworksTool.RegistManagerHolder(AC_WorkshopItemInfoFactory.Instance);//调用其构造函数进行初始化并注册到ManagerHolder
     }
     protected override List<IHubManagerModInitHandler> GetListManagerModInitOrder()
     {

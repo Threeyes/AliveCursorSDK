@@ -838,6 +838,17 @@ public static partial class LazyExtension_Common
             tfInst.rotation = rotation;
         }
     }
+    /// <summary>
+    /// 销毁游戏对象，同时避免Destroy延迟销毁影响后续子物体层级查询
+    /// </summary>
+    /// <param name="tf"></param>
+    public static void DestroyAtOnce(this GameObject go)
+    {
+        if (go.transform.parent)
+            go.transform.SetParent(null);
+
+        Destroy(go.transform);
+    }
     #endregion
 
     #region Transform

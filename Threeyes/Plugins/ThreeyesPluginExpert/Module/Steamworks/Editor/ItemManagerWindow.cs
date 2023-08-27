@@ -938,7 +938,7 @@ namespace Threeyes.Steamworks
 
 
         /// <summary>
-        /// 检查Asset是否为ReadOnly（如存储在Library/PackageCache文件夹中）
+        /// 检查Asset能否读写（如存储在Library/PackageCache文件夹中）
         /// </summary>
         /// <param name="assetPath"></param>
         static bool CheckIfPackageAssetReadWriteable(string assetPath)

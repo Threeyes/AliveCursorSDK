@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -7,6 +7,8 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using System.Threading;
+using System.IO;
 
 namespace Threeyes.Editor
 {
@@ -16,6 +18,107 @@ namespace Threeyes.Editor
     /// </summary>
     public static class EditorTool
     {
+        #region Asset
+        /// <summary>
+        /// 重命名资源，保留引用
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="newName">新名称（不带后缀）</param>
+        /// <returns>An empty string, if the asset has been successfully renamed, otherwise an error
+        //     message.</returns>
+        public static string Rename(Object obj, string newName)
+        {
+            var relateObjPath = AssetDatabase.GetAssetPath(obj);
+            return AssetDatabase.RenameAsset(relateObjPath, newName);
+        }
+
+        /// <summary>
+        /// 将指定Asset的预览图保存为资源文件，默认存储在obj所在目录的Preview Texture文件夹下
+        /// </summary>
+        /// <param name="obj">Asset文件夹中的任意文件</param>
+        /// <param name="overrideSavedPath">自定义预览图存储路径（包括文件名）</param>
+        /// <returns></returns>
+        public static Texture CreateAndSaveAssetPreview(Object obj, string overrideSavedPath = "")
+        {
+            if (obj == null)
+            {
+                Debug.LogError("Can't create preview for null object");
+                return null;
+            }
+            var relateObjPath = AssetDatabase.GetAssetPath(obj);
+            if (!relateObjPath.StartsWith("Assets"))
+            {
+                Debug.LogError("only support object insde Assets Folder!");
+                return null;
+            }
+            Texture2D preview = AssetPreview.GetAssetPreview(obj);
+
+            //wait untill unity loads preview
+            int tm = 0;
+            while (preview == null)
+            {
+                Thread.Sleep(100);
+                preview = AssetPreview.GetAssetPreview(obj);
+                tm += 100;
+                if (tm >= 3000) //3 sec countdown
+                    break;
+            }
+
+            ///出错可能原因：
+            ///-选中的Asset在只读路径中（如package）
+            if (preview == null)
+            {
+                Debug.LogError($"Unable to create preview for object {obj.name}, perhaps the resource is not in the Asset folder.");
+                return null;
+            }
+
+            var relatePreviewTexturePath = relateObjPath.Substring(0, relateObjPath.LastIndexOf("/")) + "/Preview Texture";//将预览图存在obj所在目录的Preview Texture文件夹下
+            string savePath = Path.Combine(Application.dataPath, relatePreviewTexturePath.Replace("Assets/", string.Empty));
+
+            CreateSaveFolder(savePath);
+
+            //encode to png and then save to assets
+            var bytes = preview.EncodeToPNG();
+            string name = obj.name + ".png";
+            string imagePath = overrideSavedPath.NotNullOrEmpty() ? overrideSavedPath : relatePreviewTexturePath + "/" + name;
+
+
+            if (File.Exists(name))
+                File.Delete(name);
+            File.WriteAllBytes(imagePath, bytes);
+
+            Debug.Log("创建预览图：\r\n" + imagePath);
+
+            //refresh assets
+            AssetDatabase.Refresh();
+
+            //change from texture to sprite
+            TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(imagePath);//Assets的目录
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            EditorUtility.SetDirty(importer);
+            AssetDatabase.ImportAsset(imagePath);
+            AssetDatabase.Refresh();
+
+            Texture objTex = AssetDatabase.LoadAssetAtPath<Texture>(imagePath);
+            return objTex;
+            //Selection.objects = new Object[] { objTex };
+        }
+
+        /// <summary>
+        /// [EDITOR ONLY] Check if the save directory exitst. If no creates it
+        /// </summary>
+        static void CreateSaveFolder(string savePath)
+        {
+            if (!Directory.Exists(savePath))
+            {
+                Debug.Log("Created directory: " + savePath);
+                Directory.CreateDirectory(savePath);
+                AssetDatabase.Refresh();
+            }
+        }
+        #endregion
+
         #region Repaint
 
         public static void RepaintSceneView()

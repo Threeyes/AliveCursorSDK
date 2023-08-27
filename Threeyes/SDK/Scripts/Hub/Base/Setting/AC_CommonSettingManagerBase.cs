@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Threeyes.Data;
 using Threeyes.Steamworks;
@@ -170,6 +169,7 @@ public class AC_CommonSettingConfigInfo : HubSettingConfigInfoBase
     [Header("General Setting")]//PS:(以下Option不能用枚举代替，因为可能会有变化（如多语言））
 
     //Todo:将General Setting放到不受IsAliveCursorActive影响的UI区域中
+    public BoolData generalSetting_IsProgramActive = new BoolData(true);//启用程序
     public BoolData generalSetting_IsAliveCursorActive = new BoolData(true);//启用AC
     public BoolData generalSetting_IsRunAtStartUp = new BoolData(false);//系统运行时自动启动
     public BoolData generalSetting_IsSupportMultiDisplay = new BoolData(true);//支持多屏幕

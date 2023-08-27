@@ -9,17 +9,13 @@ namespace Threeyes.Steamworks
 {
     public interface IWorkshopItemInfoFactory
     {
-        //WorkshopItemInfo CreateBase(SOWorkshopItemInfo sOWorkshopItemInfo);
         WorkshopItemInfo CreateBase(string itemDirPath, WSItemLocation itemLocation = WSItemLocation.Downloaded);
     }
 
     public abstract class WorkshopItemInfoFactory : IWorkshopItemInfoFactory
     {
-        //public abstract WorkshopItemInfo CreateBase(SOWorkshopItemInfo sOWorkshopItemInfo);
         public abstract WorkshopItemInfo CreateBase(string itemDirPath, WSItemLocation itemLocation = WSItemLocation.Downloaded);
-
     }
-
 
     public class WorkshopItemInfoFactory<TInstance, TSOItemInfo, TItemInfo> : WorkshopItemInfoFactory, IWorkshopItemInfoFactory
         where TInstance : WorkshopItemInfoFactory<TInstance, TSOItemInfo, TItemInfo>, new()
@@ -28,20 +24,10 @@ namespace Threeyes.Steamworks
     {
         public static readonly TInstance Instance = new TInstance();
 
-        public WorkshopItemInfoFactory()
-        {
-            SteamworksTool.RegistManagerHolder(this);
-        }
-
-        //public override WorkshopItemInfo CreateBase(SOWorkshopItemInfo sOWorkshopItemInfo)
-        //{
-        //    return Create((TSOItemInfo)sOWorkshopItemInfo);
-        //}
         public override WorkshopItemInfo CreateBase(string itemDirPath, WSItemLocation itemLocation = WSItemLocation.Downloaded)
         {
             return Create(itemDirPath, itemLocation);
         }
-
 
         /// <summary>
         /// 【EditorOnly】仅在UnityEditor Build Mod时调用，用于生成完整的ItemInfo用于序列化

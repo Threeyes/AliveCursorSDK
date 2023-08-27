@@ -3899,6 +3899,13 @@
             https://partner.steamgames.com/doc/features/workshop/implementation#Legal
             </summary>
         </member>
+        <member name="M:Steamworks.Ugc.Item.Init(Steamworks.Data.SteamUGCDetails_t)">
+            <summary>
+            #添加 使用details初始化Item，常用于反序列化
+            Ref：[internal static Item From( SteamUGCDetails_t details )]
+            </summary>
+            <param name="details"></param>
+        </member>
         <member name="P:Steamworks.Ugc.Item.Details">
             <summary>
             #添加 获取Item详细信息，主要用于序列化

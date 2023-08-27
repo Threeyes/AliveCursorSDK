@@ -40,5 +40,4 @@ public class AC_SOWorkshopItemInfo : SOWorkshopItemInfo<AC_WorkshopItemInfo>
             return listTag.ToArray();
         }
     }
-
 }

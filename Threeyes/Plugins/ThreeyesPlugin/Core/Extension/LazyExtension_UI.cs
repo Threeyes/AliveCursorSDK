@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -94,6 +94,20 @@ public static class LazyExtension_UI
         trans.pivot = aVec;
         trans.anchorMin = aVec;
         trans.anchorMax = aVec;
+    }
+
+    /// <summary>
+    /// 获取RectTransform中的某个位置
+    /// </summary>
+    /// <param name="trans"></param>
+    /// <param name="screenPoint">像素坐标，如mousePosition</param>
+    /// <param name="camera">Canvas对应的相机。针对Overlay的Cavnas，camera值必须为null，否则会报错。（Warning：If you are using a canvas in 'Screen Space - Overlay' (e.g. a 2D canvas), you have to pass null as the argument for the camera to the RectTransformUtility. If you try to pass the main camera, or any other camera in the scene, in as an argument, you will get bizarre results that seem to have no bearing on reality.）</param>
+    /// <returns></returns>
+    public static Vector2 GetPos(this RectTransform trans, Vector2 screenPoint, Camera camera = null)
+    {
+        Vector2 originalLocalPointerPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(trans, screenPoint, camera, out originalLocalPointerPosition);
+        return originalLocalPointerPosition;
     }
 
     public static void SetPositionOfPivot(this RectTransform trans, Vector2 newPos)

@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.0.2]
+- Fix Joints using AC_RigBuilderHelper will be misplaced when cursor reactive.
+- Update Facepunch.Steamworks.
+
 ## [4.0.1]
 - Update Facepunch.Steamworks.
 - Mod Scripts improvement.

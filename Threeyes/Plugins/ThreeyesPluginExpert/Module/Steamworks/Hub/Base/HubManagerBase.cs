@@ -16,7 +16,6 @@ namespace Threeyes.Steamworks
             SteamworksTool.RegistManagerHolder(this);
         }
 
-
         #region NaughtyAttributes
         protected const string foldoutName_Debug = "[Debug]";
         #endregion

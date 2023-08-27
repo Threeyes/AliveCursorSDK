@@ -119,7 +119,6 @@ public interface IAC_CommonSetting_IsRunAtStartUpHandler
 {
 	void OnIsRunAtStartUpChanged(bool isActive);
 }
-
 public interface IAC_CommonSetting_IsSupportMultiDisplayHandler
 {
 	void OnIsSupportMultiDisplayChanged(bool isActive);

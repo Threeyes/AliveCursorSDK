@@ -11,5 +11,5 @@ namespace Threeyes.Common
     [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_Common + "PrefabGroup", fileName = "PrefabGroup")]
     public class SOPrefabGroup : SOGroupBase<GameObject>
     {
-    }
+    } 
 }

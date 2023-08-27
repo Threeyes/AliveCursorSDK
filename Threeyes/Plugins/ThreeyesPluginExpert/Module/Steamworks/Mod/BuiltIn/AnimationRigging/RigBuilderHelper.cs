@@ -12,7 +12,7 @@ using Threeyes.Steamworks;
 /// 1. Setup joints
 /// 2. Open ContextMenu and invoke SaveJointInfo before game played 
 /// 
-/// PS：更改光标大小/光标显隐后，RigBuilder的joints会出现错位（因为性能优化，更改缩放不会更新Joint： https://forum.unity.com/threads/how-can-i-override-scale-using-animation-rigging.770219/#post-7277947）
+/// PS：更改模型大小/光标显隐后，RigBuilder的Joints会出现错位（因为性能优化，更改缩放不会更新Joint： https://forum.unity.com/threads/how-can-i-override-scale-using-animation-rigging.770219/#post-7277947）
 /// </summary>
 public class RigBuilderHelper : ComponentHelperBase<RigBuilder>,
     IHubSystemWindow_ChangeCompletedHandler,

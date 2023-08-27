@@ -121,11 +121,6 @@ public enum AC_SystemCursorAppearanceType
 #endregion
 
 #region Workshop Item
-
-//——Workshop提供的选项——
-
-
-
 //——Custom Tags——
 
 /// <summary>
@@ -237,6 +232,4 @@ public enum AC_WSItemAdvance
 
 	All = ~0
 }
-
-
 #endregion
