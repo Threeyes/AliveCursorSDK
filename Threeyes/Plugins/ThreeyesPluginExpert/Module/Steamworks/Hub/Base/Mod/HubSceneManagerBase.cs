@@ -26,7 +26,7 @@ namespace Threeyes.Steamworks
         #region ModInit
         protected virtual void InitMod(ModEntry modEntry)
         {
-            //#1.调用Controller的Init       
+            //#0.调用Controller的Init       
             modEntry.Init();//优先初始化单例
 
             //#1.按顺序调用各Manager的OnModInit

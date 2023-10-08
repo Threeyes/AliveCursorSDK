@@ -40,6 +40,8 @@ namespace Threeyes.Steamworks
         where TItemInfo : WorkshopItemInfo, new()
     {
         public static TSOEditorSettingManager SOManagerInst { get { return info.SOEditorSettingManagerInst; } }
+        static SORuntimeSettingManager SORuntimeManagerInst { get { return SORuntimeSettingManager.Instance; } }
+
         public static readonly TItemManagerWindowInfo info = new TItemManagerWindowInfo();
 
         private VisualTreeAsset uxmlAsset = default;
@@ -400,6 +402,7 @@ namespace Threeyes.Steamworks
                 windowInstance.RefreshItemInfoGroupUIState();//刷新UI
         }
 
+
         public static void RunCurSceneWithSimulator()
         {
             //ToUpdate:研究如何设置LightingSettings中对应SimulatorScene，而不是像现在一样需要重新加载(参考LightingWindowEnvironmentSection+LightingWindow）
@@ -411,7 +414,7 @@ namespace Threeyes.Steamworks
             for (int i = 0; i != SceneManager.sceneCount; i++)
             {
                 Scene activeScene = SceneManager.GetSceneAt(i);
-                if (activeScene.path.Contains(SORuntimeSettingManager.Instance.SimulatorSceneName))
+                if (activeScene.path.Contains(SORuntimeManagerInst.SimulatorSceneName))
                     continue;
                 else
                     itemSceneFilePath = activeScene.path;
@@ -858,7 +861,7 @@ namespace Threeyes.Steamworks
 
                 //查找项目中所以可能存在的资源文件路径(Assets或Packages文件夹）
                 List<string> listSceneAssetPath = new List<string>();
-                foreach (string targetGUID in AssetDatabase.FindAssets(SORuntimeSettingManager.Instance.SimulatorSceneName))
+                foreach (string targetGUID in AssetDatabase.FindAssets(SORuntimeManagerInst.SimulatorSceneName))
                 {
                     if (targetGUID.NotNullOrEmpty())
                     {
@@ -868,7 +871,7 @@ namespace Threeyes.Steamworks
                 }
 
                 ///查找首个可读写的Simulator场景文件，优先级如下：
-                ///#1 可读写的Package中【Packages/com.threeyes.alivecursor.sdk/Threeyes/HubSimulator/AliveCursorHub_Simulator.unity】
+                ///#1 可读写的Package中【如Packages/com.threeyes.alivecursor.sdk/Threeyes/HubSimulator/AliveCursorHub_Simulator.unity】
                 string sceneAssetInPackage = listSceneAssetPath.FirstOrDefault((s) => s.StartsWith(PackageSDKPath));
                 if (sceneAssetInPackage.NotNullOrEmpty())
                 {
@@ -886,10 +889,10 @@ namespace Threeyes.Steamworks
                     string sceneAssetInAsset = listSceneAssetPath.FirstOrDefault();
                     if (sceneAssetInAsset.NotNullOrEmpty())
                     {
-                        if (sceneAssetInAsset.StartsWith(SamplesSDKPath))//如果是Sample中的文件
+                        if (sceneAssetInAsset.StartsWith(ProjectSamplesSDKPath))//如果是Sample中的文件
                         {
                             //获取Sample文件夹中SDK的版本
-                            string assetVersion = sceneAssetInAsset.Replace(SamplesSDKPath + "/", "");
+                            string assetVersion = sceneAssetInAsset.Replace(ProjectSamplesSDKPath + "/", "");
                             assetVersion = assetVersion.Substring(0, assetVersion.IndexOf("/"));
                             PackageInfo packageInfoSDK = GetCacheSDKPackageInfo();//获取当前SDK的version（PS：如果SDK在Project（管理程序），则返回可能为空）
                             if (packageInfoSDK != null)
@@ -906,7 +909,7 @@ namespace Threeyes.Steamworks
                     }
                     else//无法找到：提醒导入
                     {
-                        Debug.LogError("Can't find Simulator Scene in project! Please open PackageManager window and import the latest Simulator assets via AliveCursorSDK/Samples!");
+                        Debug.LogError($"Can't find Simulator Scene in project! Please open PackageManager window and import the latest Simulator assets via {SORuntimeManagerInst.productName}SDK/Samples!");
                     }
                 }
 
@@ -924,9 +927,12 @@ namespace Threeyes.Steamworks
             return isSimulaterHubSceneLoaded;
         }
 
-        const string SDKIdentifier = "com.threeyes.alivecursor.sdk";
-        const string SamplesSDKPath = "Assets/Samples/AliveCursorSDK";
-        const string PackageSDKPath = "Packages/" + SDKIdentifier;//在Package中的sdk路径（不管是否Embedded都是这个路径）
+        static string PackageSDKPath { get { return "Packages/" + SDKIdentifier; } }//在Package中的sdk路径（不管是否Embedded都是这个路径）
+        static string SDKIdentifier { get { return SORuntimeManagerInst.sDKIdentifier; } }
+        /// <summary>
+        /// 项目文件夹中导入的Samples资源
+        /// </summary>
+        static string ProjectSamplesSDKPath { get { return "Assets/Samples/" + SORuntimeManagerInst.productName; } }
         /// <summary>
         /// 返回缓存到Packages中的SDK信息
         /// </summary>
@@ -970,7 +976,7 @@ namespace Threeyes.Steamworks
             if (defaultDir.IsNullOrEmpty())
                 defaultDir = Application.dataPath;
 
-            string resultFilePath = EditorUtility.OpenFilePanelWithFilters("Select AliveCursor.exe...", defaultDir, new string[] { "Exe files", "exe" });
+            string resultFilePath = EditorUtility.OpenFilePanelWithFilters($"Select {SORuntimeManagerInst.productName}.exe...", defaultDir, new string[] { "Exe files", "exe" });
             if (resultFilePath.NotNullOrEmpty())
             {
                 FileInfo fileInfoSelected = new FileInfo(resultFilePath);
@@ -1005,7 +1011,7 @@ namespace Threeyes.Steamworks
         {
             if (exePath.NotNullOrEmpty())
             {
-                if (File.Exists(exePath) && exePath.EndsWith("AliveCursor.exe"))
+                if (File.Exists(exePath) && exePath.EndsWith($"{SORuntimeManagerInst.productName}.exe"))//检查主程序是否存在
                     return true;
             }
             return false;
@@ -1059,8 +1065,24 @@ namespace Threeyes.Steamworks
             var processStartInfo = new System.Diagnostics.ProcessStartInfo(SOManagerInst.ItemWindow_ExePath, $"-umod \"{SOManagerInst.CurWorkshopItemInfo.ExportItemDirPath}\"");
             System.Diagnostics.Process.Start(processStartInfo);
         }
+
+        //static void TestCacheLog()
+        //{
+        //    Application.logMessageReceivedThreaded -= ReceivedLog;
+        //    Application.logMessageReceivedThreaded += ReceivedLog;
+        //}
+        //private static void ReceivedLog(string condition, string stackTrace, LogType type)
+        //{
+        //    if (type == LogType.Error)
+        //    {
+        //        int a = 1;
+        //    }
+        //}
+
         static bool BuildItemFunc(TSOItemInfo sOWorkshopItemInfo, out string errorLog)
         {
+            //TestCacheLog();//【遇到打包失败且无错误提示时激活该行】编辑器调试时，通过在ReceivedLog中打断点可及时获取未打印的报错信息，避免被清空
+
             errorLog = null;
             if (!sOWorkshopItemInfo)
             {
@@ -1085,6 +1107,11 @@ namespace Threeyes.Steamworks
 
                     //开始打包
                     ExportSettings activeExportSettings = ExportSettings.Active;
+                    activeExportSettings.ClearConsoleOnBuild = false;//避免意外清空错误信息
+                    //activeExportSettings.ShowOutputDirectory = false;//可以避免打包完成后打开文件夹
+                    EditorUtility.SetDirty(activeExportSettings);//确保修改的设置被保存
+
+
                     SetUpExportProfileSettings(sOWorkshopItemInfo, GetActiveExportProfileSettings(sOWorkshopItemInfo));
                     activeExportSettings.SetActiveExportProfile(GetActiveExportProfileSettings(sOWorkshopItemInfo));
                     ModBuildResult result = ModToolsUtil.StartBuild(activeExportSettings);
@@ -1104,7 +1131,7 @@ namespace Threeyes.Steamworks
                         var json = JsonConvert.SerializeObject(sOWorkshopItemInfo.ItemInfo, Formatting.Indented);
                         File.WriteAllText(sOWorkshopItemInfo.ExportItemInfoFilePath, json);
                     }
-                    else
+                    else //Warning:单个打包可能其报错会被清空，建议在调试模式中查看！
                     {
                         errorLog = "Build Failed with error:\r\n" + result.ErrorMessage;
                         return false;

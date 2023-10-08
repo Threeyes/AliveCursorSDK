@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
@@ -23,15 +23,15 @@ public class InstanceBase<T> : MonoBehaviour, ISetInstance
             return;
         }
 
-        if (!isInit)
-        {
-            SetInstanceFunc();
+        if (isInit)
+            return;
 
-            if (isDontDestroyOnLoad)
-            {
-                transform.SetParent(null);//移动到根层级，避免父物体被销毁
-                DontDestroyOnLoad(gameObject);
-            }
+        SetInstanceFunc();
+
+        if (isDontDestroyOnLoad)
+        {
+            transform.SetParent(null);//移动到根层级，避免父物体被销毁
+            DontDestroyOnLoad(gameObject);
         }
     }
 

@@ -10,7 +10,7 @@ namespace Threeyes.Persistent
 {
     public abstract partial class PersistentDataBase : MonoBehaviour, IPersistentData, IHierarchyViewInfo
     {
-        public abstract Type ValueType { get; }
+        public abstract Type ValueType { get; set; }
         public string PersistentDirPath { get; set; }
 
         public string Key { get { return key; } set { key = value; } }
@@ -30,7 +30,8 @@ namespace Threeyes.Persistent
         public const string strMenuItem_Root_Basic = strMenuItem_Root + "Basic/";
         public const string strMenuItem_Root_Basic_Ex = strMenuItem_Root_Basic + "Ex/";
         public const string strMenuItem_Root_File = strMenuItem_Root + "File/";
-        public const string strMenuItem_Root_SO = strMenuItem_Root + "ScriptableObject/";
+        public const string strMenuItem_Root_Object = strMenuItem_Root + "Object/";
+        public const string strMenuItem_Root_PropertyBag = strMenuItem_Root + "PropertyBag/";
         public const int intBasicMenuOrder = 100;
         public const int intFileMenuOrder = 200;
         public const int intScriptableObjectMenuOrder = 300;
@@ -89,9 +90,11 @@ namespace Threeyes.Persistent
     {
         public virtual TValue DefaultValue { get { return defaultValue; } set { defaultValue = value; } }
         public virtual TValue PersistentValue { get { return persistentValue; } set { persistentValue = value; } }
-        public virtual TValue ValueToSaved { get { return persistentValue; }  }//持久化时需要存储的值
-        public bool HasChanged { get { return hasSetValue; } set { hasSetValue = value; } }
-        public override Type ValueType { get { return typeof(TValue); } }
+        public virtual TValue ValueToSaved { get { return persistentValue; } }//持久化时需要存储的值
+        public bool HasChanged { get { return hasChanged; } set { hasChanged = value; } }
+        public bool HasLoadedFromExtern { get { return hasLoadedFromExtern; } set { hasLoadedFromExtern = value; } }
+
+        public override Type ValueType { get { return typeof(TValue); } set { /*除非必要，暂不设置*/} }
 
         public UnityEvent<TValue> EventOnUIChanged { get { return onUIChanged; } }
         public UnityEvent<TValue> EventOnValueChanged { get { return onValueChanged; } }
@@ -105,7 +108,13 @@ namespace Threeyes.Persistent
         [AllowNesting]
         [ReadOnly]
 #endif
-        [SerializeField] protected bool hasSetValue = false;//Check if the user has set the value, use this to decide to save or not
+        [SerializeField] protected bool hasChanged = false;//Check if the user has set the value, use this to decide to save or not
+#if USE_NaughtyAttributes
+        [AllowNesting]
+        [ReadOnly]
+#endif
+        [SerializeField] protected bool hasLoadedFromExtern = false;//Check if the value has been loaded from extern, ignore using the default value
+
 #if USE_NaughtyAttributes
         [AllowNesting]
         [ReadOnly]
@@ -135,9 +144,22 @@ namespace Threeyes.Persistent
         /// PS:
         /// -如果通过UIField_XXX修改字段不需要调用此方法
         /// </summary>
+        [ContextMenu("SetDirty")]
         public virtual void SetDirty()
         {
             HasChanged = true;
+        }
+
+        /// <summary>
+        /// 重置字段，方便复用
+        /// 
+        /// Todo：移动到父类中
+        /// </summary>
+        public virtual void Clear()
+        {
+            //重置为默认值，并清空其他Action回调
+            defaultValue = default(TValue);
+            persistentValue = default(TValue);
         }
 
         #region Editor Method

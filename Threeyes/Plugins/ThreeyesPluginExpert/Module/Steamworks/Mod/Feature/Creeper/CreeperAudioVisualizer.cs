@@ -29,7 +29,7 @@ namespace Threeyes.Steamworks
         /// <param name="data"></param>
         public void OnRawSampleDataChanged(float[] data)
         {
-            float volume = ManagerHolder.SystemAudioManager.CalculateLoudness(data);
+            float volume = AudioVisualizerTool.CalculateLoudness(data);
             Vector3 axisPercent = Vector3.zero;//偏转实现：将输入值分成三等分，分别对应XYZ的旋转缩放值
 
             //PS:因为data range: [-1.0, 1.0]，刚好适用于正负随机旋转值

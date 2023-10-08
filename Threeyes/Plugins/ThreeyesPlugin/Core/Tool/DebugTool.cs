@@ -12,6 +12,8 @@ public static class DebugTool
     /// <value></value>
     public static bool IsEditorOrDebugBuild => Application.isEditor || !Application.isEditor && IsDebugBuild;
 
+    public static bool IsRuntimeDebugBuild => !Application.isEditor && IsDebugBuild;
+
     /// <summary>
     /// In the Build Settings dialog there is a check box called "Development Build".
     /// </summary>

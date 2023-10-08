@@ -13,7 +13,7 @@ namespace Threeyes.Steamworks
         protected override void SetInstanceFunc()
         {
             base.SetInstanceFunc();
-            SteamworksTool.RegistManagerHolder(this);
+            SteamworksTool.RegisterManagerHolder(this);
         }
 
         #region NaughtyAttributes

@@ -16,23 +16,6 @@ namespace Threeyes.Steamworks
         protected const int rawSampleCount = 256;//源数据(256足够呈现波动，太多会有割裂感）
         protected const int fftSize = 4096;// 【受音量影响】Defines FFT data size constants that can be used for FFT calculations. (Note that only the half of the specified size can be used for visualizations.)   
         protected const int spectrumCount = 128;//柱状图（64已经足够细致，因为光标显示区域不大，不应该过于细分）
-
-        /// <summary>
-        /// Get average DB
-        /// </summary>
-        /// <param name="rawSampleData"></param>
-        /// <returns></returns>
-        public float CalculateLoudness(float[] rawSampleData)
-        {
-            float v = 0f,
-                len = rawSampleData.Length;
-
-            for (int i = 0; i < len; i++)
-                v += Mathf.Abs(rawSampleData[i]);//PS:因为值的范围为[-1,1]，所以要取绝对值
-
-            //Root mean square is a good approximation of perceived loudness: (https://answers.unity.com/questions/157940/getoutputdata-and-getspectrumdata-they-represent-t.html)
-            return Mathf.Sqrt(v / (float)len);
-        }
         #endregion
 
         #region Property & Field

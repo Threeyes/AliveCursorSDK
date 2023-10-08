@@ -35,16 +35,24 @@ namespace Threeyes.External
                 return;
             }
 
-            //#1 Read file->bytes
-            UnityAction<ReadFileResult> actResultTemp =
-            (fileIOResult) =>
+            //如果路径为空，则代表重置标识（后续可以定义一个特殊的重置标识）
+            if (path.IsNullOrEmpty())
             {
-                if (fileIOResult.errorInfo != null)
-                    loadResult.errorInfo = fileIOResult.errorInfo;
-                if (fileIOResult.HasValue)
+                loadResult.Mark = LoadResult.MarkType.NullPath;
+                actResult.Execute(loadResult);
+                return;
+            }
+
+            //#1 Read file，然后使用Decoder转换成对应类型
+            UnityAction<ReadFileResult> actResultTemp =
+            (readFileResult) =>
+            {
+                if (readFileResult.errorInfo != null)
+                    loadResult.errorInfo = readFileResult.errorInfo;
+                if (readFileResult.HasValue)
                 {
                     //#2 Decode bytes->Assets
-                    DecodeResult<T> decodeResult = DecoderManager.DecodeEx<T>(fileIOResult.value, decodeOption);
+                    DecodeResult<T> decodeResult = DecoderManager.DecodeEx<T>(readFileResult.value, decodeOption);
                     loadResult.value = decodeResult.value;
                     if (decodeResult.errorInfo != null)
                         loadResult.errorInfo += decodeResult.errorInfo;
@@ -111,19 +119,38 @@ namespace Threeyes.External
         [System.Serializable]
         public class LoadResult
         {
+            public MarkType Mark = MarkType.None;//特殊标记，比如Reset可以是代表重置
+
             public virtual bool HasValue { get { return ObjValue != null; } }
             public virtual object ObjValue { get { return null; } set { } }
             //private object objValue = null;//PS:为了兼容性及反射方便，使用object存储真正的值（ToDelete：改为属性，由value负责存储具体值。参考DecodeResultBase）
 
             public int FileBytesCount { get; set; }//The count of file bytes
+
+
             public string errorInfo = null;
 
-            public LoadResult() { }
+            public LoadResult()
+            {
+            }
             public LoadResult(LoadResult other)
             {
                 ObjValue = other.ObjValue;
                 errorInfo = other.errorInfo;
             }
+
+            /// <summary>
+            /// Extra info
+            /// 
+            /// Ref:UnityWebRequest
+            /// </summary>
+            public enum MarkType
+            {
+                None = 0,
+
+                NullPath,//标记路径为空，可用于重置标识
+            }
+
         }
 
         public class LoadResult<T> : LoadResult

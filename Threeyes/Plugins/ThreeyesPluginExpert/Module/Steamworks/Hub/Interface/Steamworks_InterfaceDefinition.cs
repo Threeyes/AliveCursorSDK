@@ -3,14 +3,28 @@ using UnityEngine.SceneManagement;
 
 namespace Threeyes.Steamworks
 {
-    #region 用于ManagerHolder，包含各Manager的核心字段/方法
+    #region 以Hub前缀，定义通用的接口及Handler，包含各Manager的核心字段/方法/回调
+
+    public interface IHubManagerModPreInitHandler
+    {
+        /// <summary>
+        /// Get call before PersistentData is Loaded
+        /// </summary>
+        void OnModPreInit(Scene scene, ModEntry modEntry);
+    }
 
     /// <summary>
     /// Manager Init Mod
     /// </summary>
     public interface IHubManagerModInitHandler
     {
+        /// <summary>
+        /// Get call right after PersistentData is Loaded
+        /// </summary>
         void OnModInit(Scene scene, ModEntry modEntry);
+        /// <summary>
+        /// Get call right after PersistentData is Saved
+        /// </summary>
         void OnModDeinit(Scene scene, ModEntry modEntry);
     }
 
@@ -57,7 +71,6 @@ namespace Threeyes.Steamworks
         int RawSampleCount { get; }
         int FFTCount { get; }
         int SpectrumCount { get; }
-        float CalculateLoudness(float[] rawSampleData);
     }
     public interface IHubSystemAudio_RawSampleDataChangedHandler
     {
@@ -87,14 +100,14 @@ namespace Threeyes.Steamworks
     }
     #endregion
 
-    #region 供各Manager继承
+    #region 以下接口继承了必要的父接口，方便具体Manager直接继承
 
-    //——SystemManager——
+    //——System——
     public interface ISystemAudioManager : IHubSystemAudioManager, IHubManagerModInitHandler
     {
     }
 
-    //——ModManager——
+    //——Mod——
     public interface IEnvironmentManager :
     IHubManagerWithController<IEnvironmentController>
     , IHubEnvironmentManager
@@ -104,7 +117,6 @@ namespace Threeyes.Steamworks
     public interface IPostProcessingManager : IHubManagerModInitHandler, IHubManagerWithController<IPostProcessingController>
     {
     }
-
 
     #endregion
 }

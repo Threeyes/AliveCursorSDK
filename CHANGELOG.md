@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.1.1]
+- Move CalculateLoudness method from AC_ManagerHolder.SystemAudioManager to AudioVisualizerTool.
+- Move some common Manager interface from Threeyes.Steamworks.ManagerHolder to the one on their namespace(e.g. LogManager is now located at LogManagerHolder).
+- Reorganize Codes.
+
 ## [4.0.2]
 - Fix Joints using AC_RigBuilderHelper will be misplaced when cursor reactive.
 - Update Facepunch.Steamworks.

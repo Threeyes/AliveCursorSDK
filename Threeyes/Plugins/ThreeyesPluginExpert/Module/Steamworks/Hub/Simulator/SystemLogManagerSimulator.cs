@@ -10,7 +10,7 @@ namespace Threeyes.Steamworks
         protected override void SetInstanceFunc()
         {
             base.SetInstanceFunc();
-            SteamworksTool.RegistManagerHolder(this);
+            ManagerHolderTool.Register(this, typeof(LogManagerHolder));//注册指定接口
         }
     }
 }

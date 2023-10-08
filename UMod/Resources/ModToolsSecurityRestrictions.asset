@@ -35,6 +35,7 @@ MonoBehaviour:
       - Threeyes.IO.FileIO
       - Threeyes.External.ExternalResources
       - PathTool
+      - ManagerHolderTool
     memberReferences:
       defaultBehaviour: 0
       allowEntries: []

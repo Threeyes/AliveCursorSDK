@@ -19,14 +19,14 @@ public class AC_SystemCursorManagerSimulator : AC_SystemCursorManagerBase<AC_Sys
 		//ToUpdate:如果curSystemCursorAppearanceInfo切换到IBeam，则根据设置，自动决定是否设置Texture
 
 		//Press Left/Right Arrow key: loop through [No, ArrowCD]
-		if (Input.GetKeyDown(KeyCode.RightArrow))//Add
+		if (InputTool.GetKeyDown(KeyCode.RightArrow))//Add
 		{
 			if (curSCAType_Simulator == AC_SystemCursorAppearanceType.ArrowCD || curSCAType_Simulator == AC_SystemCursorAppearanceType.None)
 				curSCAType_Simulator = AC_SystemCursorAppearanceType.No;
 			else
 				curSCAType_Simulator = (AC_SystemCursorAppearanceType)((int)curSCAType_Simulator << 1);
 		}
-		if (Input.GetKeyDown(KeyCode.LeftArrow))//Subtract
+		if (InputTool.GetKeyDown(KeyCode.LeftArrow))//Subtract
 		{
 			if (curSCAType_Simulator == AC_SystemCursorAppearanceType.No || curSCAType_Simulator == AC_SystemCursorAppearanceType.None)
 				curSCAType_Simulator = AC_SystemCursorAppearanceType.ArrowCD;
@@ -34,13 +34,13 @@ public class AC_SystemCursorManagerSimulator : AC_SystemCursorManagerBase<AC_Sys
 				curSCAType_Simulator = (AC_SystemCursorAppearanceType)((int)curSCAType_Simulator >> 1);
 		}
 		//Press DownArrow key: switch between None and last valid type
-		if (Input.GetKeyDown(KeyCode.DownArrow))
+		if (InputTool.GetKeyDown(KeyCode.DownArrow))
 		{
 			curSCAType_Simulator = curSCAType_Simulator == AC_SystemCursorAppearanceType.None ? lastSCAType_Simulator : AC_SystemCursorAppearanceType.None;
 		}
 
 		//Press UpArrow key: toggle system cursor activation
-		if (Input.GetKeyDown(KeyCode.UpArrow))
+		if (InputTool.GetKeyDown(KeyCode.UpArrow))
 		{
 			isSystemCursorShowing_Simulator = !isSystemCursorShowing_Simulator;
 		}

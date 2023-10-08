@@ -53,8 +53,9 @@ namespace Threeyes.Steamworks
         public virtual void ResetConfigToDefault()
         {
             ///Bug:
-            ///-偶尔会使用各Field默认值
-           
+            ///-偶尔会使用各Field的默认值，可能原因是使用了Json中的Default值，而其保存的是默认值
+            ///ToUpdate：改为使用defaultConfig的对应值
+
             //重置配置为默认值
             ResetAllDataToDefault();
         }
@@ -83,10 +84,18 @@ namespace Threeyes.Steamworks
 
         public virtual void ResetAllDataToDefault()
         {
-            ///Todo:使用默认值进行重置，同时会调用actionValueReset从而静默更新UI
             try
             {
-                GetListBaseData_Reset().ForEach((bd) => bd.ResetToDefaultValue());
+                ///使用默认值进行重置，同时会调用actionValueReset从而静默更新UI
+                ExecuteBetweenConfig(ref defaultConfig, ref soOverrideConfig.config,
+                    (bdSource, bdOther) =>
+                    {
+                        //#1 复制Value和DefaultValue到目标Config
+                        (bdSource as BasicData).CloneTo(ref bdOther);
+                        //#2 调用目标Config的ResetToDefaultValue，使用DefaultValue来重置值和通知事件来更新UI（Warning：DefaultValue来源于defaultConfig！）
+                        (bdOther as BasicData).ResetToDefaultValue();
+                    },
+                    GetListIgnoreBaseDataFieldName_Reset());
             }
             catch (Exception e)
             {
@@ -121,17 +130,24 @@ namespace Threeyes.Steamworks
             }
         }
 
+        ///// <summary>
+        ///// 获取需要重置的字段
+        ///// </summary>
+        ///// <returns></returns>
+        //protected virtual List<BasicData> GetListBaseData_Reset()
+        //{
+        //    return GetListBaseData();
+        //}
         /// <summary>
-        /// 获取需要重置的字段
+        /// 获取需要忽略的BaseData字段
         /// </summary>
         /// <returns></returns>
-        protected virtual List<BasicData> GetListBaseData_Reset()
+        protected virtual List<string> GetListIgnoreBaseDataFieldName_Reset()
         {
-            return GetListBaseData();
+            return new List<string>();
         }
-
         /// <summary>
-        /// 获取所有的数据类实例
+        /// 获取所有的BasicData实例
         /// ToUpdate:改为放到管理类中，去掉泛型
         /// </summary>
         /// <returns></returns>
@@ -145,9 +161,8 @@ namespace Threeyes.Steamworks
                 if (fieldValue.GetType().IsSubclassOf(typeof(BasicData)))
                 {
                     if (listIgnoreFieldName != null && listIgnoreFieldName.Contains(fieldInfo.Name))//忽略指定字段
-                    {
                         continue;
-                    }
+
                     BasicData inst = fieldValue as BasicData;
                     listBD.Add(inst);
                 }
@@ -155,21 +170,31 @@ namespace Threeyes.Steamworks
             return listBD;
         }
 
-        public virtual void CloneTo(ref TConfig other)
+        /// <summary>
+        /// 
+        /// Old:将字段复制给其他实例，会调用其BasicData事件更新
+        /// </summary>
+        /// <param name="other"></param>
+        public virtual void ExecuteBetweenConfig(ref TConfig source, ref TConfig other, Action<object, object> actBetweenTwoBasicData, List<string> listIgnoreFieldName = null)
         {
             try
             {
-                //复制对应的值
                 foreach (FieldInfo fieldInfo in typeof(TConfig).GetFields())
                 {
-                    object fieldValue = fieldInfo.GetValue(Config);//真实值
+                    if (listIgnoreFieldName != null && listIgnoreFieldName.Contains(fieldInfo.Name))//忽略指定字段
+                        continue;
 
-                    if (fieldValue.GetType().IsSubclassOf(typeof(BasicData)))
+
+                    if (fieldInfo.FieldType.IsSubclassOf(typeof(BasicData)))
                     {
-                        BasicData bdThis = fieldValue as BasicData;
-                        var fieldValueOthers = fieldInfo.GetValue(other);
-                        bdThis.CloneTo(ref fieldValueOthers);
+                        actBetweenTwoBasicData.Execute(fieldInfo.GetValue(source), fieldInfo.GetValue(other));
+                        //bdThis.CloneTo(ref fieldValueOthers);//复制对应的值
                     }
+                    //else//ToAdd其他(如enum:直接set)(需要确认是否需要通知。目前CommonSetting全部使用BasicData因此不需要考虑enumerate)
+                    //{
+
+                    //}
+
                 }
             }
             catch (Exception e)

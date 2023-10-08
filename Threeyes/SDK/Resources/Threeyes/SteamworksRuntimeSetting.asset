@@ -15,3 +15,4 @@ MonoBehaviour:
   productName: AliveCursor
   productNameForShort: AC
   steamAppID: 1606490
+  sDKIdentifier: com.threeyes.alivecursor.sdk

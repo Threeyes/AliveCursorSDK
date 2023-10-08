@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Threeyes.Log;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,8 @@ namespace Threeyes.Steamworks
     {
         /// <summary>
         /// 
+        /// PS：
+        /// -建议不包含HubScene，因为HubScene物体数量庞大， 且各成员已知，可以改用Event来监听
         /// </summary>
         /// <typeparam name="TInterface"></typeparam>
         /// <param name="act"></param>
@@ -31,7 +34,7 @@ namespace Threeyes.Steamworks
                 catch (System.Exception e)
                 {
                     //将错误写入到Item对应目录中便于制作者查看
-                    ManagerHolder.LogManager.LogError($"SendMessage for {typeof(TInterface)} with error:" + e);
+                    LogManagerHolder.LogManager.LogError($"SendMessage for {typeof(TInterface)} with error:" + e);
                 }
             }
         }

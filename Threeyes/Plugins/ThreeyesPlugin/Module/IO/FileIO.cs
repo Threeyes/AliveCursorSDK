@@ -44,6 +44,7 @@ namespace Threeyes.IO
         }
         public static ReadFileResult ReadAllBytesEx(string filePathOrUrl)
         {
+            filePathOrUrl = filePathOrUrl.NotNullString(); //PS:避免StartsWith等遇到null会报错
             if (IsAndroidStreamingAssetsPath(filePathOrUrl) || IsUriPath(filePathOrUrl))
             {
                 return ReadAllBytesFromWebEx(filePathOrUrl);
@@ -68,29 +69,31 @@ namespace Threeyes.IO
 
         #region Inner
 
-        public static ReadFileResult ReadAllBytesFromFileSystemEx(string filePath)
+        static ReadFileResult readFileResult_FileNotExist { get { return new ReadFileResult() { errorInfo = $"File not exist!" }; } }
+
+        static ReadFileResult ReadAllBytesFromFileSystemEx(string filePath)
         {
-            ReadFileResult fileIOResult = new ReadFileResult();
+            ReadFileResult readFileResult = new ReadFileResult();
             if (File.Exists(filePath))
             {
                 try
                 {
-                    fileIOResult.value = File.ReadAllBytes(filePath);
+                    readFileResult.value = File.ReadAllBytes(filePath);
                 }
                 catch (Exception e)
                 {
                     string errorLog = $"ReadAllBytes error in [{filePath}]: " + e;
                     Debug.LogError(errorLog);
-                    fileIOResult.errorInfo = errorLog;
+                    readFileResult.errorInfo = errorLog;
                 }
             }
             else
             {
-                fileIOResult.errorInfo = $"File not exist in {filePath}!";
+                readFileResult.errorInfo = $"File not exist in {filePath}!";
             }
-            return fileIOResult;
+            return readFileResult;
         }
-        public static async Task<ReadFileResult> ReadAllBytesFromFileSystemExAsync(string filePath)
+        static async Task<ReadFileResult> ReadAllBytesFromFileSystemExAsync(string filePath)
         {
             ReadFileResult fileIOResult = new ReadFileResult();
             if (File.Exists(filePath))
@@ -111,7 +114,7 @@ namespace Threeyes.IO
         }
 
         //Bug:暂未实现功能
-        public static ReadFileResult ReadAllBytesFromWebEx(string filePathOrUrl)
+        static ReadFileResult ReadAllBytesFromWebEx(string filePathOrUrl)
         {
             ReadFileResult fileIOResult = new ReadFileResult();
             string url = AddProtocol(filePathOrUrl);
@@ -140,7 +143,6 @@ namespace Threeyes.IO
             }
             return fileIOResult;
         }
-
 
         public static async Task<ReadFileResult> ReadAllBytesFromWebExAsync(string filePath)
         {
@@ -179,6 +181,9 @@ namespace Threeyes.IO
 
         public static bool Exists(string filePath)
         {
+            if (filePath.IsNullOrEmpty())
+                return false;
+
             ///PS:
             ///1.不推荐使用Web读取本地文件/ it is not recommended to use UnityWebRequest for that. In most cases there are more efficient ways to read local files.（https://forum.unity.com/threads/unitywebrequest-for-local-files-on-android-failure.441655/）
             if (IsAndroidStreamingAssetsPath(filePath))
@@ -189,8 +194,11 @@ namespace Threeyes.IO
             return File.Exists(filePath);
         }
 
-        public static bool IsUriPath(string filePath)
+        static bool IsUriPath(string filePath)
         {
+            if (filePath.IsNullOrEmpty())
+                return false;
+
             //ToUpdate：待使用更加通用的方法，兼容Uri的http/ftp等格式
             //Uri uri = new Uri(filePath);
             //uri.Scheme == Uri.UriSchemeHttp||
@@ -199,8 +207,11 @@ namespace Threeyes.IO
             return filePath.StartsWith("file:///") || filePath.StartsWith("http");
         }
 
-        public static bool IsAndroidStreamingAssetsPath(string filePath)
+        static bool IsAndroidStreamingAssetsPath(string filePath)
         {
+            if (filePath.IsNullOrEmpty())
+                return false;
+
             //return true;//Debug，ToDelete
             if (!Application.isEditor && Application.platform == RuntimePlatform.Android)
             {
@@ -215,7 +226,7 @@ namespace Threeyes.IO
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string AddProtocol(string filePath)
+        static string AddProtocol(string filePath)
         {
             switch (Application.platform)
             {

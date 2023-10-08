@@ -3,19 +3,27 @@ using UnityEngine;
 using UnityEditor;
 using Threeyes.Editor;
 #endif
+#if USE_NaughtyAttributes
+using NaughtyAttributes;
+#endif
+
 namespace Threeyes.Common
 {
-
-    //非必须，可以仅提供AD_SerializableItemPrefabInfo对应的So
     /// <summary>
     /// 提供预制物信息
     /// 
     /// ToAdd:
-    /// -调用AssetMenuEditor_CreateAssetPrevew，增加一键创建Preview的通用方法，参考SZY
+    /// +调用AssetMenuEditor_CreateAssetPrevew，增加一键创建Preview的通用方法
     /// </summary>
     [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_Common + "PrefabInfo", fileName = "PrefabInfo")]
     public class SOPrefabInfo : ScriptableObject
     {
+#if USE_NaughtyAttributes
+        [ResizableTextArea]
+#endif
+        public string remark;//开发者内部注释
+        [Space]
+
         public string title;
         public GameObject prefab;
         public Texture preview;
@@ -36,10 +44,10 @@ namespace Threeyes.Common
         }
 
         /// <summary>
-        /// 与Prefab同名
+        /// 将文件名改为Prefab的同名
         /// </summary>
-        [ContextMenu("RenameLikePrefab")]
-        public void RenameLikePrefab()
+        [ContextMenu("RenameAfterPrefab")]
+        public void RenameAfterPrefab()
         {
             if (!prefab)
                 return;

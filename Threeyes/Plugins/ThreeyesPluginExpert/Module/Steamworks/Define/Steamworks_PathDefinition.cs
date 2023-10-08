@@ -99,7 +99,8 @@ namespace Threeyes.Steamworks
 
         public static string Data_Save_LogDirPath { get { return Data_SaveDirPath + "/Log"; } }//Item对应Log文件的根目录
         public static string Data_Save_SettingDirPath { get { return Data_SaveDirPath + "/Setting"; } }//存储项目设置的根目录
-        public static string Data_Save_ItemDirPath { get { return Data_SaveDirPath + "/Item"; } }//Item的根目录
+        public static string Data_Save_ItemDirPath { get { return Data_SaveDirPath + "/Item"; } }//Item的根目录（通过SteamCloud同步）
+        public static string Data_Save_ItemLocalDirPath { get { return Data_SaveDirPath + "/Item_Local"; } }//本地Item的根目录（类似系统的AppData\Local，只存储在本地）
 
         #endregion
 
@@ -114,7 +115,9 @@ namespace Threeyes.Steamworks
             {
                 string productName = SORuntimeSettingManager.Instance.productName;
 #if UNITY_EDITOR
-                return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
+                //PS:先临时改为本地打包的路径
+                return ExportItemRootDirPath;
+                //return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
 #else
 			return PathTool.ProjectDirPath + @$"\..\..\..\{productName}_ModUploader\Export\Items";
 #endif

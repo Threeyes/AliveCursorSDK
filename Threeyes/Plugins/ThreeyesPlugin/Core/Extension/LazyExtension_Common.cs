@@ -61,7 +61,9 @@ public static partial class LazyExtension_Common
     }
 
     /// <summary>
-    /// 深度拷贝信息,仅支持序列化的对象 https://stackoverflow.com/questions/1031023/copy-a-class-c-sharp
+    /// 深度拷贝信息，仅支持序列化的对象 https://stackoverflow.com/questions/1031023/copy-a-class-c-sharp
+    /// 
+    /// Warning：容易报错
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="other"></param>
@@ -121,6 +123,18 @@ public static partial class LazyExtension_Common
     #endregion
 
     #region String
+
+    /// <summary>
+    /// 为了避免StartsWith等遇到null会报错，需要调用该方法
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static string NotNullString(this string str)
+    {
+        if (str == null)
+            return "";
+        return str;
+    }
 
     /// <summary>
     /// 通过回车分割字符串
@@ -607,6 +621,61 @@ public static partial class LazyExtension_Common
     #endregion
 
     #region UnityAction
+    public static void TryExecute(this UnityAction action)
+    {
+        try
+        {
+            action.Execute();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+    public static void TryExecute<T1>(this UnityAction<T1> action, T1 value1)
+    {
+        try
+        {
+            action.Execute(value1);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+    public static void TryExecute<T1, T2>(this UnityAction<T1, T2> action, T1 value1, T2 value2)
+    {
+        try
+        {
+            action.Execute(value1, value2);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+    public static void TryExecute<T1, T2, T3>(this UnityAction<T1, T2, T3> action, T1 value1, T2 value2, T3 value3)
+    {
+        try
+        {
+            action.Execute(value1, value2, value3);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+    public static void TryExecute<T1, T2, T3, T4>(this UnityAction<T1, T2, T3, T4> action, T1 value1, T2 value2, T3 value3, T4 value4)
+    {
+        try
+        {
+            action.Execute(value1, value2, value3, value4);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
 
     public static void Execute(this UnityAction action)
     {

@@ -17,7 +17,15 @@ namespace Threeyes.Config
         TSOConfig SOOverrideConfig { get; }
 
         //#Template, Just copy and rename
-        //public TConfig Config { get { return SOOverrideConfig ? SOOverrideConfig.config : DefaultConfig; } }
+        //public TConfig Config
+        //{
+        //    get
+        //    {
+        //        if (config == null)
+        //            config = SOOverrideConfig ? SOOverrideConfig.config : DefaultConfig;
+        //        return config;
+        //    }
+        //}
         //public TConfig DefaultConfig { get { return defaultConfig; } set { defaultConfig = value; } }
         //public TSOConfig SOOverrideConfig { get { return soOverrideConfig; } set { soOverrideConfig = value; } }
         //[Header("Config")]

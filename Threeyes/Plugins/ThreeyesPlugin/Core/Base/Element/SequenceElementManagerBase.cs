@@ -5,40 +5,40 @@ using UnityEngine;
 using UnityEngine.Events;
 using Threeyes.Pool;
 /// <summary>
-/// ¹ÜÀí¶¯Ì¬Éú³ÉµÄ¶à¸öÄÚÈİ
+/// ç®¡ç†åŠ¨æ€ç”Ÿæˆçš„å¤šä¸ªå†…å®¹
 /// 
 /// Todo:
-/// -ÕûºÏµ½Threeyes.CoreÖĞ
+/// -æ•´åˆåˆ°Threeyes.Coreä¸­
 /// 
 /// </summary>
-/// <typeparam name="TElement">ÊµÀı»¯ÔªËØ</typeparam>
-/// <typeparam name="TData">ÔªËØÊı¾İ</typeparam>
+/// <typeparam name="TElement">å®ä¾‹åŒ–å…ƒç´ </typeparam>
+/// <typeparam name="TData">å…ƒç´ æ•°æ®</typeparam>
 public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase<TData>, IShowHide
     where TElement : ElementBase<TData>
     where TData : class
 {
-    public virtual Transform TfElementParent { get { return tfElementParent; } }//´ıÊµÀı»¯ÔªËØµÄ¸¸ÎïÌå
-    public virtual GameObject PreElement { get { return preElement; } set { preElement = value; } }//ÔªËØÔ¤ÖÆÎï
-    [HideInInspector] public UnityEvent onInitAllElement;//Éú³ÉËùÓĞÔªËØÊ±µ÷ÓÃ
-    [HideInInspector] public UnityEvent onInitElement;//Éú³ÉĞÂÔªËØÊ±µ÷ÓÃ
+    public virtual Transform TfElementParent { get { return tfElementParent; } }//å¾…å®ä¾‹åŒ–å…ƒç´ çš„çˆ¶ç‰©ä½“
+    public virtual GameObject PreElement { get { return preElement; } set { preElement = value; } }//å…ƒç´ é¢„åˆ¶ç‰©
+    [HideInInspector] public UnityEvent onInitAllElement;//ç”Ÿæˆæ‰€æœ‰å…ƒç´ æ—¶è°ƒç”¨
+    [HideInInspector] public UnityEvent onInitElement;//ç”Ÿæˆæ–°å…ƒç´ æ—¶è°ƒç”¨
 
     [Header("Init")]
-    public bool isHideOnStart = false;//¿ªÊ¼Ê±Òş²Ø
-    //³õÊ¼»¯ÉèÖÃ£¨2Ñ¡1£©
-    public bool isInitOnStart = true;//ÊÇ·ñÊ¹ÓÃÒÑÓĞÊı¾İÉú³ÉÔªËØ  £¨ÉèÖÃÎªfalse¿É±£ÁôÒÑ´æÔÚµÄÔªËØ£©
-    public bool isInitUsingExistElementOnStart = false;//ÊÇ·ñÕë¶ÔÒÑÓĞÔªËØ½øĞĞ³õÊ¼»¯£¨ÓëÉÏÃæ»¥³â£©
-    public Transform tfElementParent;//ÔªËØµÄ¸¸ÎïÌå
-    public GameObject preElement;//ÔªËØÔ¤ÖÆÎï
+    public bool isHideOnStart = false;//å¼€å§‹æ—¶éšè—
+    //åˆå§‹åŒ–è®¾ç½®ï¼ˆ2é€‰1ï¼‰
+    public bool isInitOnStart = true;//æ˜¯å¦ä½¿ç”¨å·²æœ‰æ•°æ®ç”Ÿæˆå…ƒç´   ï¼ˆè®¾ç½®ä¸ºfalseå¯ä¿ç•™å·²å­˜åœ¨çš„å…ƒç´ ï¼‰
+    public bool isInitUsingExistElementOnStart = false;//æ˜¯å¦é’ˆå¯¹å·²æœ‰å…ƒç´ è¿›è¡Œåˆå§‹åŒ–ï¼ˆä¸ä¸Šé¢äº’æ–¥ï¼‰
+    public Transform tfElementParent;//å…ƒç´ çš„çˆ¶ç‰©ä½“
+    public GameObject preElement;//å…ƒç´ é¢„åˆ¶ç‰©
 
     [Header("Pool")]
-    public bool usePool = false;//PoolÖ§³Ö£¬Ä¬ÈÏÎªfalse
+    public bool usePool = false;//Poolæ”¯æŒï¼Œé»˜è®¤ä¸ºfalse
     public int defaultCapacity = 10;
     public int maxSize = 100;
 
     [Header("Runtime")]
-    public List<TElement> listElement = new List<TElement>();//»º´æ¶¯Ì¬ÊµÀı»¯ºóµÄÔªËØ×é¼ş
+    public List<TElement> listElement = new List<TElement>();//ç¼“å­˜åŠ¨æ€å®ä¾‹åŒ–åçš„å…ƒç´ ç»„ä»¶
 
-    protected virtual ObjectPool<GameObject> Pool//PS:×ÓÀà¿É¸ü»»³É×Ô¼ºÏ²»¶µÄPoolÀàĞÍ
+    protected virtual ObjectPool<GameObject> Pool//PS:å­ç±»å¯æ›´æ¢æˆè‡ªå·±å–œæ¬¢çš„Poolç±»å‹
     {
         get
         {
@@ -60,16 +60,16 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
 
     protected virtual void StartFunc()
     {
-        if (isInitOnStart)//Ê¹ÓÃÒÑÓĞÊı¾İÉú³ÉÔªËØ
+        if (isInitOnStart)//ä½¿ç”¨å·²æœ‰æ•°æ®ç”Ÿæˆå…ƒç´ 
         {
             Init();
         }
-        else if (isInitUsingExistElementOnStart)//Õë¶ÔÒÑÓĞÔªËØ½øĞĞ³õÊ¼»¯
+        else if (isInitUsingExistElementOnStart)//é’ˆå¯¹å·²æœ‰å…ƒç´ è¿›è¡Œåˆå§‹åŒ–
         {
             InitUsingExistElement();
         }
 
-        if (isHideOnStart)//£¨´´½¨ÒÔºóÒş²Ø£©
+        if (isHideOnStart)//ï¼ˆåˆ›å»ºä»¥åéšè—ï¼‰
             Hide();
     }
 
@@ -83,7 +83,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     #region Public Method
 
     /// <summary>
-    /// Í¨¹ı´«ÈëµÄÊı¾İ£¬Éú³ÉÔªËØ
+    /// é€šè¿‡ä¼ å…¥çš„æ•°æ®ï¼Œç”Ÿæˆå…ƒç´ 
     /// </summary>
     /// <param name="tempListData"></param>
     public virtual void Init(List<TData> tempListData)
@@ -93,36 +93,36 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// Ê¹ÓÃÒÑÓĞµÄÊı¾İ£¬Éú³ÉÔªËØ
+    /// ä½¿ç”¨å·²æœ‰çš„æ•°æ®ï¼Œç”Ÿæˆå…ƒç´ 
     /// </summary>
     public virtual void Init()
     {
-        //ÖØÖÃÔªËØºÍÊı¾İ
+        //é‡ç½®å…ƒç´ å’Œæ•°æ®
         ResetData();
         ResetElement();
 
-        //³õÊ¼»¯ÔªËØ
+        //åˆå§‹åŒ–å…ƒç´ 
         InitElement();
     }
 
     /// <summary>
-    /// Õë¶ÔÒÑÓĞµÄÔªËØ£¬Ê¹ÓÃÆä×ÔÉídata½øĞĞ³õÊ¼»¯
+    /// é’ˆå¯¹å·²æœ‰çš„å…ƒç´ ï¼Œä½¿ç”¨å…¶è‡ªèº«dataè¿›è¡Œåˆå§‹åŒ–
     /// </summary>
     public virtual void InitUsingExistElement()
     {
-        listData.Clear();//Çå¿ÕÊı¾İ
+        listData.Clear();//æ¸…ç©ºæ•°æ®
 
         listElement = TfElementParent.GetComponentsInChildren<TElement>(true).ToList();
         for (int i = 0; i != listElement.Count; i++)
         {
             TElement element = listElement[i];
-            InitData(element, element.data, i);//Ê¹ÓÃElementÒÑÓĞµÄÊı¾İ¼°²ÎÊı½øĞĞ³õÊ¼»¯
+            InitData(element, element.data, i);//ä½¿ç”¨Elementå·²æœ‰çš„æ•°æ®åŠå‚æ•°è¿›è¡Œåˆå§‹åŒ–
             listData.Add(element.data);
         }
     }
 
     /// <summary>
-    /// ÖØÉèÊı¾İ
+    /// é‡è®¾æ•°æ®
     /// </summary>
     public virtual void ResetData()
     {
@@ -130,24 +130,24 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// É¾³ıËùÓĞÔªËØ
+    /// åˆ é™¤æ‰€æœ‰å…ƒç´ 
     /// </summary>
     public virtual void ResetElement()
     {
-        while (TfElementParent.childCount > 0)//Ê¹ÓÃWhile¶ø²»ÊÇforeach£¬±ÜÃâ·ÃÎÊÔ½½ç
+        while (TfElementParent.childCount > 0)//ä½¿ç”¨Whileè€Œä¸æ˜¯foreachï¼Œé¿å…è®¿é—®è¶Šç•Œ
         {
             Transform tfSon = TfElementParent.GetChild(0);
-            DestroyElementFunc(tfSon.gameObject);//PS:³õÊ¼»¯µ÷ÓÃÊ±£¬¿ÉÄÜÎïÌåÖ»ÊÇÁÙÊ±ÎïÌå£¬ËùÒÔ²»ÄÜÍ¨¹ı»ñÈ¡TElementµÄ·½Ê½É¾³ı
+            DestroyElementFunc(tfSon.gameObject);//PS:åˆå§‹åŒ–è°ƒç”¨æ—¶ï¼Œå¯èƒ½ç‰©ä½“åªæ˜¯ä¸´æ—¶ç‰©ä½“ï¼Œæ‰€ä»¥ä¸èƒ½é€šè¿‡è·å–TElementçš„æ–¹å¼åˆ é™¤
         }
     }
 
     /// <summary>
-    /// ÒÆ³ıÖ¸¶¨ÔªËØ
+    /// ç§»é™¤æŒ‡å®šå…ƒç´ 
     /// </summary>
     /// <param name="element"></param>
     public virtual void RemoveElement(TElement element)
     {
-        if (!element)//ÔªËØÎª¿Õ
+        if (!element)//å…ƒç´ ä¸ºç©º
             return;
         if (ListData.Contains(element.data))
             ListData.Remove(element.data);
@@ -158,7 +158,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// Ê¹ÓÃÒÑÓĞÊı¾İ£¬³õÊ¼»¯È«²¿ÔªËØ
+    /// ä½¿ç”¨å·²æœ‰æ•°æ®ï¼Œåˆå§‹åŒ–å…¨éƒ¨å…ƒç´ 
     /// </summary>
     public virtual void InitElement()
     {
@@ -167,7 +167,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
             TData data = ListData[i];
             if (data == null)
             {
-                Debug.LogError("¿ÕÒıÓÃ£¡");
+                Debug.LogError("ç©ºå¼•ç”¨ï¼");
                 continue;
             }
 
@@ -190,7 +190,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// Éú³ÉÔªËØ²¢³õÊ¼»¯
+    /// ç”Ÿæˆå…ƒç´ å¹¶åˆå§‹åŒ–
     /// </summary>
     /// <param name="goPre"></param>
     /// <param name="data"></param>
@@ -208,10 +208,9 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// Éú³ÉÔªËØ²¢´æ´¢µ½listElementÖĞ
+    /// ç”Ÿæˆå…ƒç´ å¹¶å­˜å‚¨åˆ°listElementä¸­
     /// </summary>
     /// <param name="goPre"></param>
-    /// 
     /// <returns></returns>
     protected virtual TElement CreateElementFunc(GameObject goPre)
     {
@@ -227,20 +226,20 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
 
     protected virtual void DestroyElementFunc(GameObject go)
     {
-        go.GetComponent<TElement>()?.OnBeforeDestroy();//ÊÖ¶¯µ÷ÓÃ·½·¨
+        go.GetComponent<TElement>()?.OnBeforeDestroy();//æ‰‹åŠ¨è°ƒç”¨æ–¹æ³•
 
         if (usePool)
             Pool.Release(go);
         else
         {
-            go.transform.SetParent(null);//PS£ºÒòÎªÎïÌåÔÚÏÂÒ»Ö¡±»Ïú»Ù£¬Òò´ËĞèÒªÏÈÒÆ³ö¸¸ÎïÌå£¬±ÜÃâÓ°ÏìĞÂÔªËØÉú³É
+            go.transform.SetParent(null);//PSï¼šå› ä¸ºç‰©ä½“åœ¨ä¸‹ä¸€å¸§è¢«é”€æ¯ï¼Œå› æ­¤éœ€è¦å…ˆç§»å‡ºçˆ¶ç‰©ä½“ï¼Œé¿å…å½±å“æ–°å…ƒç´ ç”Ÿæˆ
             Destroy(go);
         }
     }
 
 
     /// <summary>
-    /// ´«ÈëÊı¾İ³õÊ¼»¯Ö¸¶¨Element
+    /// ä¼ å…¥æ•°æ®åˆå§‹åŒ–æŒ‡å®šElement
     /// </summary>
     /// <param name="element"></param>
     /// <param name="data"></param>
@@ -250,7 +249,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
     }
 
     /// <summary>
-    /// »ñÈ¡Ö¸¶¨indexµÄÔªËØ
+    /// è·å–æŒ‡å®šindexçš„å…ƒç´ 
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
@@ -261,7 +260,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
             return element;
         else
         {
-            Debug.LogError("Ã»ÓĞÕÒµ½Ïà¹ØÔªËØ!");
+            Debug.LogError("æ²¡æœ‰æ‰¾åˆ°ç›¸å…³å…ƒç´ !");
             return null;
         }
     }
@@ -327,7 +326,7 @@ public abstract class SequenceElementManagerBase<TElement, TData> : SequenceBase
 }
 
 /// <summary>
-/// Õë¶ÔContentElementBase,Ôö¼ÓĞòºÅÒÔ¼°µ¥Àı
+/// é’ˆå¯¹ContentElementBase,å¢åŠ åºå·ä»¥åŠå•ä¾‹
 /// </summary>
 /// <typeparam name="TManager"></typeparam>
 /// <typeparam name="TElement"></typeparam>
@@ -339,7 +338,7 @@ public abstract class SequenceElementManagerBase<TManager, TElement, TData> : Se
 {
     protected override void InitData(TElement element, TData data, int index)
     {
-        //ÉèÖÃÏà¹ØÒıÓÃ
+        //è®¾ç½®ç›¸å…³å¼•ç”¨
         element.Index = index;
         element.Manager = this as TManager;
 

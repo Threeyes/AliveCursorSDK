@@ -2,9 +2,7 @@ namespace Threeyes.Persistent
 {
     public class PersistentData_String : PersistentDataBase<string, StringEvent>
     {
-
 #if UNITY_EDITOR
-
         //——MenuItem——
         static string instName = "StringPD ";
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "String", false, intBasicMenuOrder + 3)]
@@ -15,8 +13,6 @@ namespace Threeyes.Persistent
 
         //——Hierarchy GUI——
         public override string ShortTypeName { get { return "String"; } }
-
 #endif
-
     }
 }

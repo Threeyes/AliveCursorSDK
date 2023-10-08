@@ -1,41 +1,54 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+
 /// <summary>
 /// 存储相同的一系列元件
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class ElementGroupBase<T> : MonoBehaviour where T : class
-{
-    public List<T> listElement = new List<T>();
-
-    public virtual void ResetData()
-    {
-
-    }
-}
-
-//适用于带数据的元件
-public abstract class ElementGroupBase<TElement, TEleData> : MonoBehaviour
-    where TElement : ElementBase<TEleData>
-    where TEleData : class
+/// <typeparam name="TElement"></typeparam>
+public class ElementGroupBase<TElement> : MonoBehaviour, IElementGroup
+    where TElement : class
 {
     public List<TElement> listElement = new List<TElement>();
 
     public virtual void ResetData()
     {
-
+        listElement.Clear();
     }
+    public virtual void ResetElement() { }
 
-    public virtual void InitElement(TEleData eleData)
+    [ContextMenu("Clear")]
+    public virtual void Clear()
     {
-        TElement inst = InitElementFunc(eleData);
-        AddElementToList(inst);
+        //重置数据和元素
+        ResetData();
+        ResetElement();
+    }
+}
+
+
+/// <summary>
+/// 带数据的元件
+/// </summary>
+/// <typeparam name="TElement"></typeparam>
+/// <typeparam name="TEleData"></typeparam>
+public abstract class ElementGroupBase<TElement, TEleData> : ElementGroupBase<TElement>
+    where TElement : ElementBase<TEleData>
+    where TEleData : class
+{
+    public virtual TElement InitElement(TEleData data)
+    {
+        TElement element = CreateElementFunc(data);
+        InitData(element, data);
+        return element;
     }
 
-    protected abstract TElement InitElementFunc(TEleData eleData);
-
+    protected abstract TElement CreateElementFunc(TEleData data);
+    protected virtual void InitData(TElement element, TEleData data)
+    {
+        element.Init(data);
+    }
     protected virtual void AddElementToList(TElement element)
     {
         listElement.Add(element);
@@ -48,6 +61,36 @@ public abstract class ElementGroupBase<TElement, TEleData> : MonoBehaviour
             listElement.Remove(element);
         }
     }
-
 }
 
+public abstract class ElementGroupBase<TManager, TElement, TEleData> : ElementGroupBase<TElement, TEleData>
+    where TManager : class
+    where TElement : ElementBase<TManager, TElement, TEleData>
+    where TEleData : class
+{
+    protected override void InitData(TElement element, TEleData data)
+    {
+        element.Manager = this as TManager;//Set Manager
+        base.InitData(element, data);
+    }
+}
+
+
+
+public interface IElementGroup
+{
+    /// <summary>
+    /// Reset Data and Clear all child instance
+    /// </summary>
+    void Clear();
+
+    /// <summary>
+    /// Reset Data
+    /// </summary>
+    void ResetData();
+
+    /// <summary>
+    /// Clear all child instance
+    /// </summary>
+    void ResetElement();
+}

@@ -54,11 +54,11 @@ public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_C
 		///KeyChangeValue:
 		///#Change cursor size by -/=
 
-		if (Input.GetKeyDown(KeyCode.Minus))
+		if (InputTool.GetKeyDown(KeyCode.Minus))
 		{
 			ChangeCursorSize(false);
 		}
-		if (Input.GetKeyDown(KeyCode.Equals))
+		if (InputTool.GetKeyDown(KeyCode.Equals))
 		{
 			ChangeCursorSize(true);
 		}

@@ -17,6 +17,11 @@ namespace Threeyes.ShowHide
             if (isInit)
                 return;
 
+            SetInstanceFunc();
+        }
+
+        protected virtual void SetInstanceFunc()
+        {
             Instance = this as T;
             isInit = true;
         }

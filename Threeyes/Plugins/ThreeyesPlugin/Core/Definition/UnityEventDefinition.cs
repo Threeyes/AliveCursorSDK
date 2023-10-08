@@ -53,6 +53,9 @@ public class Vector2Event : UnityEvent<Vector2> { }
 public class Vector3Event : UnityEvent<Vector3> { }
 
 [System.Serializable]
+public class Vector4Event : UnityEvent<Vector4> { }
+
+[System.Serializable]
 public class GradientEvent : UnityEvent<Gradient> { }
 
 

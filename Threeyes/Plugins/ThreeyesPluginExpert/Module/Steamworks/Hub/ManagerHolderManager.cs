@@ -17,12 +17,16 @@ namespace Threeyes.Steamworks
         protected virtual void InitSpecialFields()
         {
             InitWorkshopItemInfoFactory();
+
+            ManagerHolder.GetListManagerModPreInitOrder = GetListManagerModPreInitOrder;
             ManagerHolder.GetListManagerModInitOrder = GetListManagerModInitOrder;//因为使用了ManagerHolder的字段，所以需要等使用后才能获取，不能在这个阶段设置) 
         }
         /// <summary>
         /// 初始化ManagerHolder.WorkshopItemInfoFactory
         /// </summary>
         protected abstract void InitWorkshopItemInfoFactory();
+
+        protected abstract List<IHubManagerModPreInitHandler> GetListManagerModPreInitOrder();
 
         /// <summary>
         /// 初始化ManagerHolder.GetListManagerModInitOrder

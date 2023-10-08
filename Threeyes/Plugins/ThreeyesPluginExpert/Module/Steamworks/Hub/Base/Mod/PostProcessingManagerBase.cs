@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace Threeyes.Steamworks
@@ -51,11 +50,8 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Controller Callback
-        void OnIsUsePostProcessingChanged(bool isUse)
+        protected virtual void OnIsUsePostProcessingChanged(bool isUse)
         {
-            var uacData = ManagerHolder.EnvironmentManager.MainCamera.GetComponent<UniversalAdditionalCameraData>();
-            uacData.renderPostProcessing = isUse;
-            uacData.antialiasing = isUse ? AntialiasingMode.None : AntialiasingMode.FastApproximateAntialiasing;//PS: FXAA会导致PP的透明度失效，因此两者互斥
         }
         #endregion
     }

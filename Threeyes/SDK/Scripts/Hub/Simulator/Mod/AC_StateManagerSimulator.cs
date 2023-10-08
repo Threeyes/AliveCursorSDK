@@ -18,14 +18,14 @@ public class AC_StateManagerSimulator : AC_StateManagerBase<AC_StateManagerSimul
 	{
 		//PS：因为OnGUI同一帧会调用多次，而切换State只需要按下一瞬间，因此需要用Update
 		//Number Keys change state
-		if (!Input.anyKeyDown)
+		if (!InputTool.anyKeyDown)
 			return;
 
 		if (isDebugTopNumberKeysChangeState)
 		{
 			foreach (var keyCode in debugDicTopNumberKey2State.Keys)
 			{
-				if (Input.GetKeyDown(keyCode))
+				if (InputTool.GetKeyDown(keyCode))
 				{
 					DebugInputChangeStateFunc(keyCode, AC_KeyState.Down, debugDicTopNumberKey2State);
 				}
@@ -35,7 +35,7 @@ public class AC_StateManagerSimulator : AC_StateManagerBase<AC_StateManagerSimul
 		{
 			foreach (var keyCode in debugDicPadNumberKey2State.Keys)
 			{
-				if (Input.GetKeyDown(keyCode))
+				if (InputTool.GetKeyDown(keyCode))
 				{
 					DebugInputChangeStateFunc(keyCode, AC_KeyState.Down, debugDicPadNumberKey2State);
 				}

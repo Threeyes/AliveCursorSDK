@@ -9,8 +9,14 @@ public class AC_ManagerHolderManager : ManagerHolderManager
 {
     protected override void InitWorkshopItemInfoFactory()
     {
-        SteamworksTool.RegistManagerHolder(AC_WorkshopItemInfoFactory.Instance);//调用其构造函数进行初始化并注册到ManagerHolder
+        SteamworksTool.RegisterManagerHolder(AC_WorkshopItemInfoFactory.Instance);//调用其构造函数进行初始化并注册到ManagerHolder
     }
+
+    protected override List<IHubManagerModPreInitHandler> GetListManagerModPreInitOrder()
+    {
+        return new List<IHubManagerModPreInitHandler>();
+    }
+
     protected override List<IHubManagerModInitHandler> GetListManagerModInitOrder()
     {
         return new List<IHubManagerModInitHandler>()
@@ -22,6 +28,6 @@ public class AC_ManagerHolderManager : ManagerHolderManager
             AC_ManagerHolder.StateManager,
             AC_ManagerHolder.SystemCursorManager,
             AC_ManagerHolder.SystemAudioManager
-    };
+        };
     }
 }

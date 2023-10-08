@@ -5,6 +5,11 @@ namespace Threeyes.Editor
 {
     public static class EditorPathTool
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objAsset"></param>
+        /// <returns></returns>
         public static string GetAssetAbsPath(Object objAsset)
         {
             if (!objAsset)
@@ -15,13 +20,17 @@ namespace Threeyes.Editor
         /// <summary>
         /// Unity local path to abs path
         /// </summary>
-        /// <param name="unityPath"></param>
+        /// <param name="unityRelatePath"></param>
         /// <returns></returns>
-        public static string UnityRelateToAbsPath(string unityPath)
+        public static string UnityRelateToAbsPath(string unityRelatePath)
         {
-            string path = Application.dataPath;
-            path = path.Replace("Assets", "");
-            return path + unityPath;
+            int length = unityRelatePath.Length;
+            if (length >= 6)
+            {
+                return Application.dataPath + unityRelatePath.Substring(6, length - 6);//裁剪掉unityRelatePath的"Assets/"
+            }
+            Debug.LogError($"Relate path length error: [{unityRelatePath}]");
+            return unityRelatePath;
         }
         public static string AbsToUnityRelatePath(string absPath)
         {

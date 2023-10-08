@@ -15,7 +15,7 @@ namespace Threeyes.Steamworks
     /// PS:
     /// 1.Default Environment Lighting/Reflections Sources come from Skybox, inheric this class if your want to change them
     /// </summary>
-    [AddComponentMenu(Steamworks_EditorDefinition.ComponentMenuPrefix_Root_Cursor_Controller + "DefaultEnvironmentController")]
+    //[AddComponentMenu(Steamworks_EditorDefinition.ComponentMenuPrefix_Root_Mod_Controller + "DefaultEnvironmentController")]
     public class DefaultEnvironmentController<TSOConfig, TConfig> : EnvironmentControllerBase<TSOConfig, TConfig>
        where TSOConfig : SOConfigBase<TConfig>
         where TConfig : DefaultEnvironmentControllerConfigInfo
@@ -298,5 +298,4 @@ namespace Threeyes.Steamworks
     }
 
     #endregion
-
 }

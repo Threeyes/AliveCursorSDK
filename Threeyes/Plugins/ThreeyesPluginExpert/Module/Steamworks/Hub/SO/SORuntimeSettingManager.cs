@@ -9,6 +9,7 @@ namespace Threeyes.Steamworks
     /// -项目相关信息
     /// -SDK名称
     /// -接口代码前缀等
+    /// -Package ID
     /// PS:
     /// -放在SDK目录下，一般禁止用户修改
     /// </summary>
@@ -31,6 +32,9 @@ namespace Threeyes.Steamworks
         /// Steam中该应用的唯一id
         /// </summary>
         public uint steamAppID;
+
+        public string sDKIdentifier = "";//SDK的Package ID。如：com.threeyes.alivecursor.sdk
+
     }
     public class SORuntimeSettingManagerInfo : SOInstacneInfo
     {

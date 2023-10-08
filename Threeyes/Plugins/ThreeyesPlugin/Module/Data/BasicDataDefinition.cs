@@ -4,6 +4,10 @@ using UnityEngine.Events;
 #if USE_JsonDotNet
 using Newtonsoft.Json;
 #endif
+/// <summary>
+/// ToUpdate:
+/// -参考UnityEngine.Rendering.VolumeParameter<T>，完善Equals等接口实现
+/// </summary>
 namespace Threeyes.Data
 {
     //PS：该namespace存储所有Module公用的class
@@ -23,8 +27,13 @@ namespace Threeyes.Data
 #endif
     public abstract class BasicData
     {
+        /// <summary>
+        /// 将字段克隆给其他物体，同时会调用事件更新
+        /// </summary>
+        /// <param name="other"></param>
         public abstract void CloneTo(ref object other);
         public abstract void NotifyValueChanged(BasicDataState state = BasicDataState.Update);
+        public abstract void NotifyResetToDefaultValue();
         public abstract void ResetToDefaultValue();
         public abstract void ClearEvent();
     }
@@ -99,6 +108,10 @@ namespace Threeyes.Data
         {
             this.value = value;
         }
+        public override void NotifyResetToDefaultValue()
+        {
+            actionValueReset.Execute(defaultValue);
+        }
         public override void NotifyValueChanged(BasicDataState state = BasicDataState.Update)
         {
             actionValueChanged.Execute(Value);
@@ -109,7 +122,7 @@ namespace Threeyes.Data
         public override void ResetToDefaultValue()
         {
             Value = defaultValue;
-            actionValueReset.Execute(defaultValue);
+            NotifyResetToDefaultValue();
         }
         public override void ClearEvent()
         {

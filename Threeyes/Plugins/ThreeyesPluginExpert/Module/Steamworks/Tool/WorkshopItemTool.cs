@@ -138,7 +138,7 @@ namespace Threeyes.Steamworks
 			return Path.Combine(workshopItemInfo.dirPath, workshopItemInfo.modFileRelatePath);
 		}
 		/// <summary>
-		/// Item 本地用户配置的存储路径
+		/// Item用户配置的存储路径
 		/// </summary>
 		/// <param name="workshopItemInfo"></param>
 		/// <returns></returns>
@@ -148,6 +148,16 @@ namespace Threeyes.Steamworks
 			return Steamworks_PathDefinition.Data_Save_ItemDirPath + "/" + workshopItemInfo.DirName() + "/" + Steamworks_PathDefinition.persistentFolderName;
 		}
 
+		/// <summary>
+		/// 本地Item用户配置的存储路径
+		/// </summary>
+		/// <param name="workshopItemInfo"></param>
+		/// <returns></returns>
+		public static string PersistentDataLocalDirPath(this WorkshopItemInfo workshopItemInfo)
+		{
+			//PS:相对其文件夹进行存储，避免使用id生成，因为调试时未上传的Mod的id无效
+			return Steamworks_PathDefinition.Data_Save_ItemLocalDirPath + "/" + workshopItemInfo.DirName() + "/" + Steamworks_PathDefinition.persistentFolderName;
+		}
 		public static string LogDirPath(this WorkshopItemInfo workshopItemInfo)
 		{
 			return Steamworks_PathDefinition.Data_Save_LogDirPath + "/" + workshopItemInfo.DirName();

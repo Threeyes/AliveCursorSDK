@@ -35,6 +35,7 @@ public static class InputTool
     /// The current mouse scroll delta. (Read Only)
     /// </summary>
     public static Vector2 mouseScrollDelta { get { return new Vector2(0, GetMouseWheelDelta()); } }
+
     /// <summary>
     /// Indicates if a mouse device is detected.
     /// </summary>
@@ -75,7 +76,7 @@ public static class InputTool
     /// 自定义的获取输入的方法
     public static Func<string, float> OverrideGetAxis;
     public static Func<Vector2> OverrideGetMousePosition;
-    public static Func<int,bool> OverrideGetMouseButtonDown;
+    public static Func<int, bool> OverrideGetMouseButtonDown;
     public static Func<int, bool> OverrideGetMouseButton;
     public static Func<int, bool> OverrideGetMouseButtonUp;
 
@@ -235,7 +236,7 @@ public static class InputTool
     static float GetMouseWheelDelta()
     {
 #if ENABLE_INPUT_SYSTEM
-        return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y : 0.0f;
+        return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y / 120 : 0.0f;//PS：要除以滚轴的单位滚动数值
 #else
 			return UnityEngine.Input.mouseScrollDelta.y;
 #endif
@@ -431,8 +432,10 @@ public static class InputTool
         {
             var newKey = default(NewCode);
 
-            if (keyMapping.TryGetValue(oldKey, out newKey) == true)
+            if (keyMapping.TryGetValue(oldKey, out newKey))
             {
+                if (newKey == NewCode.None)//PS:没有None对应的KeyControl
+                    return null;
                 return Keyboard.current[newKey];
             }
         }

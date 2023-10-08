@@ -3,48 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// »ùÓÚContentµÄÔªËØ
+/// åŸºäºŽContentçš„å…ƒç´ 
 /// </summary>
 /// <typeparam name="TData"></typeparam>
-public class SequenceElementBase<TManager, TElement, TData> : ElementBase<TData>, SequenceElement<TManager>
+public class SequenceElementBase<TManager, TElement, TData> : ElementBase<TManager, TElement, TData>, ISequenceElement<TManager>
     where TManager : SequenceElementManagerBase<TElement, TData>
     where TElement : ElementBase<TData>
         where TData : class
 {
-    public TManager Manager
-    {
-        get
-        {
-            return manager;
-        }
-        set
-        {
-            manager = value;
-        }
-    }
-    [SerializeField] protected TManager manager;
-
-
     /// <summary>
     /// Index in content
     /// </summary>
-    public int Index
-    {
-        get
-        {
-            return index;
-        }
-        set
-        {
-            index = value;
-        }
-    }
-
+    public int Index { get { return index; } set { index = value; } }
     [SerializeField] protected int index;
 }
 
-public interface SequenceElement<TManager>
+public interface ISequenceElement<TManager> : IElement<TManager>
 {
-    TManager Manager { get; set; }
     int Index { get; set; }
 }
