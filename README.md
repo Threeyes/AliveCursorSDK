@@ -3,7 +3,7 @@
 <p align="center">
     <a href="https://store.steampowered.com/app/1606490/Alive_Cursor/"><img src="https://github.com/Threeyes/AliveCursorSDK/blob/main/Threeyes/SDK/Textures/ACSDK%20Icon.png?raw=true" alt="Logo" width="200px" height="200px" />
     <br />
-	<a href="https://unity.com/releases/editor/qa/lts-releases?version=2022.3"><img src="https://img.shields.io/badge/%20Unity-2022.3.4f1%20-blue" /></a>
+	<a href="https://unity.com/releases/editor/qa/lts-releases?version=2022.3"><img src="https://img.shields.io/badge/%20Unity-2022.3.10f1%20-blue" /></a>
 	<a href="https://openupm.com/packages/com.threeyes.alivecursor.sdk/"><img src="https://img.shields.io/npm/v/com.threeyes.alivecursor.sdk?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
 	<a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
     <br />
@@ -24,7 +24,7 @@
 
 ## Installation via [OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)
 1. Install [Git](https://git-scm.com/).
-2. Create an empty Win project with [Unity2022.3.4f1](https://unity.com/releases/editor/qa/lts-releases?version=2022.3).
+2. Create an empty Win project with [Unity2022.3.10f1](https://unity.com/releases/editor/qa/lts-releases?version=2022.3).
 3. Download the latest [manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json) file and replace the file with the same name in the `[ProjectRootPath]/Packages` directory. 
 4. Download [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip) zip file, extract it and replace the folder with the same name in the `[ProjectRootPath]` directory. 
 5. Open the project, Make sure `Packages/manifest.json` contain one and only one External Script Editor that you are using in `Preferences/External Tools` (eg, VisualStudio):
