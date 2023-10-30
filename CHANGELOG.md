@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.2]
+- PersistentData_Gradient add option: useHDR
+- Add interface for each Controller.
+
 ## [4.1.1]
 - Move CalculateLoudness method from AC_ManagerHolder.SystemAudioManager to AudioVisualizerTool.
 - Move some common Manager interface from Threeyes.Steamworks.ManagerHolder to the one on their namespace(e.g. LogManager is now located at LogManagerHolder).

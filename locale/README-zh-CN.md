@@ -24,7 +24,7 @@
 
 ## 通过[OpenUPM](https://openupm.com/packages/com.threeyes.alivecursor.sdk/)安装
 1. 安装[Git](https://git-scm.com/).
-2. 使用[Unity2021.3.5f1](https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe)创建一个Windows版的空项目.
+2. 使用[Unity2022.3.10f1](https://download.unitychina.cn/download_unity/ff3792e53c62/UnityDownloadAssistant-2022.3.10f1.exe)创建一个Windows版的空项目.
 3. 下载最新的[manifest.json](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/manifest.json)文件并替换`[项目根目录]/Packages`路径下的同名文件。
 4. 下载 [ProjectSetting](https://raw.githubusercontent.com/Threeyes/AliveCursorSDK/main/ProjectConfig~/ProjectSettings.zip)压缩文件，解压后覆盖`[项目根目录]`路径下的同名文件夹。
 5. 打开该项目，确保`PackagesManager`窗口包含**唯一**的脚本编辑器，并且与`Preferences` 窗口-External Tools中的设置一致（如VisualStudio）：
