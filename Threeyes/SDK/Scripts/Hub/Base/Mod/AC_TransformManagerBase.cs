@@ -50,6 +50,9 @@ where T : AC_TransformManagerBase<T>
 		///2.因为场景可能有多个Controller，因此需要由Manager决定需要调用哪一个，而不是使用SendMessage
 		modController = modEntry.GetComponent<IAC_TransformController>();//尝试获取
 		ActiveController.OnModControllerInit();//初始化引用等（注意不能提前调用，否则会报错）
+		ManagerHolderManager.Instance.FireGlobalControllerConfigStateEvent<IAC_SOTransformControllerConfig>(modController == null);//设置对应的全局Config是否可用
+		ManagerHolderManager.Instance.FireGlobalControllerConfigStateEvent<IAC_SOAction_CursorBored>(modController == null);//设置对应的全局Config是否可用
+
 	}
 	public virtual void OnModDeinit(Scene scene, ModEntry modEntry)
 	{

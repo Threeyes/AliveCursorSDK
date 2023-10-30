@@ -11,7 +11,7 @@ public static class ColorTool
 	private const byte k_MaxByteForOverexposedColor = 191;
 
 	/// <summary>
-	/// 从HDR Color中分离出baseColor以及exposure
+	/// 从HDR Color中分离出baseColor32以及exposure
 	///
 	/// Ref：https://github.com/Unity-Technologies/UnityCsReference/blob/11bcfd801fccd2a52b09bb6fd636c1ddcc9f1705/Editor/Mono/GUI/ColorMutator.cs
 	/// </summary>
@@ -46,9 +46,11 @@ public static class ColorTool
 
 	/// <summary>
 	/// 将Color及exposure组合成HDR Color
+	/// 
+	/// PS：因为Color32的值不能超过255，因此要使用ColorStruct传递HDR值
 	/// </summary>
 	/// <param name="baseLinearColor"></param>
-	/// <param name="exposure"></param>
+	/// <param name="exposure">亮度[-10,10]</param>
 	/// <returns></returns>
 	public static Color ComposeHdrColor(Color32 baseLinearColor, float exposure)
 	{

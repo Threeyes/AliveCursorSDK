@@ -1,12 +1,5 @@
 using Threeyes.Action;
 using Threeyes.Config;
-using Threeyes.Steamworks;
-
-public interface IAC_StateController : IModControllerHandler
-{
-	void SetState(AC_CursorStateInfoEx cursorStateInfo);
-	bool IsCurStateActionComplete(ActionState actionState);
-}
 
 ///To提醒：
 ///1.重写难度较大，一般只建议Modder克隆内置的soCursorStateActionCollection，并且修改其中的部分Action

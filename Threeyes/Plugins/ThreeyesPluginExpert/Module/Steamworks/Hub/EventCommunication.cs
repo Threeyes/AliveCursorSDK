@@ -29,7 +29,8 @@ namespace Threeyes.Steamworks
             {
                 try
                 {
-                    act(result[i]);//为节省资源，不判断是否为空，调用方应确保不为空
+                    //为节省资源，不判断是否为空，调用方应确保不为空
+                    act(result[i]);
                 }
                 catch (System.Exception e)
                 {

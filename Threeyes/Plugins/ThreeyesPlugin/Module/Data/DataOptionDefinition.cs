@@ -173,9 +173,39 @@ namespace Threeyes.Data
             return this;
         }
     }
-
-
     [Serializable]
+    public class DataOption_Gradient : DataOption
+    {
+        public bool UseHDR { get { return useHDR; } set { useHDR = value; } }
+        [SerializeField] protected bool useHDR = false;
+
+
+        public DataOption_Gradient()
+        {
+            useHDR = false;
+        }
+
+        public DataOption_Gradient(bool useHDR)
+        {
+            this.useHDR = useHDR;
+        }
+
+        public override IDataOption Init(MemberInfo memberInfo, object obj = null)
+        {
+            if (memberInfo != null)
+            {
+                //基于[ColorUsage]或[ColorUsageEx]继续初始化
+                GradientUsageAttribute gradientUsageAttribute = memberInfo.GetCustomAttribute<GradientUsageAttribute>();
+                if (gradientUsageAttribute != null)
+                {
+                    useHDR = gradientUsageAttribute.hdr;
+                }
+            }
+            return this;
+        }
+    }
+
+        [Serializable]
     public class DataOption_Color : DataOption
     {
         public bool UseAlpha { get { return useAlpha; } set { useAlpha = value; } }
@@ -204,7 +234,7 @@ namespace Threeyes.Data
                 if (colorUsageAttribute != null)
                 {
                     useAlpha = colorUsageAttribute.showAlpha;
-                    UseHDR = colorUsageAttribute.hdr;
+                    useHDR = colorUsageAttribute.hdr;
                 }
                 else if (colorUsageExAttribute != null && obj != null)
                 {
@@ -215,7 +245,7 @@ namespace Threeyes.Data
                     if (useAlphaValue.HasValue)
                         useAlpha = useAlphaValue.Value;
                     if (useHDRValue.HasValue)
-                        UseHDR = useHDRValue.Value;
+                        useHDR = useHDRValue.Value;
                 }
             }
             return this;

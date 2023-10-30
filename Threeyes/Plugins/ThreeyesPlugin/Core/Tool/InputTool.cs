@@ -46,7 +46,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null;
 #else
-			return UnityEngine.Input.mousePresent;
+            return UnityEngine.Input.mousePresent;
 #endif
         }
     }
@@ -61,12 +61,31 @@ public static class InputTool
 #endif
         }
     }
+
+    /// <summary>
+    /// Returns true the first frame the user hits any key or mouse button.
+    /// </summary>
+    public static bool anyKeyBoardDown
+    {
+        get
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Keyboard.current.anyKey.wasPressedThisFrame;//Warning:这里只是检测Keyboard。需要添加鼠标的状态，参考Input
+#else
+            return Input.anyKeyDown && Input.inputString != "";//Warning：Input.anyKeyDown包含鼠标输入，所以还需要额外检测inputString是否输入了字符
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Returns true the first frame the user hits any key or mouse button.
+    /// </summary>
     public static bool anyKeyDown
     {
         get
         {
 #if ENABLE_INPUT_SYSTEM
-            return Keyboard.current.anyKey.wasPressedThisFrame;
+            return Keyboard.current.anyKey.wasPressedThisFrame;//ToUpdate:这里只是检测Keyboard。需要添加鼠标的状态，参考Input
 #else
             return Input.anyKeyDown;
 #endif
@@ -126,7 +145,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         return Mouse.current != null ? Mouse.current.position.ReadValue() : default(Vector2);
 #else
-			return UnityEngine.Input.mousePosition;
+        return UnityEngine.Input.mousePosition;
 #endif
     }
     public static bool GetMouseButtonDown(int index)
@@ -138,7 +157,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-			return UnityEngine.Input.GetMouseButtonDown(index);
+        return UnityEngine.Input.GetMouseButtonDown(index);
 #endif
     }
     public static bool GetMouseButton(int index)
@@ -150,7 +169,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-			return UnityEngine.Input.GetMouseButton(index);
+        return UnityEngine.Input.GetMouseButton(index);
 #endif
     }
     public static bool GetMouseButtonUp(int index)
@@ -162,7 +181,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-			return UnityEngine.Input.GetMouseButtonUp(index);
+        return UnityEngine.Input.GetMouseButtonUp(index);
 #endif
     }
 
@@ -177,7 +196,7 @@ public static class InputTool
 
         return Touch.activeTouches.Count;
 #else
-			return UnityEngine.Input.touchCount;
+        return UnityEngine.Input.touchCount;
 #endif
     }
 
@@ -194,15 +213,15 @@ public static class InputTool
             touch.phase == TouchPhase.Stationary ||
             touch.phase == TouchPhase.Moved;
 #else
-			var touch = UnityEngine.Input.GetTouch(index);
+        var touch = UnityEngine.Input.GetTouch(index);
 
-			id       = touch.fingerId;
-			position = touch.position;
-			pressure = touch.pressure;
-			set      =
-				touch.phase == UnityEngine.TouchPhase.Began ||
-				touch.phase == UnityEngine.TouchPhase.Stationary ||
-				touch.phase == UnityEngine.TouchPhase.Moved;
+        id = touch.fingerId;
+        position = touch.position;
+        pressure = touch.pressure;
+        set =
+            touch.phase == UnityEngine.TouchPhase.Began ||
+            touch.phase == UnityEngine.TouchPhase.Stationary ||
+            touch.phase == UnityEngine.TouchPhase.Moved;
 #endif
     }
 
@@ -211,7 +230,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-			return UnityEngine.Input.GetKeyDown(oldKey);
+        return UnityEngine.Input.GetKeyDown(oldKey);
 #endif
     }
 
@@ -220,7 +239,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-			return UnityEngine.Input.GetKey(oldKey);
+        return UnityEngine.Input.GetKey(oldKey);
 #endif
     }
 
@@ -229,7 +248,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-			return UnityEngine.Input.GetKeyUp(oldKey);
+        return UnityEngine.Input.GetKeyUp(oldKey);
 #endif
     }
 
@@ -238,7 +257,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y / 120 : 0.0f;//PS：要除以滚轴的单位滚动数值
 #else
-			return UnityEngine.Input.mouseScrollDelta.y;
+        return UnityEngine.Input.mouseScrollDelta.y;
 #endif
     }
 
@@ -248,7 +267,7 @@ public static class InputTool
 #if ENABLE_INPUT_SYSTEM
         return Keyboard.current != null;
 #else
-			return true;
+        return true;
 #endif
     }
     #endregion

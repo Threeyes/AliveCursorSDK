@@ -50,8 +50,10 @@ public static class LazyExtension_Collections
     /// <typeparam name="T">The type of object being enumerated</typeparam>
     /// <param name="rand">An instance of a random number generator</param>
     /// <returns>A random element from a list, or null if the list is empty</returns>
-    public static T Random<T>(this IEnumerable<T> list, Random rand)
+    public static T Random<T>(this IEnumerable<T> list, Random rand = null)
     {
+        if (rand == null)
+            rand = new Random();
         if (list != null && list.Count() > 0)
             return list.ElementAt(rand.Next(list.Count()));
 

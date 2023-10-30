@@ -23,7 +23,7 @@ namespace Threeyes.Steamworks
         /// </summary>
         void OnModInit(Scene scene, ModEntry modEntry);
         /// <summary>
-        /// Get call right after PersistentData is Saved
+        /// Get call right before PersistentData is Saved
         /// </summary>
         void OnModDeinit(Scene scene, ModEntry modEntry);
     }
@@ -108,15 +108,16 @@ namespace Threeyes.Steamworks
     }
 
     //——Mod——
-    public interface IEnvironmentManager :
-    IHubManagerWithController<IEnvironmentController>
+    public interface IEnvironmentManager<TControllerInterface> :
+    IHubManagerWithController<TControllerInterface>
     , IHubEnvironmentManager
     , IHubManagerModInitHandler
+        where TControllerInterface : IEnvironmentController
     {
     }
-    public interface IPostProcessingManager : IHubManagerModInitHandler, IHubManagerWithController<IPostProcessingController>
+    public interface IPostProcessingManager<TControllerInterface> : IHubManagerModInitHandler, IHubManagerWithController<TControllerInterface>
+        where TControllerInterface : IPostProcessingController
     {
     }
-
     #endregion
 }

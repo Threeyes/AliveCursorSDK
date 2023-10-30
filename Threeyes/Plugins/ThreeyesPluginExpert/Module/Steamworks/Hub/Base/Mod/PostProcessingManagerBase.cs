@@ -13,9 +13,11 @@ namespace Threeyes.Steamworks
     /// 2.因为AC只能使用部分字段，所以不提供通用的DefaultController
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PostProcessingManagerBase<T, TDefaultController> : HubManagerWithControllerBase<T, IPostProcessingController, TDefaultController>, IPostProcessingManager
-        where T : PostProcessingManagerBase<T, TDefaultController>
-        where TDefaultController : MonoBehaviour, IPostProcessingController
+    public class PostProcessingManagerBase<T, TControllerInterface, TDefaultController, TSOControllerConfigInterface> : HubManagerWithControllerBase<T, TControllerInterface, TDefaultController>, IPostProcessingManager<TControllerInterface>
+        where T : PostProcessingManagerBase<T, TControllerInterface, TDefaultController, TSOControllerConfigInterface>
+        where TDefaultController : MonoBehaviour, TControllerInterface
+        where TControllerInterface : IPostProcessingController
+        where TSOControllerConfigInterface : ISOPostProcessingControllerConfig
     {
         #region Unity Method
         private void Awake()
@@ -32,7 +34,7 @@ namespace Threeyes.Steamworks
         #region Callback
         public virtual void OnModInit(Scene scene, ModEntry modEntry)
         {
-            modController = scene.GetComponents<IPostProcessingController>().FirstOrDefault();
+            modController = scene.GetComponents<TControllerInterface>().FirstOrDefault();
             defaultController.gameObject.SetActive(modController == null);//两者互斥
             if (modController != null)//Mod有自定义EnvironmentController：更新Environment
             {
@@ -41,11 +43,12 @@ namespace Threeyes.Steamworks
             }
 
             ActiveController.OnModControllerInit();//初始化
+            ManagerHolderManager.Instance.FireGlobalControllerConfigStateEvent<TSOControllerConfigInterface>(modController == null);//设置对应的全局Config是否可用
         }
         public virtual void OnModDeinit(Scene scene, ModEntry modEntry)
         {
             modController?.OnModControllerDeinit();
-            modController = null;//重置，否则会有引用残留
+            modController = default(TControllerInterface);//重置，否则会有引用残留
         }
         #endregion
 

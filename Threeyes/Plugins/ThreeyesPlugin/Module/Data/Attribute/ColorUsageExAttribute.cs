@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Threeyes.Data
 {
+	/// <summary>
+	/// 功能：
+	/// -指定额外的DataOption作为可设置参数
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
 	public class ColorUsageExAttribute : PropertyExAttribute
 	{

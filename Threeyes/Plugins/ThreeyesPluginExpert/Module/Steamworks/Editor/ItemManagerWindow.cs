@@ -28,6 +28,7 @@ namespace Threeyes.Steamworks
     {
         public abstract TSOEditorSettingManager SOEditorSettingManagerInst { get; }
         public abstract string WindowAssetPath { get; }
+        public virtual void BeforeBuild(ref TSOItemInfo soItemInfo) { }
 
         public abstract void AfterBuild(ModBuildResult result, ref TSOItemInfo soItemInfo);
 
@@ -1101,6 +1102,8 @@ namespace Threeyes.Steamworks
             {
                 if (GetActiveExportProfileSettings(sOWorkshopItemInfo) != null)
                 {
+                    info.BeforeBuild(ref sOWorkshopItemInfo);//进行打包前的预处理（如更新SOAssetPack）
+
                     //检查或创建文件夹
                     string exportDirPath = sOWorkshopItemInfo.ExportItemDirPath;
                     DirectoryInfo directoryInfo = GetOrCreate(exportDirPath);

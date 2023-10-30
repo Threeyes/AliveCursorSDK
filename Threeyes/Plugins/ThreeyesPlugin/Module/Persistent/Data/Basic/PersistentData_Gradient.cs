@@ -1,8 +1,9 @@
+using Threeyes.Data;
 using UnityEngine;
 
 namespace Threeyes.Persistent
 {
-    public class PersistentData_Gradient : PersistentDataBase<Gradient, GradientEvent>
+    public class PersistentData_Gradient : PersistentDataBase<Gradient, GradientEvent, DataOption_Gradient>
     {
         private void Reset()
         {
@@ -16,7 +17,7 @@ namespace Threeyes.Persistent
 
 #if UNITY_EDITOR
 
-        //¡ª¡ªMenuItem¡ª¡ª
+        //â€”â€”MenuItemâ€”â€”
         static string instName = "GradientPD ";
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Gradient", false, intBasicMenuOrder + 9)]
         public static void CreateInst()
@@ -24,7 +25,7 @@ namespace Threeyes.Persistent
             Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Gradient>(instName);
         }
 
-        //¡ª¡ªHierarchy GUI¡ª¡ª
+        //â€”â€”Hierarchy GUIâ€”â€”
         public override string ShortTypeName { get { return "Gradient"; } }
 
 #endif

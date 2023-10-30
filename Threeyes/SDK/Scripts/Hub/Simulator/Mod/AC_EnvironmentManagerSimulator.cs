@@ -1,5 +1,4 @@
 using Threeyes.Steamworks;
 
-public class AC_EnvironmentManagerSimulator : EnvironmentManagerBase<AC_EnvironmentManagerSimulator, AC_DefaultEnvironmentController>
-    , IAC_EnvironmentManager
+public class AC_EnvironmentManagerSimulator : AC_EnvironmentManagerBase<AC_EnvironmentManagerSimulator>
 { }

@@ -1,4 +1,24 @@
 using UnityEngine;
+
+/// <summary>
+/// 提供常用ShaderProperty的ID，避免设置材质时多余的调用
+/// Ref：UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Receiver.Rendering.ColorMaterialPropertyAffordanceReceiver.ShaderPropertyLookup
+/// 
+/// </summary>
+public readonly struct ShaderPropertyCollection
+{
+    public static readonly int BaseColorID = Shader.PropertyToID(
+#if UNITY_PIPELINE_URP|| UNITY_PIPELINE_HDRP
+   "_BaseColor"
+#else
+   "_Color"
+#endif
+        );
+    public static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor");
+
+}
+
+
 /// <summary>
 /// Material Float Type
 /// </summary>
@@ -10,7 +30,7 @@ public enum MaterialFloatType
     [MaterialPropertyName("_Metallic", "_Metallic", "_Metallic")]
     Metallic,//determines how "metal-like" the surface is
     [MaterialPropertyName("_Glossiness", "_Smoothness", "_Smoothness")]
-    Smoothness,//control the ��microsurface detail�� or smoothness across a surface   
+    Smoothness,//control the “microsurface detail” or smoothness across a surface   
     [MaterialPropertyName("_BumpScale", "_BumpScale", "_NormalScale")]
     NormalScale,//Scale for NormalMap
     [MaterialPropertyName("_Parallax", "_Parallax", "_HeightOffset")]
@@ -35,7 +55,7 @@ public enum MaterialColorType
 }
 
 /// <summary>
-/// ��ͼ���ƣ�����Offset/Tilling�ȣ�
+/// 贴图名称（用于Offset/Tilling等）
 /// </summary>
 public enum MaterialTextureType
 {

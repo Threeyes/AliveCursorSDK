@@ -59,12 +59,15 @@ public class AC_StateManagerBase<T> : HubManagerWithControllerBase<T, IAC_StateC
     public virtual void OnModInit(Scene scene, ModEntry modEntry)
     {
         modController = modEntry.GetComponent<IAC_StateController>();//尝试获取
-                                                                     //ToAdd：调用Controller.SetState以便同步调用SOAction到最新状态
+        ActiveController.OnModControllerInit();//初始化
+
+        //ToAdd：调用Controller.SetState以便同步调用SOAction到最新状态
     }
 
     public virtual void OnModDeinit(Scene scene, ModEntry modEntry)
     {
-        //ToAdd
+        modController?.OnModControllerDeinit();
+        modController = null;
     }
 
     //Setting

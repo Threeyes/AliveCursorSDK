@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 /// <summary>
-/// 自定义显示名称
+/// 自定义多语言显示名称
 /// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
 public class NameAttribute : Attribute
 {
     public string Name { get; set; }

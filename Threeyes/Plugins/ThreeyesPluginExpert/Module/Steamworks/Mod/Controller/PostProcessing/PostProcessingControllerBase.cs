@@ -7,8 +7,12 @@ namespace Threeyes.Steamworks
     {
         event UnityAction<bool> IsUsePostProcessingChanged;
     }
+    public interface ISOPostProcessingControllerConfig
+    {
+    }
+
     public abstract class PostProcessingControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IPostProcessingController
-        where TSOConfig : SOConfigBase<TConfig>
+        where TSOConfig : SOConfigBase<TConfig>, ISOPostProcessingControllerConfig
     {
         public event UnityAction<bool> IsUsePostProcessingChanged;
         public abstract bool IsUsePostProcessing { get; }

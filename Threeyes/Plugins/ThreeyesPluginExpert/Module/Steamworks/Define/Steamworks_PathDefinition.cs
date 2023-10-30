@@ -116,7 +116,7 @@ namespace Threeyes.Steamworks
                 string productName = SORuntimeSettingManager.Instance.productName;
 #if UNITY_EDITOR
                 //PS:先临时改为本地打包的路径
-                return ExportItemRootDirPath;
+                return ExportItemRootDirPath;//本项目路径
                 //return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
 #else
 			return PathTool.ProjectDirPath + @$"\..\..\..\{productName}_ModUploader\Export\Items";

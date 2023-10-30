@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 8f6def221c717be4591525a7b3f8fd19
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gizmoBuiltInCubemesh: {fileID: 10202, guid: 0000000000000000e000000000000000,
+      type: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

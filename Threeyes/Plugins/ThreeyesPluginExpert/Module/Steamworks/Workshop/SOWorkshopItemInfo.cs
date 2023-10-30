@@ -99,7 +99,7 @@ namespace Threeyes.Steamworks
         public abstract bool IsExported { get; }//检查是否有导出目录
         public abstract bool IsUploadValid { get; }//PS:仅简单检查导出目录是否存在即可
 
-        public bool CheckIfBuildValid(out string errorLog)
+        public virtual bool CheckIfBuildValid(out string errorLog)
         {
             errorLog = "";
 

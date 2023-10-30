@@ -91,7 +91,9 @@ namespace Threeyes.Persistent
         public virtual TValue DefaultValue { get { return defaultValue; } set { defaultValue = value; } }
         public virtual TValue PersistentValue { get { return persistentValue; } set { persistentValue = value; } }
         public virtual TValue ValueToSaved { get { return persistentValue; } }//持久化时需要存储的值
+        public bool SaveAnyway { get { return saveAnyway; } }
         public bool HasChanged { get { return hasChanged; } set { hasChanged = value; } }
+
         public bool HasLoadedFromExtern { get { return hasLoadedFromExtern; } set { hasLoadedFromExtern = value; } }
 
         public override Type ValueType { get { return typeof(TValue); } set { /*除非必要，暂不设置*/} }
@@ -104,6 +106,7 @@ namespace Threeyes.Persistent
         [SerializeField] protected TEvent onUIChanged;//当通过某个UI元素进行SetValue，则需要通过该事件调用UI的SetValueWithoutNotify方法（注意该事件不应该间接调用到该类实例中的Set方法，因为会导致循环调用）
         [SerializeField] protected TEvent onValueChanged;//值被更新时调用（注意该事件不应该间接调用到该类实例中的Set方法，因为会导致循环调
 
+        [Header("Runtime")]
 #if USE_NaughtyAttributes
         [AllowNesting]
         [ReadOnly]
@@ -120,6 +123,9 @@ namespace Threeyes.Persistent
         [ReadOnly]
 #endif
         [SerializeField] protected TValue persistentValue;
+
+        [Header("Config")]
+        [SerializeField] protected bool saveAnyway = false;//让Controller忽略hasChanged字段，直接保存。适用于需要修改复杂类的成员但无法直接调用PD.SetDirty的情况
 
         public virtual void OnDefaultValueSaved() { }
         /// <summary>
@@ -151,7 +157,7 @@ namespace Threeyes.Persistent
         }
 
         /// <summary>
-        /// 重置字段，方便复用
+        /// 清空并重置字段，方便复用
         /// 
         /// Todo：移动到父类中
         /// </summary>

@@ -12,7 +12,7 @@ public class ToggleHelper_SliderStyle : MonoBehaviour
 {
     public Slider slider;//仅作为UI显示，不可交互
     public float tweenDuration = 0.5f;
-       
+
     //#Runtime
     Tween tweenPercent;
     float curTweenPercent = 0;
@@ -31,7 +31,7 @@ public class ToggleHelper_SliderStyle : MonoBehaviour
                      slider.value = percent;
                      slider.handleRect.localEulerAngles = Vector3.Lerp(Vector3.zero, new Vector3(0, 0, -540), percent);
                  },
-                 1, tweenDuration).SetAutoKill(false);
+                 1, tweenDuration).SetUpdate(true).SetAutoKill(false);//PS:SetUpdate(true)可以忽略TimeScale导致动画卡住
         }
         tweenPercent.Pause();
 

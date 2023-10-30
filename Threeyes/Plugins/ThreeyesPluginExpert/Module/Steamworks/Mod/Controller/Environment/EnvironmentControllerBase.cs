@@ -11,9 +11,12 @@ namespace Threeyes.Steamworks
     /// 2.You can modify more settings via RenderSettings API, but make sure to reset them OnDestroy
     /// </summary>
     public interface IEnvironmentController : IModControllerHandler { }
+    public interface ISOEnvironmentControllerConfig
+    {
+    }
 
     public abstract class EnvironmentControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IEnvironmentController
-            where TSOConfig : SOConfigBase<TConfig>
+            where TSOConfig : SOConfigBase<TConfig>, ISOEnvironmentControllerConfig
     {
         public virtual void OnModControllerInit() { }
         public virtual void OnModControllerDeinit() { }
