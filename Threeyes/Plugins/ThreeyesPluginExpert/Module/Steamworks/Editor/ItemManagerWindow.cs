@@ -897,7 +897,7 @@ namespace Threeyes.Steamworks
                 }
                 ///#2 Asset文件夹中，有以下2种存在形式：
                 ///——Hub程序中的位置
-                ///——Samples中【Assets/Samples/AliveCursorSDK/X.X.X/HubSimulator/AliveCursorHub_Simulator.unity】
+                ///——Samples中【如Assets/Samples/AliveCursorSDK/X.X.X/HubSimulator/AliveCursorHub_Simulator.unity】
                 if (simulatorSceneAssetRealPath.IsNullOrEmpty())
                 {
                     string sceneAssetInAsset = listSceneAssetPath.FirstOrDefault();
@@ -914,7 +914,7 @@ namespace Threeyes.Steamworks
                                 string curSDKVersion = packageInfoSDK.version;
                                 if (curSDKVersion != assetVersion)//如果Asset/Samples中的版本与Package中的版本不一致，则不报错，通过Warning提示更新。（Modder在PackageManager中点击Update后，会自动升级到最新版本并删除旧版本）
                                 {
-                                    Debug.LogWarning($"[AliveCursor] Simulator assets obsolete! Please open PackageManager window and update AliveCursorSDK/Samples to latest version [{curSDKVersion}]!");
+                                    Debug.LogWarning($"{SORuntimeManagerInst.productName}'s Simulator assets obsolete! Please open PackageManager window and update '{SORuntimeManagerInst.sdkName}/Samples' to latest version [{curSDKVersion}]!");
                                 }
                             }
                         }
@@ -946,7 +946,7 @@ namespace Threeyes.Steamworks
         /// <summary>
         /// 项目文件夹中导入的Samples资源
         /// </summary>
-        static string ProjectSamplesSDKPath { get { return "Assets/Samples/" + SORuntimeManagerInst.productName; } }
+        static string ProjectSamplesSDKPath { get { return "Assets/Samples/" + SORuntimeManagerInst.sdkName; } }
         /// <summary>
         /// 返回缓存到Packages中的SDK信息
         /// </summary>

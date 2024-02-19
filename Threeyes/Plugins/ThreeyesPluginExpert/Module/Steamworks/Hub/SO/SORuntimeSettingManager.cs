@@ -24,10 +24,17 @@ namespace Threeyes.Steamworks
         /// 项目全称（无空格）。如：AliveCursor
         /// </summary>
         public string productName;
+
+        /// <summary>
+        /// SDK的名称，如AliveCursorSDK
+        /// </summary>
+        public string sdkName;
+
         /// <summary>
         /// 项目缩写，可用于接口标识。如：AC
         /// </summary>
         public string productNameForShort;
+
         /// <summary>
         /// Steam中该应用的唯一id
         /// </summary>

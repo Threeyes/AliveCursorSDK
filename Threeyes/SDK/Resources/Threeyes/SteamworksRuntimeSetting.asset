@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SteamworksRuntimeSetting
   m_EditorClassIdentifier: 
   productName: AliveCursor
+  sdkName: AliveCursorSDK
   productNameForShort: AC
   steamAppID: 1606490
   sDKIdentifier: com.threeyes.alivecursor.sdk

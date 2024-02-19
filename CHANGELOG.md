@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.1.5]
+- Fix: After updating the SDK, it still prompts for resource expiration.
+
 ## [4.1.4]
 - Components inherited from IHubSystemAudio_XXXHandler need to manual Register to receive callback.
 - Code optimization.
