@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.4]
+- Components inherited from IHubSystemAudio_XXXHandler need to manual Register to receive callback.
+- Code optimization.
+
 ## [4.1.2]
 - PersistentData_Gradient add option: useHDR
 - Add interface for each Controller.
