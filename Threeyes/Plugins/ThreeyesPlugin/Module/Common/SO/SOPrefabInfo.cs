@@ -15,32 +15,56 @@ namespace Threeyes.Common
     /// ToAdd:
     /// +调用AssetMenuEditor_CreateAssetPrevew，增加一键创建Preview的通用方法
     /// </summary>
-    [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_Common + "PrefabInfo", fileName = "PrefabInfo")]
+    [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_SO_Common + "PrefabInfo", fileName = "PrefabInfo")]
     public class SOPrefabInfo : ScriptableObject
     {
+        public virtual string Tooltip { get { return tooltip; } }
+        public virtual string Title { get { return title; } set { title = value; } }
+        public virtual GameObject Prefab { get { return prefab; } set { prefab = value; } }
+        public virtual Texture Preview { get { return preview; } set { preview = value; } }
+        public virtual string Description { get { return description; } set { description = value; } }
+
 #if USE_NaughtyAttributes
         [ResizableTextArea]
 #endif
-        public string remark;//开发者内部注释
+        [SerializeField] protected string remark;//开发者内部注释
         [Space]
-
-        public string title;
-        public GameObject prefab;
-        public Texture preview;
-        public string description;//[Optional]
-        public string tooltip;//[Optional]
+        [SerializeField] protected string title;
+        [SerializeField] protected GameObject prefab;
+        [SerializeField] protected Texture preview;
+        [SerializeField] protected string description;//[Optional]
+        [SerializeField] protected string tooltip;//[Optional]
 
 #if UNITY_EDITOR
-        [ContextMenu("CreatePreview")]
-        public void CreatePreview()
+        [ContextMenu("ClearData")]
+        public void ClearData()
         {
-            if (!prefab)
+            ClearDataFunc();
+        }
+
+        private void ClearDataFunc(bool isIncludePrefab = true)
+        {
+            remark = "";
+            title = "";
+            if (isIncludePrefab)
+                prefab = null;
+            preview = null;
+            description = "";
+            tooltip = "";
+        }
+
+        [ContextMenu("InitAfterPrefab")]
+        public void InitAfterPrefab()
+        {
+            if (!Prefab)
             {
-                Debug.LogError("The prefab is null!");
+                Debug.LogError("Prefab is null!");
                 return;
             }
-            preview = EditorTool.CreateAndSaveAssetPreview(prefab);
-            EditorUtility.SetDirty(this);
+
+            ClearDataFunc(false);
+            RenameAfterPrefab();
+            CreatePreview();
         }
 
         /// <summary>
@@ -49,9 +73,24 @@ namespace Threeyes.Common
         [ContextMenu("RenameAfterPrefab")]
         public void RenameAfterPrefab()
         {
-            if (!prefab)
+            if (!Prefab)
                 return;
-            EditorTool.Rename(this, prefab.name);
+            EditorTool.Rename(this, Prefab.name);
+
+            if (title.IsNullOrEmpty())
+                title = Prefab.name;
+        }
+  
+        [ContextMenu("CreatePreview")]
+        public void CreatePreview()
+        {
+            if (!Prefab)
+            {
+                Debug.LogError("The prefab is null!");
+                return;
+            }
+            Preview = EditorTool.CreateAndSaveAssetPreview(Prefab);
+            EditorUtility.SetDirty(this);
         }
 #endif
     }

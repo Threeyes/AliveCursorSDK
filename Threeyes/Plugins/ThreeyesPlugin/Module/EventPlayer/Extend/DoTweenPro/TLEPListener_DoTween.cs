@@ -225,7 +225,9 @@ true;
             //ToUpdate: 增加针对DoTweenAnimation的LoopType的设置方式
             Comp.SetDuration((float)value.subDuration);//Directly set is faster than compare(PS: 即使不设置Duration也不影响效果，因为Goto传入的是百分比)
 
-            CacheBehaviourInfo.indexInTrack = value.indexInTrack;
+#if Threeyes_Timeline
+   CacheBehaviourInfo.indexInTrack = value.indexInTrack;
+#endif
             CacheBehaviourInfo.target = target;
             CacheBehaviourInfo.doTweenAnimation = doTweenAnimation;
         }

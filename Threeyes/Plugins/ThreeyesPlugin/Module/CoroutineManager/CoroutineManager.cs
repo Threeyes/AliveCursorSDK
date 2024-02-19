@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,9 @@ namespace Threeyes.Coroutine
 {
     /// <summary>
     /// 用于开启协程的单例类，防止协程因为物体隐藏而被中断
+    /// 
+    /// ToUpdate:
+    /// -待确认StopCoroutine在停止后会不会把cacheEnum设置为null，如果不会则以前代码中的TryStopCoroutine需要主动设置为null
     /// </summary>
     public class CoroutineManager : MonoBehaviour
     {
@@ -60,6 +63,18 @@ namespace Threeyes.Coroutine
             {
                 Instance.StopCoroutine(routine);
             }
+        }
+        /// <summary>
+        /// Only Execute routine for once, will Stop previous Coroutine
+        /// </summary>
+        /// <param name="routine"></param>
+        /// <param name="cacheRoutine">Use this field to cache output routine</param>
+        public static void StartCoroutineSoloEx(IEnumerator routine, ref UnityEngine.Coroutine cacheRoutine)
+        {
+            if (cacheRoutine != null)
+                StopCoroutineEx(cacheRoutine);
+
+            cacheRoutine = StartCoroutineEx(routine);
         }
     }
 }

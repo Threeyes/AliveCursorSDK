@@ -53,7 +53,7 @@ namespace Threeyes.AliveCursor.SDK.Editor
         {
             ModContent modContent = result.BuiltMod.GetModContentMask();
             {
-                sOWorkshopItemInfo.itemSafety = modContent.Has(ModContent.Scripts) ? AC_WSItemAdvance.IncludeScripts : AC_WSItemAdvance.None;
+                sOWorkshopItemInfo.itemAdvance = modContent.Has(ModContent.Scripts) ? AC_WSItemAdvance.IncludeScripts : AC_WSItemAdvance.None;
                 EditorUtility.SetDirty(sOWorkshopItemInfo);
             }
         }

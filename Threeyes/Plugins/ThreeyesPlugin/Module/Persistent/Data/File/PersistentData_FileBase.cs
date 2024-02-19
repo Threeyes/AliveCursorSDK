@@ -59,9 +59,6 @@ namespace Threeyes.Persistent
         }
 
         #region Load from extern
-        public virtual FilePathModifier FilePathModifier { get { if (filePathModifier_PD == null) filePathModifier_PD = new FilePathModifier_PD(this); return filePathModifier_PD; } set { Debug.LogError("This property can't set!"); /*暂时不允许设置，避免用户魔改*/} }
-        private FilePathModifier_PD filePathModifier_PD;
-
         public event UnityAction<ExternalResources.LoadResult, object> AssetChanged;//Param:(loadAssetResult, DefaultAsset)
         public ExternalResources.LoadResult LoadResult { get { return loadResult; } }
         ExternalResources.LoadResult<TAsset> loadResult = new ExternalResources.LoadResult<TAsset>();

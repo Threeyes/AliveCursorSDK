@@ -58,7 +58,7 @@ public class SequenceBase<TData> : SequenceAbstract, IEnumerable<TData>
     /// <summary>
     /// 激活下一个并调用
     /// </summary>
-    public void ActiveAndSetNext()
+    public override void ActiveAndSetNext()
     {
         int nextIndex = ListData.GetIndex(CurIndex + 1);
 

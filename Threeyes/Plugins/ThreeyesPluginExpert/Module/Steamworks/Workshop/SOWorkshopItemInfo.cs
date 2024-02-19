@@ -17,10 +17,9 @@ namespace Threeyes.Steamworks
         #region Property & Field
         public abstract WorkshopItemInfo BaseItemInfo { get; }
 
+        #region Workshop上传信息
         public ulong ItemID { get { return itemId; } set { itemId = value; } }
         public Texture2D TexturePreview { get => texturePreview; set => texturePreview = value; }
-
-        #region Workshop上传信息
         public string Title { get => title; set => title = value; }//#0 名称（PS：用户可通过在名字里增加标识词来匹配搜索关键字）
         public string Description { get => description; }//#1 描述
         public abstract string ContentDirPath { get; }//#2 待上传文件夹路径
@@ -57,10 +56,9 @@ namespace Threeyes.Steamworks
         //https://partner.steamgames.com/doc/api/ISteamUGC#SetItemTag
         [Header("Item Info")]
         [SerializeField] string title;
-        [SerializeField] [Multiline] string description;
+        [SerializeField][Multiline] string description;
         [SerializeField] Texture2D texturePreview;
         [SerializeField] WSItemVisibility itemVisibility = WSItemVisibility.Public;
-
 
         //#唯一标识
         [Header("Item Identity")]
@@ -103,18 +101,18 @@ namespace Threeyes.Steamworks
         {
             errorLog = "";
 
-            //Title
+            //#Title
             if (string.IsNullOrEmpty(Title))
             {
                 errorLog = "The title is empty!";
             }
 
-            //Preview
-            else if (!TexturePreview)
+            //#Preview
+            else if (!TexturePreview)//预览图不能为空
             {
                 errorLog = "Preview file can't be null!";
             }
-            else if (!File.Exists(PreviewFilePath))//预览图不能为空
+            else if (!File.Exists(PreviewFilePath))//预览图不在Unity项目内
             {
                 errorLog = "The preview file does not exist!";
             }
@@ -124,13 +122,16 @@ namespace Threeyes.Steamworks
             }
             else if (!IsPreviewFileSizeVaild)//预览文件大小不对
             {
-                errorLog = $"The size of the preview file can't be larger than {MaxPreviewFileSize / 1024 }KB!";
+                errorLog = $"The size of the preview file can't be larger than {MaxPreviewFileSize / 1024}KB!";
             }
 
-            //资源文件
-            else if (!File.Exists(SceneFilePath))//Scene不能为空
+            //#资源
+            else if (IsSceneFile)//Scene文件
             {
-                errorLog = "The scene not exist!";
+                if (!File.Exists(SceneFilePath))//Scene不能为空
+                {
+                    errorLog = "The scene not exist!";
+                }
             }
             return errorLog.IsNullOrEmpty();
         }
@@ -150,19 +151,23 @@ namespace Threeyes.Steamworks
         public string ItemDirPath => GetItemDirPath(itemName);// Item文件夹的绝对路径
         public string DataDirPath => GetDataDirPath(itemName);// Item/Data的绝对路径
         public string SceneFilePath => GetSceneFilePath(itemName);// Item/Scene/Entry.unity的绝对路径
+        protected virtual bool IsSceneFile { get { return true; } }//子类可以重载，方便打包只包含模型的Mod
+
 
         //——Utility——
         public static readonly string DataDirName = "Datas";
-        public static readonly string SceneDirName = "Scenes";
+        public static readonly string WorkshopItemInfoAssetName = "WorkshopItemInfo.asset";
         public static readonly string DefaultPreviewName = "Preview";// 预览图名称
-        public static readonly string SceneName = "Entry";// 场景名称
         public static readonly string[] arrStrValidPreviewFileExtension = new string[] { "jpg", "jpeg", "png", "gif" };// 预览图支持的格式（Warning：Workshop.Upload不支持大写后缀！）
         public static readonly long MaxPreviewFileSize = 1048576;// 预览图文件上限，单位B (PS:预览图文件大小上限为1024KB【如果超过，则Upload时会报错：Result.LimitExceeded】)
+        public static readonly string SceneDirName = "Scenes";
+        public static readonly string SceneName = "Entry";// 场景名称
         public static string GetItemDirPath(string itemName) { return Steamworks_PathDefinition.ItemParentDirPath + "/" + itemName; }
         public static string GetSceneDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + SceneDirName; }
         public static string GetSceneFilePath(string itemName) { return GetSceneDirPath(itemName) + "/" + SceneName + ".unity"; }
+        public static string GetRelateSceneFilePath(string itemName) { return $"Assets/{Steamworks_PathDefinition.ItemRootDirName}/{itemName}/{SceneDirName}/{SceneName}.unity"; }//Unity的场景路径，如：Items/Default/Scenes/Entry.unity
         public static string GetDataDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + DataDirName; }
-        public static string GetItemInfoFilePath(string itemName) { return GetDataDirPath(itemName) + "/WorkshopItemInfo.asset"; }
+        public static string GetItemInfoFilePath(string itemName) { return GetDataDirPath(itemName) + "/" + WorkshopItemInfoAssetName; }
         public string GetDefaultPreviewFilePath(string fileExtension) => GetDefaultPreviewFilePath(itemName, fileExtension);
         public static string GetDefaultPreviewFilePath(string itemName, string fileExtension)
         {

@@ -159,9 +159,7 @@ public static class ReflectionTool
 
     #endregion
 
-    #region GetInfo
-
-    #region Ref: NaughtAttribute
+    #region  GetInfo 【优先使用】【Ref: NaughtAttribute】
     //——从自身及父类的某个匹配Info——
     public static List<bool> GetConditionValues(object target, string[] conditions)
     {
@@ -320,6 +318,7 @@ public static class ReflectionTool
     #endregion
 
 
+    #region GetInfo
 
     /// <summary>
     /// Get Unique path for fieldInfo (Mainly for marking the fieldInfo from nested classes)
@@ -830,13 +829,13 @@ public static class ReflectionToolExtension
     {
         return type.GetAllObjectElement(flags, (t, bF) => t.GetProperties(bF));
     }
-    public static List<MethodInfo> GetAllMethods(this Type type, BindingFlags flags)
-    {
-        return type.GetAllObjectElement(flags, (t, bF) => t.GetMethods(bF));
-    }
     public static List<MemberInfo> GetAllMembers(this Type type, BindingFlags flags)
     {
         return type.GetAllObjectElement(flags, (t, bF) => t.GetMembers(bF));
+    }
+    public static List<MethodInfo> GetAllMethods(this Type type, BindingFlags flags)
+    {
+        return type.GetAllObjectElement(flags, (t, bF) => t.GetMethods(bF));
     }
     static List<TMemberInfo> GetAllObjectElement<TMemberInfo>(this Type type, BindingFlags flags, Func<Type, BindingFlags, TMemberInfo[]> actGetMembers)
     {

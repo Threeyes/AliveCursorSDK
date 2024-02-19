@@ -11,6 +11,7 @@ namespace Threeyes.Steamworks
     /// 
     /// PS：
     /// -存在Hub及Simulator中
+    /// -为了避免访问顺序的问题，可用于存储静态属性、事件
     /// </summary>
     public abstract class ManagerHolderManager : HubManagerBase<ManagerHolderManager>
     {

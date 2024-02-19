@@ -81,7 +81,6 @@ namespace Threeyes.Steamworks
         protected abstract void InitUI();
 
         #region Data
-
         public virtual void ResetAllDataToDefault()
         {
             try
@@ -203,7 +202,6 @@ namespace Threeyes.Steamworks
             }
         }
         #endregion
-
     }
 
     #region Define

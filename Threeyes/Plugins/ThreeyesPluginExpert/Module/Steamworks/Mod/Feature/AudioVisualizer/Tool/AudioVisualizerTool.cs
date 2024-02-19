@@ -7,20 +7,31 @@ namespace Threeyes.Steamworks
     public static class AudioVisualizerTool
     {
         /// <summary>
-        /// Get average DB
+        /// Calculate average DB from giving data
+        /// 
+        /// Todo：参数增加start及end（归一化进度），方便进行子集采样
         /// </summary>
         /// <param name="rawSampleData"></param>
-        /// <returns></returns>
-        public static float CalculateLoudness(float[] rawSampleData)
+        /// <returns>Value between [0,1]</returns>
+        public static float CalculateLoudness(float[] rawSampleData, float startPercent = 0, float endPercent = 1)
         {
-            float v = 0f,
-                len = rawSampleData.Length;
+            float values = 0f;
+            int rawDataLength = rawSampleData.Length;
 
-            for (int i = 0; i < len; i++)
-                v += Mathf.Abs(rawSampleData[i]);//PS:因为值的范围为[-1,1]，所以要取绝对值
+            int startIndex = (int)(Mathf.Clamp01(startPercent) * rawDataLength);
+            int endIndex = (int)(Mathf.Clamp01(endPercent) * rawDataLength);
+            int subLength = endIndex - startIndex;
+
+            for (int i = 0; i < rawDataLength; i++)
+                values += Mathf.Abs(rawSampleData[i]);//先累加每个采样点的音量。PS：因为音频源数据是通过三角函数曲线转化为来，值的范围为[-1,1]，所以要取绝对值
 
             //Root mean square is a good approximation of perceived loudness: (https://answers.unity.com/questions/157940/getoutputdata-and-getspectrumdata-they-represent-t.html)
-            return Mathf.Sqrt(v / (float)len);
+            float result = Mathf.Sqrt(values / rawDataLength);
+            if (result < volumeThreshold)//即使当前无音频输出，数字仍不为0（如0.0003)，此时需要进行裁剪
+                result = 0;
+            return result;
         }
+
+        const float volumeThreshold = 0.005f;//多少音量才当作有效
     }
 }

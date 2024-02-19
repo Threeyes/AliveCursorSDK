@@ -64,7 +64,7 @@ namespace Threeyes.Steamworks
         //——Interaction Group——
         //Edit
         Button buttonSelectItemDirButton;
-        Button buttonEditScene;
+        protected Button buttonEditScene;//Create/Edit Scene
 
         //Build
         TextField textFieldExePath;
@@ -89,15 +89,28 @@ namespace Threeyes.Steamworks
 
         //——Runtime——
         public List<TSOItemInfo> listValidItemInfo = new List<TSOItemInfo>();//扫描到的信息
-        TSOItemInfo curSOWorkshopItemInfo;
+        protected TSOItemInfo curSOWorkshopItemInfo;
         protected static readonly Vector2 k_MinWindowSize = new Vector2(450, 600);
 
         private void OnEnable()
         {
             uxmlAsset = Resources.Load<VisualTreeAsset>(info.WindowAssetPath);
             uxmlAsset.CloneTree(rootVisualElement);
+            InitUXMLField();
 
-            //##Setup UIf
+            //InitUI
+            InitUI(SOManagerInst.CurWorkshopItemInfo);
+
+
+            //版本提示。ToAdd：增加Package更新后执行
+            InitSDKVersionUI();
+        }
+
+        /// <summary>
+        /// 初始化UXML的相关元素
+        /// </summary>
+        protected virtual void InitUXMLField()
+        {
             //——Item Manager Group——
             visualElementItemManagerGroup = rootVisualElement.Q<VisualElement>("ItemManagerGroup");
             dropdownFieldActiveItem = rootVisualElement.Q<DropdownField>("ActiveItemDropdownField");
@@ -170,14 +183,8 @@ namespace Threeyes.Steamworks
             labelSDKVersion = rootVisualElement.Q<Label>("SDKVersionLabel");
             buttonUpdateSDK = rootVisualElement.Q<Button>("UpdateSDKButton");
             buttonUpdateSDK.RegisterCallback<ClickEvent>(OnUpdateSDKButtonClick);
-
-            //InitUI
-            InitUI(SOManagerInst.CurWorkshopItemInfo);
-
-
-            //版本提示。ToAdd：增加Package更新后执行
-            InitSDKVersionUI();
         }
+
         private void Update()
         {
             Update_CreateScreenshot();
@@ -282,7 +289,7 @@ namespace Threeyes.Steamworks
         /// <summary>
         /// 刷新ItemInfoGroupUI状态（适用于修改信息后进行局部更新，如上传、打包）
         /// </summary>
-        void RefreshItemInfoGroupUIState()
+        protected virtual void RefreshItemInfoGroupUIState()
         {
             UpdatePreviewStateFunc();
             UpdatePreviewHelperBoxStateFunc();
@@ -534,12 +541,18 @@ namespace Threeyes.Steamworks
                     }
                     AssetDatabase.Refresh();
                     InitUI(infoInst);//重新创建
+                    AfterCreateItem(infoInst);//文件创建成功后
                 }
                 catch (System.Exception e)
                 {
                     Debug.LogError("Create Item failed with error:\r\n" + e);
                 }
             }
+        }
+
+        protected virtual void AfterCreateItem(TSOItemInfo infoInst)
+        {
+
         }
 
         void SetItemManagerHelpBoxInfoFunc(bool isShow, string content = "")
@@ -1288,8 +1301,6 @@ namespace Threeyes.Steamworks
             }
             return null;
         }
-
-
         #endregion
 
         #region Utility
@@ -1395,7 +1406,7 @@ namespace Threeyes.Steamworks
     }
 
     /// <summary>
-    /// Todo:生成独立类
+    /// Todo:生成独立类，放到ThreeyesPlugin，使用宏定义封装
     /// </summary>
     public static class UIToolkitLazyExtension
     {

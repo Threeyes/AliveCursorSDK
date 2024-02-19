@@ -7,8 +7,12 @@ namespace Threeyes.Steamworks
 {
     /// <summary>
     /// Show clock info
+    /// 
+    /// ToAdd：
+    /// +ConfigInfo增加时间Offset(总位移秒数)，方便用户在场景摆放多个时钟，并对应不同时区
+    /// -支持运行时编辑
     /// </summary>
-    public class ClockController : ConfigurableComponentBase<SOClockControllerConfig, ClockController.ConfigInfo>
+    public class ClockController : ConfigurableComponentBase<ClockController, SOClockControllerConfig, ClockController.ConfigInfo, ClockController.PropertyBag>
     {
         //Use these event to display number
         public IntEvent onHourChange;
@@ -43,7 +47,18 @@ namespace Threeyes.Steamworks
         public bool TestSecondRollback { get => testSecondRollback; set => testSecondRollback = value; }//Use property for UnityEvent
         [SerializeField] private bool testSecondRollback = false;//Set to true to rollback second once (Via EP)
 
-        DateTime curDateTime { get { return DateTime.Now; } }
+        DateTime curDateTime
+        {
+            get
+            {
+                DateTime dateTimeNow = DateTime.Now;
+                if (Config.offsetSeconds != 0)//如果时间位移不为零就进行计算
+                {
+                    dateTimeNow = new DateTime(dateTimeNow.Ticks + TimeSpan.TicksPerSecond * Config.offsetSeconds);
+                }
+                return dateTimeNow;
+            }
+        }
         bool hasInit = false;
         protected virtual void OnEnable()
         {
@@ -117,6 +132,7 @@ namespace Threeyes.Steamworks
                 return;
 
             DateTime dateTime = curDateTime;
+
             if (isAutoUpdate)
                 curSecond = dateTime.Second;
 
@@ -149,13 +165,17 @@ namespace Threeyes.Steamworks
 
         protected virtual void SetTimeTween(TimeType timeType, float lastValue, float curValue, FloatEvent onTimePercentChanged, Func<float, float> getPercent, Tween tween)
         {
-            if (curValue != 0)
+            if (curValue != 0)//Increase
             {
                 SetTimeIncreaseFunc(timeType, lastValue, curValue, onTimePercentChanged, getPercent, tween, Config.increaseTweenEaseType, Config.increaseTweenDuration);
             }
-            else//From 59(s/m) or 11(h) back to 0
+            else//Rollback: From 59(s/m) or 11(h) back to 0
             {
-                SetTimeRollbackfunc(timeType, lastValue, curValue, onTimePercentChanged, getPercent, tween, Config.rollbackTweenEaseType, Config.rollbackTweenDuration);
+                float targetValue = 0;
+                if (!Config.rollbackToZero)
+                    targetValue = lastValue + 1;//直接叠加。适用于时钟等直接进入到下一值
+
+                SetTimeRollbackfunc(timeType, lastValue, targetValue, onTimePercentChanged, getPercent, tween, Config.rollbackTweenEaseType, Config.rollbackTweenDuration);
             }
         }
 
@@ -167,6 +187,14 @@ namespace Threeyes.Steamworks
         {
             SetTimeTweenFunc(timeType, lastValue, curValue, onTimePercentChanged, getPercent, tween, ease, tweenDuration, delay);
         }
+
+        #region IModHandler
+
+        public override void UpdateSetting()
+        {
+            //都是实时更新，暂不需要做操作
+        }
+        #endregion
 
         #region Debug
 
@@ -194,11 +222,9 @@ namespace Threeyes.Steamworks
         {
             curSecond = 0;
         }
-
         #endregion
 
         #region Utility
-
         protected virtual void SetTimeTweenFunc(TimeType timeType, float lastValue, float curValue, FloatEvent onTimePercentChanged, Func<float, float> getPercent, Tween tween, Ease ease, float tweenDuration = 1, float delay = 0)
         {
             float tempValue = lastValue;
@@ -225,18 +251,22 @@ namespace Threeyes.Steamworks
         {
             return second / 60;
         }
-
         #endregion
 
         #region Define
         [Serializable]
-        public class ConfigInfo : SerializableDataBase
+        public class ConfigInfo : SerializableComponentConfigInfoBase
         {
             [Range(0, 1)] public float increaseTweenDuration = 1;
             public Ease increaseTweenEaseType = Ease.OutElastic;//Ease type when Time increase
             [Range(0, 1)] public float rollbackTweenDuration = 1;
             public Ease rollbackTweenEaseType = Ease.OutCubic;//Ease type when Time rollback to zero
+            public bool rollbackToZero = true;//True:[Max-1]=>[0]; False:[Max-1]=>[Max]
+
+            public int offsetSeconds;//TimeZone offset
         }
+        public class PropertyBag : ConfigurableComponentPropertyBagBase<ClockController, ConfigInfo> { }
+
         public enum TimeType
         {
             Hour,

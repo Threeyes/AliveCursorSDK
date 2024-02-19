@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +7,11 @@ using UnityEngine;
 /// </summary>
 public interface IProgramLifeCycle
 {
+    /// <summary>
+    /// 获取该模块的可读名称
+    /// </summary>
+    string CycleName { get; }
+
     /// <summary>
     /// 程序能否退出(需要注意，执行完毕后需要将该值设置为true）
     /// </summary>
@@ -23,6 +28,8 @@ public interface IProgramLifeCycle
     /// <returns></returns>
     IEnumerator IETryQuit();
 
-    int QuitExecuteOrder { get; }//退出的顺序
-
+    /// <summary>
+    /// 退出的顺序，值越大越往后
+    /// </summary>
+    int QuitExecuteOrder { get; }
 }

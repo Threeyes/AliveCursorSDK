@@ -1,95 +1,115 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Persistent;
 using Threeyes.Data;
 using UnityEngine;
-using UnityEngine.Events;
 using Newtonsoft.Json;
 using Threeyes.Config;
-
+using NaughtyAttributes;
 namespace Threeyes.Steamworks
 {
     /// <summary>
     /// Control Material's value
-    ///
+    /// 
+    /// PS:
+    /// -You can find material's property detail in Inspector Editor mode
+    /// 
+    /// ToAdd:
+    /// - 编辑器方法，可以一键导入指定材质的属性
+    /// -可以运行时更改SurfaceType等枚举（参考：https://forum.unity.com/threads/making-material-transparant-in-universal-rp.1216053/）
     /// </summary>
-    public class MaterialController : ConfigurableComponentBase<SOMaterialControllerConfig, MaterialController.ConfigInfo>
-        , IModHandler
+    public class MaterialController : ConfigurableComponentBase<MaterialController, SOMaterialControllerConfig, MaterialController.ConfigInfo, MaterialController.PropertyBag>
     {
+        #region Property & Field
         public Material Material
         {
             get
             {
                 if (targetRenderer)
-                    return targetRenderer.material;
+                {
+                    Material desireMaterial = null;
+                    if (Config.materialIndex == 0)
+                    {
+#if UNITY_EDITOR
+                        if (!Application.isPlaying)
+                            desireMaterial = targetRenderer.sharedMaterial;
+                        else
+#endif
+                            desireMaterial = targetRenderer.material;
+                    }
+                    else
+                    {
+                        if (targetRenderer.materials.Length > Config.materialIndex)
+                            desireMaterial = targetRenderer.materials[Config.materialIndex];
+                    }
+                    return desireMaterial;
+                }
                 return targetMaterial;
             }
         }
         //Set either one to provide material
         [SerializeField] protected Renderer targetRenderer;//Where the material attached
-        [SerializeField] protected Material targetMaterial;//Target material asset
+        [SerializeField] protected Material targetMaterial;//[Optional] Target material asset
 
         [Header("Runtime")]
-        public Material cloneMaterial;
+        [ReadOnly] public Material cloneMaterial;
+        #endregion
 
         #region Unity Method
-        private void Awake()
+        protected override void Awake()
         {
-            Config.actionPersistentChanged += OnPersistentChanged;
+            base.Awake();
 
-            if (targetMaterial)
+#if UNITY_EDITOR
+            if (!UModTool.IsUModGameObject(this) && targetMaterial)//忽略UMod加载
                 cloneMaterial = Instantiate(targetMaterial);
+#endif
         }
-        private void OnDestroy()
-        {
-            Config.actionPersistentChanged -= OnPersistentChanged;
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+#if UNITY_EDITOR
             ///退出后,将项目的Material还原为默认值，可以是启动后直接创建一个克隆的材质，退出时用其值还原（使用Render就没这个问题，因为时针对克隆体进行操作）
             if (Application.isEditor && targetMaterial)
                 targetMaterial.CopyPropertiesFromMaterial(cloneMaterial);
+#endif
+
+            Config.listTextureShaderProperty.ForEach(t => t?.Dispose());//卸载所有运行时加载的资源
         }
         #endregion
 
         #region Callback
-        public void OnModInit()
+        public override void UpdateSetting()
         {
-            UpdateSetting();
-        }
-        public void OnModDeinit() { }
-
-        void OnPersistentChanged(PersistentChangeState persistentChangeState)
-        {
-            UpdateSetting();
-        }
-        public void UpdateSetting()
-        {
-            if (!Material)
+            Material targetMaterial = Material;//避免重复访问
+            if (!targetMaterial)
                 return;
 
             SetListFunc(ref Config.listTextureShaderProperty,
             (propertyName, shaderProperty) =>
             {
-                Material.SetTexture(propertyName, shaderProperty.Texture);
-                Material.SetTextureOffset(propertyName, shaderProperty.offset);
-                Material.SetTextureScale(propertyName, shaderProperty.scale);
+                targetMaterial.SetTexture(propertyName, shaderProperty.Texture);
+                targetMaterial.SetTextureOffset(propertyName, shaderProperty.offset);
+                targetMaterial.SetTextureScale(propertyName, shaderProperty.scale);
             });
             SetListFunc(ref Config.listColorShaderProperty,
             (propertyName, shaderProperty) =>
             {
                 Color colorResult = shaderProperty.value;
-                Material.SetColor(propertyName, colorResult);
+                targetMaterial.SetColor(propertyName, colorResult);
             });
 
             SetListFunc(ref Config.listIntShaderProperty,
             (propertyName, shaderProperty) =>
             {
-                Material.SetInteger(propertyName, shaderProperty.value);
+                targetMaterial.SetInteger(propertyName, shaderProperty.value);
             });
             SetListFunc(ref Config.listFloatShaderProperty,
             (propertyName, shaderProperty) =>
             {
-                Material.SetFloat(propertyName, shaderProperty.value);
+                targetMaterial.SetFloat(propertyName, shaderProperty.value);
             });
         }
 
@@ -115,38 +135,38 @@ namespace Threeyes.Steamworks
         //针对每个贴图（包含默认贴图）、float、vector等定义对应数据类，并且存储在各自的List中。具体结构参考（debug模式）shader
 
         [Serializable]
-        [PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-        public class ConfigInfo : SerializableDataBase
+        public class ConfigInfo : SerializableComponentConfigInfoBase
         {
-            [JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
+            public int materialIndex = 0;
 
             public List<TextureShaderProperty> listTextureShaderProperty = new List<TextureShaderProperty>();
             public List<ColorShaderProperty> listColorShaderProperty = new List<ColorShaderProperty>();
             public List<IntShaderProperty> listIntShaderProperty = new List<IntShaderProperty>();
             public List<FloatShaderProperty> listFloatShaderProperty = new List<FloatShaderProperty>();
-
-            #region Callback
-            void OnPersistentChanged(PersistentChangeState persistentChangeState)
-            {
-                actionPersistentChanged.Execute(persistentChangeState);
-            }
-            #endregion
         }
+        public class PropertyBag : ConfigurableComponentPropertyBagBase<MaterialController, ConfigInfo> { }
 
         public class ShaderPropertyBase : SerializableDataBase
         {
             public string name;//shader field name, set by modder（如：_BaseMap）（Todo【非必要，可以供用户动态修改】：runtimeEdit时不可编辑，但在UnityEditor可编辑。如有必要可自行写一个Attribute，增加一个bool值：editorEditableonly）
         }
 
+        /// <summary>
+        /// Todo：
+        /// -继承IDisposable，在推出后卸载externalTexture
+        /// 
+        /// 常见属性：
+        /// -_BaseMap
+        /// </summary>
         [Serializable]
-        public class TextureShaderProperty : ShaderPropertyBase
+        public class TextureShaderProperty : ShaderPropertyBase, System.IDisposable
         {
             public Texture Texture { get { return externalTexture ? externalTexture : defaultTexture; } }
 
             [JsonIgnore] public Texture defaultTexture;
             [JsonIgnore] public Texture externalTexture;
             [PersistentAssetFilePath(nameof(externalTexture), true, defaultAssetFieldName: nameof(defaultTexture))] public string externalTextureFilePath;
-            public Vector2 scale = new Vector2(1, 1);
+            public Vector2 scale = new Vector2(1, 1);//Warning:Remember to set this field, or your material may display incorrectly
             public Vector2 offset = new Vector2(0, 0);
 
             //ToAdd：导入图片的类型（如通过TextureTool进一步转为noramlMap）
@@ -157,11 +177,28 @@ namespace Threeyes.Steamworks
             {
                 scale = new Vector2(1, 1);
             }
+
+            public void Dispose()
+            {
+                //if (externalTexture)
+                //{
+                //DestroyImmediate(externalTexture, true);//ToTest:看有无必要，因为Unity会自行管理加载后的图像
+                //}
+            }
         }
+
+        /// <summary>
+        /// 
+        /// 常见属性：
+        /// -_BaseColor
+        /// </summary>
         [Serializable]
         public class ColorShaderProperty : ShaderPropertyBase
         {
-            [ColorUsageEx(dataOptionMemberName: nameof(dataOption_Color))] public Color value;
+            //使用[ColorUsage]，确保编辑模式能提供所有选项
+            [ColorUsageEx(dataOptionMemberName: nameof(dataOption_Color))] [ColorUsage(showAlpha: true, hdr: true)] public Color value;
+
+
             public DataOption_Color dataOption_Color;
 
             public ColorShaderProperty()

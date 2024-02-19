@@ -13,67 +13,67 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class UIDragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
+    public bool initOnAwake = true;//如果是挂载Prefab上，可以禁用并主动设置引用，否则会报警告
+    public RectTransform panelRectTransform;//需要拖拽的Panel，要求有父物体且边界范围设置正确
+    public RectTransform parentRectTransform;
 
-	public RectTransform panelRectTransform;//需要拖拽的Panel，要求有父物体且边界范围设置正确
-	private RectTransform parentRectTransform;
+    private Vector2 originalLocalPointerPosition;
+    private Vector3 originalPanelLocalPosition;
+    // Clamp panel to area of parent
+    public void ClampToWindow()
+    {
+        Init();
 
-	private Vector2 originalLocalPointerPosition;
-	private Vector3 originalPanelLocalPosition;
+        Vector3 pos = panelRectTransform.localPosition;
 
+        Vector3 minPosition = parentRectTransform.rect.min - panelRectTransform.rect.min;
+        Vector3 maxPosition = parentRectTransform.rect.max - panelRectTransform.rect.max;
 
-	// Clamp panel to area of parent
-	public void ClampToWindow()
-	{
-		Init();
+        pos.x = Mathf.Clamp(panelRectTransform.localPosition.x, minPosition.x, maxPosition.x);
+        pos.y = Mathf.Clamp(panelRectTransform.localPosition.y, minPosition.y, maxPosition.y);
 
-		Vector3 pos = panelRectTransform.localPosition;
+        panelRectTransform.localPosition = pos;
+    }
 
-		Vector3 minPosition = parentRectTransform.rect.min - panelRectTransform.rect.min;
-		Vector3 maxPosition = parentRectTransform.rect.max - panelRectTransform.rect.max;
+    void Awake()
+    {
+        if (initOnAwake)
+            Init();
+    }
 
-		pos.x = Mathf.Clamp(panelRectTransform.localPosition.x, minPosition.x, maxPosition.x);
-		pos.y = Mathf.Clamp(panelRectTransform.localPosition.y, minPosition.y, maxPosition.y);
+    bool isInit = false;
+    [ContextMenu("Init")]
+    public void Init()
+    {
+        if (isInit)
+            return;
 
-		panelRectTransform.localPosition = pos;
-	}
+        if (!panelRectTransform)
+            panelRectTransform = transform.parent as RectTransform;
 
-	void Awake()
-	{
-		Init();
-	}
+        if (panelRectTransform && panelRectTransform.parent)
+            parentRectTransform = panelRectTransform.parent.GetComponent<RectTransform>();
+        else
+            Debug.LogWarning($"缺少{nameof(panelRectTransform)}或{nameof(parentRectTransform)}！");
+    }
 
-	bool isInit = false;
-	public void Init()
-	{
-		if (isInit)
-			return;
+    public void OnPointerDown(PointerEventData data)
+    {
+        originalPanelLocalPosition = panelRectTransform.localPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, data.position, data.pressEventCamera, out originalLocalPointerPosition);
+    }
 
-		if (!panelRectTransform)
-			panelRectTransform = transform.parent as RectTransform;
+    public void OnDrag(PointerEventData data)
+    {
+        if (panelRectTransform == null || parentRectTransform == null)
+            return;
 
-		if (panelRectTransform.parent)
-			parentRectTransform = panelRectTransform.parent.GetComponent<RectTransform>();
-		else
-			Debug.LogError(panelRectTransform.ToString() + " 缺少父物体！");
-	}
-
-	public void OnPointerDown(PointerEventData data)
-	{
-		originalPanelLocalPosition = panelRectTransform.localPosition;
-		RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, data.position, data.pressEventCamera, out originalLocalPointerPosition);
-	}
-
-	public void OnDrag(PointerEventData data)
-	{
-		if (panelRectTransform == null || parentRectTransform == null)
-			return;
-
-		Vector2 localPointerPosition;
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, data.position, data.pressEventCamera, out localPointerPosition))
-		{
-			Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-			panelRectTransform.localPosition = originalPanelLocalPosition + offsetToOriginal;
-		}
-		ClampToWindow();
-	}
+        Vector2 localPointerPosition;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRectTransform, data.position, data.pressEventCamera, out localPointerPosition))
+        {
+            Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
+            panelRectTransform.localPosition = originalPanelLocalPosition + offsetToOriginal;
+        }
+        ClampToWindow();
+    }
 }

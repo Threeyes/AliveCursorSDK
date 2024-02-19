@@ -133,10 +133,6 @@ public class AC_DefaultTransformController : AC_TransformControllerBase
 		[Range(1, 180)] public float slowDownAngleThreshold = 30;//[When Lerping] Avoid glithing on small movement(绕轴旋转时减弱小范围移动/旋转时的抖动)
 		[JsonIgnore] public AnimationCurve slowDownAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));//Curve to slowdown rotation
 		public float reachThreshold = 0.05f;//How close is treat as reach
-
-		[Header("Working")]
-		public bool isFixedAngle = true;//Using fixed angle on working state
-		[EnableIf(nameof(isFixedAngle))] [AllowNesting] [Range(0, 360)] public float workingAngle = 0;//The target angle if isFixedAngle set to true
 	}
 	#endregion
 }

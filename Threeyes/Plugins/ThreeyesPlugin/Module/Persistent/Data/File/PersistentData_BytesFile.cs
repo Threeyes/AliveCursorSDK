@@ -9,7 +9,7 @@ namespace Threeyes.Persistent
 	/// (Basicly Support external file with any extension, but you can set the overrideFileFilterExtensions in Option to limit the valid file type) 
 	/// 
 	/// PS:
-	/// 1.SOBytesInfo仅用于链接Unity编辑器内部资源
+	/// 1.SOBytesInfo用于在Unity中提供可编辑的实体，以及链接Unity编辑器内部资源
 	/// </summary>
 	public class PersistentData_BytesFile : PersistentData_FileBase<SOBytesAsset, SOBytesAssetEvent, DataOption_BytesFile>
     {

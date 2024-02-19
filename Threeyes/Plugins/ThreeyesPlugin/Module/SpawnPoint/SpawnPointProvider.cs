@@ -9,18 +9,31 @@ namespace Threeyes.SpawnPoint
 {
     /// <summary>
     /// ToUpdate：改为只针对单个ISpawnPointGroup
+    /// -不太通用，可以先作为
     /// </summary>
     public class SpawnPointProvider : ConfigurableComponentBase<SOSpawnPointProviderConfig, SpawnPointProvider.ConfigInfo>
     {
-        public Transform tfSpawnPointParent;//Parent of all SpawnPoint
-
-        //Runtime
-        public List<ISpawnPointGroup> listSpawnPointGroup = new List<ISpawnPointGroup>();
-
-        private void Awake()
+        /// <summary>
+        /// 最终的所有Group。
+        /// Warning:
+        /// -不能在Awake中初始化，因为此时Mod还未生成子物体。
+        /// </summary>
+        public List<ISpawnPointGroup> ListTargetSpawnPointGroup
         {
-            listSpawnPointGroup = tfSpawnPointParent.GetComponentsInChildren<ISpawnPointGroup>().ToList();
+            get
+            {
+                if (listCustomSpawnPointGroup.Count == 0)
+                    return listSpawnPointGroup.ConvertAll<ISpawnPointGroup>(s => s);
+
+                List<ISpawnPointGroup> listTargetSpawnPointGroup = new List<ISpawnPointGroup>();
+                listTargetSpawnPointGroup.AddRange(listSpawnPointGroup);
+                listTargetSpawnPointGroup.AddRange(listCustomSpawnPointGroup);
+                return listTargetSpawnPointGroup;
+            }
         }
+
+        public List<ISpawnPointGroup> listCustomSpawnPointGroup = new List<ISpawnPointGroup>();//通过接口实现的自定义类，可以在运行时添加
+        public List<SpawnPointGroupBase> listSpawnPointGroup = new List<SpawnPointGroupBase>();//继承Unity组件接口的自定义类
 
         int curSpawnPointIndex = -1;//初始化为-1，方便获取首值
         bool isLastYoYoIncrease = true;
@@ -32,49 +45,12 @@ namespace Threeyes.SpawnPoint
         /// -增加FallbackSpawnPoint点，方便超出数量后存放
         /// </summary>
         /// <returns></returns>
-        public ISpawnPointGroup GetNewSpawnPoint()
+        public ISpawnPointGroup GetNewSpawnPointGroup()
         {
             if (Time.time - lastSpawnTime < Config.spawnIntervalTime)
                 return null;
 
-            ISpawnPointGroup newSpawnPoint = listSpawnPointGroup.GetNewElement(Config.loopType, ref curSpawnPointIndex, ref isLastYoYoIncrease);
-
-            //ISpawnPointGroup curSpawnPoint = listSpawnPointGroup.IsIndexValid(curSpawnPointIndex) ? listSpawnPointGroup[curSpawnPointIndex] : null;//初次使用，可能为空
-            //switch (Config.loopType)
-            //{
-            //    case LoopType.Random:
-            //        newSpawnPoint = listSpawnPointGroup.GetNewRandom(curSpawnPoint);
-            //        break;
-            //    case LoopType.InOrder:
-            //        newSpawnPoint = listSpawnPointGroup.GetNextByIndex(curSpawnPointIndex);
-            //        break;
-            //    case LoopType.Yoyo:
-            //        if (listSpawnPointGroup.Count <= 1)
-            //            newSpawnPoint = listSpawnPointGroup.FirstOrDefault();
-            //        else
-            //        {
-            //            int nextIndex = curSpawnPointIndex;
-            //            if (isLastYoYoIncrease)
-            //            {
-            //                nextIndex = curSpawnPointIndex.GetDeltaIndex(+1, listSpawnPointGroup.Count);
-            //                if (nextIndex == listSpawnPointGroup.Count - 1)
-            //                    isLastYoYoIncrease = false;
-            //            }
-            //            else
-            //            {
-            //                nextIndex = curSpawnPointIndex.GetDeltaIndex(-1, listSpawnPointGroup.Count);
-            //                if (nextIndex == 0)
-            //                    isLastYoYoIncrease = true;
-            //            }
-            //            newSpawnPoint = listSpawnPointGroup[nextIndex];
-            //        }
-            //        break;
-            //}
-            //if (newSpawnPoint != null)
-            //{
-            //    curSpawnPointIndex = listSpawnPointGroup.IndexOf(newSpawnPoint);
-            //}
-
+            ISpawnPointGroup newSpawnPoint = ListTargetSpawnPointGroup.GetNewElement(Config.loopType, ref curSpawnPointIndex, ref isLastYoYoIncrease);
             lastSpawnTime = Time.time;
             return newSpawnPoint;
         }

@@ -42,7 +42,14 @@ namespace Threeyes.Editor
             Rect remainRect = selectionRect;
             Rect rectEle = remainRect.GetAvaliableRect(EditorDrawerTool.buttonSize);
             if (EditorDrawerTool.DrawButton(rectEle, EditorDrawerTool.TexArrRightIcon))
-                comp.SetNext();
+            {
+                //如果按住Alt，则调用ActiveAndSetNext
+                if (Event.current.alt)
+                comp.ActiveAndSetNext();
+                else
+                    comp.SetNext();
+
+            }
             rectEle = remainRect.GetRemainRect(rectEle).GetAvaliableRect(EditorDrawerTool.buttonSize);
             if (EditorDrawerTool.DrawButton(rectEle, EditorDrawerTool.TexArrLeftIcon))
                 comp.SetPrevious();

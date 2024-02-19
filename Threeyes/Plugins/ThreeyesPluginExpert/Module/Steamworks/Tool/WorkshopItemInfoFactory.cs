@@ -35,6 +35,13 @@ namespace Threeyes.Steamworks
         /// <param name="sOWorkshopItemInfo"></param>
         public virtual TItemInfo Create(TSOItemInfo sOWorkshopItemInfo)
         {
+            TItemInfo inst = CreateFunc(sOWorkshopItemInfo);
+            inst.Init();
+            return inst;
+        }
+
+        protected virtual TItemInfo CreateFunc(TSOItemInfo sOWorkshopItemInfo)
+        {
             return new TItemInfo()
             {
                 //Set basic
@@ -50,6 +57,8 @@ namespace Threeyes.Steamworks
                 dirPath = sOWorkshopItemInfo.ItemDirPath,
             };
         }
+
+
 
         /// <summary>
         /// 【Runtime】通过读取打包后的Item所在目录的Json信息，生成WorkshopItemInfo。

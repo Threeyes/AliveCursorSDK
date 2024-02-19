@@ -1,4 +1,4 @@
-﻿using Threeyes.Steamworks;
+using Threeyes.Steamworks;
 using UnityEngine;
 
 public interface IAC_TransformController : IModControllerHandler

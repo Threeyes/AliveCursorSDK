@@ -6,21 +6,24 @@ using UnityEngine.SceneManagement;
 namespace Threeyes.Steamworks
 {
     public class HubSceneManagerBase<T> : HubManagerWithLifeCycleBase<T>, IHubSceneManager
-        where T: HubSceneManagerBase<T>
+        where T : HubSceneManagerBase<T>
     {
-		#region Interface
-		public Scene HubScene { get { return hubScene; } }
-		public Scene CurModScene { get { return curModScene; } }
+        #region Interface
+        public Scene HubScene { get { return hubScene; } }
+        public Scene CurModScene { get { return curModScene; } }
 
-		protected Scene hubScene;
-		protected Scene curModScene;
+        protected Scene hubScene;
+        protected Scene curModScene;
 
-		protected override void SetInstanceFunc()
-		{
-			base.SetInstanceFunc();
-			hubScene = gameObject.scene;//Use self scene
-		}
+        protected override void SetInstanceFunc()
+        {
+            base.SetInstanceFunc();
+            hubScene = gameObject.scene;//Use self scene
+        }
+        #endregion
 
+        #region IProgramLifeCycle
+        public override int QuitExecuteOrder { get { return 10; } }
         #endregion
 
         #region ModInit

@@ -1,9 +1,6 @@
-using NaughtyAttributes;
 using Newtonsoft.Json;
-using Threeyes.Config;
 using Threeyes.Persistent;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Threeyes.Steamworks
 {
@@ -21,54 +18,91 @@ namespace Threeyes.Steamworks
     /// 1. Create Material with shader "Threeyes/SpecialFX/Liquid", attached it to the Model
     /// 2. Set values in [Model] Group, then Invoke SetShaderModelConfig method in ContextMenu
     /// 3.Set material's FillAmount field
+    /// 
+    /// PS:
+    /// -因为FillAmount可能是运行时更新，所以暂不存到ConfigInfo中，或者增加是否为DynamicFillAmount等相关字段
     /// </summary>
-    public class LiquidController : ConfigurableUpdateComponentBase<Renderer, SOLiquidControllerConfig, LiquidController.ConfigInfo>
+    public class LiquidController : ConfigurableComponentBase<Renderer, LiquidController, SOLiquidControllerConfig, LiquidController.ConfigInfo, LiquidController.PropertyBag>
 , IModHandler
     {
         #region Property & Field
-        public float FillAmount { get { return Comp ? Comp.material.GetFloat("_FillAmount") : 0; } set { Comp?.material.SetFloat("_FillAmount", value); } }//(Mainly for runtime modify via UnityEvent)
+
+        /// <summary>
+        /// Runtime FillAmount，
+        /// 
+        /// PS：
+        /// -This property is mainly for runtime modify other Sources (Such as UnityEvent），This field's value will not change ConfigInfo.startFillAmount or to be saved/serialized（因为该属性主要用于运行时更改FillAmount（如根据时间回调更新），所以不适合存储到Config中及序列化）
+        /// </summary>
+        public float FillAmount { get { return Comp ? Comp.material.GetFloat("_FillAmount") : 0; } set { SetShaderProperty_FillAmount(value); } }
+
+        /// <summary>
+        /// 在startFillAmount的基础上额外的数值
+        /// 
+        /// 适用于：
+        /// -在原基础上进行偏移（如音频响应）
+        /// </summary>
+        /// <param name="delta"></param>
+        public void SetDeltaFillAmount(float delta)
+        {
+            //PS：基于ConfigInfo.startFillAmount进行计算
+            float finalFillAmount = Mathf.Clamp01(Config.baseFillAmount + delta);
+            SetShaderProperty_FillAmount(finalFillAmount);
+        }
+
+        /// <summary>
+        /// 填充剩余空间，通过传入归一化值，可以填充（1-Config.startFillAmount）的值，用于
+        /// </summary>
+        /// <param name="fillPercent"></param>
+        public void FillRemainSpace(float fillPercent)
+        {
+            fillPercent = Mathf.Clamp01(fillPercent);
+            float leftPercent = Mathf.Clamp01(1 - Config.baseFillAmount);//剩余位填充空间
+            SetShaderProperty_FillAmount(Config.baseFillAmount + leftPercent * fillPercent);
+        }
+        void SetShaderProperty_FillAmount(float value)
+        {
+            Comp?.material.SetFloat("_FillAmount", value);
+        }
+
         protected virtual Material TargetMaterial { get { return Comp ? Comp.material : null; } }//override this if you prefer different material
 
+        public Transform TfMotionSource { get { return tfMotionSource ? tfMotionSource : transform; } }
+        public Transform TfLiquidSource { get { return Comp ? Comp.transform : transform; } }
 
+        public Transform tfMotionSource;//The target to calculate offset
         [Header("Model Setting")]//PS: Set these value and Invoke SetShaderModelConfig in MenuItem before game started to recalculate the Material propertys
         [Tooltip("The ScaleFactor in model import window")]
         public float modelScaleFactor = 1;
         [Tooltip("The model vertice pos range in Y Axis while the model's rotation is in initial state")]
-        public Vector2 modelVerticePosYRange = new Vector2(-0.5f, 0.5f);
+        public Vector2 modelVerticePosYRange = new Vector2(-0.5f, 0.5f);//当模型在初始旋转状态时，模型所有点的Y轴区间范围，用于计算液体的显示区域
 
         //Runtime
         float Pulse { get { return 2 * Mathf.PI * curWobbleFrequency; } }// make a sine wave of the decreasing wobble
         float maxWobblePerFrame { get { return Config.maxWobble * DeltaTime; } }//(PS:只是单帧上限，不设置总上限，方便实现更自然的晃动效果）
-        float curWobbleFrequency = 2f;
-        float wobbleSinInputX;
-        float wobbleSinInputZ = 10;//Different from X Axis
-        float wobbleSinOutputScaleX;
-        float wobbleSinOutputScaleZ;
-        float curFoamLineWdith;
+        float curWobbleFrequency = 0;
+        float wobbleSinInputX = 0;
+        float wobbleSinInputZ = 0;//Different from X Axis
+        float wobbleSinOutputScaleX = 0;
+        float wobbleSinOutputScaleZ = 0;
+        float curFoamLineWdith = 0;
         Vector3 lastPos;
         Vector3 velocity;
-        Vector3 lastVelocity = default;
+        public Vector3 lastVelocity = Vector3.zero;
         Vector3 lastRot;
         Vector3 angularVelocity;
         #endregion
 
         #region Unity Method
-        void Awake()
-        {
-            Config.actionAppearanceSettingChanged += OnAppearanceSettingChanged;
-        }
-        void OnDestroy()
-        {
-            Config.actionAppearanceSettingChanged -= OnAppearanceSettingChanged;
-        }
-        protected override void UpdateFunc()
+        protected float DeltaTime { get { return Time.deltaTime; } }
+        protected virtual void LateUpdate()
         {
             if (!TargetMaterial)
                 return;
+            if (DeltaTime == 0)//避免因为时间停止导致velocity等值因为除0变为Null
+                return;
 
-            base.UpdateFunc();
-            velocity = (transform.position - lastPos) / DeltaTime;
-            angularVelocity = velocity.sqrMagnitude > 0.001f ? transform.rotation.eulerAngles - lastRot : Vector3.zero;//正在移动=>忽略旋转，否则在两个变量的作用下会导致异常抖动的现象
+            velocity = (TfMotionSource.position - lastPos) / DeltaTime;
+            angularVelocity = velocity.sqrMagnitude > 0.001f ? TfMotionSource.rotation.eulerAngles - lastRot : Vector3.zero;//正在移动=>忽略旋转，否则在两个变量的作用下会导致异常抖动的现象
 
             //#1 根据瞬间运动方向，调节WaveSine的Input，从而控制液体的偏转方向
             wobbleSinInputX += DeltaTime * Pulse;
@@ -84,7 +118,9 @@ namespace Threeyes.Steamworks
                 curWobbleFrequency = Mathf.Lerp(curWobbleFrequency, Config.wobbleFrequency, DeltaTime * Config.wobbleRecovery);
 
             //#2 根据位移和旋转的变化，计算WaveSine的Result缩放(因为#1已经计算了增减区间，所以这里的velocity只需要取正值
-            wobbleSinOutputScaleX += Mathf.Clamp((Mathf.Abs(velocity.x) * Config.wobbleIncreaseByMoveSpeed + angularVelocity.z * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame, -maxWobblePerFrame, maxWobblePerFrame);
+            wobbleSinOutputScaleX += Mathf.Clamp(
+                (Mathf.Abs(velocity.x) * Config.wobbleIncreaseByMoveSpeed + angularVelocity.z * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame,
+                -maxWobblePerFrame, maxWobblePerFrame);
             wobbleSinOutputScaleZ += Mathf.Clamp((Mathf.Abs(velocity.z) * Config.wobbleIncreaseByMoveSpeed + angularVelocity.x * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame, -maxWobblePerFrame, maxWobblePerFrame);
             wobbleSinOutputScaleX = Mathf.Lerp(wobbleSinOutputScaleX, 0, DeltaTime * Config.wobbleRecovery);
             wobbleSinOutputScaleZ = Mathf.Lerp(wobbleSinOutputScaleZ, 0, DeltaTime * Config.wobbleRecovery);
@@ -98,47 +134,22 @@ namespace Threeyes.Steamworks
             curFoamLineWdith = Mathf.Clamp(curFoamLineWdith, Config.rangeFoam.x, Config.rangeFoam.y);
             TargetMaterial.SetFloat("_FoamLineWidth", curFoamLineWdith);//Foam Line Width
 
-            //#5 每帧都保证与物体缩放值同步
-            TargetMaterial.SetFloat("_GlobalScale", transform.lossyScale.y * modelScaleFactor);
+            //#5 确保材质与物体的全局缩放值同步
+            TargetMaterial.SetFloat("_GlobalScale", TfLiquidSource.lossyScale.y * modelScaleFactor);
 
             // Save Last Data
-            lastPos = transform.position;
-            lastRot = transform.rotation.eulerAngles;
+            lastPos = TfMotionSource.position;
+            lastRot = TfMotionSource.rotation.eulerAngles;
+            lastVelocity = velocity;
         }
         #endregion
 
-        #region Callback
-        ///ToAdd：检查Config的Appearance并更新Shader
-        public void OnModInit()
+        #region IModHandler
+        public override void UpdateSetting()
         {
-            UpdateAppearanceSetting();
-
             //Init
-            curWobbleFrequency = Config.wobbleFrequency;
-        }
-        public void OnModDeinit() { }
-        void OnAppearanceSettingChanged(PersistentChangeState persistentChangeState)
-        {
-            if (persistentChangeState == PersistentChangeState.Load)
-                return;
-            RuntimeTool.ExecuteOnceInCurFrameAsync(UpdateAppearanceSetting);
-        }
-        void UpdateAppearanceSetting()
-        {
-            if (!Config.isOverrideAppearance)
-                return;
-            if (!TargetMaterial)
-                return;
-
-            if (TargetMaterial.GetTexture("_MainTex") != Config.MainTexture)
-            {
-                TargetMaterial.SetTexture("_MainTex", Config.MainTexture);
-            }
-            TargetMaterial.SetColor("_Color", Config.mainColor);
-            TargetMaterial.SetColor("_TopColor", Config.topColor);
-            TargetMaterial.SetColor("_FoamColor", Config.foamColor);
-            TargetMaterial.SetColor("_RimColor", Config.rimColor);
-            TargetMaterial.SetFloat("_RimPower", Config.rimPower);
+            if (curWobbleFrequency == 0)
+                curWobbleFrequency = Config.wobbleFrequency;
         }
         #endregion
 
@@ -185,16 +196,47 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region ContextMenu 
+#if UNITY_EDITOR
+        [ContextMenu("CalculateModelVerticeRange")]
+        public void CalculateModelVerticeRange()
+        {
+            ///计算模型点的区间
+            if (!Comp)
+            {
+                Debug.LogError("Please set comp!");
+                return;
+            }
+
+            MeshFilter meshFilter = Comp.GetComponent<MeshFilter>();
+            if (meshFilter)
+            {
+                modelVerticePosYRange = new Vector2(float.MaxValue, float.MinValue);//初始化为两个最不可能的值，避免因为用户手动设置导致无法匹配
+
+                //查找所有顶点的Y轴最大/最小值
+                foreach (Vector3 point in meshFilter.sharedMesh.vertices)//Note that this method returns the vertices in local space, not in world space.
+                {
+                    if (point.y < modelVerticePosYRange.x)//最小值
+                        modelVerticePosYRange.x = point.y;
+                    else if (point.y > modelVerticePosYRange.y)
+                        modelVerticePosYRange.y = point.y;
+                }
+                UnityEditor.EditorUtility.SetDirty(this);// mark as dirty, so the change will be save into scene file
+            }
+        }
+
+        /// <summary>
+        /// Use config data to setup shader (Only executed before game start)
+        /// </summary>
         [ContextMenu("SetShaderModelConfig")]
-        public void SetShaderModelConfig()//Use this to (Execute before game start)
+        public void SetShaderModelConfig()
         {
             if (Application.isPlaying)
                 return;
 
             ///PS:
-            ///1.虽然可以通过代码主动获取Vertice的范围，但是由用户设置可以更自由地限制显示区域，避免模型带有外壳导致溢出的情况
+            ///-既可以通过CalculateModelVerticeRange主动获取Vertice的范围，也可以由用户限制显示区域，避免模型带有外壳导致溢出的情况
 
-            //Remap the pos range to [-0.5f,0.5f]
+            //Remap the pos range to [-0.5f,0.5f]（将点重映射到区间内）
             float middlePoint = (modelVerticePosYRange.y + modelVerticePosYRange.x) / 2;
             float scale = 0.5f / (modelVerticePosYRange.y - middlePoint);
 
@@ -205,18 +247,16 @@ namespace Threeyes.Steamworks
             Comp.sharedMaterial.SetFloat("_PosOffset", -middlePoint);
             Comp.sharedMaterial.SetFloat("_PosScale", scale);
         }
+#endif
         #endregion
 
         #region Define
 
         [System.Serializable]
-        [PersistentChanged(nameof(ConfigInfo.OnPersistentChanged))]
-        public class ConfigInfo : SerializableDataBase
+        public class ConfigInfo : SerializableComponentConfigInfoBase
         {
-            [JsonIgnore] public UnityAction<PersistentChangeState> actionPersistentChanged;
-            [JsonIgnore] public UnityAction<PersistentChangeState> actionAppearanceSettingChanged;
-
-            public Texture MainTexture { get { return externalMainTexture ? externalMainTexture : defaultMainTexture; } }
+            [Header("Common")]
+            [Tooltip("The default liquid fill amount")][Range(0, 1)] public float baseFillAmount = 0.5f;//
 
             //——Runtime Motion——
             [Header("Foam")]
@@ -241,32 +281,10 @@ namespace Threeyes.Steamworks
             [Tooltip("How fast the wobble reset to origin state")]
             public float wobbleRecovery = 0.8f;
 
-            //——Appearance——
-            [Header("Appearance (Color or texture")]
-            public bool isOverrideAppearance = false;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [JsonIgnore] public Texture defaultMainTexture;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [ReadOnly] [JsonIgnore] public Texture externalMainTexture;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [PersistentAssetFilePath(nameof(externalMainTexture), true)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public string externalMainTextureFilePath;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [ColorUsage(true, true)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public Color mainColor = Color.white;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [ColorUsage(true, true)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public Color topColor = Color.green;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [ColorUsage(true, true)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public Color foamColor = Color.gray;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [ColorUsage(true, true)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public Color rimColor = Color.cyan;
-            [EnableIf(nameof(isOverrideAppearance))] [AllowNesting] [Range(0, 10)] [PersistentValueChanged(nameof(OnAppearanceSettingChanged))] public float rimPower = 1;
-
-            [HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
-
-            #region Callback
-            void OnPersistentChanged(PersistentChangeState persistentChangeState)
-            {
-                actionPersistentChanged.Execute(persistentChangeState);
-            }
-            void OnAppearanceSettingChanged(PersistentChangeState persistentChangeState)
-            {
-                actionAppearanceSettingChanged.Execute(persistentChangeState);
-            }
-            #endregion
+            [HideInInspector][JsonIgnore][PersistentDirPath] public string PersistentDirPath;
         }
 
+        public class PropertyBag : ConfigurableComponentPropertyBagBase<LiquidController, ConfigInfo> { }
         #endregion
     }
 }

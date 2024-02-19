@@ -18,11 +18,11 @@ namespace Threeyes.Data
     /// <summary>
     /// 包含DataOption的定义
     /// </summary>
-    public interface IDataOptionContainer
+    public interface IDataOptionHolder
     {
         IDataOption BaseDataOption { get; }
     }
-    public interface IDataOptionContainer<TDataOption> : IDataOptionContainer
+    public interface IDataOptionContainer<TDataOption> : IDataOptionHolder
         where TDataOption : IDataOption
     {
         TDataOption DataOption { get; }
@@ -49,17 +49,23 @@ namespace Threeyes.Data
     }
 
     /// <summary>
-    /// 带范围
+    /// 带范围的值
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     public abstract class DataOption_RangeBase<TValue> : DataOption
     {
         public bool UseRange { get { return useRange; } set { useRange = value; } }
-        public TValue MinValue { get { return minValue; } set { minValue = value; } }
-        public TValue MaxValue { get { return maxValue; } set { maxValue = value; } }
+        public TValue MinValue { get { return minValue; } set { minValue = value; } }//如果不限制，则使用TValue类型的最小值表示
+        public TValue MaxValue { get { return maxValue; } set { maxValue = value; } }//如果不限制，则使用TValue类型的最大值表示
 
         [SerializeField] protected bool useRange = false;
+        #if USE_NaughtyAttributes
+        [ShowIf(nameof(useRange))] [AllowNesting] 
+#endif
         [SerializeField] protected TValue minValue;
+#if USE_NaughtyAttributes
+    [ShowIf(nameof(useRange))] [AllowNesting] 
+#endif
         [SerializeField] protected TValue maxValue;
 
         public DataOption_RangeBase(bool useRange = false, TValue minValue = default(TValue), TValue maxValue = default(TValue))
@@ -84,11 +90,11 @@ namespace Threeyes.Data
                 //# [Range]
                 RangeAttribute rangeAttribute = memberInfo.GetCustomAttribute<RangeAttribute>();
                 RangeExAttribute rangeExAttribute = memberInfo.GetCustomAttribute<RangeExAttribute>();
-                if (rangeAttribute != null)
+                if (rangeAttribute != null)//[Range]
                 {
                     tempRange = new Vector2(rangeAttribute.min, rangeAttribute.max);
                 }
-                else if (rangeExAttribute != null && obj != null)
+                else if (rangeExAttribute != null && obj != null)//[RangeEx]获取动态的值
                 {
                     float? minValue = rangeExAttribute.GetMinValue(obj);
                     float? maxValue = rangeExAttribute.GetMaxValue(obj);
@@ -99,16 +105,22 @@ namespace Threeyes.Data
                     if (useRange.HasValue)
                         isUseRange = useRange.Value;
                 }
-#if USE_NaughtyAttributes
-                else
+
+                //#PS: 针对最大/最小值，如果另一端无效，则使用终端值代替
+                if (tempRange == null)//Unity 
                 {
-                    //# [MinValue][MaxValue]
+                    MinAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinAttribute>();
+                    //MaxAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxAttribute>();//Unity没有此字段
+                    if (minValueAttribute != null)
+                        tempRange = new Vector2(minValueAttribute.min, float.MaxValue);
+                }
+#if USE_NaughtyAttributes
+                if (tempRange == null)//NaughtyAttributes [MinValue][MaxValue]
+                {
                     MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
                     MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
-                    if (minValueAttribute != null && maxValueAttribute != null)
-                    {
-                        tempRange = new Vector2(minValueAttribute.MinValue, maxValueAttribute.MaxValue);
-                    }
+                    if (minValueAttribute != null || maxValueAttribute != null)
+                        tempRange = new Vector2(minValueAttribute != null ? minValueAttribute.MinValue : int.MinValue, maxValueAttribute != null ? maxValueAttribute.MaxValue : int.MaxValue);
                 }
 #endif
                 if (tempRange.HasValue)
@@ -141,7 +153,6 @@ namespace Threeyes.Data
                 }
                 else if (rangeExAttribute != null && obj != null)
                 {
-                    //ToAdd：设置useRange
                     float? minValue = rangeExAttribute.GetMinValue(obj);
                     float? maxValue = rangeExAttribute.GetMaxValue(obj);
                     bool? useRange = rangeExAttribute.GetUseRangeValue(obj);
@@ -151,16 +162,21 @@ namespace Threeyes.Data
                     if (useRange.HasValue)
                         isUseRange = useRange.Value;
                 }
-#if USE_NaughtyAttributes
-                else
+
+                if (tempRange == null)//Unity 
                 {
-                    //暂时需要最小/最大同时出现
+                    MinAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinAttribute>();
+                    //MaxAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxAttribute>();//Unity没有此字段
+                    if (minValueAttribute != null)
+                        tempRange = new Vector2(minValueAttribute.min, float.MaxValue);
+                }
+#if USE_NaughtyAttributes
+                if (tempRange == null)//NaughtyAttributes [MinValue][MaxValue]
+                {
                     MinValueAttribute minValueAttribute = memberInfo.GetCustomAttribute<MinValueAttribute>();
                     MaxValueAttribute maxValueAttribute = memberInfo.GetCustomAttribute<MaxValueAttribute>();
-                    if (minValueAttribute != null && maxValueAttribute != null)
-                    {
-                        tempRange = new Vector2(minValueAttribute.MinValue, maxValueAttribute.MaxValue);
-                    }
+                    if (minValueAttribute != null || maxValueAttribute != null)
+                        tempRange = new Vector2(minValueAttribute != null ? minValueAttribute.MinValue : float.MinValue, maxValueAttribute != null ? maxValueAttribute.MaxValue : float.MaxValue);
                 }
 #endif
                 if (tempRange.HasValue)
@@ -205,7 +221,7 @@ namespace Threeyes.Data
         }
     }
 
-        [Serializable]
+    [Serializable]
     public class DataOption_Color : DataOption
     {
         public bool UseAlpha { get { return useAlpha; } set { useAlpha = value; } }
@@ -229,23 +245,22 @@ namespace Threeyes.Data
             if (memberInfo != null)
             {
                 //基于[ColorUsage]或[ColorUsageEx]继续初始化
-                ColorUsageAttribute colorUsageAttribute = memberInfo.GetCustomAttribute<ColorUsageAttribute>();
                 ColorUsageExAttribute colorUsageExAttribute = memberInfo.GetCustomAttribute<ColorUsageExAttribute>();
-                if (colorUsageAttribute != null)
-                {
-                    useAlpha = colorUsageAttribute.showAlpha;
-                    useHDR = colorUsageAttribute.hdr;
-                }
-                else if (colorUsageExAttribute != null && obj != null)
+                ColorUsageAttribute colorUsageAttribute = memberInfo.GetCustomAttribute<ColorUsageAttribute>();
+                if (colorUsageExAttribute != null && obj != null)//优先考虑[ColorUsageEx]，因为它能根据Option动态提供选项。[ColorUsage]通常只是方便在编辑器模式下提供所有选项
                 {
                     bool? useAlphaValue = colorUsageExAttribute.GetUseAlphaValue(obj);
                     bool? useHDRValue = colorUsageExAttribute.GetUseHdrValue(obj);
-
 
                     if (useAlphaValue.HasValue)
                         useAlpha = useAlphaValue.Value;
                     if (useHDRValue.HasValue)
                         useHDR = useHDRValue.Value;
+                }
+                else if (colorUsageAttribute != null)
+                {
+                    useAlpha = colorUsageAttribute.showAlpha;
+                    useHDR = colorUsageAttribute.hdr;
                 }
             }
             return this;
@@ -260,7 +275,7 @@ namespace Threeyes.Data
     {
         public List<OptionData> listOptionData = new List<OptionData>();
 
-        #region Define
+#region Define
 
         /// <summary>
         /// (PS: 为了兼容UGUI、TextMeshpro或以后的UIToolkit，需要定义对应的数据类）
@@ -315,7 +330,7 @@ namespace Threeyes.Data
                 this.image = image;
             }
         }
-        #endregion
+#endregion
     }
 
     /// <summary>

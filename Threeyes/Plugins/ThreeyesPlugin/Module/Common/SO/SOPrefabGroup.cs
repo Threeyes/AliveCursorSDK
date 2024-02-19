@@ -8,7 +8,7 @@ namespace Threeyes.Common
     /// <summary>
     /// Cache prefabs
     /// </summary>
-    [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_Common + "PrefabGroup", fileName = "PrefabGroup")]
+    [CreateAssetMenu(menuName = EditorDefinition_Common.AssetMenuPrefix_SO_Common + "PrefabGroup", fileName = "PrefabGroup")]
     public class SOPrefabGroup : SOGroupBase<GameObject>
     {
     } 

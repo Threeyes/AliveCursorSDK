@@ -20,7 +20,7 @@ public static class DebugTool
     public static bool IsDebugBuild => Debug.isDebugBuild;
 
     /// <summary>
-    /// 检查当前是否为Debug状态（满足条件：编辑器+isDebug或
+    /// 检查当前是否为Debug状态（满足条件：前提是isDebug为true，然后是编辑器 || 真机+DebugBuild）
     /// </summary>
     /// <param name="isDebug"></param>
     /// <returns></returns>

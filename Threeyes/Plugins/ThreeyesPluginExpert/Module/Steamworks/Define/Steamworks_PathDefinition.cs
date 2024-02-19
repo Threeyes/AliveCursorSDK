@@ -36,6 +36,16 @@ namespace Threeyes.Steamworks
 
         public static string licenseFilePath { get { return StreamingAssetsFolder + @"\Licenses\LicenseCollection.md"; } }
 
+        public static string logFilePath
+        {
+            get
+            {
+                string appData = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
+
+                return $@"{appData}\..\LocalLow\{Application.companyName}\{Application.productName}\Player.log";
+            }
+        }
+
         /// <summary>
         /// The folder for Windows Notify icons
         /// </summary>
@@ -46,7 +56,7 @@ namespace Threeyes.Steamworks
 
         #region  ——Editor——
 
-        static readonly string ItemRootDirName = "Items";
+        public static readonly string ItemRootDirName = "Items";
         /// <summary>
         /// [Unity Editor]:存放所有Item的父文件夹
         /// </summary>
@@ -106,6 +116,7 @@ namespace Threeyes.Steamworks
 
         #region ——Export——
 
+        internal static bool UseModUploaderAsUnityExported { get; set; }//使用ModUploader作为导出路径
         /// <summary>
         /// AliveCursor_ModUploader对应的Item文件夹
         /// </summary>
@@ -115,9 +126,9 @@ namespace Threeyes.Steamworks
             {
                 string productName = SORuntimeSettingManager.Instance.productName;
 #if UNITY_EDITOR
-                //PS:先临时改为本地打包的路径
+                if (UseModUploaderAsUnityExported)
+                    return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
                 return ExportItemRootDirPath;//本项目路径
-                //return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
 #else
 			return PathTool.ProjectDirPath + @$"\..\..\..\{productName}_ModUploader\Export\Items";
 #endif

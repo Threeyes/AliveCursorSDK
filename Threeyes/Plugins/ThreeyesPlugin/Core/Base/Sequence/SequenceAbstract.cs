@@ -89,6 +89,7 @@ public abstract class SequenceAbstract : MonoBehaviour, IHierarchyViewInfo
     }
 
     //——Set——
+    public abstract void ActiveAndSetNext();
 
     /// <summary>
     /// 重新设置当前数据，常用于重新开始

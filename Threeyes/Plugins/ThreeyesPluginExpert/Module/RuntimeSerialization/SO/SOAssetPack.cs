@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
-using System.Linq;
 using Threeyes.Editor;
-using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,7 +10,7 @@ using UnityEditor;
 namespace Threeyes.RuntimeSerialization
 {
     /// <summary>
-    /// 存储Asset的meta信息，方便运行时重新连接Asset及Prefab
+    /// 存储Asset的meta信息，方便运行时重新连接Asset及Prefab。类似于运行时获取Resource资源的功能
     /// 
     /// Ref:Unity.RuntimeSceneSerialization.AssetPack
     /// 
@@ -20,11 +18,6 @@ namespace Threeyes.RuntimeSerialization
     /// This type is used as a look up table for asset objects, and can be used to build an AssetBundle for loading
     /// scene assets in player builds
     /// 
-    /// ToUpdate：
-    /// -扫描并存储指定文件下的Prefab
-    /// 
-    /// ToTest:
-    /// -放到AC中打包，看能否正常加载
     /// </summary>
 
     [CreateAssetMenu(menuName = "SO/RuntimeSerialization/" + "AssetPack", fileName = "AssetPack")]
@@ -321,8 +314,8 @@ namespace Threeyes.RuntimeSerialization
         /// <summary>
         /// 针对特定文件夹创建So
         /// </summary>
-        /// <param name="sourceAbsDirPath"></param>
-        /// <param name="relateDirPath"></param>
+        /// <param name="sourceAbsDirPath">目标文件夹路径</param>
+        /// <param name="destAbsDirPath">存储SOAssetPack的文件夹路径</param>
         public static void CreateFromFolder(string sourceAbsDirPath, string destAbsDirPath)
         {
             //#1 获取文件夹位置
@@ -401,7 +394,7 @@ namespace Threeyes.RuntimeSerialization
         }
 
         /// <summary>
-        /// 利用穿入的Prefab资源信息初始化
+        /// 利用传入的Prefab资源信息初始化
         /// </summary>
         /// <param name="guid"></param>
         /// <param name="path"></param>

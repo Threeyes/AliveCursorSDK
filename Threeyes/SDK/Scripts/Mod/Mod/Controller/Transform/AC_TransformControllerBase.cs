@@ -103,6 +103,11 @@ public abstract class AC_TransformControllerBase<TSOConfig, TConfig> : Configura
 public class AC_TransformControllerConfigInfoBase : SerializableDataBase
 {
 	public DimensionType dimensionType = DimensionType.ThreeD;
+	
+	[Header("Working")]
+	public bool isFixedAngle = true;//Using fixed angle on working state
+	[EnableIf(nameof(isFixedAngle))] [AllowNesting] [Range(0, 360)] public float workingAngle = 0;//The target angle if isFixedAngle set to true
+
 	public enum DimensionType
 	{
 		TwoD,

@@ -8,8 +8,18 @@ namespace Threeyes.RuntimeSerialization
     /// </summary>
     public static class SOAssetPackManager
     {
-        public static List<SOAssetPack> listActiveAssetPack = new List<SOAssetPack>();//用于序列化/反序列化时临时设置的数据（ToUpdate：在加载Mod后就开始初始化）
+        static List<SOAssetPack> listActiveAssetPack = new List<SOAssetPack>();//用于序列化/反序列化时临时设置的数据（ToUpdate：在加载Mod后就开始初始化）
 
+        public static void Add(SOAssetPack sOAssetPack)
+        {
+            listActiveAssetPack.AddOnce(sOAssetPack);
+            listActiveAssetPack.RemoveAll(data => data == null);//清空无效数据
+        }
+        public static void Remove(SOAssetPack sOAssetPack)
+        {
+            listActiveAssetPack.Remove(sOAssetPack);
+            listActiveAssetPack.RemoveAll(data => data == null);//清空无效数据
+        }
 
         #region Deserialize
         /// <summary>

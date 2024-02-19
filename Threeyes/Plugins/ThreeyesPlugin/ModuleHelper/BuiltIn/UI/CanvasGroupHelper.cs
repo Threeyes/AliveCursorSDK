@@ -103,10 +103,9 @@ public class CanvasGroupHelper : ComponentHelperBase<CanvasGroup>, IShowHideEx
     //保留参数
     public Vector2 alphaRange = new Vector2(0, 1);
     public float tweenDuration = 0.8f;
-    public Ease ease = Ease.Linear;
 
 #if USE_DOTween
-
+    public Ease ease = Ease.Linear;
     protected Tweener tweener;
     protected virtual void BeginShowHideFunc_Tween(bool isShow)
     {

@@ -466,6 +466,21 @@ public static partial class LazyExtension_Common
     #region Angle
 
     /// <summary>
+    /// 将角度变为矢量
+    /// 
+    /// Ref: https://forum.unity.com/threads/how-to-convert-eulerangles-to-forward-direction.1178980/#post-7549813
+    /// <paramref name="axis"/>需要转换的轴向<paramref name="axis"/>
+    /// </summary>
+    public static Vector3 AngleToVector(this Vector3 angel, Vector3? axis = null)
+    {
+        if (axis == null)
+        {
+            axis = Vector3.forward;//默认为Forward
+        }
+        return Quaternion.Euler(angel).ToVector(axis.Value);
+    }
+
+    /// <summary>
     /// 将大于180度角进行以负数形式输出，保证角度的数据在统一范围[-180,180]内
     /// </summary>
     /// <param name="value"></param>
@@ -475,6 +490,23 @@ public static partial class LazyExtension_Common
         return new Vector3(value.x.GetStandardAngle(), value.y.GetStandardAngle(), value.z.GetStandardAngle());
     }
 
+
+    /// <summary>
+    /// 计算两个向量的角度，取值范围为[0，360]
+    /// </summary>
+    /// <param name="from">The vector from which the angular difference is measured.</param>
+    /// <param name="to">The vector to which the angular difference is measured.</param>
+    /// <param name="axis">A vector around which the other vectors are rotated. 角度对应的轴</param>
+    /// <returns></returns>
+    public static float DeltaAngle360(this Vector3 from, Vector3 to, Vector3 axis)
+    {
+        float signedAngle = Vector3.SignedAngle(from, to, axis);//The angle returned will always be between -180 and 180 degrees, because the method returns the smallest angle between the vectors. That is, it will never return a reflex angle.
+
+        //确保值在[0，360]区间
+        if (signedAngle < 0)
+            signedAngle += 360;
+        return signedAngle;
+    }
 
     /// <summary>
     /// 计算两个角度的增量，避免越界
@@ -548,8 +580,8 @@ public static partial class LazyExtension_Common
     /// <summary>
     /// 计算两个角度的增量，避免越界
     /// </summary>
-    /// <param name="lastAngle"></param>
     /// <param name="nextAngle"></param>
+    /// <param name="lastAngle"></param>
     /// <returns></returns>
     public static float DeltaAngle(this float nextAngle, float lastAngle)
     {
@@ -571,24 +603,61 @@ public static partial class LazyExtension_Common
 
     #region Quaternion
 
+    /// <summary>
+    /// 将角度变为矢量
+    /// </summary>
+    /// <param name="quat"></param>
+    /// <param name="axis"></param>
+    /// <returns></returns>
+    public static Vector3 ToVector(this Quaternion quat, Vector3? axis = null)
+    {
+        if (axis == null)
+        {
+            axis = Vector3.forward;//默认为Forward
+        }
+        //原理：将指定轴如（Forward）旋转对应角度angels，即可得到目标的轴向
+        return quat * axis.Value;
+    }
+    /// <summary>
+    /// 获取相对于自身坐标系的初始旋转
+    /// 
+    /// 常见用途：
+    /// -自身物体有一定偏转角度，但是需要计算子物体在自身坐标系的初始旋转角度等
+    /// 
+    /// Warning：
+    /// -不能使用tf.rotation代替，因为会因为自身旋转而导致出错！
+    /// </summary>
+    /// <param name="tf"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public static Quaternion GetSelfCoordinateSystemInitRotation(this Transform tf)
+    {
+        if (!tf)
+            return Quaternion.identity;
+
+        return Quaternion.LookRotation(tf.TransformDirection(Vector3.forward), tf.TransformDirection(Vector3.up));//基于自身坐标系的forward及up，计算出初始旋转值
+    }
+
     //public static Quaternion Rotate(this Quaternion start, Vector3 angle)
     //{
     //    return start * Quaternion.Euler(angle);
     //}
     /// <summary>
-    /// 围绕指定轴向旋转某个角度
+    /// 围绕该start旋转值的指定轴，旋转某个角度
     /// </summary>
     /// <param name="start"></param>
-    /// <param name="axis">旋转的轴向（单轴）</param>
-    /// <param name="angle">旋转值(PS:不能超过180度</param>
+    /// <param name="axis">旋转的轴向，会自动映射到自身坐标系，如Vector3.right</param>
+    /// <param name="angle">旋转值</param>
     /// <returns></returns>
     public static Quaternion RotateAround(this Quaternion start, Vector3 axis, float angle)
     {
-        if (angle >= 180)
-            Debug.LogError("旋转角度大于180！");
-        Vector3 rotateValue = Vector3.one * angle;
-        rotateValue.Scale(axis);//仅对应指定轴有效
-        return start * Quaternion.Euler(rotateValue);
+        return start * Quaternion.AngleAxis(angle, axis);
+
+        //if (angle >= 180)
+        //    Debug.LogError("旋转角度大于180！");
+        //Vector3 rotateValue = Vector3.one * angle;
+        //rotateValue.Scale(axis);//仅对应指定轴有效
+        //return start * Quaternion.Euler(rotateValue);
     }
 
     #endregion
@@ -846,7 +915,6 @@ public static partial class LazyExtension_Common
         return obj.InstantiatePrefab(tfParent, position, rotation, scale).GetComponent<T>();
     }
 
-
     /// <summary>
     /// 生成一个保存预制物引用的新物体
     /// </summary>
@@ -868,14 +936,16 @@ public static partial class LazyExtension_Common
         if (tfParent)
         {
             tfInst.SetParent(tfParent, false);//scale prefab to UI scale 
-            tfInst.localPosition = position;
-            tfInst.localRotation = rotation;
 
+            tfInst.SetProperty(position, rotation);
+            //tfInst.localPosition = position;
+            //tfInst.localRotation = rotation;
         }
         else
         {
-            tfInst.position = position;
-            tfInst.rotation = rotation;
+            tfInst.SetProperty(position, rotation, isLocalSpace: false);
+            //tfInst.position = position;
+            //tfInst.rotation = rotation;
         }
 
         //PS:默认不修改缩放，除非明确指定
@@ -921,6 +991,71 @@ public static partial class LazyExtension_Common
     #endregion
 
     #region Transform
+
+    public static string GetHierarchyName(this Transform tf)
+    {
+        string result = tf.name;
+        while (tf.parent)
+        {
+            result = tf.parent.name + "/" + result;
+            tf = tf.parent;
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 根据物体是否为刚体，自动调用对应的移动方法，确保能正确移动到指定位置
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="rotation"></param>
+    /// <param name="scale"></param>
+    public static void SetProperty(this Transform tf, Vector3? position = null, Quaternion? rotation = null, Vector3? scale = null, bool isLocalSpace = true)
+    {
+        /////【ToTest】以下修改Rigidbody的方法需要详细测试
+        ///#1 Cache
+        ///PS:
+        /// -如果物体有刚体且Interpolate不为None，则需要先设置为None再移动，否则会其导致移动不到正常位置，因为该选项是让物体基于前几帧进行计算（https://forum.unity.com/threads/rigidbody2d-position-doesnt-teleport-the-object-with-the-interpolation-settings-on.1172240/）
+        Rigidbody rigidbody = tf.GetComponent<Rigidbody>();
+        bool cacheIsKinematic = false;
+        RigidbodyInterpolation cacheRigidbodyInterpolation = RigidbodyInterpolation.None;
+        bool shouldChangRigdibody = false;
+        if (rigidbody && rigidbody.interpolation != RigidbodyInterpolation.None)
+        {
+            shouldChangRigdibody = true;
+            cacheIsKinematic = rigidbody.isKinematic;
+            cacheRigidbodyInterpolation = rigidbody.interpolation;
+            rigidbody.interpolation = RigidbodyInterpolation.None;
+            rigidbody.isKinematic = true;
+            rigidbody.gameObject.SetActive(false);//最重要的起作用代码（可能会导致物体的OnEnable/Disable被多次调用）
+        }
+
+        //#2 Set
+        if (position.HasValue)
+        {
+            if (isLocalSpace)
+                tf.localPosition = position.Value;
+            else
+                tf.position = position.Value;
+        }
+        if (rotation.HasValue)
+        {
+            if (isLocalSpace)
+                tf.localRotation = rotation.Value;
+            else
+                tf.rotation = rotation.Value;
+        }
+        if (scale.HasValue)
+            tf.localScale = scale.Value;//PS:缩放暂无全局可设置字段
+
+        //#3 Restore
+        if (rigidbody && shouldChangRigdibody)
+        {
+            rigidbody.isKinematic = cacheIsKinematic;
+            rigidbody.interpolation = cacheRigidbodyInterpolation;
+            rigidbody.gameObject.SetActive(true);
+        }
+    }
+
 
     /// <summary>
     /// PS:名称不能加/！！！否则会出现找不到子物体的问题 file:///C:/Program%20Files_Custom/Unity%20Group/Unity2018.2.10/Editor/Data/Documentation/en/ScriptReference/Transform.Find.html
@@ -991,6 +1126,18 @@ public static partial class LazyExtension_Common
     }
 
 
+    [Obsolete]
+    public static Color GetColor(this Transform tf, string colorName = "_Color")
+    {
+        return tf.GetMat().GetColor(colorName);
+    }
+
+    [Obsolete]
+    public static void SetColor(this Transform tf, Color color, string colorName = "_Color")
+    {
+        tf.GetMat().SetColor(colorName, color);
+    }
+    [Obsolete]
     public static Material GetMat(this Transform tf)
     {
         if (tf.GetComponent<MeshRenderer>() != null)
@@ -1004,16 +1151,7 @@ public static partial class LazyExtension_Common
         }
         return null;
     }
-
-    public static Color GetColor(this Transform tf, string colorName = "_Color")
-    {
-        return tf.GetMat().GetColor(colorName);
-    }
-
-    public static void SetColor(this Transform tf, Color color, string colorName = "_Color")
-    {
-        tf.GetMat().SetColor(colorName, color);
-    }
+    [Obsolete]
     public static bool HasRender(this Transform tf)
     {
         return tf.GetComponent<MeshRenderer>();
@@ -1415,14 +1553,14 @@ public static partial class LazyExtension_Common
 
 
     public static TReturn FindFirstComponentInParent<TReturn>(this Component comp, bool includeSelf = true)
-        where TReturn : Component
+        where TReturn : class//Component
     {
         TReturn tReturn = null;
         comp.transform.ForEachParent(
            (tf) =>
            {
-               if (!tReturn)
-                   tReturn = tf.GetComponent<TReturn>();
+               if (tReturn == null)
+                   tf.TryGetComponent(out tReturn);//Warning:不要直接使用GetComponent，因为如果TReturn为Component，其返回的是对应类型的空值而不是null而导致意外赋值给tReturn，这样会导致后续的(tReturn == null)无法进入！
            },
            includeSelf
            );
@@ -1462,9 +1600,11 @@ public static partial class LazyExtension_Common
            (tf) =>
            {
                TReturn cacheComp = tf.GetComponent<TReturn>();
-               if (cacheComp != null)
+               if (tf.TryGetComponent<TReturn>(out cacheComp))
+               {
                    if (match == null || (match != null && match(cacheComp)))
                        listResult.Add(cacheComp);
+               }
            }, includeSelf, isRecursive);
         return listResult;
     }

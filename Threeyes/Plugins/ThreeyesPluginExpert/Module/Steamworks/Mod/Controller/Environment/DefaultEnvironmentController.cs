@@ -5,6 +5,7 @@ using Threeyes.Config;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using DefaultValue = System.ComponentModel.DefaultValueAttribute;
 
 namespace Threeyes.Steamworks
@@ -78,6 +79,7 @@ namespace Threeyes.Steamworks
 
         #region Module Setting
         bool lastReflectionProbeUsed = false;//Cache state, avoid render multi times
+        bool lastSkyboxUsed = false;//Cache state, avoid render multi times
         public virtual void SetLights(bool isUse)
         {
             goLightGroup?.SetActive(isUse);
@@ -104,7 +106,6 @@ namespace Threeyes.Steamworks
                 RefreshReflectionProbe();
         }
 
-        bool lastSkyboxUsed = false;//Cache state, avoid render multi times
         /// <summary>
         /// 
         /// </summary>
@@ -132,7 +133,7 @@ namespace Threeyes.Steamworks
                     needRefresh = true;
                 }
             }
-            if (needRefresh)
+            if (needRefresh)//修改天空盒后：更新GI（如反射探头）
                 DynamicGIUpdateEnvironment();
         }
         #endregion
@@ -163,7 +164,18 @@ namespace Threeyes.Steamworks
                 return;
             if (!lastReflectionProbeUsed)//PS:未激活时调用无效
                 return;
-            RuntimeTool.ExecuteOnceInCurFrameAsync(() => reflectionProbe.RenderProbe());//PS:RenderProbe会返回ID，可用于后续检查Render完成时间
+
+
+            //public enum ReflectionProbeMode
+            //{
+            //    Baked,//Reflection probe is baked in the Editor.
+            //    Realtime,//Reflection probe is updating in real-time.
+            //    Custom//Reflection probe uses a custom texture specified by the user.
+            //}
+
+            //仅当反射探头的属性为Realtime且ViaScripting时，才能调用方法更新
+            if (reflectionProbe.mode == ReflectionProbeMode.Realtime && reflectionProbe.refreshMode == ReflectionProbeRefreshMode.ViaScripting)
+                RuntimeTool.ExecuteOnceInCurFrameAsync(() => reflectionProbe.RenderProbe(/*reflectionProbe.realtimeTexture*/));//PS:RenderProbe会返回ID，可用于后续检查Render完成时间
         }
         /// <summary>
         /// 

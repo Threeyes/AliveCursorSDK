@@ -9,7 +9,7 @@ public static class UITool
 
     /// <summary>
     /// Warning:
-    /// -如果相机有PhysicsRaycaster组件，那么光标移动到Collider时，IsPointerOverGameObject会返回true。解决办法是为PhysicsRaycaster设置特定的EventMask（https://forum.unity.com/threads/how-to-detect-if-mouse-is-over-ui.1025533/#post-7616668）
+    /// -如果相机有 PhysicsRaycaster 组件，那么光标移动到Collider时，IsPointerOverGameObject会返回true。解决办法是为PhysicsRaycaster设置特定的EventMask（https://forum.unity.com/threads/how-to-detect-if-mouse-is-over-ui.1025533/#post-7616668）
     /// </summary>
     /// <returns></returns>
     public static bool IsHoveringUI()
@@ -23,6 +23,9 @@ public static class UITool
 
     /// <summary>
     /// 是否正在选中特定UI
+    /// 
+    /// ToUpdate：
+    /// -提供可选参数（是否判断Layer，可以保证与PhysicsRaycaster共存）。参考：https://forum.unity.com/threads/how-to-detect-if-mouse-is-over-ui.1025533/#post-8227341
     /// </summary>
     /// <param name="goUIElement"></param>
     /// <returns></returns>

@@ -35,6 +35,20 @@ namespace Threeyes.Persistent
     [AttributeUsage(AttributeTargets.Field)]
     public class PersistentDirPathAttribute : Attribute { }
 
+    /// <summary>
+    /// 【Todo】标记默认值字段，适用于普通类型
+    /// 
+    /// Ref：DefaultValueAttribute
+    /// 用途：
+    /// -重置时使用defaultValue
+    /// -UIField_String中作为Holder的值
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
+    public class PersistentDefaultValueAttribute : Attribute
+    {
+        public string DefaultValueFieldName { get; set; }
+
+    }
 
     /// <summary>
     /// Cache asset fieldinfo's external file path, and optional load the asset
@@ -73,7 +87,7 @@ namespace Threeyes.Persistent
         /// </summary>
         /// <param name="assetFieldName">The name of the binding asset field</param>
         /// <param name="isAutoLoad">Auto load the asset</param>
-        /// <param name="dataOption_FilePropertyName">The property to return Option_File instance</param>
+        /// <param name="dataOption_FilePropertyName">The property to return DataOption_XXXFile instance. Note: the type of this instance should match the assetField, such as DataOption_TextureFile for Texture</param>
         /// <param name="assetLoadedCallbackMethodName">
         /// </param>
         /// <param name="defaultAssetFieldName">The name of the binding default asset field</param>

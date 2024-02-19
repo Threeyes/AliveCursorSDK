@@ -12,7 +12,7 @@ public static class RuntimeTool
     static Dictionary<UnityAction, float> dicCacheNextFameAction = new Dictionary<UnityAction, float>();
 
     /// <summary>
-    /// Make sure the method execute once in cur frame (eg: heavy method like Resources.UnloadUnusedAssets )
+    /// Make sure the method execute once in cur frame (eg: heavy method like Resources.UnloadUnusedAssets)
     /// </summary>
     /// <param name="action"></param>
     public static async void ExecuteOnceInCurFrameAsync(UnityAction action)

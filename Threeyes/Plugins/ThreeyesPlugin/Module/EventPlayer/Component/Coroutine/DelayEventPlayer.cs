@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Text;
+#if UNITY_EDITOR
+using Threeyes.Editor;
+using UnityEditor;
+#endif
 
 namespace Threeyes.EventPlayer
 {
-#if UNITY_EDITOR
-    using Threeyes.Editor;
-    using UnityEditor;
-#endif
 
     /// <summary>
     /// Delay Invoke Play Event
@@ -146,6 +146,12 @@ namespace Threeyes.EventPlayer
         public static void CreateDelayEventPlayer()
         {
             EditorTool.CreateGameObjectAsChild<DelayEventPlayer>(instName);
+        }
+        [MenuItem(strMenuItem_Root_Collection + "DelayEPG Child", false, intCollectionMenuOrder + 4)]
+        public static void CreateDelayEventPlayerGroupChild()
+        {
+            var eventPlayer = EditorTool.CreateGameObjectAsChild<DelayEventPlayer>("DelayEPG ");
+            eventPlayer.IsGroup = true;
         }
 
         //——Hierarchy GUI——

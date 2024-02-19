@@ -9,6 +9,8 @@ namespace Threeyes.Steamworks
 {
     public class SceneManagerSimulator : HubSceneManagerBase<SceneManagerSimulator>
     {
+        public bool HasSceneLoaded { get { return hasSceneLoaded; } }
+        bool hasSceneLoaded = false;
         protected virtual void Start()
         {
             InitAsync();
@@ -42,6 +44,7 @@ namespace Threeyes.Steamworks
                 return;
             }
             InitMod(modEntry);
+            hasSceneLoaded = true;
         }
     }
 }

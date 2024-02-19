@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Threeyes.Data;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,10 +16,6 @@ namespace Threeyes.Persistent
         where TDataOption : IDataOption
     {
         public override Type ValueType { get { return TargetValue != null ? TargetValue.GetType() : null; } }
-
-        public virtual FilePathModifier FilePathModifier { get { if (filePathModifier_PD == null) filePathModifier_PD = new FilePathModifier_PD(this); return filePathModifier_PD; } set { Debug.LogError("This property can't set!"); /*暂时不允许设置，避免用户魔改*/} }
-        private FilePathModifier_PD filePathModifier_PD;
-
         public override TValue ValueToSaved { get { return TargetValue; } }//直接存储TargetValue，确保即使不通过UIField_XX修改该值，也能正常保存字段
         public abstract TValue TargetValue { get; set; }
 

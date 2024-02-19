@@ -4,17 +4,28 @@ using UnityEngine;
 
 namespace Threeyes.Config
 {
+    public interface IConfigurableComponent<TConfig>
+    {
+        /// <summary>
+        /// Get first valid Config 
+        /// </summary>
+        TConfig Config { get; }
+
+        /// <summary>
+        /// The default config
+        /// </summary>
+        TConfig DefaultConfig { get; set; }
+    }
+
     /// <summary>
     /// Component that use SO to save config
     /// </summary>
     /// <typeparam name="TSOConfig"></typeparam>
     /// <typeparam name="TConfig"></typeparam>
-    public interface IConfigurableComponent<TSOConfig, TConfig>
+    public interface IConfigurableComponent<TSOConfig, TConfig> : IConfigurableComponent<TConfig>
         where TSOConfig : SOConfigBase<TConfig>
     {
-        TConfig Config { get; }
-        TConfig DefaultConfig { get; }
-        TSOConfig SOOverrideConfig { get; }
+        TSOConfig SOOverrideConfig { get; set; }
 
         //#Template, Just copy and rename
         //public TConfig Config

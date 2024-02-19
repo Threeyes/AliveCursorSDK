@@ -298,11 +298,6 @@ namespace Threeyes.EventPlayer
             hasVideoPlayerInit = true;
         }
 
-        protected virtual void FrameReady(VideoPlayer source, long frameIdx)
-        {
-
-        }
-
         protected virtual void LoopPointReached(VideoPlayer source)
         {
             onFinish.Invoke();
@@ -317,7 +312,9 @@ namespace Threeyes.EventPlayer
         {
             isSeeking = false;
         }
-
+        protected virtual void FrameReady(VideoPlayer source, long frameIdx)
+        {
+        }
 
         //——Video Control (Check if null incase this EP is for group purpose)
         void PlayVideoFunc()

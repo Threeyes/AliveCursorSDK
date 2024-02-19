@@ -22,7 +22,12 @@ public class AC_SOWorkshopItemInfo : SOWorkshopItemInfo<AC_WorkshopItemInfo>
     public AC_WSItemReference itemReference = AC_WSItemReference.None;
     public AC_WSItemFeature itemFeature = AC_WSItemFeature.None;
 
-    [HideInInspector] public AC_WSItemAdvance itemSafety = AC_WSItemAdvance.None;
+    [HideInInspector] public AC_WSItemAdvance itemAdvance = AC_WSItemAdvance.None;//(Edit after mod build completed)
+
+    public AC_SOWorkshopItemInfo()
+    {
+        ageRatingType = AC_WSItemAgeRating.General;//避免ItemManagerWindow默认将该值设置为0
+    }
 
     public override string[] Tags
     {
@@ -35,7 +40,7 @@ public class AC_SOWorkshopItemInfo : SOWorkshopItemInfo<AC_WorkshopItemInfo>
             listTag.AddRange(itemGenre.GetNamesEx());
             listTag.AddRange(itemReference.GetNamesEx());
             listTag.AddRange(itemFeature.GetNamesEx());
-            listTag.AddRange(itemSafety.GetNamesEx());
+            listTag.AddRange(itemAdvance.GetNamesEx());
 
             return listTag.ToArray();
         }

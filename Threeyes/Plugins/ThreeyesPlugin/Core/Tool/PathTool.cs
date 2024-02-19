@@ -403,7 +403,7 @@ public partial class PathTool
 	public static void OpenFile(string filePath, bool isSelect = true)
 	{
 		string cmd = "explorer.exe";
-		string arg = ConvertToSystemFormat(filePath); //(PS:；路径只能是\\）
+		string arg = ConvertToSystemFormat(filePath); //(PS:路径只能是\\）
 		if (isSelect)
 			arg = "/select, " + arg;
 		Debug.Log(filePath);

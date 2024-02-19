@@ -47,6 +47,9 @@ public class CollisionEvent : UnityEvent<Collision> { }
 public class GameObjectEvent : UnityEvent<GameObject> { }
 
 [System.Serializable]
+public class TransformEvent : UnityEvent<Transform> { }
+
+[System.Serializable]
 public class Vector2Event : UnityEvent<Vector2> { }
 
 [System.Serializable]

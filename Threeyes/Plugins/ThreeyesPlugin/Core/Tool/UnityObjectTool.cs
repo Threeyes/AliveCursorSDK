@@ -131,7 +131,7 @@ public static class UnityObjectTool
                 {
                     Type elementType = ReflectionTool.GetCollectionElementType(fieldType);
 
-                    if (elementType != null && elementType.IsInherit(ScriptableObjectType)) //SO元素：其作用是为了供程序内部引用，为了避免引用丢失，需要迭代调用本方法复制其字段内容而不是返回原值（前提是SO的具体类型一致）【太复杂，ToDelete】
+                    if (elementType != null && elementType.IsInherit(UnityObjectType)) //UnityEngine.Object的子类：其作用是为了供程序内部引用，为了避免引用丢失，需要迭代调用本方法复制其字段内容而不是返回原值（前提是SO的具体类型一致）【太复杂，ToDelete】
                     {
                         if (dstList.Count == srcList.Count)//只有合集长度相同才复制，避免影响原来的List的长度、位置或顺序
                         {
@@ -185,7 +185,7 @@ public static class UnityObjectTool
             }
             else if (fieldType.IsClass)// 自定义Class -> Recursion (克隆并筛选)
             {
-                if (SetFieldClone_UnityClass(fieldInfo, srcObj, dstObj))//Unity定制Class:进行特殊Clone
+                if (CopyField_UnityClass(fieldInfo, srcObj, dstObj))//Unity定制Class:进行特殊Clone
                 {
 
                 }
@@ -349,7 +349,7 @@ public static class UnityObjectTool
     /// <param name="srcObj"></param>
     /// <param name=""></param>
     /// <returns>是否已经拷贝</returns>
-    public static bool SetFieldClone_UnityClass(FieldInfo fieldInfo, object srcObj, object dstObj)
+    public static bool CopyField_UnityClass(FieldInfo fieldInfo, object srcObj, object dstObj)
     {
         if (fieldInfo == null || srcObj == null || dstObj == null)
             return false;

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 namespace Threeyes.Persistent
 {
 
-    public partial interface IPersistentData : IDisposable
+    public partial interface IPersistentData : IFilePathModifierHolder, IDisposable
     {
         /// <summary>
         /// 判断Key、Option等是否有效
@@ -35,6 +35,8 @@ namespace Threeyes.Persistent
         /// Controller初始化时主动调用
         /// </summary>
         void Init();
+
+        void Clear();
     }
 
     /// <summary>
@@ -61,7 +63,7 @@ namespace Threeyes.Persistent
     /// 
     /// PS:接口传入的string代表路径
     /// </summary>
-    public interface IPersistentData_File : IPersistentData<string>, IFilePathModifierHolder
+    public interface IPersistentData_File : IPersistentData<string>
     {
         event UnityAction<ExternalResources.LoadResult, object> AssetChanged;//(loadResult, defaultAsset)
     }
@@ -77,7 +79,7 @@ namespace Threeyes.Persistent
         UnityEvent<TAsset> EventOnAssetChanged { get; }
     }
 
-    public interface IPersistentData_ComplexData<TValue> : IPersistentData<TValue>, IFilePathModifierHolder
+    public interface IPersistentData_ComplexData<TValue> : IPersistentData<TValue>
     {
         TValue TargetValue { get; set; }
     }

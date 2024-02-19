@@ -21,12 +21,18 @@ namespace Threeyes.Steamworks
         public CreeperTransformController creeperGhostController;
         public List<CreeperLegController> listCreeperLegGhostController { get { return creeperGhostController.listLegController; } }
 
+        #region Init
+        protected virtual void OnEnable()
+        {
+            ManagerHolder.SystemAudioManager.Register(this);
+        }
+        protected virtual void OnDisable()
+        {
+            ManagerHolder.SystemAudioManager.UnRegister(this);
+        }
+        #endregion
+
         #region Callback
-        /// <summary>
-        /// PS:
-        /// -只有当前有音频数据时才会进入
-        /// </summary>
-        /// <param name="data"></param>
         public void OnRawSampleDataChanged(float[] data)
         {
             float volume = AudioVisualizerTool.CalculateLoudness(data);

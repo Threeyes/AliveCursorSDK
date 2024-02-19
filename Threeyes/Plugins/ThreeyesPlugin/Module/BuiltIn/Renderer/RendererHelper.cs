@@ -4,98 +4,165 @@ using UnityEngine;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
-/// <summary>
-/// 设置Renderer及其子类的信息，适用于各类RP
-/// 
-/// Todo:
-/// -使用EnumDefinition_Material中的枚举
-/// </summary>
-public class RendererHelper : ComponentHelperBase<Renderer>
+
+namespace Threeyes.BuiltIn
 {
-    #region Property & Field
-    Material Material
+    /// <summary>
+    /// 设置Renderer及其子类的信息，适用于各类RP
+    /// 
+    /// Todo:
+    /// -使用EnumDefinition_Material中的枚举
+    /// </summary>
+    public class RendererHelper : ComponentHelperBase<Renderer>
     {
-        get
+        #region Property & Field
+        public Material Material
         {
-            if (!_material)
+            get
             {
-                if (layer == 0)
+                if (!_material)
                 {
+                    if (layer == 0)
+                    {
 #if UNITY_EDITOR
-                    if (!Application.isPlaying)
-                        _material = Comp.sharedMaterial;
-                    else
+                        if (!Application.isPlaying)
+                            _material = Comp.sharedMaterial;
+                        else
 #endif
-                        _material = Comp.material;
+                            _material = Comp.material;
+                    }
+                    else
+                    {
+                        if (Comp.materials.Length > layer)
+                            _material = Comp.materials[layer];
+                    }
+                }
+                return _material;
+            }
+        }
+        [SerializeField] Material _material;
+        [SerializeField] int layer = 0;
+        #endregion
+
+        #region Material
+        public void SetMaterial(Material material)
+        {
+            if (layer == 0)
+                Comp.material = material;
+            else//设置指定层的材质
+            {
+                if (Comp.materials.Length >= layer + 1)
+                {
+                    //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
+                    Material[] mats = Comp.materials;
+                    mats[layer] = material;
+                    Comp.materials = mats;
                 }
                 else
                 {
-                    if (Comp.materials.Length > layer)
-                        _material = Comp.materials[layer];
+                    Debug.LogError($"{Comp.gameObject} don't have material in index {layer} !");
                 }
             }
-            return _material;
         }
-    }
-    [SerializeField] Material _material;
-    [SerializeField] int layer = 0;
-    #endregion
+        #endregion
 
-    #region Texture
-    [Header("——Texture——")]
-    public MaterialTextureType materialTextureType = MaterialTextureType.BaseMap;
+        #region Texture
+        [Header("——Texture——")]
+        public MaterialTextureType materialTextureType = MaterialTextureType.BaseMap;
 #if USE_NaughtyAttributes
-    [ShowIf(nameof(materialTextureType), MaterialTextureType.Custom)]
+        [ShowIf(nameof(materialTextureType), MaterialTextureType.Custom)]
 #endif
-    public string customMaterialTextureName = "";
+        public string customMaterialTextureName = "";
 
-    public void SetTexture(Texture texture)
-    {
-        if (!Material)
-            return;
-
-        string propertyName = materialTextureType.GetPropertyName(customMaterialTextureName);
-#if UNITY_2021_1_OR_NEWER
-        if (!Material.HasTexture(propertyName))
+        public void SetTexture(Texture texture)
         {
-            Debug.LogError(Material + " doesn't have texture: " + propertyName + " !");
-            return;
+            if (!Material)
+                return;
+
+            string propertyName = materialTextureType.GetPropertyName(customMaterialTextureName);
+#if UNITY_2021_1_OR_NEWER
+            if (!Material.HasTexture(propertyName))
+            {
+                Debug.LogError(Material + " doesn't have texture: " + propertyName + " !");
+                return;
+            }
+#endif
+            Material.SetTexture(propertyName, texture);
         }
-#endif
-        Material.SetTexture(propertyName, texture);
-    }
-    #endregion
+        #endregion
 
-    #region Color
-    [Header("——Set Color——")]
-    public MaterialColorType materialColorType = MaterialColorType.BaseColor;//用于设置基础颜色（包括Alpha）、发光等
+        #region Color
+        [Header("——Set Color——")]
+        public MaterialColorType materialColorType = MaterialColorType.BaseColor;//用于设置基础颜色（包括Alpha）、发光等
 #if USE_NaughtyAttributes
-    [ShowIf(nameof(materialColorType), MaterialColorType.Custom)]
+        [ShowIf(nameof(materialColorType), MaterialColorType.Custom)]
 #endif
-    public string customMaterialColorName="";
-    public bool isKeepAlpha = true;//Keep origin color's alpha
-    void SetColor(Color color)
-    {
-        if (!Material)
-            return;
+        public string customMaterialColorName = "";
+        public bool isKeepAlpha = true;//Keep origin color's alpha
+        public void SetColor(Color color)
+        {
+            if (!Material)
+                return;
 
-        string propertyName = materialColorType.GetPropertyName(customMaterialColorName);
+            string propertyName = materialColorType.GetPropertyName(customMaterialColorName);
 
 #if UNITY_2021_1_OR_NEWER
-        if (!Material.HasColor(propertyName))
-        {
-            Debug.LogError(Material + " doesn't have color: " + propertyName + " !");
-            return;
-        }
+            if (!Material.HasColor(propertyName))
+            {
+                Debug.LogError(Material + " doesn't have color: " + propertyName + " !");
+                return;
+            }
 #endif
-        
-        if (isKeepAlpha)
-        {
-            color.a = Material.GetColor(propertyName).a;
-        }
-        Material.SetColor(propertyName, color);
-    }
-    #endregion
 
-    //ToAdd...(参考RendererHelper_BuiltinRP，剔除掉Random、targetXXX等)
+            if (isKeepAlpha)
+            {
+                color.a = Material.GetColor(propertyName).a;
+            }
+            Material.SetColor(propertyName, color);
+        }
+
+        //ToAdd:SetAlpha、SetAlphaPercent
+        #endregion
+
+        #region Value
+        [Header("——Set Value——")]
+        public MaterialFloatType materialFloatType =  MaterialFloatType.NormalScale;//用于设置基础Float字段
+        public string customMaterialFloatName = "";
+      
+        public void SetFloat(float value)
+        {
+            string propertyName = materialFloatType.GetPropertyName(customMaterialFloatName);
+
+#if UNITY_2021_1_OR_NEWER
+            if (!Material.HasFloat(propertyName))
+            {
+                Debug.LogError(Material + " doesn't have float: " + propertyName + " !");
+                return;
+            }
+#endif
+
+            Material.SetFloat(propertyName, value);
+        }
+
+        #endregion
+
+        #region Keyword
+        /// <summary>
+        /// 常见Keyword（可通过Inspector-Debug模式查看Valid Keywords）：
+        /// -_EMISSION
+        /// </summary>
+        /// <param name="keyword"></param>
+        public void EnableKeyword(string keyword)
+        {
+            Material.EnableKeyword(keyword);
+        }
+        public void DisableKeyword(string keyword)
+        {
+            Material.DisableKeyword(keyword);
+        }
+        #endregion
+
+
+        //ToAdd...(参考RendererHelper_BuiltinRP，剔除掉Random、targetXXX等不通用方法)
+    }
 }

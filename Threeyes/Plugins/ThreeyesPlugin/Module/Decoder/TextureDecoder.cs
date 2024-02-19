@@ -38,9 +38,9 @@ namespace Threeyes.Decoder
 				try
 				{
 					bool markNonReadable = option.markNonReadable && !option.compress;//(Will force make texture readable if compress is on, )
-					bool canLoad = ImageConversion.LoadImage(tempTex, data, markNonReadable);//(https://docs.unity3d.com/ScriptReference/ImageConversion.LoadImage.html)
+					bool canLoad = ImageConversion.LoadImage(tempTex, data, markNonReadable);//Loads PNG or JPG image byte array into a texture.(https://docs.unity3d.com/ScriptReference/ImageConversion.LoadImage.html)
 
-					if(!canLoad)
+					if (!canLoad)
 					{
 						decodeResult.errorInfo = $"Can't load image!";
 					}

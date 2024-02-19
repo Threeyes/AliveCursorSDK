@@ -4,30 +4,33 @@ using NaughtyAttributes;
 #endif
 namespace Threeyes.Config
 {
+    public abstract class ConfigurableComponentBase<TConfig> : MonoBehaviour, IConfigurableComponent<TConfig>
+    {
+        public virtual TConfig Config { get { return defaultConfig; } }
+
+        public TConfig DefaultConfig { get { return defaultConfig; } set { defaultConfig = value; } }
+        [Header("Config")]
+        [SerializeField] protected TConfig defaultConfig;//Default config
+    }
+
     /// <summary>
     /// Component with optional and configable SO
     ///
     /// </summary>
     /// <typeparam name="TSOConfig"></typeparam>
     /// <typeparam name="TConfig"></typeparam>
-    public abstract class ConfigurableComponentBase<TSOConfig, TConfig> : MonoBehaviour, IConfigurableComponent<TSOConfig, TConfig>
+    public abstract class ConfigurableComponentBase<TSOConfig, TConfig> : ConfigurableComponentBase<TConfig>, IConfigurableComponent<TSOConfig, TConfig>
     where TSOConfig : SOConfigBase<TConfig>
     {
-        public TConfig Config
+        public override TConfig Config
         {
             get
             {
-                if (config == null)
-                    config = SOOverrideConfig ? SOOverrideConfig.config : DefaultConfig;
-                return config;
+                return SOOverrideConfig ? SOOverrideConfig.config : DefaultConfig;//不使用config字段缓存引用，因为有可能会出现uMod加载并反序列化后导致数据对不上的问题
             }
         }
-        protected TConfig config;
 
-        public TConfig DefaultConfig { get { return defaultConfig; } set { defaultConfig = value; } }
         public TSOConfig SOOverrideConfig { get { return soOverrideConfig; } set { soOverrideConfig = value; } }
-        [Header("Config")]
-        [SerializeField] protected TConfig defaultConfig;//Default config
 #if USE_NaughtyAttributes
         [Expandable]
 #endif

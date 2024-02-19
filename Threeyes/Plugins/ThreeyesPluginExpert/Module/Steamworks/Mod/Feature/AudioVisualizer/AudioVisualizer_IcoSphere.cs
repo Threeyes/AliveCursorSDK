@@ -5,302 +5,454 @@ using UnityEngine.ProBuilder;
 using UnityEngine.ProBuilder.MeshOperations;
 using Threeyes.Persistent;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine.Events;
-using Threeyes.Config;
+using static Threeyes.Steamworks.AudioVisualizer_IcoSphere.ConfigInfo;
+
 namespace Threeyes.Steamworks
 {
-	/// <summary>
-	/// Auto generate icosphere base on config, which can response to audio
-	/// 
-	/// Ref：Samples/ProBuilder/X.X.X/Runtime Examples/Icosphere FFT
-	/// </summary>
-	public class AudioVisualizer_IcoSphere : ConfigurableComponentBase<SOAudioVisualizer_IcoSphereConfig, AudioVisualizer_IcoSphere.ConfigInfo>
-	, IHubSystemAudio_RawSampleDataChangedHandler
-	, IHubSystemAudio_SpectrumDataChangedHandler
-	, IModHandler
-	{
-		#region Property & Field
-		const float twoPi = 6.283185f;
-		public IHubSystemAudioManager Manager { get { return ManagerHolder.SystemAudioManager; } }
+    /// <summary>
+    /// Auto generate icosphere base on config, which can response to audio
+    /// 
+    /// Ref：Samples/ProBuilder/X.X.X/Runtime Examples/Icosphere FFT
+    /// 
+    /// PS：
+    /// -Waveform：
+    ///     -阴影：如果无法显示阴影，则将CastShadows改为TwoSided
+    /// -Shell（外壳，也就是最大显示区域）（如玻璃外壳，可空）：
+    ///     -半径=sphereRadius + idleExtrusion + maxExtrusion
+    ///     
+    /// Todo:
+    /// -增加非运行模式下初始化默认的Mesh（非必须）及Waveform
+    /// -Shell作为外边界：可选是否考虑maxExtrusion，如果是则基于Shell半径+Pivot计算锚点，并且用Event通知外部显隐相关物体（如显隐Shell的MeshRenderer，以及缩放Shell（主要利用其碰撞体））
+    /// -不新建Mesh对应的新物体，而是基于已有物体，方便MaterialController引用并修改该材质（因为多个实例，不可能修改同一个材质）（如果不行就引用MaterialController，并手动更新其值）
+    /// </summary>
+    public class AudioVisualizer_IcoSphere : ConfigurableComponentBase<AudioVisualizer_IcoSphere, SOAudioVisualizer_IcoSphereConfig, AudioVisualizer_IcoSphere.ConfigInfo, AudioVisualizer_IcoSphere.PropertyBag>
+    , IHubSystemAudio_RawSampleDataChangedHandler
+    , IHubSystemAudio_SpectrumDataChangedHandler
+    , IModHandler
+    {
+        #region Property & Field
+        const float twoPi = 6.283185f;
+        public IHubSystemAudioManager Manager { get { return ManagerHolder.SystemAudioManager; } }
+        Transform TfParent { get { return tfParent ? tfParent : transform; } }
+        float parentLossyScale { get { return TfParent.lossyScale.x; } }//父物体的全局缩放，决定Sphere和Waveform的大小
 
-		public AnimationCurve frequencyCurve;// Optionally weights the frequency amplitude when calculating extrude distance.
-		public LineRenderer waveform;// A reference to the line renderer that will be used to render the raw waveform.
+        public Transform tfParent;//The parent of mesh and waveform
+        public AnimationCurve frequencyCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));// Optionally weights the frequency amplitude when calculating extrude distance.（PS：因为RuntimeEditor暂不支持曲线，且非必须，所以放在外部）
+        public LineRenderer waveform;// A reference to the line renderer that will be used to render the raw waveform.
+        public Pivot pivot = Pivot.Center;// The pivot of the Mesh
+        /// ToAdd:
+        /// -字段：isPivotBaseOnShellSize，
 
-		//Runtime
-		ProBuilderMesh m_ProBuilderMesh;
-		Mesh m_UnityMesh;// A reference to the MeshFilter.sharedMesh
-		Transform m_Transform;//IcoSphere
-		float m_FaceLength;
-		ExtrudedSelection[] m_AnimatedSelections;// All faces that have been extruded       
-		Vector3[] m_OriginalVertexPositions, m_DisplacedVertexPositions;// Keep a copy of the original vertex array to calculate the distance from origin.
-		#endregion
+        public Vector3Event onLocalSphereSizeChanged = new Vector3Event();//球（idle状态）的尺寸发生变化
+        public Vector3Event onLocalShellSizeChanged = new Vector3Event();//球的外壳尺寸发生变化（idle半径+[可选]最大显示范围，不包括Waveform）
 
-		#region Unity Method
-		void Awake()
-		{
-			Config.actionGeneratePersistentChanged += OnGeneratePersistentChanged;
-			Config.actionMaterialChanged += OnMaterialChanged;
-			Config.actionWaveformSettingChanged += OnWaveformSettingChanged;
-		}
-		private void OnDestroy()
-		{
-			Config.actionGeneratePersistentChanged -= OnGeneratePersistentChanged;
-			Config.actionMaterialChanged -= OnMaterialChanged;
-			Config.actionWaveformSettingChanged -= OnWaveformSettingChanged;
-		}
+        //Runtime
+        public Transform tfShell;//Shell GameObject（外壳，可为其挂载SphereCollider从而处理碰撞检测，可选其半径是否包括maxExtrusion）
+        public Transform tfIcoSphere;//IcoSphere GameObject（用于缓存运行时生成的Mesh数据，可以为其提前设置材质）
+        ProBuilderMesh m_ProBuilderMesh;
+        Mesh m_UnityMesh;// A reference to the MeshFilter.sharedMesh
+        float m_FaceLength;
+        int waveformPointCount;//Waveform的点数量
+        ExtrudedSelection[] m_AnimatedSelections;// All faces that have been extruded       
+        Vector3[] m_OriginalVertexPositions, m_DisplacedVertexPositions;// Keep a copy of the original vertex array to calculate the distance from origin.
+        #endregion
 
-		void Update()
-		{
-			// Ring rotation
-			if (Config.showWaveform && Config.rotateWaveformRing)
-			{
-				waveform.transform.Rotate(Config.waveformRotateSpeed * 360 * Time.deltaTime, Space.Self);
-			}
-		}
-		#endregion
+        #region Unity Method
+        protected override void Awake()
+        {
+            base.Awake();
+            Config.actionMeshGenerateSettingChanged += OnMeshGenerateSettingChanged;
+            Config.actionWaveformGenerateSettingChanged += OnWaveformGenerateSettingChanged;
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Config.actionMeshGenerateSettingChanged -= OnMeshGenerateSettingChanged;
+            Config.actionWaveformGenerateSettingChanged -= OnWaveformGenerateSettingChanged;
+        }
+        protected virtual void OnEnable()
+        {
+            ManagerHolder.SystemAudioManager.Register(this);
+        }
+        protected virtual void OnDisable()
+        {
+            ManagerHolder.SystemAudioManager.UnRegister(this);
+        }
 
-		#region Callback
-		public void OnModInit()
-		{
-			ReGenerateMesh();//等待PD完成初始化后，读取配置并更新（PS：如果使用的是defaultConfig，因为其不是SO，会导致其PD相关回调无法调用，因此不能依赖OnGeneratePersistentChanged在PersistentChangeState.Load时调用该方法，而是需要手动调用。凡是需要读取初始化值的都需要如此操作）
-		}
-		public void OnModDeinit() { }
-		void OnMaterialChanged(PersistentChangeState persistentChangeState)
-		{
-			if (persistentChangeState == PersistentChangeState.Load)
-				return;
-			UpdateMaterial();
-		}
-		void OnGeneratePersistentChanged(PersistentChangeState persistentChangeState)
-		{
-			if (persistentChangeState == PersistentChangeState.Load)
-				return;
-			RuntimeTool.ExecuteOnceInCurFrameAsync(ReGenerateMesh);//Make sure get executed once
-		}
-		void OnWaveformSettingChanged(PersistentChangeState persistentChangeState)
-		{
-			if (persistentChangeState == PersistentChangeState.Load)
-				return;
-			UpdateWaveformSetting();
-		}
+        void Update()
+        {
+            //#Ring
+            if (Config.showWaveform)
+            {
+                UpdateWaveformSetting();//更新Gradient
 
-		float[] lastFrameSpectrumdata = new float[] { };
-		public virtual void OnSpectrumDataChanged(float[] data)
-		{
-			if (m_AnimatedSelections == null)
-				return;
+                if (Config.rotateWaveformRing)
+                    waveform.transform.Rotate(Config.waveformRotateSpeed /** 360 */* Time.deltaTime, Space.Self);
+            }
+        }
+        #endregion
 
-			if (lastFrameSpectrumdata.Length != data.Length)//Not set or length changed
-			{
-				lastFrameSpectrumdata = data;
-			}
+        #region IModHandler
+        /// <summary>
+        /// 
+        /// PS：
+        /// -调用入口：
+        ///     -OnPersistentChanged
+        /// </summary>
+        public override void UpdateSetting()
+        {
+            ///ToUpdate:
+            ///-当且只有当Mesh相关设置有更改才调用ReGenerateMesh（参考MediaController，或者复用OnGeneratePersistentChanged）
 
-			//IcoSphere
-			//For each face, translate the vertices some distance depending on the frequency range assigned.
-			for (int i = 0; i < m_AnimatedSelections.Length; i++)
-			{
-				float normalizedIndex = (i / m_FaceLength);//Get normal index of face
-				int n = (int)(normalizedIndex * Config.fftBounds);
-				Vector3 displacement =
-					m_AnimatedSelections[i].normal
-					* ((data[n] + lastFrameSpectrumdata[n]) * .5f)
-					* (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f)
-					* Config.maxExtrusion;
-				foreach (int t in m_AnimatedSelections[i].indices)
-				{
-					m_DisplacedVertexPositions[t] = m_OriginalVertexPositions[t] + displacement;
-				}
-			}
-			m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter.
+            //ToFix:AC需要等待PD完成初始化后，读取配置并更新（因为如果使用的是defaultConfig，其不是SO，会导致其PD相关回调无法调用，因此不能依赖OnGeneratePersistentChanged在PersistentChangeState.Load时调用该方法，而是需要手动调用。凡是需要读取初始化值的都需要如此操作）（解决办法：如果没有SOConfig，则在Start或其他位置手动调用UpdateSetting）
+            //ReGenerateMesh();
 
-			//Cache
-			lastFrameSpectrumdata = data;
-		}
+        }
+        #endregion
 
-		public virtual void OnRawSampleDataChanged(float[] data)
-		{
-			if (!Config.showWaveform)
-				return;
+        #region IRuntimeEditable
+        protected override void RuntimeEditableRegisterDataEvent()
+        {
+            base.RuntimeEditableRegisterDataEvent();
+            Config.actionMeshGenerateSettingChanged -= OnMeshGenerateSettingChanged;
+            Config.actionMeshGenerateSettingChanged += OnMeshGenerateSettingChanged;
+            Config.actionWaveformGenerateSettingChanged -= OnWaveformGenerateSettingChanged;
+            Config.actionWaveformGenerateSettingChanged += OnWaveformGenerateSettingChanged;
+        }
+        #endregion
 
-			///Waveform
-			Vector3 vec = Vector3.zero;
-			int totalCount = data.Length;
-			float fTotalCount = (float)totalCount;//Warning:后续需要使用float进行小数点计算，因此类型为float
-			for (int i = 0; i != totalCount; i++)
-			{
-				if (i == totalCount - 1)//Make sure the rear point connected to head point
-				{
-					waveform.SetPosition(i, waveform.GetPosition(0));
-					return;
-				}
+        #region Callback
+        void OnMeshGenerateSettingChanged(PersistentChangeState persistentChangeState)
+        {
+            //if (persistentChangeState == PersistentChangeState.Load)
+            //    return;
+            RuntimeTool.ExecuteOnceInCurFrameAsync(ReGenerateSphere);//Make sure get executed once
+        }
+        void OnWaveformGenerateSettingChanged(PersistentChangeState persistentChangeState)
+        {
+            ReGenerateWaveform(Manager.RawSampleCount);
+        }
 
-				int n = i < fTotalCount - 1 ? i : 0;
-				float travel = Config.waveformRadius + Config.waveformHeight * data[n];
-				vec.x = Mathf.Cos(n / fTotalCount * twoPi) * travel;
-				vec.z = Mathf.Sin(n / fTotalCount * twoPi) * travel;
-				vec.y = 0f;
+        public virtual void OnRawSampleDataChanged(float[] rawData)//RawSampleData：更新曲线
+        {
+            //——Todo：根据 waveformPointCount 计算值
+            if (!Config.showWaveform)
+                return;
 
-				waveform.SetPosition(i, vec);
-			}
-		}
-		void InitWaveform()
-		{
-			//Init point positions
-			Vector3 vec = Vector3.zero;
-			int totalCount = waveform.positionCount;
-			float fTotalCount = totalCount;//Warning:后续需要使用float进行小数点计算，因此类型为float
-			for (int i = 0; i != totalCount; i++)
-			{
-				int n = i < fTotalCount - 1 ? i : 0;
-				float travel = Config.waveformRadius;
-				vec.x = Mathf.Cos(n / fTotalCount * twoPi) * travel;
-				vec.z = Mathf.Sin(n / fTotalCount * twoPi) * travel;
-				vec.y = 0f;
-				waveform.SetPosition(i, vec);
-			}
-		}
-		#endregion
+            Vector3 pos = Vector3.zero;
+            float fTotalCount = (float)waveformPointCount;//Warning:后续需要使用float进行小数点计算，因此转为float
+            for (int waveformpointIndex = 0; waveformpointIndex != waveformPointCount; waveformpointIndex++)
+            {
+                int rawDataIndex = waveformpointIndex < waveformPointCount - 1 ? waveformpointIndex : 0;//根据waveform点Index计算出对应的rawDataIndex。如果i是最后一点，则确保其值与首位相同，以保证首位相连
 
-		#region Inner Method
-		async void ReGenerateMesh()
-		{
-			if (m_Transform)
-			{
-				Destroy(m_Transform.gameObject);//Destroy old mesh
-				await Task.Yield();//Wait for destroy completed
-			}
+                rawDataIndex *= (int)Config.waveformDownSample;//原理：waveform点序号×采样值=rawData对应点的序号
 
-			//Todo：考虑父物体的局部缩放
-			m_ProBuilderMesh = ShapeGenerator.GenerateIcosahedron(PivotLocation.Center, Config.sphereRadius, Config.sphereSubdivisions);// Create a new sphere.     
-			UpdateMaterial();//Assign the default material
+                float travel = Config.waveformRadius + Config.waveformHeight * rawData[rawDataIndex];
+                pos.x = Mathf.Cos(waveformpointIndex / fTotalCount * twoPi) * travel;
+                pos.z = Mathf.Sin(waveformpointIndex / fTotalCount * twoPi) * travel;
+                pos.y = 0f;
 
-			var shell = m_ProBuilderMesh.faces;// Shell is all the faces on the new sphere.
+                waveform.SetPosition(waveformpointIndex, pos);
+            }
+        }
+        float[] lastFrameSpectrumdata = new float[] { };
+        public virtual void OnSpectrumDataChanged(float[] data)//SpectrumData：更新面
+        {
+            if (m_AnimatedSelections == null)
+                return;
 
-			// Extrude all faces on the sphere by a small amount. The third boolean parameter
-			// specifies that extrusion should treat each face as an individual, not try to group
-			// all faces together.
-			m_ProBuilderMesh.Extrude(shell, Config.extrudeMethod, Config.idleExtrusion);
+            if (lastFrameSpectrumdata.Length != data.Length)//Not set or length changed
+            {
+                lastFrameSpectrumdata = data;
+            }
 
-			// ToMesh builds the mesh positions, submesh, and triangle arrays. Call after adding
-			// or deleting vertices, or changing face properties.
-			m_ProBuilderMesh.ToMesh();
-			m_ProBuilderMesh.Refresh();// Refresh builds the normals, tangents, and UVs.
+            //IcoSphere
+            //For each face, translate the vertices some distance depending on the frequency range assigned.
+            for (int i = 0; i < m_AnimatedSelections.Length; i++)
+            {
+                float normalizedIndex = (i / m_FaceLength);//Get normal index of face
+                int n = (int)(normalizedIndex * Config.fftBounds);
+                Vector3 displacement =
+                    m_AnimatedSelections[i].normal
+                    * ((data[n] + lastFrameSpectrumdata[n]) * .5f)//与上一帧的平均值
+                    * (frequencyCurve.Evaluate(normalizedIndex) * .5f + .5f)//利用曲线来决定显示哪一部分的频段（待优化）
+                    * Config.maxExtrusion;
+                foreach (int t in m_AnimatedSelections[i].indices)
+                {
+                    m_DisplacedVertexPositions[t] = m_OriginalVertexPositions[t] + displacement;
+                }
+            }
+            m_UnityMesh.vertices = m_DisplacedVertexPositions;// Apply the new extruded vertex positions to the MeshFilter.
 
-			m_AnimatedSelections = new ExtrudedSelection[shell.Count];
-			// Populate the outsides[] cache. This is a reference to the tops of each extruded column, including
-			// copies of the sharedIndices.
-			for (int i = 0; i < shell.Count; ++i)
-			{
-				m_AnimatedSelections[i] = new ExtrudedSelection(m_ProBuilderMesh, shell[i]);
-			}
-			m_OriginalVertexPositions = m_ProBuilderMesh.positions.ToArray();// Store copy of positions array un-modified          
-			m_DisplacedVertexPositions = new Vector3[m_ProBuilderMesh.vertexCount];// displaced_vertices should mirror sphere mesh vertices.
+            //Cache
+            lastFrameSpectrumdata = data;
+        }
+        #endregion
 
-			m_UnityMesh = m_ProBuilderMesh.GetComponent<MeshFilter>().sharedMesh;
-			m_FaceLength = m_AnimatedSelections.Length;
-			m_Transform = m_ProBuilderMesh.transform;
-			m_Transform.parent = transform;
-			m_Transform.localPosition = Vector3.zero;//Reset Pos
-			m_Transform.localScale = Vector3.one;//Reset Scale
-			m_Transform.localRotation = Quaternion.identity;
+        #region Init&Update
 
-			// Build the waveform ring.
-			waveform.positionCount = Manager.RawSampleCount;
-			InitWaveform();
-			//ToAdd:Init Point Position
-			UpdateWaveformSetting();
-		}
-		void UpdateMaterial()
-		{
-			if (m_ProBuilderMesh)
-			{
-				m_ProBuilderMesh.GetComponent<MeshRenderer>().sharedMaterial = Config.sphereMaterial;
-			}
-		}
+        #region Editor
 
-		[ContextMenu("UpdateWaveformSetting")]
-		void UpdateWaveformSetting()
-		{
-			waveform.gameObject.SetActive(Config.showWaveform);
-			waveform.colorGradient = Config.waveformGradient;
-			waveform.widthMultiplier = Config.waveformWidthMultiplier;
-		}
+        [ContextMenu("EditorGenerateWaveform")]
+        void EditorGenerateWaveform()//非运行模式，基于当前配置生成Waveform
+        {
+            int rawSampleCount = 256;//提供模拟的RawSampleCount
+            ReGenerateWaveform(rawSampleCount);
+            UpdateWaveformSetting();
+        }
+        [ContextMenu("EditorGenerateSphere")]
+        void EditorGenerateSphere()
+        {
+            ///Todo:
+            ///-仅生成多边形，不缓存到非序列化字段中。不急，可以先用模型代替
+            //ReGenerateSphere();
+        }
+        #endregion
 
-		#endregion
+        void ReGenerateSphere()
+        {
+            //——生成Sphere——
+            //Todo：考虑父物体的局部缩放
+            m_ProBuilderMesh = ShapeGenerator.GenerateIcosahedron(PivotLocation.Center, Config.sphereRadius, Config.sphereSubdivisions);// Create a new sphere instance.  
 
-		#region Editor Method
+            var shell = m_ProBuilderMesh.faces;// Shell is all the faces on the new sphere.
+
+            // Extrude all faces on the sphere by a small amount. The third boolean parameter
+            // specifies that extrusion should treat each face as an individual, not try to group
+            // all faces together.
+            m_ProBuilderMesh.Extrude(shell, Config.extrudeMethod, Config.idleExtrusion);
+
+            // ToMesh builds the mesh positions, submesh, and triangle arrays. Call after adding
+            // or deleting vertices, or changing face properties.
+            m_ProBuilderMesh.ToMesh();
+            m_ProBuilderMesh.Refresh();// Refresh builds the normals, tangents, and UVs.
+
+            m_AnimatedSelections = new ExtrudedSelection[shell.Count];
+            // Populate the outsides[] cache. This is a reference to the tops of each extruded column, including
+            // copies of the sharedIndices.
+            for (int i = 0; i < shell.Count; ++i)
+            {
+                m_AnimatedSelections[i] = new ExtrudedSelection(m_ProBuilderMesh, shell[i]);
+            }
+            m_OriginalVertexPositions = m_ProBuilderMesh.positions.ToArray();// Store copy of positions array un-modified          
+            m_DisplacedVertexPositions = new Vector3[m_ProBuilderMesh.vertexCount];// displaced_vertices should mirror sphere mesh vertices.
+            m_FaceLength = m_AnimatedSelections.Length;
+
+            //tfIcoSphere = m_ProBuilderMesh.transform;
+            MeshFilter builderMeshFilter = m_ProBuilderMesh.GetComponent<MeshFilter>();//对应ProBuilderMeshFilter（ProBuilderMesh组件）
+            MeshFilter meshFilterIcoSphere = tfIcoSphere.GetComponent<MeshFilter>();
+            meshFilterIcoSphere.mesh = builderMeshFilter.sharedMesh;
+
+            m_UnityMesh = meshFilterIcoSphere.sharedMesh;
+            m_ProBuilderMesh.gameObject.DestroyAtOnce();//Destroy generated object（会根据是否为运行模式自动删除）
+
+            tfIcoSphere.parent = TfParent;
+            tfIcoSphere.localPosition = Vector3.zero;//Init Pos
+            tfIcoSphere.localScale = Vector3.one;//Reset Scale
+            tfIcoSphere.localRotation = Quaternion.identity;
+            //Update Parent Pos
+            Vector3 parentLocalPos = pivot == Pivot.Center ? Vector3.zero : Vector3.up * Config.ShellRadius;
+            TfParent.localPosition = parentLocalPos;
+
+            //Notify event
+            Vector3 shellSize = Vector3.one * (Config.ShellRadius) * 2;
+            onLocalSphereSizeChanged.Invoke(Vector3.one * Config.SphereIdleRadius * 2);
+            onLocalShellSizeChanged.Invoke(shellSize);
+
+            //——更新Shell——
+            if (tfShell)
+            {
+                MeshRenderer meshRenderer = tfShell.GetComponent<MeshRenderer>();
+                if (meshRenderer)//只决定Shell是否显示Mesh，不影响其其他组件的正常运行，如SphereCollider
+                    meshRenderer.enabled = Config.showShell;
+
+                tfShell.localScale = shellSize;
+            }
+        }
+
+        void ReGenerateWaveform(int rawSampleCount)
+        {
+            waveform.gameObject.SetActive(Config.showWaveform);
+            waveform.useWorldSpace = false;//基于局部坐标
+            waveform.loop = true;//首尾相连
+            waveformPointCount = rawSampleCount;//Waveform点数默认与RawData数组数量一致
+            switch (Config.waveformDownSample)//根据设置进行降采样(因为rawData数组的数量一定是2的幂，所以可以直接相除)
+            {
+                case DownSample.Off:
+                    break;
+                case DownSample.Half:
+                    waveformPointCount /= 2; break;
+                case DownSample.Quarter:
+                    waveformPointCount /= 4; break;
+                case DownSample.Eighth:
+                    waveformPointCount /= 8; break;
+                default:
+                    Debug.LogError($"{Config.waveformDownSample} not define!"); break;
+            }
+            waveform.positionCount = waveformPointCount;
+            InitWaveform();
+            //UpdateWaveformSetting();//因为Bug#20240111，导致通过运行时编辑Graident不会回调方法，因此暂时把这段代码挪到Update
+        }
+
+        void InitWaveform()
+        {
+            //Init point positions
+            Vector3 vec = Vector3.zero;
+            int totalCount = waveform.positionCount;
+            float fTotalCount = totalCount;//Warning:后续需要使用float进行小数点计算，因此类型为float
+            for (int i = 0; i != totalCount; i++)
+            {
+                int n = i < totalCount - 1 ? i : 0;
+                float travel = Config.waveformRadius;
+                vec.x = Mathf.Cos(n / fTotalCount * twoPi) * travel;
+                vec.z = Mathf.Sin(n / fTotalCount * twoPi) * travel;
+                vec.y = 0f;
+                waveform.SetPosition(i, vec);
+            }
+        }
+
+        [ContextMenu("UpdateWaveformSetting")]
+        void UpdateWaveformSetting()
+        {
+            waveform.colorGradient = Config.waveformGradient;
+            waveform.widthMultiplier = Config.waveformWidthMultiplier * parentLossyScale;//用户缩放父物体会同步到Waveform中
+        }
+        #endregion
+
+        #region Editor Method
 #if UNITY_EDITOR
-		Color gizmoColor = new Color(1, 1, 1, 0.5f);
-		void OnDrawGizmos()
-		{
-			if (Application.isPlaying)
-				return;
+        Color gizmoColor = new Color(1, 1, 1, 0.5f);
+        void OnDrawGizmos()
+        {
+            if (Application.isPlaying)
+                return;
 
-			Gizmos.color = gizmoColor;
-			Gizmos.DrawWireSphere(transform.position, Config.sphereRadius * transform.lossyScale.x);//Draw IcoSphere's shape
-		}
+            Gizmos.color = gizmoColor;
+            Gizmos.DrawWireSphere(TfParent.position, Config.sphereRadius * parentLossyScale);//Draw IcoSphere's shape
+        }
+
+        //private void OnValidate()
+        //{
+        //    if (Application.isPlaying)
+        //        return;
+        //}
 #endif
-		#endregion
+        #endregion
 
-		#region Define
-		/// <summary>
-		/// This is the container for each extruded column. We'll use it to apply offsets per-extruded face.
-		/// </summary>
-		struct ExtrudedSelection
-		{
-			/// <value>
-			/// The direction in which to move this selection when animating.
-			/// </value>
-			public Vector3 normal;
+        #region Define
+        [System.Serializable]
+        public class ConfigInfo : SerializableComponentConfigInfoBase
+        {
+            [JsonIgnore] public UnityAction<PersistentChangeState> actionMeshGenerateSettingChanged;//Any Generate field change
+            [JsonIgnore] public UnityAction<PersistentChangeState> actionWaveformGenerateSettingChanged;
 
-			/// <value>
-			/// All vertex indices (including common vertices). "Common" refers to vertices that share a position
-			/// but remain discrete.
-			/// </value>
-			public List<int> indices;
+            ///ToUpdate：
+            ///-删掉Material相关字段，改为MaterialController
+            ///-简化Header，改为Sphere/Waveform Setting
+            ///+添加Shell厚度
+            ///
 
-			public ExtrudedSelection(ProBuilderMesh mesh, Face face)
-			{
-				indices = mesh.GetCoincidentVertices(face.distinctIndexes);
-				normal = Math.Normal(mesh, face);
-			}
-		}
+            /// <summary>
+            /// 球Idle的半径
+            /// </summary>
+            [JsonIgnore] public float SphereIdleRadius { get { return sphereRadius + idleExtrusion; } }
 
-		[System.Serializable]
-		public class ConfigInfo : SerializableDataBase
-		{
-			[JsonIgnore] public UnityAction<PersistentChangeState> actionGeneratePersistentChanged;//Any Generate field change
-			[JsonIgnore] public UnityAction<PersistentChangeState> actionMaterialChanged;
-			[JsonIgnore] public UnityAction<PersistentChangeState> actionWaveformSettingChanged;
+            /// <summary>
+            /// 最外圈的半径
+            /// </summary>
+            [JsonIgnore]
+            public float ShellRadius
+            {
+                get
+                {
+                    float value = SphereIdleRadius;
 
-			[Header("Generate Setting")]
-			[Range(0, 3)] [PersistentValueChanged(nameof(OnGeneratePersistentChanged))] public int sphereSubdivisions = 2;// The number of subdivisions to give the sphere.
-			[Range(0.5f, 1f)] [PersistentValueChanged(nameof(OnGeneratePersistentChanged))] public float sphereRadius = 0.5f;// The radius of the sphere on instantiation.       
-			[PersistentValueChanged(nameof(OnGeneratePersistentChanged))] public ExtrudeMethod extrudeMethod = ExtrudeMethod.IndividualFaces;
-			[Range(0f, 1f)] [PersistentValueChanged(nameof(OnGeneratePersistentChanged))] public float idleExtrusion = .01f;// How far along the normal should each face be extruded when at idle (no audio input).
+                    if (showShell)//仅在显示Shell时包括Shell厚度
+                    {
+                        value += shellThickness;
+                        if (shellSizeIncludeMaxExtrusion)
+                            value += maxExtrusion;
+                    }
+                    return value;
+                }
+            }
 
-			[Header("Update Setting")]
-			[JsonIgnore] public Material sphereMaterial;//Sphere's Material
-			[JsonIgnore] public List<Material> listMaterialPreset = new List<Material>();//Sphere's redefine materials
-			[PersistentOption(nameof(listMaterialPreset), nameof(sphereMaterial))] [PersistentValueChanged(nameof(OnMaterialChanged))] public int curMaterialPresetIndex = 0;
-			[Range(0, 1f)] public float maxExtrusion = 0.1f;// The max distance a frequency range will extrude a face.
-			[Range(8, 128)] public int fftBounds = 32;// An FFT returns a spectrum including frequencies that are out of human hearing range. This restricts the number of bins used from the spectrum to the lower bounds.
+            [Header("Sphere Generate Setting")]
+            [Tooltip("The number of subdivisions to give the sphere.")] [Range(0, 3)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public int sphereSubdivisions = 2;
+            [Tooltip("The radius of the sphere on instantiation.       ")] [Range(0.5f, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float sphereRadius = 0.5f;
+            [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public ExtrudeMethod extrudeMethod = ExtrudeMethod.IndividualFaces;
+            [Tooltip("How far along the normal should each face be extruded when at idle (no audio input).")] [Range(0f, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float idleExtrusion = .01f;
+            [Tooltip("The max distance a frequency range will extrude a face.")] [Range(0, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float maxExtrusion = 0.1f;
 
-			[PersistentValueChanged(nameof(OnWaveformSettingChanged))] public bool showWaveform = true;
-			[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public Gradient waveformGradient = new Gradient();
-			[EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
-			[EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;// How far from the sphere should the waveform be.
-			[EnableIf(nameof(showWaveform))] public float waveformHeight = 0.2f;// The y size of the waveform.
-			[EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;// If true, the waveform ring will rotate around self.       
-			[EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, .01f, 0f);//Waveform ring's rotate speed.
+            [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public bool showShell = true;
+            [Tooltip("The thickness of the shell")] [EnableIf(nameof(showShell))] [Range(0, .1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float shellThickness = .01f;
+            [Tooltip("Considering maximum extrusion for shell size")] [EnableIf(nameof(showShell))] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public bool shellSizeIncludeMaxExtrusion = true;
 
-			void OnGeneratePersistentChanged(PersistentChangeState persistentChangeState) { actionGeneratePersistentChanged.Execute(persistentChangeState); }
-			void OnMaterialChanged(PersistentChangeState persistentChangeState) { actionMaterialChanged.Execute(persistentChangeState); }
-			void OnWaveformSettingChanged(PersistentChangeState persistentChangeState) { actionWaveformSettingChanged.Execute(persistentChangeState); }
-		}
-		#endregion
-	}
+            [Header("Sphere Update Setting")]
+            [Tooltip("An FFT returns a spectrum including frequencies that are out of human hearing range. This restricts the number of bins used from the spectrum to the lower bounds.")] [Range(8, 128)] public int fftBounds = 32;
 
+            [Header("Waveform Generate Setting")]
+            [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public bool showWaveform = true;
+            [Tooltip("Downsampling based on audio sources can affect the number of points in the waveform")] [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public DownSample waveformDownSample = DownSample.Off;
+
+            [Header("Waveform Update Setting")]
+            [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public Gradient waveformGradient = new Gradient();
+            [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
+            [Tooltip("How far from the sphere center should the waveform be.")] [EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;//（PS：因为Update也会使用该字段，所以放在该Header下）
+            [Tooltip("The y size of the waveform.")] [EnableIf(nameof(showWaveform))] public float waveformHeight = 0.2f;
+            [Tooltip("If true, the waveform ring will rotate around self. ")] [EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;
+            [Tooltip("Waveform ring's rotate speed (degrees per second).")] [EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, 3f, 0f);
+
+            [JsonConstructor]
+            public ConfigInfo() { }
+
+            void OnMeshGenerateSettingChanged(PersistentChangeState persistentChangeState) { actionMeshGenerateSettingChanged.Execute(persistentChangeState); }
+            void OnWaveformSettingGenerateChanged(PersistentChangeState persistentChangeState) { actionWaveformGenerateSettingChanged.Execute(persistentChangeState); }
+
+            /// <summary>
+            /// Touse：用于Waveform降采样，减少点的数量
+            /// </summary>
+            public enum DownSample
+            {
+                Off = 1,
+                Half = 2,//二分之一
+                Quarter = 4,//四分之一
+                Eighth = 8//八分之一
+            };
+        }
+
+        public class PropertyBag : ConfigurableComponentPropertyBagBase<AudioVisualizer_IcoSphere, ConfigInfo> { }
+
+        public enum Pivot
+        {
+            Center,
+            LowerCenter,//The Lowest Y Axis
+        }
+
+        /// <summary>
+        /// This is the container for each extruded column. We'll use it to apply offsets per-extruded face.
+        /// </summary>
+        struct ExtrudedSelection
+        {
+            /// <value>
+            /// The direction in which to move this selection when animating.
+            /// </value>
+            public Vector3 normal;
+
+            /// <value>
+            /// All vertex indices (including common vertices). "Common" refers to vertices that share a position
+            /// but remain discrete.
+            /// </value>
+            public List<int> indices;
+
+            public ExtrudedSelection(ProBuilderMesh mesh, Face face)
+            {
+                indices = mesh.GetCoincidentVertices(face.distinctIndexes);
+                normal = Math.Normal(mesh, face);
+            }
+        }
+        #endregion
+    }
 }

@@ -9,7 +9,36 @@ namespace Threeyes.Persistent
     public static class PersistentObjectTool
     {
         #region Define
-        public static bool DefaultFieldsCopyFilter(Type objectType, MemberInfo memberInfo)
+
+        /// <summary>
+        /// 在DefaultFilter的基础上，额外排除UnityObject
+        /// 
+        /// 适用于：
+        /// -Texture、Audio等因为拷贝而丢失引用
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="memberInfo"></param>
+        /// <returns></returns>
+        public static bool FieldsCopyFilter_ExcludeUnityObject(Type objectType, MemberInfo memberInfo)
+        {
+            bool isValid = FieldsCopyFilter_Default(objectType, memberInfo);
+            if (isValid)
+            {
+                bool isSrcInheritFromUnityObject = objectType.IsInherit(typeof(UnityEngine.Object));//确认是否继承Unity.Object
+                if (isSrcInheritFromUnityObject)
+                    isValid = false;
+            }
+            return isValid;
+        }
+        /// <summary>
+        /// 排除：
+        /// -[PersistentDirPath]等自定义的不需要序列化的内容
+        /// -Newtonsoft.Json标记为不需要序列化的内容
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="memberInfo"></param>
+        /// <returns></returns>
+        public static bool FieldsCopyFilter_Default(Type objectType, MemberInfo memberInfo)
         {
             if (memberInfo != null)
             {
@@ -18,16 +47,36 @@ namespace Threeyes.Persistent
                     return true;
             }
             //PS：
-            //1.使用JsonDotNetTool.ShouldSerialize作为filter的原因：标记为不需要序列化的字段，也没有拷贝的必要; Texture、Audio等可能会因为拷贝而丢失引用
+            //1.使用JsonDotNetTool.ShouldSerialize作为filter的原因：标记为不需要序列化的字段，也没有拷贝的必要;
             //2.event等不应该拷贝，否则会覆盖掉原值
             return JsonDotNetTool.ShouldSerialize(objectType, memberInfo);
-
         }
         #endregion
 
-
-
         #region Utility
+
+        /// <summary>
+        /// 使用现有数据，强制初始化（如读取文件、调用更新事件）
+        /// 
+        /// 适用于：
+        /// -自行管理数据的初始化，或者需要强制读取外部文件
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="originInst">源数据</param>
+        /// <param name="newInst">传入的数据</param>
+        public static void ForceInit<TValue>(TValue originInst, string persistentDirPath, TValue newInst = null)
+            where TValue : class
+        {
+            if (originInst == null)
+            {
+                Debug.LogError("originInst is null!");
+                return;
+            }
+            ///PS:模拟PersistentDataComplexBase，在初始化完成后调用PersistentObjectTool.CopyFiledsAndLoadAsset(PersistentChangeState.Load)，以此来强制读取外部数据
+            if (newInst == null)
+                newInst = UnityObjectTool.DeepCopy(originInst);//克隆一份，用作比对
+            CopyFiledsAndLoadAsset(originInst, newInst, PersistentChangeState.Load, persistentDirPath);
+        }
 
         //针对特殊Attribute进行处理
         static List<FieldInfoDetail> listPOFieldInfoDetail = new List<FieldInfoDetail>();//[PersistentOption]
@@ -49,7 +98,7 @@ namespace Threeyes.Persistent
         public static void CopyFiledsAndLoadAsset<TValue>(TValue originInst, TValue newInst, PersistentChangeState persistentChangeState, string persistentDirPath, Func<Type, MemberInfo, bool> funcCopyFilter = null)
         {
             if (funcCopyFilter == null)
-                funcCopyFilter = DefaultFieldsCopyFilter;
+                funcCopyFilter = FieldsCopyFilter_Default;
 
             //#1 【Cache】缓存新旧object值及相关Attribute绑定方法
             SetupInstance(originInst, newInst, persistentChangeState, persistentDirPath, true);

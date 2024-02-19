@@ -15,7 +15,7 @@ namespace Threeyes.Decoder
         public static DecodeResult DecodeEx(byte[] data, DecodeOption option = null)
         {
             DecodeResult decodeResult = new DecodeResult();
-            if (option == null)
+            if (option == null)//ToUse
                 option = DecodeOption.Default;
 
             if (data != null && data.Length > 0)

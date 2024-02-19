@@ -71,16 +71,21 @@ namespace Threeyes.Steamworks
         int RawSampleCount { get; }
         int FFTCount { get; }
         int SpectrumCount { get; }
+
+        void Register(IHubSystemAudio_DataChangedHandler handler);
+        void UnRegister(IHubSystemAudio_DataChangedHandler handler);
     }
-    public interface IHubSystemAudio_RawSampleDataChangedHandler
+
+    public interface IHubSystemAudio_DataChangedHandler { }//用于Register/UnRegister的基接口
+    public interface IHubSystemAudio_RawSampleDataChangedHandler: IHubSystemAudio_DataChangedHandler
     {
         void OnRawSampleDataChanged(float[] rawSampleData);
     }
-    public interface IHubSystemAudio_FFTDataChangedHandler
+    public interface IHubSystemAudio_FFTDataChangedHandler : IHubSystemAudio_DataChangedHandler
     {
         void OnFFTDataChanged(float[] fftData);
     }
-    public interface IHubSystemAudio_SpectrumDataChangedHandler
+    public interface IHubSystemAudio_SpectrumDataChangedHandler : IHubSystemAudio_DataChangedHandler
     {
         void OnSpectrumDataChanged(float[] spectrumData);
     }

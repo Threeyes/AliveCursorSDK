@@ -17,7 +17,7 @@ namespace Threeyes.RuntimeSerialization
         private const int Priority = 2000;
 
         //已完成
-        [MenuItem(MenuAssetPath_RuntimeSerialization + "Create from this folder", false, Priority)]
+        [MenuItem(MenuAssetPath_RuntimeSerialization + "Create SOAssetPack from this folder", false, Priority)]
         private static void CreateFromThisFolder()
         {
             //——以下参考Unity.RuntimeSceneSerialization.EditorInternal.SaveJsonScene——
@@ -26,11 +26,13 @@ namespace Threeyes.RuntimeSerialization
             if (guids.Length != 1)
                 return;
 
-            string sourceAbsDirPath = EditorPathTool.UnityRelateToAbsPath(AssetDatabase.GUIDToAssetPath(guids[0]));
-
-            string destAbsDirPath = Directory.GetParent(sourceAbsDirPath).FullName.Replace(PathTool.ConvertToSystemFormat(Application.dataPath), "Assets");
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+            //Debug.LogError(path);
+      
+            string sourceAbsDirPath = EditorPathTool.UnityRelateToAbsPath(path);
+            string destAbsDirPath = Directory.GetParent(sourceAbsDirPath).FullName;
             SOAssetPack.CreateFromFolder(sourceAbsDirPath, destAbsDirPath);
-        }
+        } 
     }
 }
 #endif

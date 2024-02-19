@@ -10,6 +10,23 @@ namespace Threeyes.Persistent
 {
     public abstract partial class PersistentDataBase : MonoBehaviour, IPersistentData, IHierarchyViewInfo
     {
+        /// <summary>
+        /// 
+        /// PS:供有需要的时候使用（如PropertyBags）
+        /// 
+        /// </summary>
+        public virtual FilePathModifier FilePathModifier
+        {
+            get
+            {
+                return new FilePathModifier_PD(this);//PS:改为动态创建，方便更新路径
+                //if (filePathModifier_PD == null)
+                //    filePathModifier_PD = new FilePathModifier_PD(this);
+                //return filePathModifier_PD;
+            }
+            set { Debug.LogError("This property can't set!"); /*暂时不允许设置，避免用户魔改*/}
+        }
+        //private FilePathModifier_PD filePathModifier_PD;
         public abstract Type ValueType { get; set; }
         public string PersistentDirPath { get; set; }
 
@@ -23,6 +40,10 @@ namespace Threeyes.Persistent
         public virtual void Init() { }
 
         public virtual void Dispose() { }
+        public virtual void Clear()
+        {
+            //filePathModifier_PD = null;//清空，方便链接其他路径
+        }
 
 #if UNITY_EDITOR
         //——MenuItem——
@@ -88,9 +109,18 @@ namespace Threeyes.Persistent
     public abstract class PersistentDataBase<TValue, TEvent> : PersistentDataBase, IPersistentData<TValue>
     where TEvent : UnityEvent<TValue>
     {
+        public System.Func<TValue> GetSavedValue;//override需要保存的数据，适用于代码替换
         public virtual TValue DefaultValue { get { return defaultValue; } set { defaultValue = value; } }
         public virtual TValue PersistentValue { get { return persistentValue; } set { persistentValue = value; } }
-        public virtual TValue ValueToSaved { get { return persistentValue; } }//持久化时需要存储的值
+        public virtual TValue ValueToSaved
+        {
+            get
+            {
+                if (GetSavedValue != null)//优先使用有自定义方法获取值
+                    return GetSavedValue();
+                return persistentValue;
+            }
+        }//持久化时需要存储的值
         public bool SaveAnyway { get { return saveAnyway; } }
         public bool HasChanged { get { return hasChanged; } set { hasChanged = value; } }
 
@@ -161,8 +191,9 @@ namespace Threeyes.Persistent
         /// 
         /// Todo：移动到父类中
         /// </summary>
-        public virtual void Clear()
+        public override void Clear()
         {
+            base.Clear();
             //重置为默认值，并清空其他Action回调
             defaultValue = default(TValue);
             persistentValue = default(TValue);
@@ -182,7 +213,7 @@ namespace Threeyes.Persistent
     }
 
     /// <summary>
-    /// 
+    /// PD WithOption
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TEvent"></typeparam>

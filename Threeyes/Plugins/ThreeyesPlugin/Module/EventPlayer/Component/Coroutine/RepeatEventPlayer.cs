@@ -3,9 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
 using Threeyes.Coroutine;
-using UnityEngine.Playables;
 #if UNITY_EDITOR
 using Threeyes.Editor;
+using UnityEditor;
 #endif
 
 namespace Threeyes.EventPlayer
@@ -249,10 +249,16 @@ namespace Threeyes.EventPlayer
 
         //——MenuItem——
         static string instName = "RepeatEP ";
-        [UnityEditor.MenuItem(strMenuItem_RootCoroutine + "RepeatEventPlayer", false, intCoroutineMenuOrder + 1)]
+        [MenuItem(strMenuItem_RootCoroutine + "RepeatEventPlayer", false, intCoroutineMenuOrder + 1)]
         public static void CreateRepeatEventPlayer()
         {
             EditorTool.CreateGameObjectAsChild<RepeatEventPlayer>(instName);
+        }
+        [MenuItem(strMenuItem_Root_Collection + "RepeatEPG Child", false, intCollectionMenuOrder + 5)]
+        public static void CreateRepeatEventPlayerGroupChild()
+        {
+            var eventPlayer = EditorTool.CreateGameObjectAsChild<RepeatEventPlayer>("RepeatEPG ");
+            eventPlayer.IsGroup = true;
         }
 
         //——Hierarchy GUI——
