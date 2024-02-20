@@ -18,4 +18,4 @@ MonoBehaviour:
   soActionHide: {fileID: 11400000, guid: e0bf54aa2a8046f40944bb2278a6afb1, type: 2}
   soActionWorking: {fileID: 11400000, guid: dd17e68ab204b4f4e99d3a8d7c9fb263, type: 2}
   soActionStandBy: {fileID: 11400000, guid: 7994783c28cdfd745a5837b42298b0fe, type: 2}
-  soActionBored: {fileID: 11400000, guid: 351183d15cddc6c439385f2b22b77852, type: 2}
+  soActionBored: {fileID: 11400000, guid: a83458035994676468ca91b672b72f65, type: 2}

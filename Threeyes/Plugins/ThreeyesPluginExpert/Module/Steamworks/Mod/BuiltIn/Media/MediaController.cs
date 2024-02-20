@@ -64,12 +64,10 @@ namespace Threeyes.Steamworks
 
         #region IModHandler
 
-        bool hasCacheInit = false;
-        ConfigInfo cacheConfigInfo = new ConfigInfo();//缓存上次的Source数据
+        bool hasCacheInit = false;//cacheConfigInfo是否已经初始化
+        ConfigInfo cacheConfigInfo = new ConfigInfo();//缓存上次的Source数据，只有当某个值更改才进行重新加载，避免频繁读取。
         public override void UpdateSetting()
         {
-            ///ToAdd：
-            ///-保存上次的路径等加载配置配置(通过一个临时的ConfigInfo进行保存)，只有当某个值更改才进行重新加载，避免频繁读取。
             if (hasCacheInit)
             {
                 if (Config.isVideoMute != cacheConfigInfo.isVideoMute)

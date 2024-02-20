@@ -57,15 +57,21 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region IModHandler
-        public void OnModInit()
+        public virtual void OnModInit()
         {
             UpdateSetting();
         }
-        public void OnModDeinit() { }
+        public virtual void OnModDeinit() { }
         void OnPersistentChanged(PersistentChangeState persistentChangeState)
         {
+            ///PS:
+            ///-因为用户每次更改配置都会调用该设置，如果是繁重且不需要重复调用的操作（如生成Mesh），则需要将此类操作单独处理（参考AudioVisualizer_IcoSphere）
             UpdateSetting();
         }
+
+        /// <summary>
+        /// Update setting base on config info
+        /// </summary>
         public abstract void UpdateSetting();
         #endregion
 
@@ -208,7 +214,7 @@ namespace Threeyes.Steamworks
         #endregion
     }
 
-    public abstract class ConfigurableComponentBase<TComp, TContainer, TSOConfig, TConfig, TPropertyBag>: ConfigurableComponentBase<TContainer, TSOConfig, TConfig, TPropertyBag>
+    public abstract class ConfigurableComponentBase<TComp, TContainer, TSOConfig, TConfig, TPropertyBag> : ConfigurableComponentBase<TContainer, TSOConfig, TConfig, TPropertyBag>
         , IModHandler
         , IRuntimeSerializableComponent
         , IRuntimeEditable

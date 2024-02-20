@@ -226,7 +226,7 @@ namespace Threeyes.Persistent
                             }
                         }
 
-                        if (pVCAttribute != null)//#[PersistentValueChanged]//需要最后调用，便于针对Field进行最后的修改
+                        if (pVCAttribute != null)//#[PersistentValueChanged]//需要最后调用，便于针对Field进行修改
                         {
                             FieldInfoDetail targetFieldInfoDetail = listPVCFieldInfoDetail.FirstOrDefault(mi => mi.UniqueID == FieldInfoDetail.GetUniqueID(fieldInfo));
                             if (targetFieldInfoDetail != null)
@@ -238,7 +238,7 @@ namespace Threeyes.Persistent
                 }
             }
 
-            //#针对[PersistentChanged]（Class）（最后调用）
+            //#Set：针对[PersistentChanged]（Class）（最后调用，方便进行整体更新）
             if (!isCacheOrSet)
             {
                 PersistentChangedAttribute pcAttribute = objType.GetCustomAttribute<PersistentChangedAttribute>();

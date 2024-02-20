@@ -12,32 +12,59 @@ using Threeyes.Steamworks;
 /// 1. Setup joints
 /// 2. Open ContextMenu and invoke SaveJointInfo before game played 
 /// 
-/// PS：更改光标大小/光标显隐后，RigBuilder的joints会出现错位（因为性能优化，更改缩放不会更新Joint： https://forum.unity.com/threads/how-can-i-override-scale-using-animation-rigging.770219/#post-7277947）
+/// PS：当光标大小更改后（如更改尺寸，或状态更新导致缩放），RigBuilder的joints会出现错位（因为性能优化，更改缩放不会更新Joint： https://forum.unity.com/threads/how-can-i-override-scale-using-animation-rigging.770219/#post-7277947）
 /// </summary>
 public class AC_RigBuilderHelper : RigBuilderHelper
        , IAC_CommonSetting_CursorSizeHandler
-    ,IAC_CursorState_ChangedHandler
+    , IAC_CursorState_ChangedHandler
 {
     #region CallBack
     public void OnCursorSizeChanged(float value)
     {
         RebuildJoint();
     }
-    bool isLastHidingState;
     public void OnCursorStateChanged(AC_CursorStateInfo cursorStateInfo)
     {
-        ///避免：光标通过更改尺寸重新显示时，Joint会错位的问题
-        bool isCurHidingState = AC_ManagerHolder.StateManager.IsVanishState(cursorStateInfo.cursorState);
-        if (isCurHidingState)
+        bool shouldRebuild = false;
+        //从任意状态进入Working/Bored，都需要重建Joint
+        if (cursorStateInfo.stateChange == AC_CursorStateInfo.StateChange.Enter)
         {
-            TryStopCoroutine();
+            switch (cursorStateInfo.cursorState)
+            {
+                case AC_CursorState.Working:
+                case AC_CursorState.Bored:
+                    shouldRebuild = true;
+                    break;
+            }
+        }
+
+        if (shouldRebuild)
+        {
+            cacheEnum_RebuildJointOnStateCompleted = CoroutineManager.StartCoroutineEx(IERebuildJointOnStateCompleted());
         }
         else
         {
-            if (isLastHidingState)//只有从隐藏切换到显示，才需要更新
-                RebuildJoint();
+            TryStopCoroutine_RebuildJointOnStateCompleted();
         }
-        isLastHidingState = isCurHidingState;
     }
+
+    protected UnityEngine.Coroutine cacheEnum_RebuildJointOnStateCompleted;
+    IEnumerator IERebuildJointOnStateCompleted()
+    {
+        //等待当前状态完成后才调用RebuildJoint（因为状态进入时可能涉及缩放）
+        while (!AC_ManagerHolder.StateManager.IsCurStateActionComplete(Threeyes.Action.ActionState.Enter))
+            yield return null;
+
+        RebuildJoint();
+    }
+    protected virtual void TryStopCoroutine_RebuildJointOnStateCompleted()
+    {
+        if (cacheEnum_RebuildJointOnStateCompleted != null)
+        {
+            CoroutineManager.StopCoroutineEx(cacheEnum_RebuildJointOnStateCompleted);
+            cacheEnum_RebuildJointOnStateCompleted = null;
+        }
+    }
+
     #endregion
 }

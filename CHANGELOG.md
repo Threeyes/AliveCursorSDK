@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.1.6]
+- Fix: AC_RigBuilderHelper not update joints after size related state change.
+- Item Manager add ShowOutputDirectory toggle.
+- Delete wasted scripts.
+
 ## [4.1.5]
 - Fix: After updating the SDK, it still prompts for resource expiration.
 

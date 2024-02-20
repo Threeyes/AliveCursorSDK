@@ -95,20 +95,43 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region IModHandler
+        public override void OnModInit()
+        {
+            //初始化需要更新（PS:因为模拟器不会调用以下回调方法，所以要手动调用（这类方法多次调用不影响性能）)
+            OnMeshGenerateSettingChanged(PersistentChangeState.Load);
+            OnWaveformGenerateSettingChanged(PersistentChangeState.Load);
+
+            base.OnModInit();
+        }
+
+        //——以下字段及方法是为了标记指定字段是否被修改，从而在UpdateSetting中调用对应的耗时重建方法——
+        bool hasMeshGenerateSettingChanged = false;//Mark has changed
+        bool hasWaveformGenerateSettingChanged = false;//Mark has changed
+        void OnMeshGenerateSettingChanged(PersistentChangeState persistentChangeState)
+        {
+            hasMeshGenerateSettingChanged = true;
+        }
+        void OnWaveformGenerateSettingChanged(PersistentChangeState persistentChangeState)
+        {
+            hasWaveformGenerateSettingChanged = true;
+        }
+
         /// <summary>
-        /// 
         /// PS：
-        /// -调用入口：
-        ///     -OnPersistentChanged
+        /// -调用入口：OnPersistentChanged
         /// </summary>
         public override void UpdateSetting()
         {
-            ///ToUpdate:
-            ///-当且只有当Mesh相关设置有更改才调用ReGenerateMesh（参考MediaController，或者复用OnGeneratePersistentChanged）
+            ///当且只有当Mesh相关设置有更改才重新创建
+            if (hasMeshGenerateSettingChanged)
+                ReGenerateSphere();
 
-            //ToFix:AC需要等待PD完成初始化后，读取配置并更新（因为如果使用的是defaultConfig，其不是SO，会导致其PD相关回调无法调用，因此不能依赖OnGeneratePersistentChanged在PersistentChangeState.Load时调用该方法，而是需要手动调用。凡是需要读取初始化值的都需要如此操作）（解决办法：如果没有SOConfig，则在Start或其他位置手动调用UpdateSetting）
-            //ReGenerateMesh();
+            if (hasWaveformGenerateSettingChanged)
+                ReGenerateWaveform(Manager.RawSampleCount);
 
+            //Reset State
+            hasMeshGenerateSettingChanged = false;
+            hasWaveformGenerateSettingChanged = false;
         }
         #endregion
 
@@ -124,17 +147,6 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Callback
-        void OnMeshGenerateSettingChanged(PersistentChangeState persistentChangeState)
-        {
-            //if (persistentChangeState == PersistentChangeState.Load)
-            //    return;
-            RuntimeTool.ExecuteOnceInCurFrameAsync(ReGenerateSphere);//Make sure get executed once
-        }
-        void OnWaveformGenerateSettingChanged(PersistentChangeState persistentChangeState)
-        {
-            ReGenerateWaveform(Manager.RawSampleCount);
-        }
-
         public virtual void OnRawSampleDataChanged(float[] rawData)//RawSampleData：更新曲线
         {
             //——Todo：根据 waveformPointCount 计算值
@@ -274,6 +286,7 @@ namespace Threeyes.Steamworks
 
         void ReGenerateWaveform(int rawSampleCount)
         {
+
             waveform.gameObject.SetActive(Config.showWaveform);
             waveform.useWorldSpace = false;//基于局部坐标
             waveform.loop = true;//首尾相连
@@ -380,30 +393,30 @@ namespace Threeyes.Steamworks
             }
 
             [Header("Sphere Generate Setting")]
-            [Tooltip("The number of subdivisions to give the sphere.")] [Range(0, 3)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public int sphereSubdivisions = 2;
-            [Tooltip("The radius of the sphere on instantiation.       ")] [Range(0.5f, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float sphereRadius = 0.5f;
+            [Tooltip("The number of subdivisions to give the sphere.")][Range(0, 3)][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public int sphereSubdivisions = 2;
+            [Tooltip("The radius of the sphere on instantiation.       ")][Range(0.5f, 1f)][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float sphereRadius = 0.5f;
             [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public ExtrudeMethod extrudeMethod = ExtrudeMethod.IndividualFaces;
-            [Tooltip("How far along the normal should each face be extruded when at idle (no audio input).")] [Range(0f, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float idleExtrusion = .01f;
-            [Tooltip("The max distance a frequency range will extrude a face.")] [Range(0, 1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float maxExtrusion = 0.1f;
+            [Tooltip("How far along the normal should each face be extruded when at idle (no audio input).")][Range(0f, 1f)][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float idleExtrusion = .01f;
+            [Tooltip("The max distance a frequency range will extrude a face.")][Range(0, 1f)][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float maxExtrusion = 0.1f;
 
             [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public bool showShell = true;
-            [Tooltip("The thickness of the shell")] [EnableIf(nameof(showShell))] [Range(0, .1f)] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float shellThickness = .01f;
-            [Tooltip("Considering maximum extrusion for shell size")] [EnableIf(nameof(showShell))] [PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public bool shellSizeIncludeMaxExtrusion = true;
+            [Tooltip("The thickness of the shell")][EnableIf(nameof(showShell))][Range(0, .1f)][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public float shellThickness = .01f;
+            [Tooltip("Considering maximum extrusion for shell size")][EnableIf(nameof(showShell))][PersistentValueChanged(nameof(OnMeshGenerateSettingChanged))] public bool shellSizeIncludeMaxExtrusion = true;
 
             [Header("Sphere Update Setting")]
-            [Tooltip("An FFT returns a spectrum including frequencies that are out of human hearing range. This restricts the number of bins used from the spectrum to the lower bounds.")] [Range(8, 128)] public int fftBounds = 32;
+            [Tooltip("An FFT returns a spectrum including frequencies that are out of human hearing range. This restricts the number of bins used from the spectrum to the lower bounds.")][Range(8, 128)] public int fftBounds = 32;
 
             [Header("Waveform Generate Setting")]
             [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public bool showWaveform = true;
-            [Tooltip("Downsampling based on audio sources can affect the number of points in the waveform")] [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public DownSample waveformDownSample = DownSample.Off;
+            [Tooltip("Downsampling based on audio sources can affect the number of points in the waveform")][EnableIf(nameof(showWaveform))][PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public DownSample waveformDownSample = DownSample.Off;
 
             [Header("Waveform Update Setting")]
-            [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public Gradient waveformGradient = new Gradient();
-            [EnableIf(nameof(showWaveform))] [PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
-            [Tooltip("How far from the sphere center should the waveform be.")] [EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;//（PS：因为Update也会使用该字段，所以放在该Header下）
-            [Tooltip("The y size of the waveform.")] [EnableIf(nameof(showWaveform))] public float waveformHeight = 0.2f;
-            [Tooltip("If true, the waveform ring will rotate around self. ")] [EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;
-            [Tooltip("Waveform ring's rotate speed (degrees per second).")] [EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, 3f, 0f);
+            [EnableIf(nameof(showWaveform))][PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public Gradient waveformGradient = new Gradient();
+            [EnableIf(nameof(showWaveform))][PersistentValueChanged(nameof(OnWaveformSettingGenerateChanged))] public float waveformWidthMultiplier = .5f;// The widthMultiplier of the waveform.
+            [Tooltip("How far from the sphere center should the waveform be.")][EnableIf(nameof(showWaveform))] public float waveformRadius = .6f;//（PS：因为Update也会使用该字段，所以放在该Header下）
+            [Tooltip("The y size of the waveform.")][EnableIf(nameof(showWaveform))] public float waveformHeight = 0.2f;
+            [Tooltip("If true, the waveform ring will rotate around self. ")][EnableIf(nameof(showWaveform))] public bool rotateWaveformRing = false;
+            [Tooltip("Waveform ring's rotate speed (degrees per second).")][EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, 3f, 0f);
 
             [JsonConstructor]
             public ConfigInfo() { }

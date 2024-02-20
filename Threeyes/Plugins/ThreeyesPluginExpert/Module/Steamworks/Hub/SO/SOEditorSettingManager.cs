@@ -55,12 +55,25 @@ namespace Threeyes.Steamworks
                 EditorUtility.SetDirty(Instance);
             }
         }
+        public bool ItemWindow_ShowOutputDirectory
+        {
+            get
+            {
+                return itemWindow_ShowOutputDirectory;
+            }
+            set
+            {
+                itemWindow_ShowOutputDirectory = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
 
         [Expandable] [SerializeField] protected TSOItemInfo curWorkshopItemInfo;
 
         [Header("ItemManagerWindow")]
         [SerializeField] protected string itemWindow_ExePath = "";
         [SerializeField] protected bool itemWindow_IsPreviewGif = false;
+        [SerializeField] protected bool itemWindow_ShowOutputDirectory = true;//Show Output Directory after built success
 
         #endregion
     }

@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Threeyes/SDK/Scripts/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
+    <Style src="project://database/Assets/Threeyes/Plugins/ThreeyesPluginExpert/Module/Steamworks/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
     <ui:VisualElement style="width: 100%; height: 100%; min-width: 350px; flex-wrap: nowrap;">
         <ui:ScrollView mode="Vertical" name="ScrollView" view-data-key="TopScrollView">
             <ui:VisualElement name="ItemManagerGroup" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
@@ -44,14 +44,19 @@
                         <ui:Button text="Edit Scene" display-tooltip-when-elided="true" name="EditSceneButton" focusable="true" style="overflow: hidden; width: 49%;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="Gap" class="gap HorizontalGap" />
-                    <ui:TextField picking-mode="Ignore" label="AliveCursor.exe Path" value="filler text" max-length="128" name="ExePathTextField" tooltip="Where the AliveCursor.exe located (You can use Steam app to open the directory)">
-                        <ui:Button text="Select..." display-tooltip-when-elided="true" name="SelectExeButton" />
-                    </ui:TextField>
-                    <ui:VisualElement name="BuildGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0; flex-wrap: nowrap;">
-                        <ui:Button text="Build" display-tooltip-when-elided="true" name="ItemBuildButton" focusable="true" style="overflow: visible; width: 33%;" />
-                        <ui:Button text="Build&amp;Run" display-tooltip-when-elided="true" name="ItemBuildAndRunButton" focusable="true" style="overflow: visible; width: 33%;" />
-                        <ui:Button text="Run" display-tooltip-when-elided="true" name="ItemRunButton" focusable="true" style="overflow: visible; width: 33%;" />
-                        <ui:Button text="Build All" display-tooltip-when-elided="true" name="ItemBuildAllButton" focusable="true" style="overflow: hidden; width: auto; display: none;" />
+                    <ui:VisualElement name="BuildGroup" style="flex-direction: column; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0; flex-wrap: nowrap;">
+                        <ui:TextField picking-mode="Ignore" label="AliveCursor.exe Path" value="filler text" max-length="128" name="ExePathTextField" tooltip="Where the AliveCursor.exe located (You can use Steam app to open the directory)">
+                            <ui:Button text="Select..." display-tooltip-when-elided="true" name="SelectExeButton" />
+                        </ui:TextField>
+                        <ui:VisualElement name="TopGroup" focusable="false" style="flex-grow: 1; flex-direction: row;">
+                            <ui:Toggle label="ShowOutputDirectory" name="ShowOutputDirectoryToggle" value="true" style="align-items: stretch; justify-content: flex-start; align-self: stretch;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="BottomGroup" style="flex-grow: 1; flex-direction: row;">
+                            <ui:Button text="Build" display-tooltip-when-elided="true" name="ItemBuildButton" focusable="true" style="overflow: visible; width: 33%;" />
+                            <ui:Button text="Build&amp;Run" display-tooltip-when-elided="true" name="ItemBuildAndRunButton" focusable="true" style="overflow: visible; width: 33%;" />
+                            <ui:Button text="Run" display-tooltip-when-elided="true" name="ItemRunButton" focusable="true" style="overflow: visible; width: 33%;" />
+                            <ui:Button text="Build All" display-tooltip-when-elided="true" name="ItemBuildAllButton" focusable="true" style="overflow: hidden; width: auto; display: none;" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="Gap" class="gap HorizontalGap" />
                     <ui:VisualElement name="UploadGroup" style="justify-content: flex-start; align-items: stretch;">

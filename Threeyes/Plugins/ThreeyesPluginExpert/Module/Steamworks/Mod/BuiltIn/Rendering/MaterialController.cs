@@ -15,6 +15,7 @@ namespace Threeyes.Steamworks
     /// -You can find material's property detail in Inspector Editor mode
     /// 
     /// ToAdd:
+    /// -参考AudioVisualizer_IcoSphere，为每个ShaderPropertyBase增加hasChanged字段，只有Changed才进行更新
     /// - 编辑器方法，可以一键导入指定材质的属性
     /// -可以运行时更改SurfaceType等枚举（参考：https://forum.unity.com/threads/making-material-transparant-in-universal-rp.1216053/）
     /// </summary>

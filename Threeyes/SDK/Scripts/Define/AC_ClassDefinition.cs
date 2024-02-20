@@ -30,15 +30,20 @@ public class AC_CursorStateInfo : DataObjectBase
     {
         None = 0,
 
-        Enter = 1 << 0,
+        Enter = 1 << 0,//正在进入
         //Update = 1 << 1,//PS：仅用于状态判断（ToUpdate：Update应该是一个单独的状态，不要跟Enter、Exit放一起
-        Exit = 1 << 2,
+        Exit = 1 << 2,//正在退出
 
         All = ~0
     }
+
+    public override string ToString()
+    {
+        return $"{stateChange}: {cursorState}";
+    }
 }
 
-//（PS：因为action出错容易导致程序卡死，因此仅作为Manager类使用）
+//（PS：因为action出错容易导致程序卡死，因此仅供Manager类使用）
 public class AC_CursorStateInfoEx : AC_CursorStateInfo
 {
     public UnityAction actOnComplete;

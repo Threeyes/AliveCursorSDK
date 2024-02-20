@@ -151,11 +151,17 @@ namespace Threeyes.Steamworks
             buttonEditScene = rootVisualElement.Q<Button>("EditSceneButton");
             buttonEditScene.RegisterCallback<ClickEvent>(OnEditSceneButtonClick);
 
+
             textFieldExePath = rootVisualElement.Q<TextField>("ExePathTextField");
             textFieldExePath.value = SOManagerInst.ItemWindow_ExePath;
             textFieldExePath.RegisterCallback<ChangeEvent<string>>(OnExePathTextFieldChanged);
             buttonSelectExe = rootVisualElement.Q<Button>("SelectExeButton");
             buttonSelectExe.RegisterCallback<ClickEvent>(OnSelectExeButtonClick);
+
+            Toggle toggleShowOutputDirectory = rootVisualElement.Q<Toggle>("ShowOutputDirectoryToggle");
+            toggleShowOutputDirectory.value = SOManagerInst.ItemWindow_ShowOutputDirectory;
+            toggleShowOutputDirectory.RegisterCallback<ChangeEvent<bool>>(OnShowOutputDirectoryToggleChanged);
+
             buttonItemBuild = rootVisualElement.Q<Button>("ItemBuildButton");
             buttonItemBuild.RegisterCallback<ClickEvent>(OnBuildButtonClick);
             buttonItemBuildAndRun = rootVisualElement.Q<Button>("ItemBuildAndRunButton");
@@ -447,6 +453,11 @@ namespace Threeyes.Steamworks
         {
             SOManagerInst.ItemWindow_IsPreviewGif = evt.newValue;
             UpdatePreviewStateFunc();
+        }
+
+        private void OnShowOutputDirectoryToggleChanged(ChangeEvent<bool> evt)
+        {
+            SOManagerInst.ItemWindow_ShowOutputDirectory = evt.newValue;
         }
 
         private void OnAgreementLabelClick(ClickEvent evt)
@@ -1124,7 +1135,7 @@ namespace Threeyes.Steamworks
                     //开始打包
                     ExportSettings activeExportSettings = ExportSettings.Active;
                     activeExportSettings.ClearConsoleOnBuild = false;//避免意外清空错误信息
-                    //activeExportSettings.ShowOutputDirectory = false;//可以避免打包完成后打开文件夹
+                    activeExportSettings.ShowOutputDirectory = SOManagerInst.ItemWindow_ShowOutputDirectory;//可以避免打包完成后打开文件夹
                     EditorUtility.SetDirty(activeExportSettings);//确保修改的设置被保存
 
 

@@ -43,16 +43,21 @@ namespace Threeyes.Steamworks
             RebuildJoint();
         }
 
-        protected UnityEngine.Coroutine cacheEnum;
+        protected UnityEngine.Coroutine cacheEnum_RebuildJoint;
+        [ContextMenu("RebuildJoint")]
+        [Button("RebuildJoint")]
         public void RebuildJoint()
         {
             TryStopCoroutine();
-            cacheEnum = CoroutineManager.StartCoroutineEx(IERebuildJoint());
+            cacheEnum_RebuildJoint = CoroutineManager.StartCoroutineEx(IERebuildJoint());
         }
         protected virtual void TryStopCoroutine()
         {
-            if (cacheEnum != null)
-                CoroutineManager.StopCoroutineEx(cacheEnum);
+            if (cacheEnum_RebuildJoint != null)
+            {
+                CoroutineManager.StopCoroutineEx(cacheEnum_RebuildJoint);
+                cacheEnum_RebuildJoint = null;
+            }
         }
 
         IEnumerator IERebuildJoint()
