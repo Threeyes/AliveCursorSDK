@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Core;
 #if Threeyes_VideoPlayer
 using UnityEngine.Video;
 #endif
 #if UNITY_EDITOR
 using UnityEditor;
 using Threeyes.Core.Editor;
-using Threeyes.Core;
 #endif
 
 namespace Threeyes.EventPlayer

@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.2.1]
+- Fix build error.
+
 ## [4.2.0]
 - Add namespace for Core scripts;
 - Improve appearance for LiquidController and ClockController.
