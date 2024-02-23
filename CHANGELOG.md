@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.2.2]
+- Fix SOEventPlayerSettingManager's version update error on program start.
+
 ## [4.2.1]
 - Fix build error.
 

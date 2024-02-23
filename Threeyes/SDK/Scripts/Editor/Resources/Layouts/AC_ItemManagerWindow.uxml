@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Threeyes/Plugins/ThreeyesPluginExpert/Module/Steamworks/Editor/Resources/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=df1ea2653b87a714c8af53ffced0a5e7&amp;type=3#Common" />
     <ui:VisualElement style="width: 100%; height: 100%; min-width: 350px; flex-wrap: nowrap;">
-        <ui:ScrollView mode="Vertical" name="ScrollView" view-data-key="TopScrollView">
+        <ui:ScrollView mode="Vertical" name="ScrollView" view-data-key="TopScrollView" horizontal-scroller-visibility="Hidden">
             <ui:VisualElement name="ItemManagerGroup" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
                 <ui:DropdownField label="ActiveItem" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="ActiveItemDropdownField" />
                 <ui:VisualElement name="CreateModGroup" view-data-key="CreateModGroup" style="flex-direction: row; justify-content: space-between;">
