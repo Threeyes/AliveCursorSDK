@@ -2,9 +2,10 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
-using Threeyes.Cache;
 using Threeyes.External;
 using Threeyes.Data;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
@@ -152,7 +153,7 @@ namespace Threeyes.Persistent
                 try
                 {
                     //PS：将项目内部的Asset拷贝到指定目录中
-                    string assetAbsPath = Editor.EditorPathTool.GetAssetAbsPath(DefaultAsset);
+                    string assetAbsPath = EditorPathTool.GetAssetAbsPath(DefaultAsset);
                     if (assetAbsPath.NotNullOrEmpty())
                     {
                         string destFilePath = null;

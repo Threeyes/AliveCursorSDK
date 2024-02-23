@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.Rendering;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
     /// 根据当前RenderingPipeline，添加对应宏定义：
     /// URP：UNITY_PIPELINE_URP
     /// HDRP：UNITY_PIPELINE_HDRP
     /// 
-    /// https://gist.github.com/cjaube/944b0d5221808c2a761d616f29deaf49
+    /// Ref：https://gist.github.com/cjaube/944b0d5221808c2a761d616f29deaf49
     /// </summary>
     [InitializeOnLoad]
     public class DefineSymbolManager_RenderingPipeline

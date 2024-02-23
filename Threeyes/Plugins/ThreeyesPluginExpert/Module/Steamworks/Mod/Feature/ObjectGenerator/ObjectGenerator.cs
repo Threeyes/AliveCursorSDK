@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Common;
 using Threeyes.Config;
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.Steamworks

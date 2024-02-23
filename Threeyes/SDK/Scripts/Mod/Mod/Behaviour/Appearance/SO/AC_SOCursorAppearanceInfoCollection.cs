@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Newtonsoft.Json;
+using Threeyes.Core;
 /// <summary>
 /// Custom appearance for all system built in cursor type
 /// </summary>

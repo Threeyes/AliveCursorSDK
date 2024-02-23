@@ -1,7 +1,8 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #endif
 #if USE_NaughtyAttributes
 using NaughtyAttributes;

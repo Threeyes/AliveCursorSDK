@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Steamworks;
 using Steamworks.Data;
 using UgcEditor = Steamworks.Ugc.Editor;
+using Threeyes.Core;
+
 namespace Threeyes.Steamworks
 {
     public sealed class WorkshopItemUploader

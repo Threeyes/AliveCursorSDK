@@ -1,71 +1,76 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 using UnityEngine.Events;
-/// <summary>
-/// 管理所有CanvasGroupHelper，实现类似ToggleGroup的功能
-/// </summary>
-public class CanvasGroupGroupHelper : ComponentHelperGroupBase<CanvasGroupHelper, CanvasGroup>
+
+namespace Threeyes.ModuleHelper
 {
-    public UnityEvent onChangeCanvasGroup;
-
-    public CanvasGroupHelper curCanvasGroupHelper;//当前激活的组
-    public bool isEnableRepeatInvoke = false;//是否允许重复调用
-
     /// <summary>
-    /// 当前激活的Helper（因为调试时curCanvasGroupHelper可能为空，用这个比较方便）
+    /// 管理所有CanvasGroupHelper，实现类似ToggleGroup的功能
     /// </summary>
-    public List<CanvasGroupHelper> ListActiveHelper
+    public class CanvasGroupGroupHelper : ComponentHelperGroupBase<CanvasGroupHelper, CanvasGroup>
     {
-        get
+        public UnityEvent onChangeCanvasGroup;
+
+        public CanvasGroupHelper curCanvasGroupHelper;//当前激活的组
+        public bool isEnableRepeatInvoke = false;//是否允许重复调用
+
+        /// <summary>
+        /// 当前激活的Helper（因为调试时curCanvasGroupHelper可能为空，用这个比较方便）
+        /// </summary>
+        public List<CanvasGroupHelper> ListActiveHelper
         {
-            List<CanvasGroupHelper> listHelper = new List<CanvasGroupHelper>();
+            get
+            {
+                List<CanvasGroupHelper> listHelper = new List<CanvasGroupHelper>();
+                ForEachChildComponent((c) =>
+                {
+                    if (c.isShowing)
+                        listHelper.Add(c);
+                });
+                return listHelper;
+            }
+        }
+
+        //private void Reset()
+        //{
+        //    isRecursive = false;    
+        //}
+
+        public void SetInteractable(bool isActive)
+        {
             ForEachChildComponent((c) =>
             {
-                if (c.isShowing)
-                    listHelper.Add(c);
+                c.Comp.interactable = isActive;
             });
-            return listHelper;
         }
-    }
 
-    //private void Reset()
-    //{
-    //    isRecursive = false;    
-    //}
-
-    public void SetInteractable(bool isActive)
-    {
-        ForEachChildComponent((c) =>
+        /// <summary>
+        /// 显示指定的CanvasGroup
+        /// </summary>
+        /// <param name="canvasGroupHelper"></param>
+        public void ShowCanvasGroup(CanvasGroupHelper canvasGroupHelper)
         {
-            c.Comp.interactable = isActive;
-        });
-    }
-
-    /// <summary>
-    /// 显示指定的CanvasGroup
-    /// </summary>
-    /// <param name="canvasGroupHelper"></param>
-    public void ShowCanvasGroup(CanvasGroupHelper canvasGroupHelper)
-    {
-        if (!isEnableRepeatInvoke && curCanvasGroupHelper == canvasGroupHelper)
-            return;
-        ForEachChildComponent((c) =>
-        {
-            bool isMatch = (c == canvasGroupHelper);
-
-            if (Application.isPlaying)
+            if (!isEnableRepeatInvoke && curCanvasGroupHelper == canvasGroupHelper)
+                return;
+            ForEachChildComponent((c) =>
             {
-                c.BeginShowHide(isMatch);
-            }
-            else
-            {
-                c.ShowAtOnce(isMatch);
-            }
-        });
+                bool isMatch = c == canvasGroupHelper;
 
-        curCanvasGroupHelper = canvasGroupHelper;
-        onChangeCanvasGroup.Invoke();
+                if (Application.isPlaying)
+                {
+                    c.BeginShowHide(isMatch);
+                }
+                else
+                {
+                    c.ShowAtOnce(isMatch);
+                }
+            });
+
+            curCanvasGroupHelper = canvasGroupHelper;
+            onChangeCanvasGroup.Invoke();
+        }
+
     }
-
 }

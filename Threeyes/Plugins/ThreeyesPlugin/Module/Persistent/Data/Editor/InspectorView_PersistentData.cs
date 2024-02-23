@@ -2,13 +2,15 @@
 using System;
 using System.Linq;
 using System.Text;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using Threeyes.Persistent;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 namespace Threeyes.Editor
 {
-	[CanEditMultipleObjects]
+    [CanEditMultipleObjects]
 	[CustomEditor(typeof(PersistentDataBase), true)]//editorForChildClasses
 	public class InspectorView_PersistentData : InspectorViewSyncWithHierarchyBase
 	{

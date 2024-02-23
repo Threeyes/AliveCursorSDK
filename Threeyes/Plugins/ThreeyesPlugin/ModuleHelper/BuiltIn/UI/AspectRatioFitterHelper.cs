@@ -1,15 +1,18 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(AspectRatioFitter))]
-
-public class AspectRatioFitterHelper : UIAutoFitHelperBase<AspectRatioFitter>
+namespace Threeyes.ModuleHelper
 {
-    protected override void SetAspectAtOnce(float aspectHeiDevWid)
+    [RequireComponent(typeof(AspectRatioFitter))]
+
+    public class AspectRatioFitterHelper : UIAutoFitHelperBase<AspectRatioFitter>
     {
-        //AspectRatioFitter中的aspectRatio是 Width/Height
-        Comp.aspectRatio = 1 / aspectHeiDevWid;
+        protected override void SetAspectAtOnce(float aspectHeiDevWid)
+        {
+            //AspectRatioFitter中的aspectRatio是 Width/Height
+            Comp.aspectRatio = 1 / aspectHeiDevWid;
+        }
     }
 }

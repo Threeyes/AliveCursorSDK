@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 
 public class AC_SystemInputManagerSimulator : AC_SystemInputManagerBase<AC_SystemInputManagerSimulator>

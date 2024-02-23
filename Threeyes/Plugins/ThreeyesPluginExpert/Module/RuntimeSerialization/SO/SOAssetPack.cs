@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
-using Threeyes.Editor;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

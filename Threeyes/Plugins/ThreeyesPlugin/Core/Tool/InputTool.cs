@@ -9,108 +9,109 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 #endif
-
-/// <summary>
-/// 功能：
-/// -封装新/旧InputSystem，避免旧代码报错。
-/// 
-/// PS：
-/// -通过重载Func，可以实现自定义Input
-///
-/// Ref：
-/// -Lean.Common.LeanInput
-/// -官方升级说明： https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html
-/// </summary>
-public static class InputTool
+namespace Threeyes.Core
 {
     /// <summary>
-    /// Number of touches.Guaranteed not to change throughout the frame. (Read Only)
+    /// 功能：
+    /// -封装新/旧InputSystem，避免旧代码报错。
+    /// 
+    /// PS：
+    /// -通过重载Func，可以实现自定义Input
+    ///
+    /// Ref：
+    /// -Lean.Common.LeanInput
+    /// -官方升级说明： https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html
     /// </summary>
-    public static int touchCount { get { return GetTouchCount(); } }
-    /// <summary>
-    /// The current mouse position in pixel coordinates. (Read Only).
-    /// </summary>
-    public static Vector3 mousePosition { get { return GetMousePosition(); } }
-    /// <summary>
-    /// The current mouse scroll delta. (Read Only)
-    /// </summary>
-    public static Vector2 mouseScrollDelta { get { return new Vector2(0, GetMouseWheelDelta()); } }
-
-    /// <summary>
-    /// Indicates if a mouse device is detected.
-    /// </summary>
-    public static bool mousePresent
+    public static class InputTool
     {
-        get
+        /// <summary>
+        /// Number of touches.Guaranteed not to change throughout the frame. (Read Only)
+        /// </summary>
+        public static int touchCount { get { return GetTouchCount(); } }
+        /// <summary>
+        /// The current mouse position in pixel coordinates. (Read Only).
+        /// </summary>
+        public static Vector3 mousePosition { get { return GetMousePosition(); } }
+        /// <summary>
+        /// The current mouse scroll delta. (Read Only)
+        /// </summary>
+        public static Vector2 mouseScrollDelta { get { return new Vector2(0, GetMouseWheelDelta()); } }
+
+        /// <summary>
+        /// Indicates if a mouse device is detected.
+        /// </summary>
+        public static bool mousePresent
         {
+            get
+            {
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null;
 #else
-            return UnityEngine.Input.mousePresent;
+                return Input.mousePresent;
 #endif
+            }
         }
-    }
-    public static bool anyKey
-    {
-        get
+        public static bool anyKey
         {
+            get
+            {
 #if ENABLE_INPUT_SYSTEM
             return Keyboard.current.anyKey.isPressed;
 #else
-            return Input.anyKey;
+                return Input.anyKey;
 #endif
+            }
         }
-    }
 
-    /// <summary>
-    /// Returns true the first frame the user hits any key or mouse button.
-    /// </summary>
-    public static bool anyKeyBoardDown
-    {
-        get
+        /// <summary>
+        /// Returns true the first frame the user hits any key or mouse button.
+        /// </summary>
+        public static bool anyKeyBoardDown
         {
+            get
+            {
 #if ENABLE_INPUT_SYSTEM
             return Keyboard.current.anyKey.wasPressedThisFrame;//Warning:这里只是检测Keyboard。需要添加鼠标的状态，参考Input
 #else
-            return Input.anyKeyDown && Input.inputString != "";//Warning：Input.anyKeyDown包含鼠标输入，所以还需要额外检测inputString是否输入了字符
+                return Input.anyKeyDown && Input.inputString != "";//Warning：Input.anyKeyDown包含鼠标输入，所以还需要额外检测inputString是否输入了字符
 #endif
+            }
         }
-    }
 
-    /// <summary>
-    /// Returns true the first frame the user hits any key or mouse button.
-    /// </summary>
-    public static bool anyKeyDown
-    {
-        get
+        /// <summary>
+        /// Returns true the first frame the user hits any key or mouse button.
+        /// </summary>
+        public static bool anyKeyDown
         {
+            get
+            {
 #if ENABLE_INPUT_SYSTEM
             return Keyboard.current.anyKey.wasPressedThisFrame;//ToUpdate:这里只是检测Keyboard。需要添加鼠标的状态，参考Input
 #else
-            return Input.anyKeyDown;
+                return Input.anyKeyDown;
 #endif
+            }
         }
-    }
 
-    /// 自定义的获取输入的方法
-    public static Func<string, float> OverrideGetAxis;
-    public static Func<Vector2> OverrideGetMousePosition;
-    public static Func<int, bool> OverrideGetMouseButtonDown;
-    public static Func<int, bool> OverrideGetMouseButton;
-    public static Func<int, bool> OverrideGetMouseButtonUp;
+        /// 自定义的获取输入的方法
+        public static Func<string, float> OverrideGetAxis;
+        public static Func<Vector2> OverrideGetMousePosition;
+        public static Func<int, bool> OverrideGetMouseButtonDown;
+        public static Func<int, bool> OverrideGetMouseButton;
+        public static Func<int, bool> OverrideGetMouseButtonUp;
 
-    #region Unit Func
-    /// <summary>
-    /// Warning:通常该方法需要提前定义Action，当前先处理常见的axis
-    /// </summary>
-    /// <param name="axisName"></param>
-    /// <returns></returns>
-    public static float GetAxis(string axisName)
-    {
-        if (OverrideGetAxis != null)
+        #region Unit Func
+        /// <summary>
+        /// Warning:通常该方法需要提前定义Action，当前先处理常见的axis
+        /// </summary>
+        /// <param name="axisName"></param>
+        /// <returns></returns>
+        public static float GetAxis(string axisName)
         {
-            return OverrideGetAxis.Invoke(axisName);
-        }
+            if (OverrideGetAxis != null)
+            {
+                return OverrideGetAxis.Invoke(axisName);
+            }
 #if ENABLE_INPUT_SYSTEM
         ///PS:以下字段需要当前Input的有对应名称的Action，否则会报错
         ///Look: Mouse X、Mouse Y
@@ -133,61 +134,61 @@ public static class InputTool
         //    result = Gamepad.current.leftStick.ReadValue().y;
         return result;
 #else
-        return Input.GetAxis(axisName);
+            return Input.GetAxis(axisName);
 #endif
-    }
-    static Vector2 GetMousePosition()
-    {
-        if (OverrideGetMousePosition != null)
-        {
-            return OverrideGetMousePosition.Invoke();
         }
+        static Vector2 GetMousePosition()
+        {
+            if (OverrideGetMousePosition != null)
+            {
+                return OverrideGetMousePosition.Invoke();
+            }
 #if ENABLE_INPUT_SYSTEM
         return Mouse.current != null ? Mouse.current.position.ReadValue() : default(Vector2);
 #else
-        return UnityEngine.Input.mousePosition;
+            return Input.mousePosition;
 #endif
-    }
-    public static bool GetMouseButtonDown(int index)
-    {
-        if (OverrideGetMouseButtonDown != null)
-        {
-            return OverrideGetMouseButtonDown.Invoke(index);
         }
+        public static bool GetMouseButtonDown(int index)
+        {
+            if (OverrideGetMouseButtonDown != null)
+            {
+                return OverrideGetMouseButtonDown.Invoke(index);
+            }
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-        return UnityEngine.Input.GetMouseButtonDown(index);
+            return Input.GetMouseButtonDown(index);
 #endif
-    }
-    public static bool GetMouseButton(int index)
-    {
-        if (OverrideGetMouseButton != null)
-        {
-            return OverrideGetMouseButton.Invoke(index);
         }
+        public static bool GetMouseButton(int index)
+        {
+            if (OverrideGetMouseButton != null)
+            {
+                return OverrideGetMouseButton.Invoke(index);
+            }
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-        return UnityEngine.Input.GetMouseButton(index);
+            return Input.GetMouseButton(index);
 #endif
-    }
-    public static bool GetMouseButtonUp(int index)
-    {
-        if (OverrideGetMouseButtonUp != null)
-        {
-            return OverrideGetMouseButtonUp.Invoke(index);
         }
+        public static bool GetMouseButtonUp(int index)
+        {
+            if (OverrideGetMouseButtonUp != null)
+            {
+                return OverrideGetMouseButtonUp.Invoke(index);
+            }
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-        return UnityEngine.Input.GetMouseButtonUp(index);
+            return Input.GetMouseButtonUp(index);
 #endif
-    }
+        }
 
 
-    static int GetTouchCount()
-    {
+        static int GetTouchCount()
+        {
 #if ENABLE_INPUT_SYSTEM
         if (EnhancedTouchSupport.enabled == false)
         {
@@ -196,12 +197,12 @@ public static class InputTool
 
         return Touch.activeTouches.Count;
 #else
-        return UnityEngine.Input.touchCount;
+            return Input.touchCount;
 #endif
-    }
+        }
 
-    public static void GetTouch(int index, out int id, out UnityEngine.Vector2 position, out float pressure, out bool set)
-    {
+        public static void GetTouch(int index, out int id, out Vector2 position, out float pressure, out bool set)
+        {
 #if ENABLE_INPUT_SYSTEM
         var touch = Touch.activeTouches[index];
 
@@ -213,66 +214,66 @@ public static class InputTool
             touch.phase == TouchPhase.Stationary ||
             touch.phase == TouchPhase.Moved;
 #else
-        var touch = UnityEngine.Input.GetTouch(index);
+            var touch = Input.GetTouch(index);
 
-        id = touch.fingerId;
-        position = touch.position;
-        pressure = touch.pressure;
-        set =
-            touch.phase == UnityEngine.TouchPhase.Began ||
-            touch.phase == UnityEngine.TouchPhase.Stationary ||
-            touch.phase == UnityEngine.TouchPhase.Moved;
+            id = touch.fingerId;
+            position = touch.position;
+            pressure = touch.pressure;
+            set =
+                touch.phase == TouchPhase.Began ||
+                touch.phase == TouchPhase.Stationary ||
+                touch.phase == TouchPhase.Moved;
 #endif
-    }
+        }
 
-    public static bool GetKeyDown(KeyCode oldKey)
-    {
+        public static bool GetKeyDown(KeyCode oldKey)
+        {
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-        return UnityEngine.Input.GetKeyDown(oldKey);
+            return Input.GetKeyDown(oldKey);
 #endif
-    }
+        }
 
-    public static bool GetKey(KeyCode oldKey)
-    {
+        public static bool GetKey(KeyCode oldKey)
+        {
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-        return UnityEngine.Input.GetKey(oldKey);
+            return Input.GetKey(oldKey);
 #endif
-    }
+        }
 
-    public static bool GetKeyUp(KeyCode oldKey)
-    {
+        public static bool GetKeyUp(KeyCode oldKey)
+        {
 #if ENABLE_INPUT_SYSTEM
         var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-        return UnityEngine.Input.GetKeyUp(oldKey);
+            return Input.GetKeyUp(oldKey);
 #endif
-    }
+        }
 
-    static float GetMouseWheelDelta()
-    {
+        static float GetMouseWheelDelta()
+        {
 #if ENABLE_INPUT_SYSTEM
         return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y / 120 : 0.0f;//PS：要除以滚轴的单位滚动数值
 #else
-        return UnityEngine.Input.mouseScrollDelta.y;
+            return Input.mouseScrollDelta.y;
 #endif
-    }
+        }
 
 
-    public static bool GetKeyboardExists()
-    {
+        public static bool GetKeyboardExists()
+        {
 #if ENABLE_INPUT_SYSTEM
         return Keyboard.current != null;
 #else
-        return true;
+            return true;
 #endif
-    }
-    #endregion
+        }
+        #endregion
 
-    #region Utility
+        #region Utility
 #if ENABLE_INPUT_SYSTEM
     private static System.Collections.Generic.Dictionary<KeyCode, NewCode> keyMapping = new System.Collections.Generic.Dictionary<KeyCode, NewCode>()
         {
@@ -461,5 +462,6 @@ public static class InputTool
         return null;
     }
 #endif
-    #endregion
+        #endregion
+    }
 }

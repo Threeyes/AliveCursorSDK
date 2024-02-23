@@ -1,4 +1,6 @@
 using NaughtyAttributes;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEngine;
 using StateChange = AC_CursorStateInfo.StateChange;
 
@@ -86,7 +88,7 @@ public class AC_CursorStateBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 	[UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Behaviour_State + "CursorStateBehaviourCollection", false, 1)]
 	public static void CreateInst()
 	{
-		Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_CursorStateBehaviourCollection>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_CursorStateBehaviourCollection>(instName);
 	}
 #endif
 	#endregion

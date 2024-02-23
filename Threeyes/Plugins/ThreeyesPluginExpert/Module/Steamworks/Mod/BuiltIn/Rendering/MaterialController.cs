@@ -6,6 +6,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Threeyes.Config;
 using NaughtyAttributes;
+using Threeyes.Core;
+
 namespace Threeyes.Steamworks
 {
     /// <summary>

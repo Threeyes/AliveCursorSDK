@@ -11,6 +11,7 @@ using UnityEngine.Events;
 using Newtonsoft.Json;
 using System.Linq;
 using Threeyes.Config;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

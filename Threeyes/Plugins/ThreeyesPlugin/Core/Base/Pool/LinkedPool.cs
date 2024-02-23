@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     /// <summary>
     /// A linked list version of Pool.IObjectPool_1.

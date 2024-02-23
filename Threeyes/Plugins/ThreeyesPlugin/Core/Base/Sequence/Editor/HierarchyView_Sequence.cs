@@ -1,9 +1,10 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Text;
+using Threeyes.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
     /// PS:因为是通用插件的一部分，所以不依赖于HierarchyViewManager
@@ -45,7 +46,7 @@ namespace Threeyes.Editor
             {
                 //如果按住Alt，则调用ActiveAndSetNext
                 if (Event.current.alt)
-                comp.ActiveAndSetNext();
+                    comp.ActiveAndSetNext();
                 else
                     comp.SetNext();
 

@@ -6,15 +6,16 @@ using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
 using Threeyes.Persistent;
-using Threeyes.Editor;
 using Threeyes.Steamworks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 /// <summary>
 /// 功能：检查场景设置是否正确
 ///
- 
+
 /// Ref:TanksModTools.ModSceneValidatorProcessor
 /// </summary>
 [UModBuildProcessor(".unity", -100)]

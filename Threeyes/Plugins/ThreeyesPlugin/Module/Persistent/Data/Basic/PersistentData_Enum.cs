@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using System.Text;
 using Threeyes.Data;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
@@ -48,7 +50,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Enum", false, intBasicMenuOrder + 6)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Enum>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Enum>(instName);
         }
 
         //——Hierarchy GUI——

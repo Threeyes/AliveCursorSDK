@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Text;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
 using UnityEditor;
-using Threeyes.Editor;
 #endif
 
 namespace Threeyes.EventPlayer

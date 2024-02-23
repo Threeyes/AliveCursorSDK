@@ -7,7 +7,8 @@ using System.Text;
 using UnityEngine.Events;
 using System;
 using System.Linq;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 
 namespace Threeyes.EventPlayer.Editor
 {

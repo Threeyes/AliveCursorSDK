@@ -7,6 +7,7 @@ using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;
 using Threeyes.Config;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

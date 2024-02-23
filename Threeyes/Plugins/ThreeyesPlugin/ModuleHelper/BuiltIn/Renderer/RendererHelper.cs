@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
 
-namespace Threeyes.BuiltIn
+namespace Threeyes.ModuleHelper
 {
     /// <summary>
     /// 设置Renderer及其子类的信息，适用于各类RP
@@ -126,9 +127,9 @@ namespace Threeyes.BuiltIn
 
         #region Value
         [Header("——Set Value——")]
-        public MaterialFloatType materialFloatType =  MaterialFloatType.NormalScale;//用于设置基础Float字段
+        public MaterialFloatType materialFloatType = MaterialFloatType.NormalScale;//用于设置基础Float字段
         public string customMaterialFloatName = "";
-      
+
         public void SetFloat(float value)
         {
             string propertyName = materialFloatType.GetPropertyName(customMaterialFloatName);

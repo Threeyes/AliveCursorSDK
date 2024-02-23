@@ -2,28 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ScriptDebugTool
+namespace Threeyes.Core
 {
-    //Log How many time spends
-    static System.Diagnostics.Stopwatch timer;
-    public static void RecordStartTime()
+    /// <summary>
+    /// 代码调试
+    /// </summary>
+    public static class ScriptDebugTool
     {
+        //Log How many time spends
+        static System.Diagnostics.Stopwatch timer;
+        public static void RecordStartTime()
+        {
 #if UNITY_EDITOR
-        timer = new System.Diagnostics.Stopwatch();
-        timer.Start();
+            timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
 #endif
-    }
+        }
 
-    public static void RecordStopTime()
-    {
+        public static void RecordStopTime()
+        {
 #if UNITY_EDITOR
-        timer.Stop();
+            timer.Stop();
 #endif
-    }
-    public static void LogUsedTime()
-    {
+        }
+        public static void LogUsedTime()
+        {
 #if UNITY_EDITOR
-        Debug.Log("Time elapsed: " + timer.Elapsed.Milliseconds);
+            Debug.Log("Time elapsed: " + timer.Elapsed.Milliseconds);
 #endif
+        }
     }
 }

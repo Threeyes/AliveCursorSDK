@@ -3,6 +3,7 @@ using Threeyes.Persistent;
 using Threeyes.Data;
 using UnityEngine;
 using System.Text;
+using Threeyes.Core.Editor;
 
 namespace Threeyes.Steamworks
 {
@@ -67,7 +68,7 @@ namespace Threeyes.Steamworks
         [UnityEditor.MenuItem(Steamworks_EditorDefinition.HierarchyMenuPrefix_Persistent + "OptionPD_Skin", false)]
         public static void CreateInst_Skin()
         {
-            Threeyes.Editor.EditorTool.CreateGameObjectAsChild<PersistentData_OptionSkin>(instName_Skin);
+            EditorTool.CreateGameObjectAsChild<PersistentData_OptionSkin>(instName_Skin);
         }
 
         //——Hierarchy GUI——

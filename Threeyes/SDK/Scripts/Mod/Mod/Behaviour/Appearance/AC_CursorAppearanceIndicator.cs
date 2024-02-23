@@ -1,5 +1,7 @@
 using NaughtyAttributes;
 using Threeyes.Action;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEngine;
 /// <summary>
 /// Display system cursor info
@@ -161,7 +163,7 @@ public class AC_CursorAppearanceIndicator : AC_CursorAppearanceBehaviourCollecti
 	[UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Behaviour_Appearance + "UICursorAppearanceBehaviourCollection", false, 2)]
 	public static void CreateUIInst()
 	{
-		Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_CursorAppearanceIndicator>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_CursorAppearanceIndicator>(instName);
 	}
 #endif
 	#endregion

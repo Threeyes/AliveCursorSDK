@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using UnityEngine;
+using Threeyes.Core;
 
 #if USE_NaughtyAttributes
 using NaughtyAttributes;

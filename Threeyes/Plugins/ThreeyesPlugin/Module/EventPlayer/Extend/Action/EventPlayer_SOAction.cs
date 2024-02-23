@@ -4,11 +4,12 @@ using UnityEngine.Events;
 using System.Text;
 using System.Linq;
 using Threeyes.Action;
+using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
+using Threeyes.Core.Editor;
 #endif
 #if UNITY_EDITOR
-using Threeyes.Editor;
 #endif
 
 namespace Threeyes.EventPlayer

@@ -3,6 +3,7 @@ using Threeyes.IO;
 using Threeyes.Decoder;
 using System.Reflection;
 using UnityEngine.Events;
+using Threeyes.Core;
 
 namespace Threeyes.External
 {

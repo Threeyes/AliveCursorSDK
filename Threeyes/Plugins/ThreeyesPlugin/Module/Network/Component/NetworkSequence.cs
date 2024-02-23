@@ -1,5 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 #if MIRROR
 using Mirror;
@@ -11,7 +12,7 @@ namespace Threeyes.Network
     [RequireComponent(typeof(NetworkIdentity))]
 #endif
     [DisallowMultipleComponent]
-    public class NetworkSequence : NetworkComponentHelperBase
+    public class NetworkSequence : NetworkComponentBase
     {
         public SequenceAbstract Comp
         {

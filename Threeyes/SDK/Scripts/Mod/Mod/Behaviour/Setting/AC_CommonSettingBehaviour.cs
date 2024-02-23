@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
-using Threeyes.Editor;
 #endif
 /// <summary>
 /// Custom Behaviour when CommonSetting changed

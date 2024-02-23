@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
-using Threeyes.Editor;
 #endif
 
 namespace Threeyes.EventPlayer

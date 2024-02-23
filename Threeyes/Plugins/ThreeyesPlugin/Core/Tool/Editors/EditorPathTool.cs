@@ -1,7 +1,8 @@
 #if UNITY_EDITOR
+using Threeyes.Core;
 using UnityEngine;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     public static class EditorPathTool
     {

@@ -6,6 +6,8 @@ using UnityEngine;
 using System.Linq;
 using Threeyes.Data;
 using System.Collections;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
@@ -77,7 +79,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Object + "ScriptableObject", false, intBasicMenuOrder + 2)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_SO>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_SO>(instName);
         }
 
         //——Hierarchy GUI——

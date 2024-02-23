@@ -3,35 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ComponentHelperGroupBase<THelper, TComp> : ComponentGroupBase<THelper>
-    where THelper : ComponentHelperBase<TComp>
-    where TComp : Component
+namespace Threeyes.Core
 {
-
-    public bool EnableComp
+    public class ComponentHelperGroupBase<THelper, TComp> : ComponentGroupBase<THelper>
+        where THelper : ComponentHelperBase<TComp>
+        where TComp : Component
     {
-        get { return enabled; }
-        set { ForEachChildComponent((h) => h.EnableComp = value); }
-    }
 
-    /// <summary>
-    /// 如果子对象符合条件，自动生成相应的组件
-    /// </summary>
-    public bool isAutoGenerateComp = false;
-
-    public override void ForEachChildComponent(UnityAction<THelper> func)
-    {
-        //自动添加相应的Helper组件
-        if (isAutoGenerateComp)
+        public bool EnableComp
         {
-            UnityAction<TComp> generateFunc = (com) =>
-             {
-                 com.gameObject.AddComponentOnce<THelper>();
-             };
-            ForEachChildComponent<TComp>(generateFunc);
+            get { return enabled; }
+            set { ForEachChildComponent((h) => h.EnableComp = value); }
         }
 
-        base.ForEachChildComponent(func);
-    }
+        /// <summary>
+        /// 如果子对象符合条件，自动生成相应的组件
+        /// </summary>
+        public bool isAutoGenerateComp = false;
 
+        public override void ForEachChildComponent(UnityAction<THelper> func)
+        {
+            //自动添加相应的Helper组件
+            if (isAutoGenerateComp)
+            {
+                UnityAction<TComp> generateFunc = (com) =>
+                 {
+                     com.gameObject.AddComponentOnce<THelper>();
+                 };
+                ForEachChildComponent(generateFunc);
+            }
+
+            base.ForEachChildComponent(func);
+        }
+
+    }
 }

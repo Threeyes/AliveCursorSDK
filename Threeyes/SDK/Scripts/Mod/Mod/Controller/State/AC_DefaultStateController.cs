@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Action;
 using Threeyes.Config;
+using Threeyes.Core.Editor;
 using UnityEngine;
 /// <summary>
 /// Control cursor state action
@@ -83,7 +84,7 @@ public class AC_DefaultStateController : AC_StateControllerBase<AC_SODefaultStat
 	[UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Controller_State + "Default", false)]
 	public static void CreateInst()
 	{
-		Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_DefaultStateController>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_DefaultStateController>(instName);
 	}
 #endif
 	#endregion

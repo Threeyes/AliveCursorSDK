@@ -1,5 +1,5 @@
 using UnityEngine;
-using Threeyes.Base;
+using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif

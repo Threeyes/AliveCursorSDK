@@ -5,16 +5,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using System.Linq;
+using Threeyes.Core;
+
 namespace Threeyes.ValueHolder
 {
-	/// <summary>
-	/// 通过反射设置实例的某个字段/属性/方法（适用于在UnityEvent中无法显示或对应字段是私有的情况）
-	///
-	/// PS:
-	/// 1.因为继承IValueHolder，因此可以被EventPlayer_SOAction自动调用
-	/// 2.仅为了避免不必要的代码编写（如修改简单值类型），遇到复杂的类还是需要写代码（如Color等）
-	/// </summary>
-	public abstract class ReflectionValueHolderBase : MonoBehaviour
+    /// <summary>
+    /// 通过反射设置实例的某个字段/属性/方法（适用于在UnityEvent中无法显示或对应字段是私有的情况）
+    ///
+    /// PS:
+    /// 1.因为继承IValueHolder，因此可以被EventPlayer_SOAction自动调用
+    /// 2.仅为了避免不必要的代码编写（如修改简单值类型），遇到复杂的类还是需要写代码（如Color等）
+    /// </summary>
+    public abstract class ReflectionValueHolderBase : MonoBehaviour
 	{
 		public abstract Type ValueType { get; }
 

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Threeyes.Utility
+namespace Threeyes.Core
 {
     /// <summary>
     /// Math for double

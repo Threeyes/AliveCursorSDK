@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using Threeyes.Config;
 using System;
+using Threeyes.Core;
 
 namespace Threeyes.SpawnPoint
 {

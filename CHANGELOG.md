@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.2.0]
+- Add namespace for Core scripts;
+- Improve appearance for LiquidController and ClockController.
+
 ## [4.1.6]
 - Fix: AC_RigBuilderHelper not update joints after size related state change.
 - Item Manager add ShowOutputDirectory toggle.

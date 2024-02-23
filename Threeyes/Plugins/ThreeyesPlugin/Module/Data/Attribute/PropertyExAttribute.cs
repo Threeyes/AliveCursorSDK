@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 namespace Threeyes.Data
 {
-	public abstract class PropertyExAttribute : PropertyAttribute
+    public abstract class PropertyExAttribute : PropertyAttribute
 	{
 		protected static object GetMemberValue<TValue>(object obj, string fieldOrpropertyName)
 		{

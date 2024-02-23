@@ -1,9 +1,9 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     [InitializeOnLoad]
     public static class HierarchyViewManager_UI

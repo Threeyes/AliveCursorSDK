@@ -3,11 +3,12 @@ using UnityEngine.Events;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Events;
-using Threeyes.Editor;
 #endif
 
 namespace Threeyes.EventPlayer

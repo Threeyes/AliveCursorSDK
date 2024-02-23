@@ -3,8 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
 using Threeyes.Coroutine;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
-using Threeyes.Editor;
 using UnityEditor;
 #endif
 

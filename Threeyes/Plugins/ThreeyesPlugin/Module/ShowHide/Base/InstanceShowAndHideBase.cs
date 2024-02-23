@@ -1,3 +1,4 @@
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.ShowHide

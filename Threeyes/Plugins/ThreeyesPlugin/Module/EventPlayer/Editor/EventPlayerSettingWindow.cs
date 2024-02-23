@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
-using Threeyes.Editor;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;

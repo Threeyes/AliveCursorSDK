@@ -1,10 +1,11 @@
 using DG.Tweening;
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.Action
 {
 
-	[CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "ColorEx", fileName = "TweenColorEx")]
+    [CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "ColorEx", fileName = "TweenColorEx")]
 #if UNITY_EDITOR
     [UnityEditor.CanEditMultipleObjects]
 #endif

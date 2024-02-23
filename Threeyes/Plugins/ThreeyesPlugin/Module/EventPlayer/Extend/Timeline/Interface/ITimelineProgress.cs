@@ -1,8 +1,7 @@
 using System;
-using Threeyes.Utility;
 using UnityEngine;
 using UnityEngine.Events;
-using Threeyes.Base;
+using Threeyes.Core;
 #if Threeyes_Timeline
 using UnityEngine.Playables;
 #endif

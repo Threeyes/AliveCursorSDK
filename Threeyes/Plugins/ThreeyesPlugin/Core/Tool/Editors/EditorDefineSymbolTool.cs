@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     public static class EditorDefineSymbolTool
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Threeyes.Base;
+using Threeyes.Core;
 
 #if Threeyes_DoTweenPro
 using DG.Tweening;

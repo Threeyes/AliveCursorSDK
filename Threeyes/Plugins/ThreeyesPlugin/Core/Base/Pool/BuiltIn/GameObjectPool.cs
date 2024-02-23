@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     /// <summary>
     /// Manage GameObject

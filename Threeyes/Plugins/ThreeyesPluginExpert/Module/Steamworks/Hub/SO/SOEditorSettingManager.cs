@@ -2,6 +2,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEditor;
 using UnityEngine;
 namespace Threeyes.Steamworks

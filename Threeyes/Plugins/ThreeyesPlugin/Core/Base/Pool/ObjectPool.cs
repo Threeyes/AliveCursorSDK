@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     /// <summary>
     /// Ref: UnityEngine.Pool.ObjectPool

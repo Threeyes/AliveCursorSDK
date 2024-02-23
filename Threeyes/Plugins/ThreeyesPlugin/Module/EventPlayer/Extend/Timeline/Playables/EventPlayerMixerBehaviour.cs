@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using System.Linq;
-using Threeyes.Utility;
+using Threeyes.Core;
 using Threeyes.Timeline;
 
 namespace Threeyes.EventPlayer

@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 using System;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using Threeyes.Persistent;
 using Threeyes.Steamworks;
 using UnityEngine;
@@ -71,7 +73,7 @@ public class AC_DefaultEnvironmentController : DefaultEnvironmentController<AC_S
     [UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Controller_Environment + "Default", false)]
     public static void CreateInst()
     {
-        Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_DefaultEnvironmentController>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_DefaultEnvironmentController>(instName);
     }
 #endif
     #endregion

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Threeyes.Data;
 using Threeyes.Config;
 using UnityEngine;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

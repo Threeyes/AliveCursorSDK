@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using Newtonsoft.Json;
 using Threeyes.Action;
+using Threeyes.Core.Editor;
 using UnityEngine;
 /// <summary>
 /// Control Cursor Movement
@@ -119,7 +120,7 @@ public class AC_DefaultTransformController : AC_TransformControllerBase
 	[UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Controller_Transform + "Default", false)]
 	public static void CreateInst()
 	{
-		Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_DefaultTransformController>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_DefaultTransformController>(instName);
 	}
 #endif
 	#endregion

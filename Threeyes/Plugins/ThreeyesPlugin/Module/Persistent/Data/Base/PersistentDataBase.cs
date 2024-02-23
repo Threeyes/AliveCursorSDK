@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System;
 using System.Text;
 using Threeyes.Data;
+using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif

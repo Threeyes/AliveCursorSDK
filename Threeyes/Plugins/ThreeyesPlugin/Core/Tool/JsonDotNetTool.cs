@@ -6,50 +6,52 @@ using UnityEngine;
 using Newtonsoft.Json;
 #endif
 
-public static class JsonDotNetTool
+namespace Threeyes.Core
 {
-    /// <summary>
-    /// ≈–∂œclass÷–µƒMember «∑Ò”¶∏√–Ú¡–ªØ
-    /// Ref£∫https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MemberSerialization.htm
-    /// </summary>
-    /// <param name="objectType"></param>
-    /// <param name="memberInfo"></param>
-    /// <returns></returns>
-    public static bool ShouldSerialize(Type objectType, MemberInfo memberInfo)
+    public static class JsonDotNetTool
     {
+        /// <summary>
+        /// Âà§Êñ≠class‰∏≠ÁöÑMemberÊòØÂê¶Â∫îËØ•Â∫èÂàóÂåñ
+        /// RefÔºöhttps://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MemberSerialization.htm
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="memberInfo"></param>
+        /// <returns></returns>
+        public static bool ShouldSerialize(Type objectType, MemberInfo memberInfo)
+        {
 #if USE_JsonDotNet
 
-        bool ignoreSerializableAttribute;
+            bool ignoreSerializableAttribute;
 #if HAVE_BINARY_SERIALIZATION
             ignoreSerializableAttribute = true;
 #else
-        ignoreSerializableAttribute = true;
+            ignoreSerializableAttribute = true;
 #endif
-        return ShouldSerialize(GetObjectMemberSerialization(objectType, ignoreSerializableAttribute), memberInfo);
+            return ShouldSerialize(GetObjectMemberSerialization(objectType, ignoreSerializableAttribute), memberInfo);
 #else
         Debug.LogError("Please Active USE_JsonDotNet!");
         return true;
 #endif
 
-    }
+        }
 
 #if USE_JsonDotNet
 
-    /// <summary>
-    /// ªÒ»°¿‡∂®“Â[JsonObject]÷–µƒMemberSerialization
-    /// 
-    /// Ref: Newtonsoft.Json.Serialization.JsonTypeReflector#154
-    /// </summary>
-    /// <param name="objectType"></param>
-    /// <param name="ignoreSerializableAttribute"></param>
-    /// <returns></returns>
-    public static MemberSerialization GetObjectMemberSerialization(Type objectType, bool ignoreSerializableAttribute)
-    {
-        JsonObjectAttribute objectAttribute = objectType.GetCustomAttribute<JsonObjectAttribute>();
-        if (objectAttribute != null)
+        /// <summary>
+        /// Ëé∑ÂèñÁ±ªÂÆö‰πâ[JsonObject]‰∏≠ÁöÑMemberSerialization
+        /// 
+        /// Ref: Newtonsoft.Json.Serialization.JsonTypeReflector#154
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="ignoreSerializableAttribute"></param>
+        /// <returns></returns>
+        public static MemberSerialization GetObjectMemberSerialization(Type objectType, bool ignoreSerializableAttribute)
         {
-            return objectAttribute.MemberSerialization;
-        }
+            JsonObjectAttribute objectAttribute = objectType.GetCustomAttribute<JsonObjectAttribute>();
+            if (objectAttribute != null)
+            {
+                return objectAttribute.MemberSerialization;
+            }
 #if HAVE_DATA_CONTRACTS//[MS]
         DataContractAttribute dataContractAttribute = objectType.GetCustomAttribute<DataContractAttribute>();
         if (dataContractAttribute != null)
@@ -65,13 +67,13 @@ public static class JsonDotNetTool
             }
 #endif
 
-        // the default
-        return MemberSerialization.OptOut;
-    }
+            // the default
+            return MemberSerialization.OptOut;
+        }
 
-    //Ref: Newtonsoft.Json.Serialization.DefaultContractResolver#1583
-    public static bool ShouldSerialize(MemberSerialization memberSerialization, MemberInfo memberInfo)
-    {
+        //Ref: Newtonsoft.Json.Serialization.DefaultContractResolver#1583
+        public static bool ShouldSerialize(MemberSerialization memberSerialization, MemberInfo memberInfo)
+        {
 #if HAVE_DATA_CONTRACTS
         DataContractAttribute dataContractAttribute = memberInfo.GetCustomAttribute<DataContractAttribute>();
         DataMemberAttribute dataMemberAttribute = null;
@@ -81,67 +83,68 @@ public static class JsonDotNetTool
         }
 #endif
 
-        JsonPropertyAttribute propertyAttribute = memberInfo.GetCustomAttribute<JsonPropertyAttribute>();
-        JsonRequiredAttribute requiredAttribute = memberInfo.GetCustomAttribute<JsonRequiredAttribute>();
-        bool hasMemberAttribute = false;// «∑Ò π”√¡ÀJsonPropertyAttributeªÚJsonRequiredAttribute
-        if (propertyAttribute != null)
-        {
-            hasMemberAttribute = true;
-        }
-        else
-        {
+            JsonPropertyAttribute propertyAttribute = memberInfo.GetCustomAttribute<JsonPropertyAttribute>();
+            JsonRequiredAttribute requiredAttribute = memberInfo.GetCustomAttribute<JsonRequiredAttribute>();
+            bool hasMemberAttribute = false;//ÊòØÂê¶‰ΩøÁî®‰∫ÜJsonPropertyAttributeÊàñJsonRequiredAttribute
+            if (propertyAttribute != null)
+            {
+                hasMemberAttribute = true;
+            }
+            else
+            {
 #if HAVE_DATA_CONTRACTS
                 if (dataMemberAttribute != null)
                 {
                     hasMemberAttribute = true;
                 }
 #endif
-        }
+            }
 
-        if (requiredAttribute != null)
-        {
-            hasMemberAttribute = true;
-        }
+            if (requiredAttribute != null)
+            {
+                hasMemberAttribute = true;
+            }
 
-        bool hasJsonIgnoreAttribute =
-              memberInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null
-              // automatically ignore extension data dictionary property if it is public
-              || memberInfo.GetCustomAttribute<JsonExtensionDataAttribute>() != null
+            bool hasJsonIgnoreAttribute =
+                  memberInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null
+                  // automatically ignore extension data dictionary property if it is public
+                  || memberInfo.GetCustomAttribute<JsonExtensionDataAttribute>() != null
 #if HAVE_NON_SERIALIZED_ATTRIBUTE
                 || IsNonSerializable(memberInfo)
 #endif
                 ;
 
-        bool Ignored;
+            bool Ignored;
 
-        if (memberSerialization != MemberSerialization.OptIn)
-        {
-            bool hasIgnoreDataMemberAttribute = false;
+            if (memberSerialization != MemberSerialization.OptIn)
+            {
+                bool hasIgnoreDataMemberAttribute = false;
 
 #if HAVE_IGNORE_DATA_MEMBER_ATTRIBUTE
                 hasIgnoreDataMemberAttribute = (memberInfo.GetCustomAttribute<IgnoreDataMemberAttribute>() != null);
 #endif
 
-            // ignored if it has JsonIgnore or NonSerialized or IgnoreDataMember attributes
-            Ignored = (hasJsonIgnoreAttribute || hasIgnoreDataMemberAttribute);
+                // ignored if it has JsonIgnore or NonSerialized or IgnoreDataMember attributes
+                Ignored = hasJsonIgnoreAttribute || hasIgnoreDataMemberAttribute;
+            }
+            else//[OptIn]: Only members marked with JsonPropertyAttribute or DataMemberAttribute are serialized. This member serialization mode can also be set by marking the class with DataContractAttribute.
+            {
+                // ignored if it has JsonIgnore/NonSerialized or does not have DataMember or JsonProperty attributes
+                Ignored = hasJsonIgnoreAttribute || !hasMemberAttribute;
+            }
+
+            return !Ignored;
         }
-        else//[OptIn]: Only members marked with JsonPropertyAttribute or DataMemberAttribute are serialized. This member serialization mode can also be set by marking the class with DataContractAttribute.
+
+
+        public static bool IsSerializable(Type objectType)
         {
-            // ignored if it has JsonIgnore/NonSerialized or does not have DataMember or JsonProperty attributes
-            Ignored = (hasJsonIgnoreAttribute || !hasMemberAttribute);
+            return objectType.GetCustomAttribute<SerializableAttribute>() != null;
         }
-
-        return !Ignored;
-    }
-
-
-    public static bool IsSerializable(Type objectType)
-    {
-        return objectType.GetCustomAttribute<SerializableAttribute>() != null;
-    }
-    public static bool IsNonSerializable(MemberInfo memberInfo)
-    {
-        return memberInfo.GetCustomAttribute<NonSerializedAttribute>() != null;
-    }
+        public static bool IsNonSerializable(MemberInfo memberInfo)
+        {
+            return memberInfo.GetCustomAttribute<NonSerializedAttribute>() != null;
+        }
 #endif
+    }
 }

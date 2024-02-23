@@ -2,47 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class LazyExtension_Texture2D
+namespace Threeyes.Core
 {
-
-    /// <summary>
-    /// Try Compress the texture2D with error proof
-    /// 
-    /// Ref£ºhttps://docs.unity3d.com/ScriptReference/Texture2D.Compress.html
-    /// </summary>
-    /// <param name="textureFrame"></param>
-    /// <param name="highQuality">Passing true for highQuality parameter will dither the source texture during compression, which helps to reduce compression artifacts but is slightly slower. This parameter is ignored for ETC compression.</param>
-    /// <returns></returns>
-    public static bool TryCompress(this Texture2D textureFrame, bool highQuality)
+    public static class LazyExtension_Texture2D
     {
-        if (!textureFrame)
-            return false;
-       
-        bool isValid = false;
 
-        ///ÊµÏÖÔ­Àí£º
-        ///Compress: If the graphics card does not support compression or the texture is already in compressed format, then Compress does nothing.
-        ///¡¾PC¡¿: 
-        ///¡ª¡ªDXT1(BC1) format if the original texture had no alpha channel, 
-        ///¡ª¡ªDXT5(BC3) format if it had alpha channel.
-        ///¡ª¡ªDXT5(BC4) format if the original texture was R8.
-        ///¡ª¡ªDXT5(BC5) format if the original texture was RG16.
-        ///¡¾Android¡¿, ¡¾iOS¡¿and ¡¾tvOS¡¿: Compress the texture to the ETC/EAC family of formats.
-
-        if (textureFrame.width > 4 && textureFrame.height > 4)//ºöÂÔ´´½¨µÄ¿Õ°×Í¼
+        /// <summary>
+        /// Try Compress the texture2D with error proof
+        /// 
+        /// Refï¼šhttps://docs.unity3d.com/ScriptReference/Texture2D.Compress.html
+        /// </summary>
+        /// <param name="textureFrame"></param>
+        /// <param name="highQuality">Passing true for highQuality parameter will dither the source texture during compression, which helps to reduce compression artifacts but is slightly slower. This parameter is ignored for ETC compression.</param>
+        /// <returns></returns>
+        public static bool TryCompress(this Texture2D textureFrame, bool highQuality)
         {
-            ///ÅĞ¶Ï²»Í¬Æ½Ì¨ÏÂÊÇ·ñ·ûºÏÑ¹Ëõ¹æÔò£¬±ÜÃâÎŞ·¨catchµÄ±¨´í£¨ÒòÎª²»ÔÚ¸ÃÏß³ÌÖ´ĞĞ£¬Òò´Ë´íÎó²»ÄÜ±»catch£©£º
-            ///1.²¿·ÖÆ½Ì¨µÄÑ¹Ëõ¸ñÊ½ĞèÒª³¤¿íÎª4µÄ±¶Êı£¬·ñÔò±¨´í£ºTexture '' has dimensions (218 x 218) which are not multiples of 4. Compress will not work.
-            if (textureFrame.width % 4 == 0 && textureFrame.height % 4 == 0)
+            if (!textureFrame)
+                return false;
+
+            bool isValid = false;
+
+            ///å®ç°åŸç†ï¼š
+            ///Compress: If the graphics card does not support compression or the texture is already in compressed format, then Compress does nothing.
+            ///ã€PCã€‘: 
+            ///â€”â€”DXT1(BC1) format if the original texture had no alpha channel, 
+            ///â€”â€”DXT5(BC3) format if it had alpha channel.
+            ///â€”â€”DXT5(BC4) format if the original texture was R8.
+            ///â€”â€”DXT5(BC5) format if the original texture was RG16.
+            ///ã€Androidã€‘, ã€iOSã€‘and ã€tvOSã€‘: Compress the texture to the ETC/EAC family of formats.
+
+            if (textureFrame.width > 4 && textureFrame.height > 4)//å¿½ç•¥åˆ›å»ºçš„ç©ºç™½å›¾
             {
-                isValid = true;
+                ///åˆ¤æ–­ä¸åŒå¹³å°ä¸‹æ˜¯å¦ç¬¦åˆå‹ç¼©è§„åˆ™ï¼Œé¿å…æ— æ³•catchçš„æŠ¥é”™ï¼ˆå› ä¸ºä¸åœ¨è¯¥çº¿ç¨‹æ‰§è¡Œï¼Œå› æ­¤é”™è¯¯ä¸èƒ½è¢«catchï¼‰ï¼š
+                ///1.éƒ¨åˆ†å¹³å°çš„å‹ç¼©æ ¼å¼éœ€è¦é•¿å®½ä¸º4çš„å€æ•°ï¼Œå¦åˆ™æŠ¥é”™ï¼šTexture '' has dimensions (218 x 218) which are not multiples of 4. Compress will not work.
+                if (textureFrame.width % 4 == 0 && textureFrame.height % 4 == 0)
+                {
+                    isValid = true;
+                }
             }
+
+            ///Compress require texture readable
+            if (isValid && textureFrame.isReadable)
+                textureFrame.Compress(highQuality);
+
+            return isValid;
         }
-
-        ///Compress require texture readable
-        if (isValid && textureFrame.isReadable)
-            textureFrame.Compress(highQuality);
-
-        return isValid;
     }
 }

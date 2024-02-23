@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Linq;
 using UnityEngine;
 using System;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

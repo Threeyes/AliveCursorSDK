@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
-    /// 用途：绘制TimelineClip所引用的其他剩余组件
+    /// 绘制TimelineClip所引用的其他剩余组件
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class BaseClipEditor<T> : BaseEditor<T> where T : class
@@ -60,10 +60,10 @@ namespace Threeyes.Editor
             if (comp != null)
                 components = comp.gameObject.GetComponents<MonoBehaviour>();
 
-            int numComponents = (components == null) ? 0 : components.Length;
-            int numEditors = (m_editors == null) ? 0 : m_editors.Length;
+            int numComponents = components == null ? 0 : components.Length;
+            int numEditors = m_editors == null ? 0 : m_editors.Length;
 
-            if (m_cachedReferenceObject != comp || (numComponents + 1) != numEditors)
+            if (m_cachedReferenceObject != comp || numComponents + 1 != numEditors)
             {
                 DestroyComponentEditors();
                 m_cachedReferenceObject = comp;
@@ -92,7 +92,7 @@ namespace Threeyes.Editor
                 for (int i = 0; i < m_editors.Length; ++i)
                 {
                     if (m_editors[i] != null)
-                        UnityEngine.Object.DestroyImmediate(m_editors[i]);
+                        DestroyImmediate(m_editors[i]);
                     m_editors[i] = null;
                 }
                 m_editors = null;

@@ -1,9 +1,10 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEditor;
 using UnityEngine;
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
     /// inherit to Update Hierarchy

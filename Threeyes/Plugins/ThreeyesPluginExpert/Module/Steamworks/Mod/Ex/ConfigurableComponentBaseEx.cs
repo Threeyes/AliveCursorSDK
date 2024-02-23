@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Threeyes.Config;
+using Threeyes.Core;
 using Threeyes.Data;
 using Threeyes.Localization;
 using Threeyes.Persistent;

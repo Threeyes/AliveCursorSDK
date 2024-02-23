@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Threeyes.Timeline;
-using Threeyes.Utility;
+using Threeyes.Core;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;

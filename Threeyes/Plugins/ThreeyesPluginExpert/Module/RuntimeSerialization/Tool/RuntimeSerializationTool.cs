@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Threeyes.Data;
+using Threeyes.Core.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
-using Threeyes.Editor;
 #endif
 namespace Threeyes.RuntimeSerialization
 {

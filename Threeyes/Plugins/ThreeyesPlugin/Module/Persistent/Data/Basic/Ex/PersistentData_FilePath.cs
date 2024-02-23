@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEngine;
 namespace Threeyes.Persistent
 {
@@ -27,7 +29,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic_Ex + "PersistentData_FilePath", false, intBasicMenuOrder)]
         public static void CreateInst_FilePath()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_FilePath>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_FilePath>(instName);
         }
 
         //——Hierarchy GUI——

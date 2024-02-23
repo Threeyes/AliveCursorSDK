@@ -1,15 +1,16 @@
 using DG.Tweening;
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.Action
 {
-	/// <summary>
-	///
-	///
-	/// PS:
-	/// 1. Common对应ActionConfig_TweenVector3的配置，因此不需要单独增加SOAction_TweenVector3
-	/// </summary>
-	[CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "Vector3Ex", fileName = "TweenVector3Ex")]
+    /// <summary>
+    ///
+    ///
+    /// PS:
+    /// 1. Common对应ActionConfig_TweenVector3的配置，因此不需要单独增加SOAction_TweenVector3
+    /// </summary>
+    [CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "Vector3Ex", fileName = "TweenVector3Ex")]
 #if UNITY_EDITOR
     [UnityEditor.CanEditMultipleObjects]
 #endif

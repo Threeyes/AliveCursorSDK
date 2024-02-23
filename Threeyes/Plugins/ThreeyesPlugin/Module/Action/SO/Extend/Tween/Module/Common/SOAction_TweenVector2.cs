@@ -1,9 +1,10 @@
 using DG.Tweening;
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.Action
 {
-	[CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "Vector2", fileName = "TweenVector2")]
+    [CreateAssetMenu(menuName = EditorDefinition_Action.AssetMenuPrefix_Action_Tween_Common + "Vector2", fileName = "TweenVector2")]
 #if UNITY_EDITOR
     [UnityEditor.CanEditMultipleObjects]
 #endif

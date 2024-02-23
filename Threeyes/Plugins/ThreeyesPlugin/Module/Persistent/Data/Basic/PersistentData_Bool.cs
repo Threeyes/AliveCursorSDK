@@ -1,4 +1,7 @@
 
+using Threeyes.Core;
+using Threeyes.Core.Editor;
+
 namespace Threeyes.Persistent
 {
     public class PersistentData_Bool : PersistentDataBase<bool, BoolEvent>
@@ -10,7 +13,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Bool", false, intBasicMenuOrder + 0)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Bool>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Bool>(instName);
         }
 
         //——Hierarchy GUI——

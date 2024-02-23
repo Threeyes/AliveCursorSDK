@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Threeyes.Editor;
 using System;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 
 namespace Threeyes.EventPlayer
 {
-	//ToUpdate:应该是管理所有Core的Module的宏定义
-	[CreateAssetMenu(menuName = "SO/Manager/EventPlayerSettingManager")]
+    //ToUpdate:应该是管理所有Core的Module的宏定义
+    [CreateAssetMenu(menuName = "SO/Manager/EventPlayerSettingManager")]
 	public class SOEventPlayerSettingManager : SOInstacneBase<SOEventPlayerSettingManager>
 	{
 		#region Property & Field

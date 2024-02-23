@@ -1,6 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 using Threeyes.Action;
+using Threeyes.Core;
 
 /// <summary>
 /// Manage all Input Action

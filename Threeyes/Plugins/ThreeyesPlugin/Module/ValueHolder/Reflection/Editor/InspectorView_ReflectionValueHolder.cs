@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Reflection;
+using Threeyes.Core;
 namespace Threeyes.ValueHolder
 {
     [CanEditMultipleObjects]
@@ -23,13 +24,13 @@ namespace Threeyes.ValueHolder
             if (targetObject)
             {
                 System.Type targetType = targetObject.GetType();
-                //Ä¬ÈÏÎª¿Õ
+                //é»˜è®¤ä¸ºç©º
                 List<string> listFieldOption = new List<string>() { ReflectionValueHolderBase.emptyMemberName };
                 List<string> listPropertyOption = new List<string>() { ReflectionValueHolderBase.emptyMemberName };
                 List<string> listGetMethodOption = new List<string>() { ReflectionValueHolderBase.emptyMemberName };
                 List<string> listSetMethodOption = new List<string>() { ReflectionValueHolderBase.emptyMemberName };
 
-                //ÁĞ³öËùÓĞ¶ÔÓ¦µÄÖµ
+                //åˆ—å‡ºæ‰€æœ‰å¯¹åº”çš„å€¼
                 foreach (FieldInfo fieldInfo in targetType.GetAllFields(ReflectionValueHolderBase.defaultBindingFlags))
                 {
                     if (_target.IsTypeMatch(fieldInfo.FieldType))
@@ -43,7 +44,7 @@ namespace Threeyes.ValueHolder
                         listPropertyOption.Add(propertyInfo.Name);
                 }
                 DrawPopUp(new GUIContent("Property"), listPropertyOption, ref _target.targetSerializePropertyName);
-                //ÏÔÊ¾PropertyÊÇ·ñ¿ÉÒÔ get/set 
+                //æ˜¾ç¤ºPropertyæ˜¯å¦å¯ä»¥ get/set 
                 if (_target.targetSerializePropertyName.NotNullOrEmpty())
                 {
                     PropertyInfo propertyInfoCurSelect = targetType.GetProperty(_target.targetSerializePropertyName);
@@ -84,13 +85,13 @@ namespace Threeyes.ValueHolder
         /// </summary>
         /// <param name="gUIContent"></param>
         /// <param name="listOption"></param>
-        /// <param name="lastSelect">Èç¹û²»ÔÚ¿ÉÑ¡ÏîÖĞ£¬ÔòÇå¿ÕÖµ</param>
+        /// <param name="lastSelect">å¦‚æœä¸åœ¨å¯é€‰é¡¹ä¸­ï¼Œåˆ™æ¸…ç©ºå€¼</param>
         /// <returns></returns>
         private int DrawPopUp(GUIContent gUIContent, List<string> listOption, ref string lastSelect)
         {
             bool isNameExist = listOption.Contains(lastSelect);
             if (!isNameExist)
-                lastSelect = null;//Èç¹û²»´æÔÚ£¬ÔòÇå¿Õ£¨¿ÉÄÜÊÇÎïÌåÒıÓÃ¶ªÊ§£¬»òÕßMember¸ÄÃû£©
+                lastSelect = null;//å¦‚æœä¸å­˜åœ¨ï¼Œåˆ™æ¸…ç©ºï¼ˆå¯èƒ½æ˜¯ç‰©ä½“å¼•ç”¨ä¸¢å¤±ï¼Œæˆ–è€…Memberæ”¹åï¼‰
             int lastIndex = isNameExist ? listOption.IndexOf(lastSelect) : 0;
             int curIndex = EditorGUILayout.Popup(gUIContent, lastIndex, listOption.ToArray());
             if (lastIndex != curIndex)

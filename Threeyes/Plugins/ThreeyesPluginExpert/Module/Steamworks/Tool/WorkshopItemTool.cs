@@ -1,12 +1,13 @@
 using System.IO;
+using Threeyes.Core;
 using UnityEngine;
 
 namespace Threeyes.Steamworks
 {
-	/// <summary>
-	/// 针对WorkshopItem数据类的工具类
-	/// </summary>
-	public static class WorkshopItemTool
+    /// <summary>
+    /// 针对WorkshopItem数据类的工具类
+    /// </summary>
+    public static class WorkshopItemTool
 	{
 		//——Path——
 		public static bool IsValidItemDir(string itemDirPath)

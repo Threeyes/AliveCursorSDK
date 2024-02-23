@@ -1,5 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
+using Threeyes.Core;
+
 public class AC_SystemCursorManagerSimulator : AC_SystemCursorManagerBase<AC_SystemCursorManagerSimulator>
 {
 	[Space]

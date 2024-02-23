@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using Threeyes.Core;
 #if Threeyes_UnityGifDecoder
 using ThreeDISevenZeroR.UnityGifDecoder;
 #endif

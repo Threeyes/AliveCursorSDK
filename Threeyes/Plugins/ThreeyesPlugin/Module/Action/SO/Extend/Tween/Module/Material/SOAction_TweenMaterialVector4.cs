@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Threeyes.Core;
 using UnityEngine;
 #if USE_NaughtyAttributes
 #endif

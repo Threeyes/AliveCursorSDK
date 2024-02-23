@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-namespace Threeyes.Base
+namespace Threeyes.Core
 {
     public interface ICloneableData : ICloneable
     {

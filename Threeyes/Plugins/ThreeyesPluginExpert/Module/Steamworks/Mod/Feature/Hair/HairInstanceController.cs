@@ -12,6 +12,7 @@ using static Unity.DemoTeam.Hair.HairInstance.SettingsStrands;
 using static Unity.DemoTeam.Hair.HairSim.SolverSettings;
 using static Unity.DemoTeam.Hair.HairInstance;
 using static Unity.DemoTeam.Hair.HairSim;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

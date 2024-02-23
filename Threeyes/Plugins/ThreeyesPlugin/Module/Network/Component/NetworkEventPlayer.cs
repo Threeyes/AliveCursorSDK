@@ -14,7 +14,7 @@
     [RequireComponent(typeof(NetworkIdentity))]
 #endif
     [DisallowMultipleComponent]
-    public class NetworkEventPlayer : NetworkComponentHelperBase
+    public class NetworkEventPlayer : NetworkComponentBase
     {
         public EventPlayer Comp { get { if (!comp) comp = GetComponent<EventPlayer>(); return comp; } }
         [SerializeField] protected EventPlayer comp;

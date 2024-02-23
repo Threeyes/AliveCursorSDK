@@ -4,10 +4,11 @@ using Threeyes.Data;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using Threeyes.Editor;
 #endif
 
 namespace Threeyes.RuntimeSerialization
@@ -233,9 +234,9 @@ namespace Threeyes.RuntimeSerialization
         }
         #endregion
 
-        //
-        protected bool isSourcePrefabMissing = false;
-        protected GameObjectPropertyBag deserializedGameObjectPropertyBag;//当前反序列化的源信息，方便在Prefab丢失时保存其源信息
+        //Cache
+        bool isSourcePrefabMissing = false;
+        GameObjectPropertyBag deserializedGameObjectPropertyBag;//当前反序列化的源信息，方便在Prefab丢失时保存其源信息
 
         //protected override Formatting Formatting { get { return Formatting.Indented; } }///GameObject：为了方便阅读，需要缩进【如果是使用PersistentData_String存储就不需要设置缩进，否则更难阅读】
 

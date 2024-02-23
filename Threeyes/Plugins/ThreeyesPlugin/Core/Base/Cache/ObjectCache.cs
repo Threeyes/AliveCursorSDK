@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-namespace Threeyes.Cache
+namespace Threeyes.Core
 {
+    //——缓存实例（如加载后的资源）——
     public interface IObjectCache<TID, T> where T : class
     {
         int CountAll { get; }

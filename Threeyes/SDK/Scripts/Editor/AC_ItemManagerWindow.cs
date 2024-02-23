@@ -3,6 +3,7 @@ using UMod.BuildEngine;
 using UnityEditor;
 using UMod.Shared;
 using Threeyes.Steamworks;
+using Threeyes.Core;
 
 namespace Threeyes.AliveCursor.SDK.Editor
 {

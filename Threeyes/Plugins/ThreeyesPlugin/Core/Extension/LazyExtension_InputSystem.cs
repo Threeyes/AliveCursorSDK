@@ -4,17 +4,20 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
-/// <summary>
-/// Õë¶ÔNewInpusSystem
-/// </summary>
-public static class LazyExtension_InputSystem
+
+namespace Threeyes.Core
 {
+    /// <summary>
+    /// é’ˆå¯¹New InputSystem
+    /// </summary>
+    public static class LazyExtension_InputSystem
+    {
 #if ENABLE_INPUT_SYSTEM //ENABLE_INPUT_SYSTEM and ENABLE_LEGACY_INPUT_MANAGER  https://forum.unity.com/threads/package-dependent-compilation.541894/
 
     //Ref: https://forum.unity.com/threads/solved-getbuttondown-getbuttonup-with-the-new-system.876451/#post-5764510
 
     /// <summary>
-    /// ÈÎÒâ²»Îª0Ê±µÄÖµ
+    /// ä»»æ„ä¸ä¸º0æ—¶çš„å€¼
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
@@ -24,7 +27,7 @@ public static class LazyExtension_InputSystem
     }
 
     ///// <summary>
-    ///// °´ÏÂ¼°Ì§ÆğË²¼ä
+    ///// æŒ‰ä¸‹åŠæŠ¬èµ·ç¬é—´
     ///// </summary>
     ///// <param name="action"></param>
     ///// <returns></returns>
@@ -43,4 +46,5 @@ public static class LazyExtension_InputSystem
         return action.triggered && action.ReadValue<float>() == 0;
     }
 #endif
+    }
 }

@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using Threeyes.Action;
+using Threeyes.Core;
 using UnityEngine;
 /// <summary>
 /// Manage all Cursor Appearance Action

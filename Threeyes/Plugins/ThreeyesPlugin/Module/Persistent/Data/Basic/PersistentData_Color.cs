@@ -1,14 +1,16 @@
 using UnityEngine;
 using Threeyes.Data;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 
 namespace Threeyes.Persistent
 {
-	/// <summary>
-	///
-	/// ToAdd:
-	/// -Add HDR support for default/persistent value
-	/// </summary>
-	public class PersistentData_Color : PersistentDataBase<Color, ColorEvent, DataOption_Color>
+    /// <summary>
+    ///
+    /// ToAdd:
+    /// -Add HDR support for default/persistent value
+    /// </summary>
+    public class PersistentData_Color : PersistentDataBase<Color, ColorEvent, DataOption_Color>
 	{
 
 		private void Reset()
@@ -23,7 +25,7 @@ namespace Threeyes.Persistent
 		[UnityEditor.MenuItem(strMenuItem_Root_Basic + "Color", false, intBasicMenuOrder + 8)]
 		public static void CreateInst()
 		{
-			Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Color>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Color>(instName);
 		}
 
 		//——Hierarchy GUI——

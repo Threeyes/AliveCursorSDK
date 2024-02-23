@@ -1,6 +1,8 @@
 using Threeyes.Data;
 using UnityEngine;
 using Newtonsoft.Json;
+using Threeyes.Core;
+
 namespace Threeyes.RuntimeSerialization
 {
     /// <summary>

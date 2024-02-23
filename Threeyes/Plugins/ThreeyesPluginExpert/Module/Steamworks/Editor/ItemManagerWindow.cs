@@ -11,7 +11,6 @@ using UMod.ModTools.Export;
 using UMod.BuildEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using Threeyes.Editor;
 using Newtonsoft.Json;
 using Threeyes.Decoder;
 using Threeyes.IO;
@@ -21,6 +20,8 @@ using UMod.Shared;
 using UnityEditor.PackageManager;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 using UnityEditor.PackageManager.Requests;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 
 namespace Threeyes.Steamworks
 {

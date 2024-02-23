@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Threeyes.Core;
 using UnityEngine;
 namespace Threeyes.Outline
 {

@@ -1,3 +1,5 @@
+using Threeyes.Core;
+
 namespace Threeyes.ShowHide
 {
     public class ShowOnDebugBuild : ShowAndHide

@@ -1,5 +1,7 @@
 using NaughtyAttributes;
 using Threeyes.Action;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEngine;
 using UnityEngine.Events;
 /// <summary>
@@ -160,7 +162,7 @@ public class AC_CursorInputBehaviourCollection : AC_BehaviourCollectionBase<AC_S
 	[UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Behaviour_Input + "CursorInputBehaviourCollection", false, 1)]
 	public static void CreateInst()
 	{
-		Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_CursorInputBehaviourCollection>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_CursorInputBehaviourCollection>(instName);
 	}
 #endif
 	#endregion

@@ -2,6 +2,8 @@ using NaughtyAttributes;
 using Newtonsoft.Json;
 using System;
 using Threeyes.Config;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using Threeyes.Persistent;
 using Threeyes.Steamworks;
 using UnityEngine;
@@ -115,7 +117,7 @@ public class AC_DefaultPostProcessingController : PostProcessingControllerBase<A
     [UnityEditor.MenuItem(AC_EditorDefinition.HierarchyMenuPrefix_Root_Mod_Controller_PostProcessing + "Default", false)]
     public static void CreateInst()
     {
-        Threeyes.Editor.EditorTool.CreateGameObjectAsChild<AC_DefaultPostProcessingController>(instName);
+        EditorTool.CreateGameObjectAsChild<AC_DefaultPostProcessingController>(instName);
     }
 #endif
     #endregion

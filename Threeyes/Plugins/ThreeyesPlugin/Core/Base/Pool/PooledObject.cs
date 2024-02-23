@@ -1,7 +1,7 @@
 
 using System;
 
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     public struct PooledObject<T> : IDisposable where T : class
     {

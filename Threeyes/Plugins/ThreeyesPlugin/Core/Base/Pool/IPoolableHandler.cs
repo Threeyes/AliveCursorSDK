@@ -1,4 +1,4 @@
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     public interface IPoolableHandler
     {

@@ -9,6 +9,7 @@ using UnityEngine.Events;
 using Threeyes.Config;
 
 using static com.zibra.liquid.DataStructures.ZibraLiquidAdvancedRenderParameters;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

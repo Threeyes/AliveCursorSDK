@@ -1,4 +1,7 @@
-public interface IValueHolder<TParam>
+namespace Threeyes.Core
 {
-    TParam CurValue { get; set; }
+    public interface IValueHolder<TParam>
+    {
+        TParam CurValue { get; set; }
+    }
 }

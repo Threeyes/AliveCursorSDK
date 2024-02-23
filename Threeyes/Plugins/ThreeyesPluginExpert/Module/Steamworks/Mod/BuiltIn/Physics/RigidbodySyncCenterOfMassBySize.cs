@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 /// <summary>
 /// 根据模型的缩放， 同步Rigidbody的CenterOfMass

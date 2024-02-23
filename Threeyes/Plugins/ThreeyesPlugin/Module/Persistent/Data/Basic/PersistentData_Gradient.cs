@@ -1,3 +1,5 @@
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using Threeyes.Data;
 using UnityEngine;
 
@@ -22,7 +24,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Gradient", false, intBasicMenuOrder + 9)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Gradient>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Gradient>(instName);
         }
 
         //——Hierarchy GUI——

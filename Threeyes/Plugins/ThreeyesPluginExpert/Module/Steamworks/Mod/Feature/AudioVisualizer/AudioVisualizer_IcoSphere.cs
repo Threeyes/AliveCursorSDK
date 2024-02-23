@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NaughtyAttributes;
 using UnityEngine.Events;
 using static Threeyes.Steamworks.AudioVisualizer_IcoSphere.ConfigInfo;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {
@@ -419,7 +420,10 @@ namespace Threeyes.Steamworks
             [Tooltip("Waveform ring's rotate speed (degrees per second).")][EnableIf(EConditionOperator.And, new string[] { nameof(showWaveform), nameof(rotateWaveformRing) })] public Vector3 waveformRotateSpeed = new Vector3(0f, 3f, 0f);
 
             [JsonConstructor]
-            public ConfigInfo() { }
+            public ConfigInfo()
+            {
+                waveformDownSample = DownSample.Off;//避免默认设置为0而导致报错
+            }
 
             void OnMeshGenerateSettingChanged(PersistentChangeState persistentChangeState) { actionMeshGenerateSettingChanged.Execute(persistentChangeState); }
             void OnWaveformSettingGenerateChanged(PersistentChangeState persistentChangeState) { actionWaveformGenerateSettingChanged.Execute(persistentChangeState); }

@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.Events;
 using System.Text;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
     /// 在Hierarchy绘制小图标
@@ -192,9 +192,9 @@ namespace Threeyes.Editor
         }
         static Texture2D _texDisplayBG;
 
-        public static Texture TexArrLeftIcon { get { if (!_texArrLeftIcon) _texArrLeftIcon = EditorDrawerTool.LoadResourcesSprite("Arrow_Left"); return _texArrLeftIcon; } }
+        public static Texture TexArrLeftIcon { get { if (!_texArrLeftIcon) _texArrLeftIcon = LoadResourcesSprite("Arrow_Left"); return _texArrLeftIcon; } }
         static Texture _texArrLeftIcon;
-        public static Texture TexArrRightIcon { get { if (!_texArrRightIcon) _texArrRightIcon = EditorDrawerTool.LoadResourcesSprite("Arrow_Right"); return _texArrRightIcon; } }
+        public static Texture TexArrRightIcon { get { if (!_texArrRightIcon) _texArrRightIcon = LoadResourcesSprite("Arrow_Right"); return _texArrRightIcon; } }
         static Texture _texArrRightIcon;
 
 
@@ -295,7 +295,7 @@ namespace Threeyes.Editor
             if (isFoldOut)
             {
                 actionDrawContentOnUnFold.Execute();//Draw Content
-                EditorDrawerTool.DrawLine(padding: 4);//Draw Line
+                DrawLine(padding: 4);//Draw Line
             }
             return isFoldOut;
         }
@@ -352,15 +352,15 @@ namespace Threeyes.Editor
             GUILayout.Button(gUIContent, gUIStyleDisplayButton);
             GUI.enabled = true;
         }
-        public static bool DrawButton(Rect rect, Texture texture, Color colTex = default(Color))
+        public static bool DrawButton(Rect rect, Texture texture, Color colTex = default)
         {
             bool isButPress = false;
             //绘制透明按钮（因为太丑）
-            GUI.backgroundColor = EditorDrawerTool.colorTransparent;
+            GUI.backgroundColor = colorTransparent;
             if (GUI.Button(rect, ""))
                 isButPress = true;
 
-            if (colTex != default(Color))
+            if (colTex != default)
                 GUI.color = colTex;
             GUI.DrawTexture(rect, texture);
 
@@ -754,12 +754,12 @@ namespace Threeyes.Editor
         /// <param name="sizeToUse">右侧需要占用的空间，比如右边的按钮</param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public static Rect GetAvaliableRect(this Rect selectionRect, Vector2 sizeToUse, Vector2 interval = default(Vector2), TextAlignment align = TextAlignment.Right)
+        public static Rect GetAvaliableRect(this Rect selectionRect, Vector2 sizeToUse, Vector2 interval = default, TextAlignment align = TextAlignment.Right)
         {
             Rect rectLeft = new Rect(selectionRect);//selectionRect 为有效宽度
             rectLeft.size = selectionRect.size.x < sizeToUse.x ? selectionRect.size : sizeToUse;
 
-            if (interval == default(Vector2))
+            if (interval == default)
                 interval = EditorDrawerTool.intervalSize;
 
             if (align == TextAlignment.Right)
@@ -826,8 +826,8 @@ namespace Threeyes.Editor
         /// <returns></returns>
         public static Rect GetRemainRectWithoutNameLabel(this Rect selectionRect, Component component, float space = 2)
         {
-            float nameLabelWidth = CalculateLabelLength(component.name) + space/* spaceSize.x*/;//左侧物体Name Label + 空间
-            return GetRemainRect(selectionRect, nameLabelWidth, GUIAlign.Left);
+            float nameLabelWidth = component.name.CalculateLabelLength() + space/* spaceSize.x*/;//左侧物体Name Label + 空间
+            return selectionRect.GetRemainRect(nameLabelWidth, GUIAlign.Left);
         }
 
         static List<char> listCharHalfAngle = new List<char>()

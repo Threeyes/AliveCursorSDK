@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Threeyes.Steamworks;
+using Threeyes.Core;
 /// <summary>
 /// 管理编辑器中WorkshopItem的信息
 /// 

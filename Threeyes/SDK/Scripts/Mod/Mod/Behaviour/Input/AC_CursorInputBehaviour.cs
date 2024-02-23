@@ -1,8 +1,9 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
-using Threeyes.Editor;
 #endif
 /// <summary>
 /// Custom Behaviour when target system input event occured

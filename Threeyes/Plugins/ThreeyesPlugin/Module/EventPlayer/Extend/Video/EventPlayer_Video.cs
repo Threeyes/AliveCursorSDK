@@ -9,7 +9,8 @@ using UnityEngine.Video;
 #endif
 #if UNITY_EDITOR
 using UnityEditor;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #endif
 
 namespace Threeyes.EventPlayer

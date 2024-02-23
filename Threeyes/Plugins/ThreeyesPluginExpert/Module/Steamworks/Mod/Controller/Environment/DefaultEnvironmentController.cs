@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using Newtonsoft.Json;
 using System;
 using Threeyes.Config;
+using Threeyes.Core;
 using Threeyes.Persistent;
 using UnityEngine;
 using UnityEngine.Events;

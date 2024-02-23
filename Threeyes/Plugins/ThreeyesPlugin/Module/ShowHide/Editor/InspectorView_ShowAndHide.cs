@@ -2,7 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
 using UnityEditor;
 using UnityEngine;
 namespace Threeyes.ShowHide.Editor

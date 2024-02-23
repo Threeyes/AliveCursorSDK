@@ -10,11 +10,11 @@ using UnityEngine.SceneManagement;
 using System.Threading;
 using System.IO;
 
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     /// <summary>
     /// 编辑器通用的方法
-    /// PS:不能放在Editor下，因为外部代码可能访问不了，或者是因为资源加载顺序错误导致无法访问
+    /// PS:不能放在Editor文件夹下，因为外部代码可能访问不了，或者是因为资源加载顺序错误导致无法访问
     /// </summary>
     public static class EditorTool
     {
@@ -255,8 +255,8 @@ namespace Threeyes.Editor
 
             if (tfParent)
             {
-                go.transform.localPosition = default(Vector3);
-                go.transform.localRotation = default(Quaternion);
+                go.transform.localPosition = default;
+                go.transform.localRotation = default;
                 go.transform.localScale = Vector3.one;
             }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 #if MIRROR
 using Mirror;
 #endif
@@ -6,7 +6,7 @@ using Mirror;
 namespace Threeyes.Network
 {
     /// （Warning：继承NetworkBehaviour的不能是泛型，否则Mirror会报错。所以不能提炼出类似于NetworkComponentHelper的泛型基类）
-    public abstract class NetworkComponentHelperBase :
+    public abstract class NetworkComponentBase :
 #if MIRROR
         NetworkBehaviour
 #else

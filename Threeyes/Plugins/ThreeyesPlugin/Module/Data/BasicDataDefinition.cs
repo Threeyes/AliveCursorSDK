@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using Threeyes.Core;
 #if USE_JsonDotNet
 using Newtonsoft.Json;
 #endif

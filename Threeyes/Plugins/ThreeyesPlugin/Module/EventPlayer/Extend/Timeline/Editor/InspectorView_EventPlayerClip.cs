@@ -1,7 +1,7 @@
 #if Threeyes_Timeline
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
 using UnityEditor;
 using UnityEngine;
 

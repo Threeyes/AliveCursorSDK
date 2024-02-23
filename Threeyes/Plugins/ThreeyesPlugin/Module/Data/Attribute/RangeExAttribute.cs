@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Threeyes.Core;
 using UnityEngine;
 namespace Threeyes.Data
 {
-	/// <summary>
-	/// Attribute used to make a float or int variable in a script be restricted to a
-	//     specific range.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Field)]
+    /// <summary>
+    /// Attribute used to make a float or int variable in a script be restricted to a
+    //     specific range.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
 	public class RangeExAttribute : PropertyExAttribute
 	{
 		public string MinMemberName { get; private set; }

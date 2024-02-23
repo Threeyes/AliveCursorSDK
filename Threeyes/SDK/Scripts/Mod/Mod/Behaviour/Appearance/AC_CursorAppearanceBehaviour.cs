@@ -1,7 +1,8 @@
 using System.Text;
 using UnityEngine;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
 #if UNITY_EDITOR
-using Threeyes.Editor;
 #endif
 [AddComponentMenu(AC_EditorDefinition.ComponentMenuPrefix_Root_Mod_Behaviour_Appearance + "AC_CursorAppearanceBehaviour", 0)]
 public class AC_CursorAppearanceBehaviour : AC_BehaviourBase,

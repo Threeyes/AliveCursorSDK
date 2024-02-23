@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 using static Threeyes.Steamworks.Whiteboard;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

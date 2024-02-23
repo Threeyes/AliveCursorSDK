@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using Threeyes.Core;
+
 namespace Threeyes.Steamworks
 {
     public class LightController : ConfigurableComponentBase<LightController, SOLightControllerConfig, LightController.ConfigInfo, LightController.PropertyBag>

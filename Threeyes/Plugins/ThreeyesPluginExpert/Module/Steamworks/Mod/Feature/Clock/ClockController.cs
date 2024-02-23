@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
-using Threeyes.Config;
+using NaughtyAttributes;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {
@@ -10,20 +11,26 @@ namespace Threeyes.Steamworks
     /// 
     /// ToAdd：
     /// +ConfigInfo增加时间Offset(总位移秒数)，方便用户在场景摆放多个时钟，并对应不同时区
-    /// -支持运行时编辑
+    /// +支持运行时编辑
+    /// -支持12/24小时制切换（对应HourFormat枚举）
     /// </summary>
     public class ClockController : ConfigurableComponentBase<ClockController, SOClockControllerConfig, ClockController.ConfigInfo, ClockController.PropertyBag>
     {
-        //Use these event to display number
+        //Use these event to display integer time
         public IntEvent onHourChange;
         public IntEvent onMinuteChange;
         public IntEvent onSecondChange;
 
-        //Use these event to display progress
+        //Time progress (仅考虑其单位，不考虑小一级的单位）（因为是Tweeen完成之后更新值，所以不能与下面的Precise事件整合）
+        [Header("Progress")]
         public FloatEvent onHourPercentChange;
         public FloatEvent onMinutePercentChange;
         public FloatEvent onSecondPercentChange;
 
+        [Header("Precise progress")]        //Time precise progress (考虑本级加小一级的单位，常用于齿轮时钟等与子单位相关联的显示)
+        public bool usePreciseProgress = false;//持续更新精确值
+        [ShowIf(nameof(usePreciseProgress))] public FloatEvent onPreciseHourPercentChange;
+        [ShowIf(nameof(usePreciseProgress))] public FloatEvent onPreciseMinutePercentChange;
 
         [Header("Run Time")]
         [Range(0, 11)]
@@ -47,7 +54,7 @@ namespace Threeyes.Steamworks
         public bool TestSecondRollback { get => testSecondRollback; set => testSecondRollback = value; }//Use property for UnityEvent
         [SerializeField] private bool testSecondRollback = false;//Set to true to rollback second once (Via EP)
 
-        DateTime curDateTime
+        DateTime CurDateTime
         {
             get
             {
@@ -63,10 +70,10 @@ namespace Threeyes.Steamworks
         protected virtual void OnEnable()
         {
             //Refresh whenever it gets actived
-            DateTime dateTime = curDateTime;
-            lastHour = dateTime.Hour;
-            lastMinute = dateTime.Minute;
-            lastSecond = dateTime.Second;
+            DateTime dateTime = CurDateTime;
+            curHour = lastHour = dateTime.Hour;
+            curMinute = lastMinute = dateTime.Minute;
+            curSecond = lastSecond = dateTime.Second;
             onHourChange.Invoke(lastHour);
             onMinuteChange.Invoke(lastMinute);
             onSecondChange.Invoke(lastSecond);
@@ -125,13 +132,19 @@ namespace Threeyes.Steamworks
                     SetTimeTween(TimeType.Hour, lastHour, curHour, onHourPercentChange, GetHourPercent, tweenHour);
                     lastHour = curHour;
                 }
+
+                if (usePreciseProgress)
+                {
+                    onPreciseHourPercentChange.Invoke(GetPreciseHourPercent(curHour, curMinute, curSecond));
+                    onPreciseMinutePercentChange.Invoke(GetPreciseMinutePercent(curMinute, curSecond));
+                }
             }
 #endif
 
             if (!hasInit)
                 return;
 
-            DateTime dateTime = curDateTime;
+            DateTime dateTime = CurDateTime;
 
             if (isAutoUpdate)
                 curSecond = dateTime.Second;
@@ -160,6 +173,13 @@ namespace Threeyes.Steamworks
                         lastHour = curHour;
                     }
                 }
+
+                if (usePreciseProgress)
+                {
+                    onPreciseHourPercentChange.Invoke(GetPreciseHourPercent(curHour, curMinute, curSecond));
+                    onPreciseMinutePercentChange.Invoke(GetPreciseMinutePercent(curMinute, curSecond));
+                }
+
             }
         }
 
@@ -201,9 +221,14 @@ namespace Threeyes.Steamworks
         [ContextMenu("UpdateTimeAtOnce")]
         public void UpdateTimeAtOnce()
         {
-            onHourPercentChange.Invoke(GetHourPercent(curDateTime.Hour));
-            onMinutePercentChange.Invoke(GetMinutePercent(curDateTime.Minute));
-            onSecondPercentChange.Invoke(GetSecondPercent(curDateTime.Second));
+            onHourPercentChange.Invoke(GetHourPercent(CurDateTime.Hour));
+            onMinutePercentChange.Invoke(GetMinutePercent(CurDateTime.Minute));
+            onSecondPercentChange.Invoke(GetSecondPercent(CurDateTime.Second));
+            if (usePreciseProgress)
+            {
+                onPreciseHourPercentChange.Invoke(GetPreciseHourPercent(CurDateTime.Hour, CurDateTime.Minute, CurDateTime.Second));
+                onPreciseMinutePercentChange.Invoke(GetPreciseMinutePercent(CurDateTime.Minute, CurDateTime.Second));
+            }
         }
 
         [ContextMenu("AddOneSecond")]
@@ -239,6 +264,25 @@ namespace Threeyes.Steamworks
             tween.SetEase(ease).SetDelay(delay);
         }
 
+        /// <summary>
+        /// 返回12小时制的小数hour
+        /// </summary>
+        /// <returns></returns>
+        protected virtual float GetPreciseHourPercent(float hour, float minute, float second)
+        {
+            return GetHourPercent(hour + GetMinutePercent(minute + GetSecondPercent(second)));
+        }
+        protected virtual float GetPreciseMinutePercent(float minute, float second)
+        {
+            return GetMinutePercent(minute + GetSecondPercent(second));
+        }
+
+
+        /// <summary>
+        /// 返回12小时制的整数hour
+        /// </summary>
+        /// <param name="hour"></param>
+        /// <returns></returns>
         protected virtual float GetHourPercent(float hour)
         {
             return Mathf.Repeat(hour, 12) / 12;//Turn into 12-hour clock

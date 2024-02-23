@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using Threeyes.Core;
+
 namespace Threeyes.Steamworks
 {
     /// <summary>

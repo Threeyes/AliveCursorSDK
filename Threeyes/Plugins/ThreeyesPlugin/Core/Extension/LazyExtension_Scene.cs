@@ -2,29 +2,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class LazyExtension_Scene
+namespace Threeyes.Core
 {
-    static GameObject[] arrCacheRootGO;
-
-    /// <summary>
-    /// Returns all components of Type type in the scene
-    /// </summary>
-    /// <typeparam name="TClass"></typeparam>
-    /// <param name="scene"></param>
-    /// <param name="includeInactive"></param>
-    /// <returns></returns>
-    public static IEnumerable<TClass> GetComponents<TClass>(this Scene scene, bool includeInactive = false)
+    public static class LazyExtension_Scene
     {
-        //Í¨¹ı³¡¾°±éÀúµÃµ½¡¾²âÊÔ100000¸öÎïÌå£¬ÓÃÊ±0ms£¬¿É½ÓÊÜ¡¿
-        if (scene.IsValid())
+        static GameObject[] arrCacheRootGO;
+
+        /// <summary>
+        /// Returns all components of Type type in the scene
+        /// </summary>
+        /// <typeparam name="TClass"></typeparam>
+        /// <param name="scene"></param>
+        /// <param name="includeInactive"></param>
+        /// <returns></returns>
+        public static IEnumerable<TClass> GetComponents<TClass>(this Scene scene, bool includeInactive = false)
         {
-            arrCacheRootGO = scene.GetRootGameObjects();
-            TClass[] arrClass = new TClass[] { };
-            for (int i = 0; i != arrCacheRootGO.Length; i++)//²»Ê¹ÓÃforeach£¬ÄÜ¹»´ó·ù¼õÉÙGC
+            //é€šè¿‡åœºæ™¯éå†å¾—åˆ°ã€æµ‹è¯•100000ä¸ªç‰©ä½“ï¼Œç”¨æ—¶0msï¼Œå¯æ¥å—ã€‘
+            if (scene.IsValid())
             {
-                arrClass = arrCacheRootGO[i].GetComponentsInChildren<TClass>(includeInactive);
-                for (int j = 0; j != arrClass.Length; j++)
-                    yield return arrClass[j];
+                arrCacheRootGO = scene.GetRootGameObjects();
+                TClass[] arrClass = new TClass[] { };
+                for (int i = 0; i != arrCacheRootGO.Length; i++)//ä¸ä½¿ç”¨foreachï¼Œèƒ½å¤Ÿå¤§å¹…å‡å°‘GC
+                {
+                    arrClass = arrCacheRootGO[i].GetComponentsInChildren<TClass>(includeInactive);
+                    for (int j = 0; j != arrClass.Length; j++)
+                        yield return arrClass[j];
+                }
             }
         }
     }

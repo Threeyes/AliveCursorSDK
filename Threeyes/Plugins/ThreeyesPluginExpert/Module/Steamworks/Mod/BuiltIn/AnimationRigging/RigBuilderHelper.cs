@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Threeyes.Coroutine;
 using NaughtyAttributes;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

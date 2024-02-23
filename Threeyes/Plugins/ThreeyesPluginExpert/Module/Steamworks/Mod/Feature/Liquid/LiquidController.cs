@@ -79,17 +79,17 @@ namespace Threeyes.Steamworks
         //Runtime
         float Pulse { get { return 2 * Mathf.PI * curWobbleFrequency; } }// make a sine wave of the decreasing wobble
         float maxWobblePerFrame { get { return Config.maxWobble * DeltaTime; } }//(PS:只是单帧上限，不设置总上限，方便实现更自然的晃动效果）
-        float curWobbleFrequency = 0;
-        float wobbleSinInputX = 0;
-        float wobbleSinInputZ = 0;//Different from X Axis
-        float wobbleSinOutputScaleX = 0;
-        float wobbleSinOutputScaleZ = 0;
+        float curWobbleFrequency = 0;//当前的晃动频率，值越大晃动越频繁
+        float wobbleXSinInput = 0;
+        float wobbleZSinInput = 0;//Different from X Axis
+        float wobbleXSinOutputScale = 0;
+        float wobbleZSinOutputScale = 0;
         float curFoamLineWdith = 0;
+        Vector3 deltaVelocity;
+        Vector3 deltaAngularVelocity;
         Vector3 lastPos;
-        Vector3 velocity;
         public Vector3 lastVelocity = Vector3.zero;
         Vector3 lastRot;
-        Vector3 angularVelocity;
         #endregion
 
         #region Unity Method
@@ -101,36 +101,45 @@ namespace Threeyes.Steamworks
             if (DeltaTime == 0)//避免因为时间停止导致velocity等值因为除0变为Null
                 return;
 
-            velocity = (TfMotionSource.position - lastPos) / DeltaTime;
-            angularVelocity = velocity.sqrMagnitude > 0.001f ? TfMotionSource.rotation.eulerAngles - lastRot : Vector3.zero;//正在移动=>忽略旋转，否则在两个变量的作用下会导致异常抖动的现象
+            deltaVelocity = (TfMotionSource.position - lastPos) / DeltaTime;
+            deltaAngularVelocity = deltaVelocity.sqrMagnitude > 0.001f ? TfMotionSource.rotation.eulerAngles - lastRot : Vector3.zero;//正在移动=>忽略旋转，否则在两个变量的作用下会导致异常抖动的现象
 
-            //#1 根据瞬间运动方向，调节WaveSine的Input，从而控制液体的偏转方向
-            wobbleSinInputX += DeltaTime * Pulse;
-            wobbleSinInputZ += DeltaTime * Pulse;
-            if (ModifySinInputByVelocity(velocity.x, lastVelocity.x, ref wobbleSinInputX, wobbleSinOutputScaleX))
-                lastVelocity.x = velocity.x;
-            if (ModifySinInputByVelocity(velocity.z, lastVelocity.z, ref wobbleSinInputZ, wobbleSinOutputScaleZ))
-                lastVelocity.z = velocity.z;
-
-            if (velocity.x * lastVelocity.x < 0)//Increase frequency everytime the direction changed
+            //#0【Frequency】 如果移动朝向发生变化，则增加晃动频率Frequency；否则逐渐恢复原状
+            if (deltaVelocity.x * lastVelocity.x < 0)//Increase frequency everytime the direction changed
+            {
                 curWobbleFrequency += Config.wobbleFrequencyIncreaseSpeed * DeltaTime;
+            }
             else
+            {
                 curWobbleFrequency = Mathf.Lerp(curWobbleFrequency, Config.wobbleFrequency, DeltaTime * Config.wobbleRecovery);
+            }
 
-            //#2 根据位移和旋转的变化，计算WaveSine的Result缩放(因为#1已经计算了增减区间，所以这里的velocity只需要取正值
-            wobbleSinOutputScaleX += Mathf.Clamp(
-                (Mathf.Abs(velocity.x) * Config.wobbleIncreaseByMoveSpeed + angularVelocity.z * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame,
+            //#1【Direction】 根据瞬间运动方向，调节WaveSine的Input，从而控制液体的偏转方向
+            wobbleXSinInput += DeltaTime * Pulse;
+            wobbleZSinInput += DeltaTime * Pulse;
+            if (ModifySinInput(deltaVelocity.x, lastVelocity.x, ref wobbleXSinInput, wobbleXSinOutputScale))
+                lastVelocity.x = deltaVelocity.x;
+            if (ModifySinInput(deltaVelocity.z, lastVelocity.z, ref wobbleZSinInput, wobbleZSinOutputScale))
+                lastVelocity.z = deltaVelocity.z;
+
+            //#2【Y Value】 根据位移和旋转的差值，计算WaveSine的Y轴值缩放(因为#1已经计算了增减区间，所以这里的velocity只需要取正值）
+            wobbleXSinOutputScale += Mathf.Clamp(
+                (Mathf.Abs(deltaVelocity.x) * Config.wobbleIncreaseByMoveSpeed +
+                Mathf.Abs(deltaAngularVelocity.z) * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame,
                 -maxWobblePerFrame, maxWobblePerFrame);
-            wobbleSinOutputScaleZ += Mathf.Clamp((Mathf.Abs(velocity.z) * Config.wobbleIncreaseByMoveSpeed + angularVelocity.x * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame, -maxWobblePerFrame, maxWobblePerFrame);
-            wobbleSinOutputScaleX = Mathf.Lerp(wobbleSinOutputScaleX, 0, DeltaTime * Config.wobbleRecovery);
-            wobbleSinOutputScaleZ = Mathf.Lerp(wobbleSinOutputScaleZ, 0, DeltaTime * Config.wobbleRecovery);
+            wobbleZSinOutputScale += Mathf.Clamp(
+                (Mathf.Abs(deltaVelocity.z) * Config.wobbleIncreaseByMoveSpeed +
+                Mathf.Abs(deltaAngularVelocity.x) * Config.wobbleIncreaseByRotateSpeed) * maxWobblePerFrame,
+                -maxWobblePerFrame, maxWobblePerFrame);
+            wobbleXSinOutputScale = Mathf.Lerp(wobbleXSinOutputScale, 0, DeltaTime * Config.wobbleRecovery);
+            wobbleZSinOutputScale = Mathf.Lerp(wobbleZSinOutputScale, 0, DeltaTime * Config.wobbleRecovery);
 
             //#3 设置Wobble值
-            TargetMaterial.SetFloat("_WobbleX", wobbleSinOutputScaleX * Mathf.Sin(wobbleSinInputX));
-            TargetMaterial.SetFloat("_WobbleZ", wobbleSinOutputScaleZ * Mathf.Sin(wobbleSinInputZ));
+            TargetMaterial.SetFloat("_WobbleX", wobbleXSinOutputScale * Mathf.Sin(wobbleXSinInput));
+            TargetMaterial.SetFloat("_WobbleZ", wobbleZSinOutputScale * Mathf.Sin(wobbleZSinInput));
 
             //#4 设置Foam值
-            curFoamLineWdith += (velocity.magnitude * Config.foamIncreaseSpeed - Config.foamDecreaseSpeed) * DeltaTime;//PS: angularVelocity会导致瞬间增加的Bug，暂时i不考虑
+            curFoamLineWdith += (deltaVelocity.magnitude * Config.foamIncreaseSpeed - Config.foamDecreaseSpeed) * DeltaTime;//PS: angularVelocity会导致瞬间增加的Bug，暂时i不考虑
             curFoamLineWdith = Mathf.Clamp(curFoamLineWdith, Config.rangeFoam.x, Config.rangeFoam.y);
             TargetMaterial.SetFloat("_FoamLineWidth", curFoamLineWdith);//Foam Line Width
 
@@ -140,7 +149,7 @@ namespace Threeyes.Steamworks
             // Save Last Data
             lastPos = TfMotionSource.position;
             lastRot = TfMotionSource.rotation.eulerAngles;
-            lastVelocity = velocity;
+            lastVelocity = deltaVelocity;
         }
         #endregion
 
@@ -159,8 +168,8 @@ namespace Threeyes.Steamworks
         /// （ToUpdate: 优化算法）
         /// </summary>
         /// <param name="sinInput"></param>
-        /// <returns>是否已经修改</returns>
-        static bool ModifySinInputByVelocity(float velocityValue, float lastVelocityValue, ref float sinInput, float wobbleAdd)
+        /// <returns>是否已经修改（移动方向与水的加速度方向相反）</returns>
+        static bool ModifySinInput(float velocityValue, float lastVelocityValue, ref float sinInput, float lastWobbleScale)
         {
             /// Wobble原理：
             ///     1.以标准的一个周期SineWave为例，Input为时间，Output为当前对应的Wobble值，移动或旋转物体会缩放其 振幅（Amplitude）（如果物体反向运动则对Input进行偏移）
@@ -171,10 +180,10 @@ namespace Threeyes.Steamworks
             //移动Sin的x值到其平行位置，使其从递增改为递减
 
             sinInput = Mathf.Repeat(sinInput, 2 * Mathf.PI);//将Input限定在在一个2π周期内的对应值
-            int inIncreasingArea = sinInput <= Mathf.PI / 2 || sinInput >= 1.5f * Mathf.PI ? 1 : -1;//检查当前输出值是否在增加区域，对应Input值范围为：[0,Pi/2] 或 [Pi*3/2,2*Pi]
+            int inIncreasingArea = sinInput <= 0.5f * Mathf.PI || sinInput >= 1.5f * Mathf.PI ? 1 : -1;//检查当前输出值是否在增加区域，对应Input值范围为：[0,Pi/2] 或 [Pi*3/2,2*Pi]
 
             //如果进行偏移（从静止开始移动或反方向移动）:修改对应的sin当前值，该值会修改Liquid的偏向
-            if (wobbleAdd == 0 || lastVelocityValue * wobbleAdd < 0)//从静止开始移动||与上次的位移方向相反       
+            if (lastWobbleScale == 0 || lastVelocityValue * velocityValue < 0)//从静止开始移动||与上次的位移方向相反       
             {
                 //如果移动方向与水的加速度方向相反：使其加速度相同（物体右移 对应 水顺时针旋转/加速）
                 if (Mathf.Abs(velocityValue) > 0.001f && velocityValue * inIncreasingArea < 0)
@@ -256,7 +265,7 @@ namespace Threeyes.Steamworks
         public class ConfigInfo : SerializableComponentConfigInfoBase
         {
             [Header("Common")]
-            [Tooltip("The default liquid fill amount")][Range(0, 1)] public float baseFillAmount = 0.5f;//
+            [Tooltip("The default liquid fill amount")] [Range(0, 1)] public float baseFillAmount = 0.5f;//
 
             //——Runtime Motion——
             [Header("Foam")]
@@ -281,7 +290,7 @@ namespace Threeyes.Steamworks
             [Tooltip("How fast the wobble reset to origin state")]
             public float wobbleRecovery = 0.8f;
 
-            [HideInInspector][JsonIgnore][PersistentDirPath] public string PersistentDirPath;
+            [HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
         }
 
         public class PropertyBag : ConfigurableComponentPropertyBagBase<LiquidController, ConfigInfo> { }

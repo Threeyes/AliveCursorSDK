@@ -1,3 +1,5 @@
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using Threeyes.Data;
 using UnityEngine;
 
@@ -31,7 +33,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Float", false, intBasicMenuOrder + 2)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Float>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Float>(instName);
         }
 
         //！！Hierarchy GUI！！

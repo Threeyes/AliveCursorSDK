@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using System.Reflection;
 using System.Collections.Generic;
 using Threeyes.Config;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

@@ -1,9 +1,9 @@
 using System;
 
-namespace Threeyes.Pool
+namespace Threeyes.Core
 {
     /// <summary>
-    /// Ref: UnityEngine.Pool.IObjectPool，为了兼容旧版本所以进行原接口复制
+    /// Ref: UnityEngine.Pool.IObjectPool锛屼负浜嗗吋瀹规棫鐗堟湰鎵�浠ヨ繘琛屽師鎺ュ彛澶嶅埗
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IObjectPool<T> where T : class

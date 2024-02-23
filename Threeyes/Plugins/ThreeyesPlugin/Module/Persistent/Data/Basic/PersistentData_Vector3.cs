@@ -1,3 +1,5 @@
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 using UnityEngine;
 
 namespace Threeyes.Persistent
@@ -11,7 +13,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Basic + "Vector3", false, intBasicMenuOrder + 5)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Vector3>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Vector3>(instName);
         }
 
         //！！Hierarchy GUI！！

@@ -2,6 +2,9 @@ using UnityEngine;
 using Threeyes.Data;
 using System;
 using System.Text;
+using Threeyes.Core.Editor;
+using Threeyes.Core;
+
 namespace Threeyes.Persistent
 {
     /// <summary>
@@ -81,7 +84,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_Object + "Object", false, intBasicMenuOrder + 0)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_Object>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_Object>(instName);
         }
 
         //——Hierarchy GUI——

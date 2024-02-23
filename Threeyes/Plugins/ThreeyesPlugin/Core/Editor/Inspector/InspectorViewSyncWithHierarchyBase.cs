@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 将Inspector的更改同步到Hierarchy上（适用于自定义Inspector界面）
 /// </summary>
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     public class InspectorViewSyncWithHierarchyBase : UnityEditor.Editor
     {

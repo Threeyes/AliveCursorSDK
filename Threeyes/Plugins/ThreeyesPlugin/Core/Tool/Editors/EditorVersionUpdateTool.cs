@@ -5,7 +5,7 @@ using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor.Events;
 #endif
-namespace Threeyes.Editor
+namespace Threeyes.Core.Editor
 {
     public static class EditorDummy//PS:将至少一个类放在UNITY_EDITOR外，避免打包时找不到该命名空间
     { }

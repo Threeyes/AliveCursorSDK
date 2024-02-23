@@ -4,6 +4,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using System.IO;
 using System.Linq;
+using Threeyes.Core;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

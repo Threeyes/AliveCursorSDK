@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using Threeyes.Editor;
+using Threeyes.Core.Editor;
+
 namespace Threeyes.RuntimeSerialization
 {
     /// <summary>

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using DG.Tweening;
 using System.Threading.Tasks;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {

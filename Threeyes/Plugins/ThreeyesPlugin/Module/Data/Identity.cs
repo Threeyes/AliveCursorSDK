@@ -3,6 +3,7 @@ using UnityEngine;
 #if USE_JsonDotNet
 using Newtonsoft.Json;
 using UnityEditor;
+using Threeyes.Core;
 #endif
 #if USE_NaughtyAttributes
 using NaughtyAttributes;

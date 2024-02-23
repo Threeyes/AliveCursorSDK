@@ -5,6 +5,8 @@ using System.Reflection;
 using Threeyes.Data;
 using Threeyes.External;
 using System.Collections;
+using Threeyes.Core;
+
 namespace Threeyes.Persistent
 {
     public abstract class FieldCallabackAttributeBase : Attribute

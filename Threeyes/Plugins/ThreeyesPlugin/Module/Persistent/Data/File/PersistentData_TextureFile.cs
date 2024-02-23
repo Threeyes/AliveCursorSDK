@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Threeyes.Data;
+using Threeyes.Core;
+using Threeyes.Core.Editor;
 
 namespace Threeyes.Persistent
 {
-	/// <summary>
-	/// Image file
-	/// </summary>
-	public class PersistentData_TextureFile : PersistentData_FileBase<Texture, TextureEvent, DataOption_TextureFile>
+    /// <summary>
+    /// Image file
+    /// </summary>
+    public class PersistentData_TextureFile : PersistentData_FileBase<Texture, TextureEvent, DataOption_TextureFile>
     {
         void Reset()
         {
@@ -15,7 +17,7 @@ namespace Threeyes.Persistent
             RawImage rawImage = gameObject.GetComponent<RawImage>();
             if (rawImage)
             {
-                Editor.EditorTool.ForceUpdateObject(this);
+                EditorTool.ForceUpdateObject(this);
                 DefaultAsset = rawImage.texture;
                 var tex = rawImage.texture;
                 if (tex)
@@ -43,7 +45,7 @@ namespace Threeyes.Persistent
         [UnityEditor.MenuItem(strMenuItem_Root_File + "Texture", false, intBasicMenuOrder + 1)]
         public static void CreateInst()
         {
-            Editor.EditorTool.CreateGameObjectAsChild<PersistentData_TextureFile>(instName);
+            EditorTool.CreateGameObjectAsChild<PersistentData_TextureFile>(instName);
         }
 
         //——Hierarchy GUI——

@@ -1,4 +1,4 @@
-namespace Threeyes.Base
+namespace Threeyes.Core
 {
     /// <summary>
     /// 普通数据类的基类，带有比较、空检测等功能
