@@ -16,7 +16,7 @@
 </p>
 
 ## 简介
-《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steam的软件，它支持将系统光标替换成任意Mod。它有以下特点：
+《[躁动光标](https://store.steampowered.com/app/1606490/Alive_Cursor/)》是一款发布在Steam的软件，它支持将系统光标替换成任意Mod，有以下特点：
 + 提供完善的可视化功能模块，不懂编程也能快速实现常用功能；
 + 集成数十个稳定的[第三方开源库](https://github.com/Threeyes/AliveCursorSDK/wiki/Third-party-zh-CN)，可借此实现优秀的效果；
 + Mod支持热更新，可使用C#或VisualScripting编写逻辑；
@@ -45,7 +45,7 @@
 + [QQ](https://im.qq.com/index/)群: 673880395
 
 ## 案例
-为了发挥《AliveCursor》的潜力，我上传了不同类型的MOD到[创意工坊](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490)，你可以下载[AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader)项目用作参考。
+为了挖掘《AliveCursor》的潜力，我上传了不同类型的MOD到[创意工坊](https://steamcommunity.com/profiles/76561199378980403/myworkshopfiles/?appid=1606490)，你可以下载[AliveCursor_ModUploader](https://github.com/Threeyes/AliveCursor_ModUploader)项目用作参考。
 <p align="center">
     <a href="https://github.com/Threeyes/AliveCursor_ModUploader"><img src="https://user-images.githubusercontent.com/13210990/195757514-014d8d7d-b0bf-438c-9e53-40300185e1a2.gif" alt="Item图片墙" width="600px" height="450px" />
     <br />
