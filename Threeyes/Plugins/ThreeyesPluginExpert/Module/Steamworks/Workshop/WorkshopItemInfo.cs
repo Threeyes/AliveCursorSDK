@@ -28,22 +28,11 @@ namespace Threeyes.Steamworks
         public long fileSize;//文件总大小
 
         //#Build Info
-        protected readonly string ItemModName_Scene = "Scene";//Scene文件的名称
-        public static string LcoalUgcItemFileName { get { return "UgcItem.json"; } }
-        public static string ItemInfoFileName { get { return "ItemInfo.json"; } }//序列化的WorkshopItemInfo
-        public virtual string ItemModName { get { return ItemModName_Scene; } }//打包后的Mod名称，子类可根据类型自定义
-        public virtual string ItemModFileName { get { return ItemModName + ".umod"; } }//Mod文件
-
+        public static string UgcItemFileName { get { return "UgcItem.json"; } }//通过UGC接口查询的Item信息 文件名
+        public static string ItemInfoFileName { get { return "ItemInfo.json"; } }//序列化的WorkshopItemInfo 文件名
+  
         public WorkshopItemInfo()
         {
-        }
-        /// <summary>
-        /// 通过SOItemInfo生成后，需要调用此方法
-        /// </summary>
-        public void Init()
-        {
-            ///PS：因为该字段因为是基于itemType设置，所以要延后初始化
-            modFileRelatePath = ItemModFileName;//固定位置
         }
     }
 

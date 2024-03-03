@@ -72,7 +72,7 @@ namespace Threeyes.Outline
         protected override void OnDespawnFunc()
         {
             base.OnDespawnFunc();
-         
+
             RemoveMaterial();//在Destroy时移除
 
             // Destroy material instances
@@ -81,6 +81,8 @@ namespace Threeyes.Outline
         }
 
         bool hasInit = false;
+        readonly string outlineMaskMaterialName = "OutlineMask (Instance)";
+        readonly string outlineFillMaterialName = "OutlineFill (Instance)";
         public override void InitFunc(ItemInfo data)
         {
             base.InitFunc(data);
@@ -90,8 +92,8 @@ namespace Threeyes.Outline
             outlineMaskMaterial = new Material(Shader.Find(outlineMaskShaderName));
             outlineFillMaterial = new Material(Shader.Find(outlineFillShaderName));
 
-            outlineMaskMaterial.name = "OutlineMask (Instance)";
-            outlineFillMaterial.name = "OutlineFill (Instance)";
+            outlineMaskMaterial.name = outlineMaskMaterialName;
+            outlineFillMaterial.name = outlineFillMaterialName;
 
             m_renderer = GetComponent<Renderer>();
             AddMaterial();//在Init时加入
@@ -118,12 +120,10 @@ namespace Threeyes.Outline
             if (!m_renderer)
                 return;
 
-            // Remove outline shaders
+            // Remove outline shaders（避免重复添加）
             var materials = m_renderer.sharedMaterials.ToList();
-
-            materials.Remove(outlineMaskMaterial);
-            materials.Remove(outlineFillMaterial);
-
+            materials.RemoveAll(m => m.shader.name == outlineMaskShaderName);
+            materials.RemoveAll(m => m.shader.name == outlineFillShaderName);
             m_renderer.materials = materials.ToArray();
         }
 

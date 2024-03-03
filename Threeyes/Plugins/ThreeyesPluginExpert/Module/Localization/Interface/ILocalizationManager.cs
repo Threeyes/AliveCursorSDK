@@ -13,6 +13,7 @@ namespace Threeyes.Localization
     /// </summary>
     public interface ILocalizationManager
     {
+        string GetFormatTranslationText(string translationName, string[] args = null);
         string GetTranslationText(string name, string fallback = null, bool replaceTokens = true);
     }
 }

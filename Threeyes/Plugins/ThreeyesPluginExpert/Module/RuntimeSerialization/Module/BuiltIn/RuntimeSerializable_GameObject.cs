@@ -33,8 +33,10 @@ namespace Threeyes.RuntimeSerialization
         ///——缓存该物体的唯一ID，便于绑定。可以由开发者设置，也可以通过获取GUID进行自动指定（ReadOnly）——
 
         //#以下字段二选一来使用：
-        [SerializeField] public Identity cachePrefabID = new Identity();//【运行时设置】【序列化时优先使用】缓存运行时生成该实例的SOAssetPack中Prefab的信息（该字段用于后续序列化时提供给GameObjectPropertyBag）
-        [SerializeField] public Identity cacheInstanceID = new Identity();//【编辑器非运行时设置】缓存已存在实例的信息，或者预制物中非顶层物体的信息（Prefab或NotAPrefab）（即使与cachePrefabMetadata同时设置也没关系，因为会优先考虑cachePrefabMetadata）（PS：Prefab对应实例中该字段会提示需要Apply，可以忽略）
+        public Identity CachePrefabID { get { return cachePrefabID; } }
+        public Identity CacheInstanceID { get { return cacheInstanceID; } }
+        [SerializeField] Identity cachePrefabID = new Identity();//【运行时设置】【序列化时优先使用】缓存运行时生成该实例的SOAssetPack中Prefab的信息（该字段用于后续序列化时提供给GameObjectPropertyBag）
+        [SerializeField] Identity cacheInstanceID = new Identity();//【编辑器非运行时设置】缓存已存在实例的信息，或者预制物中非顶层物体的信息（Prefab或NotAPrefab）（即使与cachePrefabMetadata同时设置也没关系，因为会优先考虑cachePrefabMetadata）（PS：Prefab对应实例中该字段会提示需要Apply，可以忽略）
 
 
 #if UNITY_EDITOR
@@ -363,12 +365,25 @@ namespace Threeyes.RuntimeSerialization
                     else//#2 如果无法找到预制物，则会生成一个空占位Prefab，方便调试与后续序列化以避免丢失
                     {
                         ///ToUpdate:
-                        ///-如果找不到，则创建一个带RS_GO的空物体（也可以使用方块+紫色材质代表丢失），并且把源序列化字符串存储到RS_GO中（可以用一个字段代表Missing，另一个字段存储源序列化字符串）
+                        ///+如果找不到，则创建一个带RS_GO的空物体（也可以使用方块+紫色材质代表丢失），并且把源序列化字符串存储到RS_GO中（可以用一个字段代表Missing，另一个字段存储源序列化字符串）
                         string dummyName = $"{childGOPropertyBag.name} (Missing Prefab with guid: {guid})";//参考Unity针对丢失Prefab的名字处理
                         Debug.LogWarning($"Failed to instantiate prefab with guid ({guid})! Use empty dummy ({dummyName}) instead!");
-                        goInst = new GameObject();
+                        if (RuntimeSerializationManager.Instance && RuntimeSerializationManager.Instance.preMissingPrefabDummy)//场景存在RuntimeSerializationManager单例：使用其定义的占位物体
+                        {
+                            goInst = Instantiate(RuntimeSerializationManager.Instance.preMissingPrefabDummy);
+                        }
+                        else//否则：创建一个空物体
+                        {
+                            goInst = new GameObject();
+                        }
                         goInst.transform.SetParent(transform);
                         goInst.name = dummyName;
+                        //尝试还原其位置和大小，方便标识其位置
+                        TransformPropertyBag transformPropertyBag = childGOPropertyBag.compoentPropertyBags.FirstOrDefault(iCPB => iCPB is TransformPropertyBag) as TransformPropertyBag;
+                        if (transformPropertyBag != null)
+                        {
+                            goInst.transform.SetProperty(transformPropertyBag.localPosition, transformPropertyBag.localRotation, transformPropertyBag.localScale);
+                        }
 
                         RuntimeSerializable_GameObject dummyRS_GO = goInst.AddComponentOnce<RuntimeSerializable_GameObject>();//PS:因为不是源物体的RS_GO，因此不能赋值给rtsgInst，因为其后续还需要进行穷举反序列化
                         dummyRS_GO.isSourcePrefabMissing = true;

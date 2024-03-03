@@ -52,16 +52,35 @@ namespace Threeyes.ModuleHelper
                 Comp.material = material;
             else//设置指定层的材质
             {
-                if (Comp.materials.Length >= layer + 1)
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
                 {
-                    //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
-                    Material[] mats = Comp.materials;
-                    mats[layer] = material;
-                    Comp.materials = mats;
+                    if (Comp.sharedMaterials.Length >= layer + 1)
+                    {
+                        //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
+                        Material[] mats = Comp.sharedMaterials;
+                        mats[layer] = material;
+                        Comp.sharedMaterials = mats;
+                    }
+                    else
+                    {
+                        Debug.LogError($"{Comp.gameObject} don't have material in index {layer} !");
+                    }
                 }
                 else
+#endif
                 {
-                    Debug.LogError($"{Comp.gameObject} don't have material in index {layer} !");
+                    if (Comp.materials.Length >= layer + 1)
+                    {
+                        //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
+                        Material[] mats = Comp.materials;
+                        mats[layer] = material;
+                        Comp.materials = mats;
+                    }
+                    else
+                    {
+                        Debug.LogError($"{Comp.gameObject} don't have material in index {layer} !");
+                    }
                 }
             }
         }

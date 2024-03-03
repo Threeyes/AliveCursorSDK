@@ -362,12 +362,6 @@ namespace Threeyes.Steamworks
             [JsonIgnore] public UnityAction<PersistentChangeState> actionMeshGenerateSettingChanged;//Any Generate field change
             [JsonIgnore] public UnityAction<PersistentChangeState> actionWaveformGenerateSettingChanged;
 
-            ///ToUpdate：
-            ///-删掉Material相关字段，改为MaterialController
-            ///-简化Header，改为Sphere/Waveform Setting
-            ///+添加Shell厚度
-            ///
-
             /// <summary>
             /// 球Idle的半径
             /// </summary>

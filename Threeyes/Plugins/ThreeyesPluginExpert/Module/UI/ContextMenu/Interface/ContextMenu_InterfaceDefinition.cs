@@ -17,6 +17,10 @@ namespace Threeyes.UI
     /// </summary>
     public interface IContextMenuProvider : IContextMenuTrigger
     {
+        /// <summary>
+        /// 自定义对应的下拉菜单，方便Manager做多语言
+        /// </summary>
+        /// <returns></returns>
         List<ToolStripItemInfo> GetContextMenuInfo();
     }
 }

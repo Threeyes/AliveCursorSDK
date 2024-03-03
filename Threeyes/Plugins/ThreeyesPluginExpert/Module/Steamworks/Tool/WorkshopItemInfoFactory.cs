@@ -10,6 +10,12 @@ namespace Threeyes.Steamworks
 {
     public interface IWorkshopItemInfoFactory
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemDirPath"></param>
+        /// <param name="itemLocation"></param>
+        /// <returns>如果文件夹不存在或文件夹内的Mod文件格式错误，则返回null</returns>
         WorkshopItemInfo CreateBase(string itemDirPath, WSItemLocation itemLocation = WSItemLocation.Downloaded);
     }
 
@@ -37,7 +43,6 @@ namespace Threeyes.Steamworks
         public virtual TItemInfo Create(TSOItemInfo sOWorkshopItemInfo)
         {
             TItemInfo inst = CreateFunc(sOWorkshopItemInfo);
-            inst.Init();
             return inst;
         }
 
@@ -48,9 +53,10 @@ namespace Threeyes.Steamworks
                 //Set basic
                 title = sOWorkshopItemInfo.Title,
                 description = sOWorkshopItemInfo.Description,
+                modFileRelatePath = sOWorkshopItemInfo.ItemModFileName,
+                previewFileRelatePath = sOWorkshopItemInfo.PreviewFilePath.NotNullOrEmpty() ? new FileInfo(sOWorkshopItemInfo.PreviewFilePath).Name : "",
                 itemVisibility = sOWorkshopItemInfo.ItemVisibility,
                 tags = sOWorkshopItemInfo.Tags,
-                previewFileRelatePath = sOWorkshopItemInfo.PreviewFilePath.NotNullOrEmpty() ? new FileInfo(sOWorkshopItemInfo.PreviewFilePath).Name : "",
 
                 //Set runtime
                 itemLocation = WSItemLocation.UnityProject,

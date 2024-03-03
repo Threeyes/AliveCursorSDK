@@ -42,6 +42,28 @@ namespace Threeyes.RuntimeEditor
     {
     }
 
+    /// <summary>
+    /// Mark the field/property is not readonly on RuntimeEditor (which can be edit on Editor)
+    /// PS：标记为运行时编辑只读，但是在编辑器中可修改，常用于Modder设置提示信息
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class RuntimeEditorReadOnlyAttribute : Attribute
+    {
+    }
+
+    
+    //——针对 List/Array——
+    ///ToAdd:
+    ///-新增不可调节顺序（NonReorderable）、不可增减元素（NonAddOrDelete），参考NonReorderableAttribute（https://docs.unity3d.com/ScriptReference/NonReorderableAttribute.html）
+
+    /// <summary>
+    /// Disables add or delete elements of an array or list
+    /// 不可增减元素
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class RuntimeEditorNonAddOrDeleteElementAttribute : Attribute
+    {
+    }
 
     //
     // 摘要:

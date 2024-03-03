@@ -239,7 +239,9 @@ namespace Threeyes.Steamworks
             List<ToolStripItemInfo> listInfo = new List<ToolStripItemInfo>();
             ///提供动态的右键菜单：
             /// -当视频正在播放时，可出现静音切换菜单（Video/ToggleMute或）,增加播放/暂停选项。Config中需要保存isMute的选项，可以不暴露在外
-            /// 【ToUpdate】：升级为二级菜单，能够通过识别‘/’来自动生成多级菜单
+            /// 【ToUpdate】：
+            /// -升级为二级菜单，能够通过识别‘/’来自动生成多级菜单
+            /// -提供多语言
             if (curMediaType == MediaType.Video && videoPlayerHelper)
             {
                 listInfo.Add(new ToolStripItemInfo("Video/Mute", (o, arg) => SetVideoMuteFunc(true), contextMenuPriority_Video));

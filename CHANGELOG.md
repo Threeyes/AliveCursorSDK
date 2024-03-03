@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.3.0]
+- Export Mod File with unique name.
+
 ## [4.2.2]
 - Fix SOEventPlayerSettingManager's version update error on program start.
 

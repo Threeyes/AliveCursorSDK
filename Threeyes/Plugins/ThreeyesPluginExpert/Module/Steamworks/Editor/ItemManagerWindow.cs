@@ -538,6 +538,7 @@ namespace Threeyes.Steamworks
                     {
                         infoInst = CreateInstance<TSOItemInfo>();
                         infoInst.itemName = itemName;
+                        infoInst.GenerateNewIDIfNull();//创建唯一ID
                         infoInst.Title = itemName;//设置默认Title
 
                         curSOWorkshopItemInfo = infoInst;//主动更新，避免OnProjectChange被调用，导致下拉框无法更新
@@ -775,7 +776,7 @@ namespace Threeyes.Steamworks
                     FileInfo fileInfoPreview = new FileInfo(previewFilePath);
                     if (fileInfoPreview.Length > SOWorkshopItemInfo.MaxPreviewFileSize)
                     {
-                        SetPreviewHelpBoxInfo($"The size of the preview file can't be larger than {SOWorkshopItemInfo.MaxPreviewFileSize / 1024 }KB!\r\n Cur file size: {fileInfoPreview.Length / 1024 }KB.");
+                        SetPreviewHelpBoxInfo($"The size of the preview file can't be larger than {SOWorkshopItemInfo.MaxPreviewFileSize / 1024}KB!\r\n Cur file size: {fileInfoPreview.Length / 1024}KB.");
                     }
                     else
                     {
