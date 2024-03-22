@@ -11,9 +11,11 @@
 
 ## Language
 <p float="left">
-  <a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/locale/README-zh-CN.md"><img src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/cn.png"/></a>
-    <a href="https://github.com/Threeyes/AliveCursorSDK"><img src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/us.png"/></a>
+  <a href="https://github.com/Threeyes/AliveCursorSDK/wiki/Home-zh-CN">中文</a> | 
+  <a href="https://github.com/Threeyes/AliveCursorSDK/wiki/Home">English</a>
 </p>
+
+
 
 ## Description
 [AliveCursor](https://store.steampowered.com/app/1606490/Alive_Cursor/) is a software released in Steam, it supports replacing the system cursor with any Mods. It has the following characteristics:
