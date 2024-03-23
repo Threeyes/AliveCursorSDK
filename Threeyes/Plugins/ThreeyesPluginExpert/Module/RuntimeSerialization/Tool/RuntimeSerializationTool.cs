@@ -43,7 +43,6 @@ namespace Threeyes.RuntimeSerialization
         }
         #endregion
 
-
         #region ID
 #if UNITY_EDITOR
         /// <summary>
@@ -126,7 +125,7 @@ namespace Threeyes.RuntimeSerialization
         public static bool IsIDUniqueInGameObject<TComponent>(TComponent rsComponent, Identity id, ref string failReason)
                where TComponent : Component, IIdentityHolder//Component, IRuntimeSerializableComponent
         {
-            if (!id.IsValid())//本GUID无效
+            if (!id.IsValid)//本GUID无效
             {
                 failReason = "ID not valid";
                 return false;
@@ -136,7 +135,7 @@ namespace Threeyes.RuntimeSerialization
             {
                 if (rtsC == rsComponent)//只计算到自身序号的组件位置，忽略后续。因为新添加的组件默认都在最后，所以只判断此组件是否与之前任意组件冲突，如果是就更新
                     return true;
-                if (rtsC.ID.IsValid() && rtsC.ID == id)
+                if (rtsC.ID.IsValid && rtsC.ID == id)
                 {
                     failReason = "ID exists in Hierarchy";
                     return false;

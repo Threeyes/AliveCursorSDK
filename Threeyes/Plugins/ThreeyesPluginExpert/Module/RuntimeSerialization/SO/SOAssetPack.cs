@@ -19,8 +19,9 @@ namespace Threeyes.RuntimeSerialization
     /// This type is used as a look up table for asset objects, and can be used to build an AssetBundle for loading
     /// scene assets in player builds
     /// 
+    /// ToUpdate:
+    /// -添加所有Assets的meta信息，方便运行时替换资源
     /// </summary>
-
     [CreateAssetMenu(menuName = "SO/RuntimeSerialization/" + "AssetPack", fileName = "AssetPack")]
     public class SOAssetPack : ScriptableObject, ISerializationCallbackReceiver
     {
@@ -256,7 +257,7 @@ namespace Threeyes.RuntimeSerialization
                 }
             }
 
-            foreach (var factory in m_PrefabFactories)//第三方注册
+            foreach (var factory in m_PrefabFactories)//第三方注册的创建Prefab的工厂（暂未用上）
             {
                 try
                 {
@@ -309,22 +310,33 @@ namespace Threeyes.RuntimeSerialization
         #region ——Editor——
 #if UNITY_EDITOR
 
+        [ContextMenu("EditorScanData")]
+        void EditorScanData()
+        {
+            //基于当前文件夹进行更新（常用于测试）
+            string relatedPath = AssetDatabase.GetAssetPath(this);
+            string sourceAbsDirPath = EditorPathTool.UnityRelateToAbsPath(relatedPath);
+            string destAbsDirPath = System.IO.Directory.GetParent(sourceAbsDirPath).FullName;
+            CreateFromFolder(destAbsDirPath, destAbsDirPath, relatedPath.GetFileNameWithoutExtension());
+        }
+
         readonly Dictionary<UnityObject, string> m_GuidMap = new();
 
-
         /// <summary>
-        /// 针对特定文件夹创建So
+        /// 针对特定文件夹创建或更新SOAssetPack
+        /// 
+        /// Ref：Unity.RuntimeSceneSerialization.EditorInternal.MenuItems.SaveJsonScene
         /// </summary>
         /// <param name="sourceAbsDirPath">目标文件夹路径</param>
         /// <param name="destAbsDirPath">存储SOAssetPack的文件夹路径</param>
-        public static void CreateFromFolder(string sourceAbsDirPath, string destAbsDirPath)
+        public static void CreateFromFolder(string sourceAbsDirPath, string destAbsDirPath, string fileNameWithoutExtension = "AssetPack")
         {
             //#1 获取文件夹位置
             string relateDirPath = EditorPathTool.AbsToUnityRelatePath(sourceAbsDirPath);
 
             //#2 创建或清空已有SOAssetPack（位置为选中文件夹里）
             PathTool.GetOrCreateDir(destAbsDirPath);
-            string assetPackPath = EditorPathTool.AbsToUnityRelatePath(destAbsDirPath + "/AssetPack.asset");
+            string assetPackPath = EditorPathTool.AbsToUnityRelatePath(destAbsDirPath + "/" + fileNameWithoutExtension + ".asset");
             SOAssetPack assetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(assetPackPath);
             bool created = false;
             if (assetPack == null)
@@ -364,8 +376,6 @@ namespace Threeyes.RuntimeSerialization
 
             Debug.Log($"{(created ? "Create" : "Update")} assetPack with [{assetPack.Prefabs.Count}] Prefabs at: " + assetPackPath);
         }
-
-
 
         /// <summary>
         /// Get the guid of a given prefab, storing the result in the given SOAssetPack, if provided

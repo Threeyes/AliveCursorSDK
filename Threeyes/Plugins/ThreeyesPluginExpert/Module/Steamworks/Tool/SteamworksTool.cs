@@ -5,10 +5,41 @@ using System.Linq;
 using System.Reflection;
 using Threeyes.Core;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 namespace Threeyes.Steamworks
 {
     public static class SteamworksTool
     {
+        static SORuntimeSettingManager SORuntimeManagerInst { get { return SORuntimeSettingManager.Instance; } }
+
+        //——State——
+        /// <summary>
+        /// 判断当前是否为HubSimulator模式
+        /// 
+        /// 调用方：
+        /// -需要在Hub和Simulator中通用的代码
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSimulator
+        {
+            get
+            {
+#if UNITY_EDITOR
+                //通过判断当前加载的所有场景有无模拟器场景即可
+                for (int i = 0; i != SceneManager.sceneCount; i++)
+                {
+                    Scene activeScene = SceneManager.GetSceneAt(i);
+                    if (activeScene.path.Contains(SORuntimeManagerInst.SimulatorSceneName))
+                        return true;
+                }
+#endif
+                return false;
+            }
+        }
+
+        //——Manager——
+
         /// <summary>
         /// 自动注册对应接口字段
         /// PS：

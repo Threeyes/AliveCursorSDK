@@ -1,0 +1,4 @@
+- https://alexanderameye.github.io/notes/stylized-water/
+- https://developer.unity.cn/projects/646755dcedbc2a0dceeb0c5a
+-Forum: https://forum.unity.com/threads/stylized-water-shader-free.846313/
+-Doc: https://alexander-ameye.gitbook.io/stylized-water/

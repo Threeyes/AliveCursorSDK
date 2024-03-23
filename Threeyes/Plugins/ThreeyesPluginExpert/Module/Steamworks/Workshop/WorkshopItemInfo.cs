@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Threeyes.Core;
 
 namespace Threeyes.Steamworks
 {
@@ -12,6 +13,9 @@ namespace Threeyes.Steamworks
     [JsonObject(MemberSerialization.OptIn)]
     public class WorkshopItemInfo
     {
+        public static readonly string UModFileExtension = "umod";//Mod文件的扩展名
+
+        public string ModFileUID { get { return modFileRelatePath.Replace("." + UModFileExtension, ""); } }//文件的UID（对应文件名）
         //#Basic Info
         [JsonProperty] public string title;
         [JsonProperty] public string description;
@@ -30,7 +34,7 @@ namespace Threeyes.Steamworks
         //#Build Info
         public static string UgcItemFileName { get { return "UgcItem.json"; } }//通过UGC接口查询的Item信息 文件名
         public static string ItemInfoFileName { get { return "ItemInfo.json"; } }//序列化的WorkshopItemInfo 文件名
-  
+
         public WorkshopItemInfo()
         {
         }

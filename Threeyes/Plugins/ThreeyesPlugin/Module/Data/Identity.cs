@@ -30,10 +30,7 @@ namespace Threeyes.Data
     public struct Identity : IEquatable<Identity>
     {
         public static Identity Empty { get { return new Identity(""); } }
-        public bool IsValid()
-        {
-            return m_Guid.NotNullOrEmpty();
-        }
+        public bool IsValid { get { return m_Guid.NotNullOrEmpty(); } }
         [JsonIgnore] public string Guid { get => m_Guid; set => m_Guid = value; }
 #if USE_NaughtyAttributes
         [AllowNesting]
@@ -52,6 +49,10 @@ namespace Threeyes.Data
             m_Guid = other.m_Guid;
         }
 
+        /// <summary>
+        /// 提供规范生成的GUID
+        /// </summary>
+        /// <returns></returns>
         public static string NewGuid()
         {
             return System.Guid.NewGuid().ToString();

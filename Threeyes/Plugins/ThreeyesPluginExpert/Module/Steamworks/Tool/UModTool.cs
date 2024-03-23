@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UMod.Shared.Linker;
 using UnityEngine;
 /// <summary>
-/// 因为忘了提交Expert，只能暂时使用该脚本
+/// 
+/// Warning：
+/// -仅能包含SDK可访问的UMod代码
 /// </summary>
 public static class UModTool
 {
@@ -14,12 +16,5 @@ public static class UModTool
             return false;
 
         return component.GetComponent<LinkBehaviourV2>() != null;
-    }
-
-    public static T FixSerializationCallbackReceiverData<T>(T data)
-        where T : ISerializationCallbackReceiver
-    {
-        data.OnAfterDeserialize();
-        return data;
     }
 }

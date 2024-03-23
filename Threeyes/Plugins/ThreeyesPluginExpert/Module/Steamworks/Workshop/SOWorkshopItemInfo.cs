@@ -133,7 +133,7 @@ namespace Threeyes.Steamworks
             {
                 if (!File.Exists(SceneFilePath))//Scene不能为空
                 {
-                    errorLog = "The scene not exist!";
+                    errorLog = $"The scene file not exist in {SceneFilePath}!";
                 }
             }
             return errorLog.IsNullOrEmpty();
@@ -142,7 +142,6 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Internal Path
-
         ///##项目内部
         ///文件夹路径：
         ///XXX（Item名）
@@ -156,9 +155,9 @@ namespace Threeyes.Steamworks
         public string SceneFilePath => GetSceneFilePath(itemName);// Item/Scene/Entry.unity的绝对路径
         protected virtual bool IsSceneFile { get { return true; } }//子类可以重载，方便打包只包含模型的Mod
 
-
         //——Utility——
         public static readonly string DataDirName = "Datas";
+        public static readonly string SOAssetPackAssetName = "AssetPack.asset";
         public static readonly string WorkshopItemInfoAssetName = "WorkshopItemInfo.asset";
         public static readonly string DefaultPreviewName = "Preview";// 预览图名称
         public static readonly string[] arrStrValidPreviewFileExtension = new string[] { "jpg", "jpeg", "png", "gif" };// 预览图支持的格式（Warning：Workshop.Upload不支持大写后缀！）
@@ -166,9 +165,19 @@ namespace Threeyes.Steamworks
         public static readonly string SceneDirName = "Scenes";
         public static readonly string SceneName = "Entry";// 场景名称
         public static string GetItemDirPath(string itemName) { return Steamworks_PathDefinition.ItemParentDirPath + "/" + itemName; }
+        public static string GetRelatedItemDirPath(string itemName) { return $"Assets/{Steamworks_PathDefinition.ItemRootDirName}/{itemName}"; }
+        public static string GetSOAssetPackFilePath(string itemName)
+        {
+            return $"{GetDataDirPath(itemName)}/{SOAssetPackAssetName}";
+        }
+        public static string GetRelatedSOAssetPackFilePath(string itemName)
+        {
+            return $"{GetRelatedItemDirPath(itemName)}/{DataDirName}/{SOAssetPackAssetName}";
+        }
+
         public static string GetSceneDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + SceneDirName; }
         public static string GetSceneFilePath(string itemName) { return GetSceneDirPath(itemName) + "/" + SceneName + ".unity"; }
-        public static string GetRelateSceneFilePath(string itemName) { return $"Assets/{Steamworks_PathDefinition.ItemRootDirName}/{itemName}/{SceneDirName}/{SceneName}.unity"; }//Unity的场景路径，如：Items/Default/Scenes/Entry.unity
+        public static string GetRelateSceneFilePath(string itemName) { return $"{GetRelatedItemDirPath(itemName)}/{SceneDirName}/{SceneName}.unity"; }//Unity的场景路径，确保打包后能正常加载，如：Assets/Items/Default/Scenes/Entry.unity
         public static string GetDataDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + DataDirName; }
         public static string GetItemInfoFilePath(string itemName) { return GetDataDirPath(itemName) + "/" + WorkshopItemInfoAssetName; }
         public string GetDefaultPreviewFilePath(string fileExtension) => GetDefaultPreviewFilePath(itemName, fileExtension);
@@ -181,18 +190,17 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Export Path
-        public static readonly string UModFileExtension = "umod";//UMod文件的扩展名
         protected readonly string ItemModName_Scene = "Scene";//Scene文件的名称
 
         public virtual string ItemModName
         {
             get
             {
-                return itemName + "_" + ID.Guid;//为了支持同时加载，需要提供唯一的ID
+                return itemName + "_" + ID.Guid;//为了支持同时加载AssetBundle，需要为每一个打包的文件提供唯一的ID
                 //return ItemModName_Scene;
             }
         }//打包后的Mod名称，子类可自定义
-        public virtual string ItemModFileName { get { return ItemModName + "." + UModFileExtension; } }//Mod文件名
+        public virtual string ItemModFileName { get { return ItemModName + "." + WorkshopItemInfo.UModFileExtension; } }//Mod文件名
         public abstract string ExportItemDirPath { get; }
         #endregion
 

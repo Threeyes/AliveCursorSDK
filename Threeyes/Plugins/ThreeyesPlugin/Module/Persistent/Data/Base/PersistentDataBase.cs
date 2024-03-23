@@ -119,7 +119,7 @@ namespace Threeyes.Persistent
             {
                 if (GetSavedValue != null)//优先使用有自定义方法获取值
                     return GetSavedValue();
-                return persistentValue;
+                return PersistentValue;
             }
         }//持久化时需要存储的值
         public bool SaveAnyway { get { return saveAnyway; } }
@@ -189,8 +189,6 @@ namespace Threeyes.Persistent
 
         /// <summary>
         /// 清空并重置字段，方便复用
-        /// 
-        /// Todo：移动到父类中
         /// </summary>
         public override void Clear()
         {

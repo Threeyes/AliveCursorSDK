@@ -53,7 +53,7 @@ namespace Threeyes.Core
                 SetDataValid(ListData[nextIndex]);
         }
 
-        public void Active(int index)
+        public override void Active(int index)
         {
             if (!IsDataVaild(index))
                 SetDataValid(ListData[index]);

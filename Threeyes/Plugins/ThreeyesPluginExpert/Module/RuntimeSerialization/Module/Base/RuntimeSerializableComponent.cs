@@ -1,29 +1,12 @@
 using Threeyes.Data;
 using UnityEngine;
-#if UNITY_EDITOR
-#endif
 namespace Threeyes.RuntimeSerialization
 {
-    /// <summary>
-    /// Mark Component as Serializable
-    /// 
-    /// PS：
-    /// -自定义RuntimeSerialization的组件需要继承此接口
-    /// </summary>
-    public interface IRuntimeSerializableComponent : IRuntimeSerializableObject
-    {
-        public IComponentPropertyBag ComponentPropertyBag { get; }
-    }
-    public interface IRuntimeSerializableComponent<TContainer, TPropertyBag> : IRuntimeSerializableComponent
-      where TContainer : Component
-        where TPropertyBag : ComponentPropertyBag<TContainer>, new()
-    { }
-
     /// <summary>
     /// 针对特定组件进行序列化
     /// </summary>
     [RequireComponent(typeof(RuntimeSerializable_GameObject))]
-    public abstract class RuntimeSerializableComponent<TContainer, TPropertyBag> : RuntimeSerializableUnityObject<TContainer, TPropertyBag>, IRuntimeSerializableComponent<TContainer, TPropertyBag>
+    public abstract partial class RuntimeSerializableComponent<TContainer, TPropertyBag> : RuntimeSerializableUnityObject<TContainer, TPropertyBag>, IRuntimeSerializableComponent<TContainer, TPropertyBag>
     where TContainer : Component
     where TPropertyBag : ComponentPropertyBag<TContainer>, new()
     {
@@ -64,7 +47,7 @@ namespace Threeyes.RuntimeSerialization
     public class ComponentPropertyBag<TContainer> : UnityObjectPropertyBag<TContainer>, IComponentPropertyBag
        where TContainer : Component
     {
-        //缓存唯一ID（统一由RuntimeSerialization_GameObject管理，因为TContainer不一定包含ID）
+        //缓存唯一ID（PS：统一由RuntimeSerialization_GameObject管理，因为TContainer不一定包含ID）
         public Identity ID { get { return id; } set { id = value; } }
         public Identity id = new Identity();//如果为实例，则不为空
     }

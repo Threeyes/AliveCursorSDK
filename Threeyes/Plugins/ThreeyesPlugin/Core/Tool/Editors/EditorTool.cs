@@ -138,7 +138,7 @@ namespace Threeyes.Core.Editor
                 File.Delete(imagePath);
             File.WriteAllBytes(imagePath, bytes);
 
-            Debug.Log("创建预览图：\r\n" + imagePath);
+            Debug.Log("Create Preview at: " + imagePath);
 
             //refresh assets
             AssetDatabase.Refresh();

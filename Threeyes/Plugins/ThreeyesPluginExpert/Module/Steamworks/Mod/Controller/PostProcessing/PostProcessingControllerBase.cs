@@ -12,6 +12,11 @@ namespace Threeyes.Steamworks
     {
     }
 
+    /// <summary>
+    /// 针对Mod场景的全局PPController
+    /// </summary>
+    /// <typeparam name="TSOConfig"></typeparam>
+    /// <typeparam name="TConfig"></typeparam>
     public abstract class PostProcessingControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IPostProcessingController
         where TSOConfig : SOConfigBase<TConfig>, ISOPostProcessingControllerConfig
     {

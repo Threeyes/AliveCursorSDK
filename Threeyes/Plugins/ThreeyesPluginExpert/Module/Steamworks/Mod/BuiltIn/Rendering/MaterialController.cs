@@ -107,7 +107,6 @@ namespace Threeyes.Steamworks
                 Color colorResult = shaderProperty.value;
                 targetMaterial.SetColor(propertyName, colorResult);
             });
-
             SetListFunc(ref Config.listIntShaderProperty,
             (propertyName, shaderProperty) =>
             {
@@ -153,7 +152,7 @@ namespace Threeyes.Steamworks
                 Material desireMaterial = null;
                 if (materialIndex >= 0)
                 {
-                    if (!Application.isPlaying || isShareMaterial)
+                    if (!Application.isPlaying || isShareMaterial)//非运行模式或共享材质
                     {
                         if (targetRenderer.sharedMaterials.Length > materialIndex)
                             desireMaterial = targetRenderer.sharedMaterials[materialIndex];
@@ -170,6 +169,46 @@ namespace Threeyes.Steamworks
             }
             return null;
         }
+        #endregion
+
+        #region Editor
+#if UNITY_EDITOR
+        /// <summary>
+        /// 根据材质的配置，初始化listXXXShaderProperty对应的数据
+        /// 
+        /// Warning：
+        /// -Option等仍需要手动设置
+        /// </summary>
+        [ContextMenu("UpdateConfigUsingComponentData")]
+        void EditorUpdateConfigUsingComponentData()
+        {
+            if (Application.isPlaying)//运行时跳过
+                return;
+            Material targetMaterial = Material;//非运行模式，获取的是共享材质
+            foreach (var tSP in Config.listTextureShaderProperty)
+            {
+                string propertyName = tSP.name;
+                tSP.defaultTexture = targetMaterial.GetTexture(propertyName);
+                tSP.offset = targetMaterial.GetTextureOffset(propertyName);
+                tSP.scale = targetMaterial.GetTextureScale(propertyName);
+            }
+            foreach (var cSP in Config.listColorShaderProperty)
+            {
+                string propertyName = cSP.name;
+                cSP.value = targetMaterial.GetColor(propertyName);
+            }
+            foreach (var iSP in Config.listIntShaderProperty)
+            {
+                string propertyName = iSP.name;
+                iSP.value = targetMaterial.GetInt(propertyName);
+            }
+            foreach (var fSP in Config.listFloatShaderProperty)
+            {
+                string propertyName = fSP.name;
+                fSP.value = targetMaterial.GetFloat(propertyName);
+            }
+        }
+#endif
         #endregion
 
         #region Define

@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Threeyes.Data;
-using System.Linq;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
-using Threeyes.Core.Editor;
 using Threeyes.Core;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using Threeyes.Core.Editor;
 #endif
 
 namespace Threeyes.RuntimeSerialization
@@ -18,14 +18,13 @@ namespace Threeyes.RuntimeSerialization
     /// Ref:Unity.RuntimeSceneSerialization.Json.Adapters.JsonAdapter.GameObject
     /// 
     /// PS：
-    /// -放在场景中的不算Prefab，所以不需要初始化其PrefabMetadata字段。PrefabMetadata的作用是重新生成Prefab
+    /// -放在场景中的不算Prefab，所以不需要初始化其prefabID字段。prefabID的作用是重新生成Prefab
     /// -因为该类不需要子类继承，所以暂时不需要继承类似IRuntimeSerializableComponent的接口
     /// 
-    /// ToUpdate:
     /// -在GameObject没有唯一标识的情况下，建议序列的物体组要不全实例，要不全通过Prefab生成，否则容易在反序列化时出现混淆
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class RuntimeSerializable_GameObject : RuntimeSerializableUnityObject<GameObject, GameObjectPropertyBag>, IIdentityHolder
+    public sealed partial class RuntimeSerializable_GameObject : RuntimeSerializableUnityObject<GameObject, GameObjectPropertyBag>
     {
         #region ID  
         public override Identity ID { get { return cacheInstanceID; } set { } }//暂不允许设置（继承IIdentityHolder接口仅用于使用RuntimeSerializationTool相关方法，平时不应使用！）
@@ -33,11 +32,13 @@ namespace Threeyes.RuntimeSerialization
         ///——缓存该物体的唯一ID，便于绑定。可以由开发者设置，也可以通过获取GUID进行自动指定（ReadOnly）——
 
         //#以下字段二选一来使用：
-        public Identity CachePrefabID { get { return cachePrefabID; } }
         public Identity CacheInstanceID { get { return cacheInstanceID; } }
-        [SerializeField] Identity cachePrefabID = new Identity();//【运行时设置】【序列化时优先使用】缓存运行时生成该实例的SOAssetPack中Prefab的信息（该字段用于后续序列化时提供给GameObjectPropertyBag）
-        [SerializeField] Identity cacheInstanceID = new Identity();//【编辑器非运行时设置】缓存已存在实例的信息，或者预制物中非顶层物体的信息（Prefab或NotAPrefab）（即使与cachePrefabMetadata同时设置也没关系，因为会优先考虑cachePrefabMetadata）（PS：Prefab对应实例中该字段会提示需要Apply，可以忽略）
+        public Identity CachePrefabID { get { return cachePrefabID; } }
+        public string CacheScope { get { return cacheScope; } }
 
+        [SerializeField] Identity cacheInstanceID = new Identity();//【编辑器非运行时设置】缓存场景已存在实例的信息，或者预制物中非顶层物体的信息，主要用于识别每个子层组件（Prefab或NotAPrefab）（即使与cachePrefabID同时设置也没关系，因为会优先考虑 cachePrefabID）（PS：Prefab对应实例中该字段会提示需要Apply，可以忽略）
+        [SerializeField] Identity cachePrefabID = new Identity();//【运行时设置】【序列化时优先使用】缓存运行时生成该实例的SOAssetPack中Prefab的GUID信息（由Unity生成）（该字段用于后续序列化时提供给GameObjectPropertyBag）
+        [SerializeField] string cacheScope = "";//运行时设置】【可空】其所在范围的唯一标识（与cachePrefabID一同设置）
 
 #if UNITY_EDITOR
         /// <summary>
@@ -97,6 +98,7 @@ namespace Threeyes.RuntimeSerialization
                 ///ToAdd：
                 ///-针对Prefab，如果其子物体也有RS_GO，则应该也需要为其设置唯一InstanceIDID，否则会出现无法还原的Bug。下面的已有方法仅针对Prefab的根物体含有RS_GO的情况（测试物体：AD的TableWithCabinet.DrawerPivot）
 
+                //ToUpdate:可以通过PrefabUtility.GetOutermostPrefabInstanceRoot获取并判断返回物体是否与自身一致，从而确定是否为根物体（参考EditorUtility.FindPrefabRoot的Obsolete注释）
                 bool isTopGO = gameObject.transform.parent == null;//是否为顶层物体
 
                 if (isTopGO)//如果为顶层Prefab：【注释】备注：暂不清除，因为其不影响绑定，避免因为频繁修改Prefab导致字段频繁更新而出错。其值会在实例化时自动匹配并进行更新（包括作为其他Prefab的子Prefab）
@@ -143,7 +145,7 @@ namespace Threeyes.RuntimeSerialization
         /// <returns></returns>
         bool IsInstanceIDValidInScene()
         {
-            if (!cacheInstanceID.IsValid())//本GUID无效
+            if (!cacheInstanceID.IsValid)//本GUID无效
                 return false;
 
             //#检查是否在场景中唯一(ToUpdate:改为用静态List缓存)
@@ -153,7 +155,7 @@ namespace Threeyes.RuntimeSerialization
                 {
                     if (rtsGO == this)//忽略自身
                         continue;
-                    if (rtsGO.cacheInstanceID.IsValid() && rtsGO.cacheInstanceID == cacheInstanceID)
+                    if (rtsGO.cacheInstanceID.IsValid && rtsGO.cacheInstanceID == cacheInstanceID)
                         return false;
                 }
                 return true;
@@ -172,7 +174,7 @@ namespace Threeyes.RuntimeSerialization
         /// <returns></returns>
         bool IsIDUniqueInHierarchy(bool isInstance)
         {
-            if (!cacheInstanceID.IsValid())//本GUID无效
+            if (!cacheInstanceID.IsValid)//本GUID无效
                 return false;
 
             try
@@ -185,7 +187,7 @@ namespace Threeyes.RuntimeSerialization
                     {
                         if (rsGO == this)//忽略自身
                             continue;
-                        if (rsGO.cacheInstanceID.IsValid() && rsGO.cacheInstanceID == cacheInstanceID)
+                        if (rsGO.cacheInstanceID.IsValid && rsGO.cacheInstanceID == cacheInstanceID)
                             return false;
                     }
                 }
@@ -203,7 +205,7 @@ namespace Threeyes.RuntimeSerialization
                                     continue;
                                 if (rsGO == this)
                                     continue;
-                                if (rsGO.cacheInstanceID.IsValid() && rsGO.cacheInstanceID == cacheInstanceID)
+                                if (rsGO.cacheInstanceID.IsValid && rsGO.cacheInstanceID == cacheInstanceID)
                                     return false;
                             }
                         }
@@ -230,34 +232,33 @@ namespace Threeyes.RuntimeSerialization
         /// -反序列化时还原该数值
         /// </summary>
         /// <param name="m_Guid"></param>
-        public void InitPrefabMetadata(string m_Guid)
+        public void InitPrefabMetadata(string m_Guid, string scope)
         {
             cachePrefabID = new Identity(m_Guid);
+            cacheScope = scope;
         }
         #endregion
 
-        //Cache
+        //#Cache
         bool isSourcePrefabMissing = false;
         GameObjectPropertyBag deserializedGameObjectPropertyBag;//当前反序列化的源信息，方便在Prefab丢失时保存其源信息
-
-        //protected override Formatting Formatting { get { return Formatting.Indented; } }///GameObject：为了方便阅读，需要缩进【如果是使用PersistentData_String存储就不需要设置缩进，否则更难阅读】
 
         protected override GameObject GetContainerFunc() { return gameObject; }
 
         public override GameObjectPropertyBag GetPropertyBag()
         {
-            if (isSourcePrefabMissing && deserializedGameObjectPropertyBag != null)//Prefab丢失：返回上次反序列化的源信息
+            if (isSourcePrefabMissing && deserializedGameObjectPropertyBag != null)//Prefab丢失：直接返回上次反序列化的源信息，便于原封不动地保存
             {
                 return deserializedGameObjectPropertyBag;
             }
 
-
-            //保存相关信息
+            //#0 保存相关信息到PropertyBag
             GameObjectPropertyBag propertyBag = base.GetPropertyBag();
-            if (cachePrefabID.IsValid())
-                propertyBag.prefabID = new Identity(cachePrefabID);
-            if (cacheInstanceID.IsValid())
+            if (cacheInstanceID.IsValid)
                 propertyBag.instanceID = new Identity(cacheInstanceID);
+            if (cachePrefabID.IsValid)
+                propertyBag.prefabID = new Identity(cachePrefabID);
+            propertyBag.scope = cacheScope;//不管有无值都可以保存
 
             //#1 扫描并存储该物体所有RTSComponent的序列化数据
             //propertyBag.serializedComponents.AddRange(listRSComponent.ConvertAll(rsc => rsc.OnSerialize()));//【ToDelete】
@@ -266,7 +267,7 @@ namespace Threeyes.RuntimeSerialization
             foreach (var rsComponent in listRSComponent)
             {
                 IComponentPropertyBag cPB = rsComponent.ComponentPropertyBag;
-                cPB.ID = rsComponent.ID;//初始化ID
+                cPB.ID = rsComponent.ID;//存储ID到PropertyBag
                 listCPB.Add(cPB);
             }
             propertyBag.compoentPropertyBags.AddRange(listCPB);
@@ -284,184 +285,7 @@ namespace Threeyes.RuntimeSerialization
 
             return propertyBag;
         }
-
-        //——【ToUpdate】：通过分布类的方式，分离出具体实现——
-
-        protected override void DeserializeFunc(GameObjectPropertyBag propertyBag, IDeserializationOption baseOption = null)
-        {
-            base.DeserializeFunc(propertyBag, baseOption);
-
-            //DeserializationOption
-            DeserializationOption_GameObject deserializationOption = new DeserializationOption_GameObject();
-            if (baseOption is DeserializationOption_GameObject dOGM)//自定义的Option（ToTest：离开代码块后dOGM会不会变空）
-            {
-                deserializationOption = dOGM;
-            }
-
-            //#1 反序列化自身所有组件
-            ////——实现1：基于序列化成字符串的string【ToDelete】——       
-            ////-查找与序列化后的类型相同的组件，并传入对应序列化字段进行OnDeserialize（不直接使用反射的好处是，方便用户）
-            ////【ToUpdate】：
-            ////-针对每一个组件都根据ID进行唯一匹配
-            ////-针对Modder的脚本，只需要匹配类名即可，因为Mod打包后所在程序集名称不一样
-            ////-针对多个相同组件，需要按顺序匹配（如标记某个组件已经反序列化）
-            ////-【进阶】对组件进行排序（参考Unity.RuntimeSceneSerialization.Internal.SerializationUtils.SortComponentList）
-            //List<PropertyBag> listPropertyBagCom = propertyBag.serializedComponents.ConvertAll((s) => DeSerializeToCommonPropertyBag(s));//-将serializedComponents转为PropertyBag
-            //List<IRuntimeSerializableComponent> listRSComponent = gameObject.GetComponents<IRuntimeSerializableComponent>().ToList();//查找所有可序列化的组件（PS：不能使用IRuntimeSerializable，否则会获取到自身的RTS_Go）
-            //foreach (var rsComponent in listRSComponent)
-            //{
-            //    int matchedIndex = listPropertyBagCom.FindIndex(pB => pB.containerTypeName == PropertyBag.GetTypeName(rsComponent.ContainerType));
-            //    if (matchedIndex != -1)
-            //    {
-            //        rsComponent.OnDeserialize(propertyBag.serializedComponents[matchedIndex]);
-            //        //rsComponent.OnDeserializeBase(propertyBag.serializedComponents[matchedIndex]);
-            //    }
-            //}
-
-            ////——实现2：基于原类型序列化——
-
-            //#1 查找所有符合条件的组件进行反序列化
-            List<IComponentPropertyBag> listComponentPropertyBag = propertyBag.compoentPropertyBags;
-            List<IRuntimeSerializableComponent> listRSComponent = gameObject.GetComponents<IRuntimeSerializableComponent>().ToList();//PS：不能使用IRuntimeSerializable，否则会获取到自身的RTS_Go
-            foreach (var componentPropertyBag in listComponentPropertyBag)
-            {
-                ///反序列化流程：
-                ///     -优先搜索相同ID的组件并反序列化
-                ///     -如果找不到，则警告。
-                /// -【Todo】后续可尝试通过containerTypeName搜索首个且唯一相同类型的组件（注意：仅适用于必要组件（如ShellItem），否则有可能因为Modder主动删除或替换组件导致功能不一）
-                IRuntimeSerializableComponent matchedRSComponent = listRSComponent.FirstOrDefault(rsC => rsC.ID == componentPropertyBag.ID);
-                if (matchedRSComponent != null)
-                {
-                    matchedRSComponent.DeserializeBase(componentPropertyBag);
-                }
-                else
-                {
-                    Debug.LogWarning($"Can't find Component [{(componentPropertyBag.ContainerTypeName)}] with [guid {componentPropertyBag.ID}]! Will not be Deserialize!");
-                }
-            }
-
-            //#2 链接或重新生成所有子物体
-            List<RuntimeSerializable_GameObject> listInstanceRSGO = transform.FindComponentsInChild<RuntimeSerializable_GameObject>(includeSelf: false, isRecursive: false).ToList();//缓存所有挂载RS_GO的子物体实例(需要忽略自身；仅扫描一层)
-            foreach (var childGOPropertyBag in propertyBag.children)
-            {
-                RuntimeSerializable_GameObject rtsgInst = null;
-                bool isChildRuntimeDeserializedPrefab = deserializationOption.isParentRuntimeDeserializedPrefab;//标记该物体或父物体是否为运行时通过Prefab生成
-
-                if (childGOPropertyBag.prefabID.IsValid())//基于Prefab：生成实例并反序列化（Warning：如果prefabMetadata为空，则无法正常生成对应预制物并还原配置。可能原因是二次序列化时没有保存好数据，意外使用了RuntimeSerialization_GameObject的cachePrefabMetadata）
-                {
-                    isChildRuntimeDeserializedPrefab = true;//标记为运行时生成
-
-                    //#1 尝试查找对应预制物并生成实例
-                    string guid = childGOPropertyBag.prefabID.Guid;
-                    GameObject goInst = SOAssetPackManager.TryInstantiatePrefab(guid, transform);//以该物体为父物体
-                    if (goInst)
-                    {
-                        rtsgInst = goInst.GetComponent<RuntimeSerializable_GameObject>();
-                        if (rtsgInst)
-                        {
-                            rtsgInst.InitPrefabMetadata(childGOPropertyBag.prefabID.Guid);//不管prefabID的值是否有效都统一初始化，便于后续序列化时保存
-                        }
-                    }
-                    else//#2 如果无法找到预制物，则会生成一个空占位Prefab，方便调试与后续序列化以避免丢失
-                    {
-                        ///ToUpdate:
-                        ///+如果找不到，则创建一个带RS_GO的空物体（也可以使用方块+紫色材质代表丢失），并且把源序列化字符串存储到RS_GO中（可以用一个字段代表Missing，另一个字段存储源序列化字符串）
-                        string dummyName = $"{childGOPropertyBag.name} (Missing Prefab with guid: {guid})";//参考Unity针对丢失Prefab的名字处理
-                        Debug.LogWarning($"Failed to instantiate prefab with guid ({guid})! Use empty dummy ({dummyName}) instead!");
-                        if (RuntimeSerializationManager.Instance && RuntimeSerializationManager.Instance.preMissingPrefabDummy)//场景存在RuntimeSerializationManager单例：使用其定义的占位物体
-                        {
-                            goInst = Instantiate(RuntimeSerializationManager.Instance.preMissingPrefabDummy);
-                        }
-                        else//否则：创建一个空物体
-                        {
-                            goInst = new GameObject();
-                        }
-                        goInst.transform.SetParent(transform);
-                        goInst.name = dummyName;
-                        //尝试还原其位置和大小，方便标识其位置
-                        TransformPropertyBag transformPropertyBag = childGOPropertyBag.compoentPropertyBags.FirstOrDefault(iCPB => iCPB is TransformPropertyBag) as TransformPropertyBag;
-                        if (transformPropertyBag != null)
-                        {
-                            goInst.transform.SetProperty(transformPropertyBag.localPosition, transformPropertyBag.localRotation, transformPropertyBag.localScale);
-                        }
-
-                        RuntimeSerializable_GameObject dummyRS_GO = goInst.AddComponentOnce<RuntimeSerializable_GameObject>();//PS:因为不是源物体的RS_GO，因此不能赋值给rtsgInst，因为其后续还需要进行穷举反序列化
-                        dummyRS_GO.isSourcePrefabMissing = true;
-                        dummyRS_GO.deserializedGameObjectPropertyBag = childGOPropertyBag;//备份，以便在序列化时原样保存
-                    }
-                }
-                else if (childGOPropertyBag.instanceID.IsValid())//基于现存的物体实例：查找匹配InstanceMetadata的物体直接并反序列化
-                {
-                    rtsgInst = listInstanceRSGO.FirstOrDefault(rtsg => rtsg.cacheInstanceID == childGOPropertyBag.instanceID);
-                    if (rtsgInst)
-                    {
-                        listInstanceRSGO.Remove(rtsgInst);//如果已经匹配，则移除
-                    }
-                    else
-                    {
-                        ///常见报错原因：
-                        ///-意外修改了Content物体的id导致无法找到
-                        Debug.LogError($"Can't find {gameObject.name}'s child instance [{childGOPropertyBag.name}] for GUID: [{childGOPropertyBag.instanceID}]!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError($"[{childGOPropertyBag.name}] doesn't have any valid metadata! Will not be deserialize!");//可能原因：id已经改变
-                }
-
-                //#3 对该物体进行反序列化
-                if (rtsgInst)
-                {
-                    //PS：因为deserializationOption是class，在后续还需要使用，所以只能缓存其isParentRuntimeDeserializedPrefab值，并在使用后还原
-                    bool cacheSelf_IsParentRuntimeDeserializedPrefab = deserializationOption.isParentRuntimeDeserializedPrefab;
-                    deserializationOption.isParentRuntimeDeserializedPrefab = isChildRuntimeDeserializedPrefab;
-                    rtsgInst.DeserializeFunc(childGOPropertyBag, deserializationOption);
-
-                    deserializationOption.isParentRuntimeDeserializedPrefab = cacheSelf_IsParentRuntimeDeserializedPrefab;
-                }
-            }
-
-            //#3 根据Option进行后处理
-            if (deserializationOption.DeleteNotExistInstance && listInstanceRSGO.Count > 0)//是否需要删除不存在的实例
-            {
-                if (!(deserializationOption.isParentRuntimeDeserializedPrefab && !deserializationOption.DeletePrefabNotExistInstance))//只要不是通过预制物生成的实例，且deletePrefabNotExistInstance为false：删除
-                    listInstanceRSGO.ForEach(rsgo => rsgo.gameObject.DestroyAtOnce());
-            }
-
-
-            /////#通过排序进行反序列化【ToDelete】：改为用cacheInstanceMetadata进行匹配，匹配失败才用此排序方法匹配——
-            /////#3 等上一步骤的Prefab全部生成后，根据siblingIndex进行排序，便于后续一一对应（【小Bug】：如果将实例与Prefab混放，如果Modder新增实例，则可能会对不上，因此建议不要混放，或者想办法增加唯一ID）
-            //List<GameObjectPropertyBag> listSortPropertyBag = new List<GameObjectPropertyBag>(propertyBag.children);
-            //listSortPropertyBag.Sort((a, b) => a.siblingIndex - b.siblingIndex);
-
-            ////#4 按顺序反序列化所有子物体（针对已存在物体）
-            //int indexRSG = 0;//当前反序列化的子物体序号
-            //foreach (Transform tfChild in container.transform)
-            //{
-            //    if (indexRSG >= propertyBag.children.Count)
-            //        break;
-            //    RuntimeSerialization_GameObject rtsgChild = tfChild.GetComponent<RuntimeSerialization_GameObject>();
-            //    if (rtsgChild)
-            //    {
-            //        GameObjectPropertyBag propertyBagChild = listSortPropertyBag[indexRSG];
-            //        rtsgChild.OnDeserialize(propertyBagChild);
-            //        rtsgChild.InitPrefabMetadata(propertyBagChild.prefabMetadata.Guid);//不管该值是否有效，统一用于初始化，便于后续序列化保存
-            //        indexRSG++;
-            //    }
-            //}
-        }
-
-        ///// <summary>
-        ///// [ToDelete]将Component序列化字段转为通用的PropertyBag，以便获取其类型等信息
-        ///// </summary>
-        ///// <param name="serializedComponent"></param>
-        ///// <returns></returns>
-        //static PropertyBag DeSerializeToCommonPropertyBag(string serializedComponent)
-        //{
-        //    return JsonConvert.DeserializeObject<PropertyBag>(serializedComponent);
-        //}
     }
-
 
     #region Define
     /// <summary>
@@ -474,8 +298,9 @@ namespace Threeyes.RuntimeSerialization
     public class GameObjectPropertyBag : UnityObjectPropertyBag<GameObject>
     {
         //缓存唯一ID（统一由RuntimeSerialization_GameObject管理）
-        public Identity instanceID = new Identity();//如果为实例，则不为空
-        public Identity prefabID = new Identity();//如果为Prefab，则不为空
+        public Identity instanceID = new Identity();//（如果是实例，则不为空）
+        public Identity prefabID = new Identity();//（如果是Prefab，则不为空）
+        public string scope = "";//【可空】其所在范围的唯一标识（如果是Prefab，则可选设置）
 
         public string name = "GameObject";//PS：名称不能为空，否则会出现警告
         public int layer;
@@ -503,9 +328,6 @@ namespace Threeyes.RuntimeSerialization
             tag = container.tag;
             active = container.activeSelf;
             siblingIndex = container.transform.GetSiblingIndex();
-            ////Todo:如果container是Prefab，则搜索其信息
-            ///Unity.RuntimeSceneSerialization的实现是加上PrefabMetadata
-            //if (container)
         }
         public override void Accept(ref GameObject container)
         {

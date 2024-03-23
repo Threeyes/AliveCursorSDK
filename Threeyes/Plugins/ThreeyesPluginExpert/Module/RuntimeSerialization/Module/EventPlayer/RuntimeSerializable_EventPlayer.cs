@@ -6,26 +6,13 @@ namespace Threeyes.RuntimeSerialization
 {
     using Threeyes.EventPlayer;
     [DisallowMultipleComponent]
-    public class RuntimeSerializable_EventPlayer : RuntimeSerializableMonoBehaviour<EventPlayer, EventPlayerPropertyBag>, IRuntimeSerializableOptionHolder<RuntimeSerializableOption_EventPlayer>
+    public partial class RuntimeSerializable_EventPlayer : RuntimeSerializableMonoBehaviour<EventPlayer, EventPlayerPropertyBag>, IRuntimeSerializableOptionHolder<RuntimeSerializableOption_EventPlayer>
     {
         ///Todo：增加自定义配置：
         ///     -在反序列化后，根据参数调用一次Play方法
         public RuntimeSerializableOption_EventPlayer Option { get { return option; } }
         [SerializeField] protected RuntimeSerializableOption_EventPlayer option;
 
-        protected override void DeserializeFunc(EventPlayerPropertyBag propertyBag, IDeserializationOption baseOption = null)
-        {
-            base.DeserializeFunc(propertyBag, baseOption);
-
-            ///根据参数来调用对应方法
-            ///ToUpdate：
-            ///-子类可以基于State来进行更精确的调用（如带参调用），或者保存最近一次调用的方法及参数项
-            ///-需要处理 IsPlayOnce 的情况，可以额外在Option中增加对应选项
-            if (Option.invokeEventOnDeserialized)
-            {
-                container.Play(container.IsPlayed);//根据之前是否已经Play，重新调用一次
-            }
-        }
     }
 
     #region Define (放在外面方便继承)

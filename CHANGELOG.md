@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.3.2]
+Update the follow pacakges:
+- json-for-unity.converters:1.5.1-1.6.3
+- UIEffect:4.0.0-preview.9-4.0.0-preview.10
+- DemoTeanHairSystem:0.10.0-0.11.0
+- textmeshpro:3.0.6-3.0.8
+- 2D PSD Importer:8.0.2-8.0.4
+- 2D Animation:9.0.3-9.0.4
+- AI Navigation: 1.1.4-1.1.5
+- Timeline: 1.7.5-1.7.6
+- VisualScripting: 1.9.0-1.9.2
+
 ## [4.3.0]
 - Export Mod File with unique name.
 

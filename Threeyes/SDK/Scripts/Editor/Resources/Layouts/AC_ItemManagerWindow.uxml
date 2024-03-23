@@ -37,7 +37,6 @@
                         <uie:EnumFlagsField label="Feature (Multiple)" name="ItemFeatureEnumField" binding-path="itemFeature" />
                     </ui:Foldout>
                 </ui:VisualElement>
-                <ui:VisualElement name="Gap" class="HorizontalGap" />
                 <ui:VisualElement name="InteractionGroup">
                     <ui:VisualElement name="EditGroup" style="flex-direction: row; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
                         <ui:Button text="Select Dir" display-tooltip-when-elided="true" name="SelectItemDirButton" focusable="true" style="overflow: visible; width: 49%;" />
@@ -45,6 +44,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="Gap" class="gap HorizontalGap" />
                     <ui:VisualElement name="BuildGroup" style="flex-direction: column; justify-content: space-around; align-items: stretch; border-left-width: 1px; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0; flex-wrap: nowrap;">
+                        <ui:HelpBox text="Warning TextWarning TextWarning TextWarning TextWarning TextWarning TextWarning Text" message-type="Warning" name="BuildHelpBox" style="align-items: stretch; -unity-text-align: upper-left; white-space: normal; position: relative; left: 0; top: 0; right: 0; bottom: 0; flex-direction: row; opacity: 1; display: flex; justify-content: flex-start; margin-left: 2px; margin-right: 2px; margin-top: 4px; margin-bottom: 0; align-self: stretch;" />
                         <ui:TextField picking-mode="Ignore" label="AliveCursor.exe Path" value="filler text" max-length="128" name="ExePathTextField" tooltip="Where the AliveCursor.exe located (You can use Steam app to open the directory)">
                             <ui:Button text="Select..." display-tooltip-when-elided="true" name="SelectExeButton" />
                         </ui:TextField>

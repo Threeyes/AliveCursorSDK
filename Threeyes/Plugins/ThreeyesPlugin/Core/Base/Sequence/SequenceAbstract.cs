@@ -6,10 +6,18 @@ using UnityEngine.Events;
 
 namespace Threeyes.Core
 {
+    public interface ISequence
+    {
+        void Set(int index);
+        void Reset(int index);
+        void Active(int index);
+        //ToAdd
+    }
+
     /// <summary>
     /// （Mainly used by SequenceHierarchyView)
     /// </summary>
-    public abstract class SequenceAbstract : MonoBehaviour, IHierarchyViewInfo
+    public abstract class SequenceAbstract : MonoBehaviour, ISequence, IHierarchyViewInfo
     {
         #region Networking
 
@@ -71,7 +79,6 @@ namespace Threeyes.Core
 
         #endregion
 
-
         #region Public Method
 
         //——Set Delta——
@@ -93,6 +100,7 @@ namespace Threeyes.Core
 
         //——Set——
         public abstract void ActiveAndSetNext();
+        public abstract void Active(int index);
 
         /// <summary>
         /// 重新设置当前数据，常用于重新开始

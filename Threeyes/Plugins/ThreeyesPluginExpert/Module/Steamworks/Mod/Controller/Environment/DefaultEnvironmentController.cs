@@ -26,11 +26,11 @@ namespace Threeyes.Steamworks
         #region Property & Field
         //PS：以下是场景相关的配置，暂不需要通过EnableIf来激活
         [Header("Lights")]
-        [Tooltip("The Root gameobject for all lights")] [Required] [SerializeField] protected GameObject goLightGroup;
-        [Tooltip("When the Skybox Material is a Procedural Skybox, use this setting to specify a GameObject with a directional Light component to indicate the direction of the sun (or whatever large, distant light source is illuminating your Scene). If this is set to None, the brightest directional light in the Scene is assumed to represent the sun. Lights whose Render Mode property is set to Not Important do not affect the Skybox.")] [Required] [SerializeField] protected Light sunSourceLight;//(Can be null)
+        [Tooltip("The Root gameobject for all lights")][Required][SerializeField] protected GameObject goLightGroup;
+        [Tooltip("When the Skybox Material is a Procedural Skybox, use this setting to specify a GameObject with a directional Light component to indicate the direction of the sun (or whatever large, distant light source is illuminating your Scene). If this is set to None, the brightest directional light in the Scene is assumed to represent the sun. Lights whose Render Mode property is set to Not Important do not affect the Skybox.")][Required][SerializeField] protected Light sunSourceLight;//(Can be null)
 
         [Header("Reflection")]
-        [Tooltip("The main ReflectionProbe")] [Required] [SerializeField] protected ReflectionProbe reflectionProbe;
+        [Tooltip("The main ReflectionProbe")][Required][SerializeField] protected ReflectionProbe reflectionProbe;
 
         #endregion
 
@@ -156,15 +156,18 @@ namespace Threeyes.Steamworks
             RuntimeTool.ExecuteOnceInCurFrameAsync(DynamicGI.UpdateEnvironment);//Update environment cubemap
             RefreshReflectionProbe();
         }
+
+        protected float lastUpdateReflectionProbeTime = 0;
+        [ContextMenu("RefreshReflectionProbe")]
         /// <summary>
         /// Update ReflectionProbe to refresh reflection
         /// </summary>
-        void RefreshReflectionProbe()
+        protected bool RefreshReflectionProbe()
         {
             if (!reflectionProbe)
-                return;
+                return false;
             if (!lastReflectionProbeUsed)//PS:未激活时调用无效
-                return;
+                return false;
 
 
             //public enum ReflectionProbeMode
@@ -176,8 +179,14 @@ namespace Threeyes.Steamworks
 
             //仅当反射探头的属性为Realtime且ViaScripting时，才能调用方法更新
             if (reflectionProbe.mode == ReflectionProbeMode.Realtime && reflectionProbe.refreshMode == ReflectionProbeRefreshMode.ViaScripting)
+            {
                 RuntimeTool.ExecuteOnceInCurFrameAsync(() => reflectionProbe.RenderProbe(/*reflectionProbe.realtimeTexture*/));//PS:RenderProbe会返回ID，可用于后续检查Render完成时间
+                lastUpdateReflectionProbeTime = Time.time;//记录渲染时间
+                return true;
+            }
+            return false;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -235,27 +244,27 @@ namespace Threeyes.Steamworks
 
         [Header("Lights")]
         [PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseLights))] public bool isUseLights = true;
-        [EnableIf(nameof(isUseLights))] [AllowNesting] public Vector3 sunLightRotation = new Vector3(30, 30, 240);
-        [EnableIf(nameof(isUseLights))] [AllowNesting] [Range(0, 8)] public float sunLightIntensity = 0.3f;
-        [EnableIf(nameof(isUseLights))] [AllowNesting] public Color sunLightColor = Color.white;
+        [EnableIf(nameof(isUseLights))][AllowNesting] public Vector3 sunLightRotation = new Vector3(30, 30, 240);
+        [EnableIf(nameof(isUseLights))][AllowNesting][Range(0, 8)] public float sunLightIntensity = 0.3f;
+        [EnableIf(nameof(isUseLights))][AllowNesting] public Color sunLightColor = Color.white;
         [EnableIf(nameof(isUseLights))] public LightShadows lightShadowType = LightShadows.None;
 
         [Header("ReflectionProbe")]
         [PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseReflection))] public bool isUseReflection = true;
 
         [Header("Skybox")]
-        [DefaultValue(true)] [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)] [PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseSkybox))] public bool isUseSkybox = true;
+        [DefaultValue(true)][JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)][PersistentValueChanged(nameof(OnPersistentValueChanged_IsUseSkybox))] public bool isUseSkybox = true;
         [EnableIf(nameof(isUseSkybox))] public SkyboxType skyboxType = SkyboxType.Default;
         //Default
-        [ValidateInput(nameof(ValidateDefaultSkyboxMaterial), "The defaultSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isUseDefaultSkybox))] [AllowNesting] [JsonIgnore] public Material defaultSkyboxMaterial;
+        [ValidateInput(nameof(ValidateDefaultSkyboxMaterial), "The defaultSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")][EnableIf(nameof(isUseDefaultSkybox))][AllowNesting][JsonIgnore] public Material defaultSkyboxMaterial;
         //Panorama  
-        [ValidateInput(nameof(ValidatePanoramaSkyboxMaterial), "The panoramaSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")] [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Material panoramaSkyboxMaterial;
+        [ValidateInput(nameof(ValidatePanoramaSkyboxMaterial), "The panoramaSkyboxMaterial's shader should be the one in \"Skybox/...\" catelogy")][EnableIf(nameof(isUsePanoramicSkybox))][AllowNesting][JsonIgnore] public Material panoramaSkyboxMaterial;
         ///Skybox/Panoramic Shader中的全景图。（PS：Panorama类型的图片不要选中 "generate mipmaps"，否则会产生缝（外部加载的图片默认都不会生成））
-        [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [JsonIgnore] public Texture defaultPanoramaTexture;
-        [EnableIf(nameof(isUsePanoramicSkybox))] [ReadOnly] [AllowNesting] [JsonIgnore] public Texture externalPanoramaTexture;
-        [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [PersistentAssetFilePath(nameof(externalPanoramaTexture), true)] public string externalPanoramaTextureFilePath;
-        [EnableIf(nameof(isUsePanoramicSkybox))] [AllowNesting] [Range(0, 360)] public float panoramaSkyboxRotation = 0;
-        [HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
+        [EnableIf(nameof(isUsePanoramicSkybox))][AllowNesting][JsonIgnore] public Texture defaultPanoramaTexture;
+        [EnableIf(nameof(isUsePanoramicSkybox))][ReadOnly][AllowNesting][JsonIgnore] public Texture externalPanoramaTexture;
+        [EnableIf(nameof(isUsePanoramicSkybox))][AllowNesting][PersistentAssetFilePath(nameof(externalPanoramaTexture), true)] public string externalPanoramaTextureFilePath;
+        [EnableIf(nameof(isUsePanoramicSkybox))][AllowNesting][Range(0, 360)] public float panoramaSkyboxRotation = 0;
+        [HideInInspector][JsonIgnore][PersistentDirPath] public string PersistentDirPath;
 
 
         #region Callback

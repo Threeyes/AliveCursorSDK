@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Threeyes.UI
 {
@@ -37,6 +38,7 @@ namespace Threeyes.UI
 
         public event EventHandler Click { add { click += value; } remove { click -= value; } }
         EventHandler click;
+        [SerializeField] UnityEvent onSelect = new UnityEvent();//用于可视化UI
         [SerializeField] private string toolTipText;
         [SerializeField] private Texture texture;
         [SerializeField] private string text;
@@ -52,6 +54,7 @@ namespace Threeyes.UI
         {
             if (click != null)
                 click.Invoke(sender, e);
+            onSelect?.Invoke();
         }
         public ToolStripItemInfo()
         {

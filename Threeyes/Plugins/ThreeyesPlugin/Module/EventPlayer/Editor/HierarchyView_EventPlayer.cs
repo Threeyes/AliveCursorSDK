@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using Threeyes.Core.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -53,8 +53,13 @@ namespace Threeyes.EventPlayer.Editor
             #region ShortCuts 
 
             //#The whole Rect
-            //Alt+Left Clitk: Switch IsActive Property
-            if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 0, () => Event.current.alt))
+            if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 0, () => Event.current.control))//Ctrl+Left Click: SetAndActive
+            {
+                Undo.RecordObject(comp, "EventPlayer Hierarchy Update");
+                TryPlayTargetEP(comp, true);
+                EditorUtility.SetDirty(comp);
+            }
+            if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 0, () => Event.current.alt))//Alt+Left Clitk: Switch IsActive Property
             {
                 //InvokeSelection(e => e.IsActive = !e.IsActive);
                 Undo.RecordObject(comp, "EventPlayer Hierarchy Update");
@@ -83,7 +88,7 @@ namespace Threeyes.EventPlayer.Editor
             Rect eleRectTog = remainRect.GetAvaliableRect(EditorDrawerTool.toggleSize);
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, eleRectTog, 0))
             {
-                comp.Play();
+                TryPlayTargetEP(comp);
             }
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, eleRectTog, 1))
             {
@@ -104,8 +109,29 @@ namespace Threeyes.EventPlayer.Editor
         }
 
 
+        static void TryPlayTargetEP(EventPlayer comp, bool? active = null)
+        {
+            //#1 如果是SEQ：直接跳到该EP序号并Play
+            bool hasSetViaSequence = false;
+            ISequence_EventPlayer eventPlayerSequence = comp.GetComponentInParent<ISequence_EventPlayer>();
+            if (eventPlayerSequence != null)
+            {
+                int index = eventPlayerSequence.FindIndexForDataEditor(comp);
+                if (index != -1)
+                {
+                    if (active.HasValue && active.Value)//先激活
+                    {
+                        eventPlayerSequence.Active(index);
+                    }
+                    eventPlayerSequence.Set(index);
+                    hasSetViaSequence = true;
+                }
+            }
 
-
+            //#2 如果上述失败，则直接Play该EP
+            if (!hasSetViaSequence)
+                comp.Play();
+        }
         #endregion
 
         #region GUI

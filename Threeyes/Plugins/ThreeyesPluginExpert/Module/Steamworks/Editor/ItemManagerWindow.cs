@@ -59,7 +59,7 @@ namespace Threeyes.Steamworks
         VisualElement visualElementSOWorkshopItemInfoGroup;
         VisualElement visualElementPreviewArea;
         Label labelPreviewRemark;
-        HelpBox helpBoxPreview;//提示框
+        HelpBox helpBoxPreview;//预览图提示框
 
 
         //——Interaction Group——
@@ -68,6 +68,7 @@ namespace Threeyes.Steamworks
         protected Button buttonEditScene;//Create/Edit Scene
 
         //Build
+        HelpBox helpBoxBuild;//打包提示框
         TextField textFieldExePath;
         Button buttonSelectExe;
         Button buttonItemBuild;
@@ -141,7 +142,7 @@ namespace Threeyes.Steamworks
             var togglePlayGif = rootVisualElement.Q<Toggle>("PlayGifToggle");
             togglePlayGif.value = SOManagerInst.ItemWindow_IsPreviewGif;
             togglePlayGif.RegisterCallback<ChangeEvent<bool>>(OnPlayGifToggleChanged);
-            helpBoxPreview = rootVisualElement.Q<HelpBox>("PreviewHelpBox");//Todo:改为全局
+            helpBoxPreview = rootVisualElement.Q<HelpBox>("PreviewHelpBox");
 
             //Tags
             Foldout foldoutItemTags = rootVisualElement.Q<Foldout>("ItemTagsFoldout");
@@ -152,7 +153,8 @@ namespace Threeyes.Steamworks
             buttonEditScene = rootVisualElement.Q<Button>("EditSceneButton");
             buttonEditScene.RegisterCallback<ClickEvent>(OnEditSceneButtonClick);
 
-
+            //Build
+            helpBoxBuild = rootVisualElement.Q<HelpBox>("BuildHelpBox");
             textFieldExePath = rootVisualElement.Q<TextField>("ExePathTextField");
             textFieldExePath.value = SOManagerInst.ItemWindow_ExePath;
             textFieldExePath.RegisterCallback<ChangeEvent<string>>(OnExePathTextFieldChanged);
@@ -417,32 +419,6 @@ namespace Threeyes.Steamworks
                 windowInstance.RefreshItemInfoGroupUIState();//刷新UI
         }
 
-
-        public static void RunCurSceneWithSimulator()
-        {
-            //ToUpdate:研究如何设置LightingSettings中对应SimulatorScene，而不是像现在一样需要重新加载(参考LightingWindowEnvironmentSection+LightingWindow）
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())//提示用户保存Scene
-                return;
-
-            //缓存当前非Item场景信息
-            string itemSceneFilePath = null;
-            for (int i = 0; i != SceneManager.sceneCount; i++)
-            {
-                Scene activeScene = SceneManager.GetSceneAt(i);
-                if (activeScene.path.Contains(SORuntimeManagerInst.SimulatorSceneName))
-                    continue;
-                else
-                    itemSceneFilePath = activeScene.path;
-            }
-            if (itemSceneFilePath.IsNullOrEmpty())
-                return;
-
-            //#1 先打开模拟场景，以便LightingSettings能被正常设置
-            bool isSimulaterHubSceneLoaded = OpenSimulatorScene_Solo();
-
-            //#2 重新打开Item场景
-            EditorSceneManager.OpenScene(itemSceneFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);
-        }
         public static void OpenSDKWiki(string url)
         {
             Application.OpenURL(url);
@@ -625,6 +601,11 @@ namespace Threeyes.Steamworks
             }
         }
 
+        /// <summary>
+        /// PS:
+        /// -支持任意含有主相机的场景
+        /// </summary>
+        /// <param name="evt"></param>
         void OnCreateScreenshotButtonClick(ClickEvent evt)
         {
             //Todo:截正方形的图，尺寸为4的倍数（PS：可以对图片进行二次处理）
@@ -637,30 +618,36 @@ namespace Threeyes.Steamworks
                 //Camera camera = tempGOCaptureCamera.AddComponent<Camera>();
                 //camera.clearFlags = CameraClearFlags.Nothing;//避免背景为默认颜色
 
-                //ToUpdate:使用当前场景的相机（默认是SimulaterManager的相机，也可以是用户自定义相机）
-                //临时禁用Simulator的UI，避免截图会截到UI
-                assistantManagerSimulator = FindObjectOfType<AssistantManagerSimulator>();//尝试查找该组件
-                if (assistantManagerSimulator)
-                    assistantManagerSimulator.TempShowInfoGroup(false);
-
                 tempGOCaptureCamera = Camera.main;
                 if (!tempGOCaptureCamera)
                 {
                     Debug.LogError("Can't find main Camera in Scene!");
                     return;
                 }
-                cacheCameraLocalPos = tempGOCaptureCamera.transform.localPosition;
-                tempGOCaptureCamera.transform.position = new Vector3(0, -0.5f, -1.5f);
+                OnBeforeCreateScreenshot();
 
                 absPreviewFilePath = curSOWorkshopItemInfo.GetDefaultPreviewFilePath(".png");
                 delayFrameCaptureScreenshot = 3;
             }
         }
-        Camera tempGOCaptureCamera;
-        Vector3 cacheCameraLocalPos;
-        int delayFrameCaptureScreenshot = 0;//延后Capture及销毁相机
-        string absPreviewFilePath;//ToAdd:存储为默认预览图
+
+        protected virtual void OnBeforeCreateScreenshot()
+        {
+            //临时禁用Simulator的UI，避免截图会截到UI
+            assistantManagerSimulator = FindObjectOfType<AssistantManagerSimulator>();//尝试查找该组件
+            if (assistantManagerSimulator)
+                assistantManagerSimulator.TempShowInfoGroup(false);
+        }
+        protected virtual void OnAfterCreateScreenshot()
+        {
+            if (assistantManagerSimulator)
+                assistantManagerSimulator.TempShowInfoGroup(true);
+        }
+
         AssistantManagerSimulator assistantManagerSimulator;
+        protected Camera tempGOCaptureCamera;
+        int delayFrameCaptureScreenshot = 0;//N帧后延后Capture及销毁相机
+        string absPreviewFilePath;//ToAdd:存储为默认预览图
 
         void Update_CreateScreenshot()
         {
@@ -686,9 +673,7 @@ namespace Threeyes.Steamworks
                 }
                 else if (delayFrameCaptureScreenshot == 0)//Reset
                 {
-                    tempGOCaptureCamera.transform.localPosition = cacheCameraLocalPos;
-                    if (assistantManagerSimulator)
-                        assistantManagerSimulator.TempShowInfoGroup(true);
+                    OnAfterCreateScreenshot();
                 }
             }
         }
@@ -706,8 +691,9 @@ namespace Threeyes.Steamworks
                 }
                 previeTex = curSOWorkshopItemInfo.TexturePreview;//设置首帧图
             }
+
             visualElementPreviewArea.style.backgroundImage = previeTex;
-            labelPreviewRemark.text = IsGifPath(curSOWorkshopItemInfo.PreviewFilePath) ? "Gif" : "";//提示是否为Gif
+            labelPreviewRemark.text = curSOWorkshopItemInfo && IsGifPath(curSOWorkshopItemInfo.PreviewFilePath) ? "Gif" : "";//提示是否为Gif
         }
 
         IVisualElementScheduledItem scheduledPlayGif;
@@ -807,8 +793,16 @@ namespace Threeyes.Steamworks
             }
 
             //PS:这里调用的函数涉及FileInfo，所以要尽量减少调用频率
-            buttonItemBuild.SetInteractable(curSOWorkshopItemInfo.IsBuildValid); // 确保Build前所有必填内容都有效，否则禁用
-            buttonItemBuildAndRun.SetInteractable(curSOWorkshopItemInfo.IsBuildValid && IsExePathValid(SOManagerInst.ItemWindow_ExePath));//在上面的基础上，需要确定exe已经配置完成
+            string errorLog = "";
+            bool isBuildValid = curSOWorkshopItemInfo.CheckIfBuildValid(out errorLog);
+
+            //在HelpBox上提示待完成事项
+            helpBoxBuild.Show(!isBuildValid);
+            if (!isBuildValid)
+                helpBoxBuild.text = errorLog;
+
+            buttonItemBuild.SetInteractable(isBuildValid); // 确保Build前所有必填内容都有效，否则禁用
+            buttonItemBuildAndRun.SetInteractable(isBuildValid && IsExePathValid(SOManagerInst.ItemWindow_ExePath));//在上面的基础上，需要确定exe已经配置完成
             buttonItemRun.SetInteractable(IsExePathValid(SOManagerInst.ItemWindow_ExePath) && curSOWorkshopItemInfo.IsExported);//确认exe已经Mod是否存在
 
             textFieldChangeLog.Show(curSOWorkshopItemInfo.IsItemUploaded);
@@ -854,30 +848,70 @@ namespace Threeyes.Steamworks
             if (EditorApplication.isPlaying)
             {
                 EditorApplication.isPlaying = false;
+                //ToAdd:需要等待退出完成或直接return，否则会报错
             }
 
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())//提示用户保存Scene
                 return;
 
-
-            //#1 尝试打开模拟场景
-            bool isSimulaterHubSceneLoaded = OpenSimulatorScene_Solo();
-
-            //#2 打开Item场景
             string absItemSceneFilePath = curSOWorkshopItemInfo.SceneFilePath;
-            //判断是否存在
+            string relateItemSceneFilePath = EditorPathTool.AbsToUnityRelatePath(absItemSceneFilePath);
+
             if (File.Exists(absItemSceneFilePath))//Item场景存在：打开
             {
-                string relateFilePath = EditorPathTool.AbsToUnityRelatePath(absItemSceneFilePath);
-                EditorSceneManager.OpenScene(relateFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);
+                OpenMultiScenes(relateItemSceneFilePath);
             }
             else//不存在：打开新建Scene菜单，提示通过 SceneTemplate 创建
             {
-                SceneTemplateManagerWindow.ShowWindow(curSOWorkshopItemInfo.SceneFilePath);
+                SceneTemplateManagerWindow.ShowWindow(curSOWorkshopItemInfo.SceneFilePath,
+                    (isSuccess) =>
+                    {
+                        if (isSuccess)
+                            OpenMultiScenes(relateItemSceneFilePath);
+                    }
+                    );
             }
         }
 
-        static bool OpenSimulatorScene_Solo()//打开模拟场景
+        public static void RunCurSceneWithSimulator()
+        {
+            //ToUpdate:研究如何设置LightingSettings中对应SimulatorScene，而不是像现在一样需要重新加载(参考LightingWindowEnvironmentSection+LightingWindow）
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())//提示用户保存Scene
+                return;
+
+
+            string itemSceneFilePath = null;//缓存需要编辑的Item场景信息
+            for (int i = 0; i != SceneManager.sceneCount; i++)
+            {
+                Scene activeScene = SceneManager.GetSceneAt(i);
+                if (activeScene.path.Contains(SORuntimeManagerInst.SimulatorSceneName))//忽略Simulator场景
+                    continue;
+                else
+                    itemSceneFilePath = activeScene.path;
+            }
+            if (itemSceneFilePath.IsNullOrEmpty())//如果当前没有Item场景，则代表仅有Simulator场景：跳过
+                return;
+
+            OpenMultiScenes(itemSceneFilePath);
+
+            //bool isSimulaterHubSceneLoaded = OpenHubSimulatorScene();//#1 先打开模拟场景，以便LightingSettings能被正常设置
+            //EditorSceneManager.OpenScene(itemSceneFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);//#2 重新打开Item场景
+        }
+
+        static void OpenMultiScenes(string relateItemSceneFilePath)
+        {
+            if (SORuntimeManagerInst.isOpenSimulatorBeforeItemScene)
+            {
+                bool isSimulaterHubSceneLoaded = OpenHubSimulatorScene();//#1 尝试打开模拟场景
+                EditorSceneManager.OpenScene(relateItemSceneFilePath, isSimulaterHubSceneLoaded ? OpenSceneMode.Additive : OpenSceneMode.Single);//#2 打开Item场景
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(relateItemSceneFilePath, OpenSceneMode.Single);
+                OpenHubSimulatorScene(OpenSceneMode.Additive);
+            }
+        }
+        static bool OpenHubSimulatorScene(OpenSceneMode openSceneMode = OpenSceneMode.Single)//打开模拟场景
         {
             bool isSimulaterHubSceneLoaded = false;
 
@@ -943,7 +977,7 @@ namespace Threeyes.Steamworks
                 if (simulatorSceneAssetRealPath.NotNullOrEmpty())
                 {
                     //	Debug.Log("Find Simulator scene in " + simulatorSceneAssetRealPath);
-                    EditorSceneManager.OpenScene(simulatorSceneAssetRealPath, OpenSceneMode.Single);
+                    EditorSceneManager.OpenScene(simulatorSceneAssetRealPath, openSceneMode);
                     isSimulaterHubSceneLoaded = true;
                 }
             }
@@ -1236,14 +1270,17 @@ namespace Threeyes.Steamworks
                 }
 
                 //ToAdd:ChangeLog
-                string itemUploadErrorLog = await WorkshopItemUploader.RemoteUploadItem(soWorkshopItemInfo, SetUploadProcessInfo, textFieldChangeLog.value);
-                if (itemUploadErrorLog.NotNullOrEmpty())
-                {
-                    Debug.LogError($"Upload Item {soWorkshopItemInfo?.Title} with error: {itemUploadErrorLog}");
-                }
+                string cacheChangeLog = textFieldChangeLog.value;
+                string itemUploadErrorLog = await WorkshopItemUploader.RemoteUploadItem(soWorkshopItemInfo, SetUploadProcessInfo, cacheChangeLog);
 
                 //刷新UI，进度条会默认隐藏
                 InitUIWithCurInfo();
+
+                if (itemUploadErrorLog.NotNullOrEmpty())
+                {
+                    Debug.LogError($"Upload Item {soWorkshopItemInfo?.Title} with error: {itemUploadErrorLog}");
+                    textFieldChangeLog.value = cacheChangeLog;//还原ChangeLog，避免要重新设置
+                }
             }
         }
 

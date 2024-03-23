@@ -122,8 +122,8 @@ namespace Threeyes.Outline
 
             // Remove outline shaders（避免重复添加）
             var materials = m_renderer.sharedMaterials.ToList();
-            materials.RemoveAll(m => m.shader.name == outlineMaskShaderName);
-            materials.RemoveAll(m => m.shader.name == outlineFillShaderName);
+            materials.RemoveAll(m => m && m.shader && (m.shader.name == outlineMaskShaderName));
+            materials.RemoveAll(m => m && m.shader && (m.shader.name == outlineFillShaderName));
             m_renderer.materials = materials.ToArray();
         }
 

@@ -10,7 +10,7 @@ namespace Threeyes.EventPlayer
 {
     //ToUpdate:应该是管理所有Core的Module的宏定义
     [CreateAssetMenu(menuName = "SO/Manager/EventPlayerSettingManager")]
-    public class SOEventPlayerSettingManager : SOInstacneBase<SOEventPlayerSettingManager>
+    public class SOEventPlayerSettingManager : SOInstanceBase<SOEventPlayerSettingManager>
     {
         #region Property & Field
 

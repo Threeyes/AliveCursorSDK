@@ -38,24 +38,28 @@ namespace Threeyes.SceneTemplate
 
         public List<SceneTemplateAsset> listValidAsset = new List<SceneTemplateAsset>();//扫描到的信息
         SceneTemplateAsset curSceneTemplateAsset;
-        static string curTargetSceneFilePath;//待存储的场景文件路径
+        static readonly GUIContent k_WindowTitle = new GUIContent("Select Template...");
+        static readonly Vector2 k_MinWindowSize = new Vector2(600, 600);
 
-        private static readonly GUIContent k_WindowTitle = new GUIContent("Select Template...");
-        private static readonly Vector2 k_MinWindowSize = new Vector2(600, 600);
+        static string curTargetSceneFilePath;//待存储的场景文件路径
+        static Action<bool> cacheActionOnCreateFinished;
+
         /// <summary>
         /// ToAdd：
         /// -增加参数：指定的List<SceneTemplateAsset>，更加通用
         /// </summary>
-        /// <param name="targetSceneFilePath"></param>
+        /// <param name="absSceneFilePath">需要创建的场景文件绝对路径</param>
         /// <returns></returns>
-        public static SceneTemplateManagerWindow ShowWindow(string targetSceneFilePath)
+        public static SceneTemplateManagerWindow ShowWindow(string absSceneFilePath, Action<bool> actionOnCreateFinished = null)
         {
-            curTargetSceneFilePath = targetSceneFilePath;
+            curTargetSceneFilePath = absSceneFilePath;
             // Get existing open window or if none, make a new one:
             SceneTemplateManagerWindow window = GetWindow<SceneTemplateManagerWindow>(true);
             window.titleContent = k_WindowTitle;
             window.minSize = k_MinWindowSize;
             window.Show();
+
+            cacheActionOnCreateFinished = actionOnCreateFinished;
             return window;
         }
 
@@ -167,8 +171,18 @@ namespace Threeyes.SceneTemplate
                 AssetDatabase.Refresh();
             }
             string relateFilePath = EditorPathTool.AbsToUnityRelatePath(curTargetSceneFilePath);
-            SceneTemplateService.Instantiate(curSceneTemplateAsset, true, relateFilePath);
-            Close();
+            InstantiationResult instantiationResult = SceneTemplateService.Instantiate(curSceneTemplateAsset, false, relateFilePath);//loadAdditively为false，避免当前存在Untitled的场景导致提示Warning
+            if (instantiationResult == null)//创建失败
+            {
+                //PS:不一定创建成功，这时可以提示用户查看控制台
+                Debug.LogError("Create Scene Failed. See the Console for details.");
+                cacheActionOnCreateFinished.Execute(false);
+            }
+            else
+            {
+                Close();
+                cacheActionOnCreateFinished.Execute(true);
+            }
         }
 
         void OnCancelButtonClick(ClickEvent evt)

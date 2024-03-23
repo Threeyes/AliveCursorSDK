@@ -209,7 +209,6 @@ namespace Threeyes.Steamworks
         }
 
         #region IModHandler
-
         public override void UpdateSetting()
         {
             //都是实时更新，暂不需要做操作

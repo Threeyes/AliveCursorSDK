@@ -1006,6 +1006,9 @@ namespace Threeyes.Core
 
         /// <summary>
         /// 根据物体是否为刚体，自动调用对应的移动方法，确保能正确移动到指定位置
+        /// 
+        /// 用途:
+        /// -针对rigidbody.interpolation等计算帧差的物体
         /// </summary>
         /// <param name="position"></param>
         /// <param name="rotation"></param>

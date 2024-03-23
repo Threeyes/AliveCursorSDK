@@ -15,7 +15,7 @@ namespace Threeyes.Steamworks
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TSOSDKManagerInfo"></typeparam>
     /// <typeparam name="TSOItemInfo"></typeparam>
-    public abstract class SOEditorSettingManager<T, TSOItemInfo> : SOInstacneBase<T, SOEditorSettingManagerInfo>
+    public abstract class SOEditorSettingManager<T, TSOItemInfo> : SOInstanceBase<T, SOEditorSettingManagerInfo>
         where T : SOEditorSettingManager<T, TSOItemInfo>
         where TSOItemInfo : SOWorkshopItemInfo
     {

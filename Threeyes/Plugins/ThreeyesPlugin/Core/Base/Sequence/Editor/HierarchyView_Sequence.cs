@@ -44,8 +44,8 @@ namespace Threeyes.Core.Editor
             Rect rectEle = remainRect.GetAvaliableRect(EditorDrawerTool.buttonSize);
             if (EditorDrawerTool.DrawButton(rectEle, EditorDrawerTool.TexArrRightIcon))
             {
-                //如果按住Alt，则调用ActiveAndSetNext
-                if (Event.current.alt)
+                //Ctrl+左键：调用ActiveAndSetNext
+                if (Event.current.control)
                     comp.ActiveAndSetNext();
                 else
                     comp.SetNext();

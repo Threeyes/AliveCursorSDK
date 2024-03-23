@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace Threeyes.EventPlayer
 {
-    public interface ISequence_EventPlayer
+    public interface ISequence_EventPlayer : ISequence
     {
         /// <summary>
         /// 功能：Hierarchy中返回子EP的序号

@@ -29,10 +29,10 @@ MonoBehaviour:
     instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 11668e3f17b7e3443b1995a24b20d6ce, type: 2}
     instantiationMode: 1
-  - dependency: {fileID: 11400000, guid: 4dfcd4afd7e6a59478508a7dfcd8df7f, type: 2}
-    instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 77eac32f0f73a8c4cb12730c24ad1a2e, type: 2}
     instantiationMode: 0
+  - dependency: {fileID: 11400000, guid: 483cd6d13c4e9b649b03a73d562e1af4, type: 2}
+    instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 5ac65d856abd30d4eae9794c753b36d1, type: 2}
     instantiationMode: 1
   - dependency: {fileID: 2800000, guid: f20112bdeec2e8d4d9f80e8390e37263, type: 3}
@@ -40,6 +40,8 @@ MonoBehaviour:
   - dependency: {fileID: 11400000, guid: 647af5da9ea77854986113986b61ba18, type: 2}
     instantiationMode: 1
   - dependency: {fileID: 2800000, guid: 188dfe7e559f13248ba2c41eb5a59328, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 11400000, guid: 144a619b636f6a1498d6f04f4d4d0e96, type: 2}
     instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 4e402d2a251433e4cb1bc941d8102c42, type: 2}
     instantiationMode: 1
@@ -57,13 +59,12 @@ MonoBehaviour:
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 1766a127aff47554495b1d5616382819, type: 3}
     instantiationMode: 1
-  - dependency: {fileID: 11400000, guid: 144a619b636f6a1498d6f04f4d4d0e96, type: 2}
-    instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 629be11c42739c24d8f274a54e635a8b, type: 2}
     instantiationMode: 1
   - dependency: {fileID: 11400000, guid: 88f26087d8617cb4b95518a0c52c216c, type: 2}
     instantiationMode: 0
   templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
   addToDefaults: 1
 --- !u!28 &3463579655665075330
 Texture2D:
@@ -87,7 +88,8 @@ Texture2D:
   m_MipCount: 1
   m_IsReadable: 1
   m_IsPreProcessed: 0
-  m_IgnoreMasterTextureLimit: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
   m_VTOnly: 0

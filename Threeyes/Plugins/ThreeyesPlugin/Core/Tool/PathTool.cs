@@ -220,7 +220,7 @@ namespace Threeyes.Core
                 foreach (FileInfo file in files)
                 {
                     string temppath = Path.Combine(destDirName, file.Name);
-                    Debug.Log("Copy " + file.FullName + " to \r\n" + temppath);
+                    //Debug.Log("Copy " + file.FullName + " to \r\n" + temppath);
                     file.CopyTo(temppath, true);
                 }
 

@@ -4,6 +4,7 @@ using UnityEditor;
 using UMod.Shared;
 using Threeyes.Steamworks;
 using Threeyes.Core;
+using UnityEngine;
 
 namespace Threeyes.AliveCursor.SDK.Editor
 {
@@ -43,6 +44,23 @@ namespace Threeyes.AliveCursor.SDK.Editor
         public static void AC_OpenSDKWiki()
         {
             OpenSDKWiki("https://github.com/Threeyes/AliveCursorSDK/wiki");
+        }
+        #endregion
+
+        #region Screenshot
+        Vector3 cacheCameraLocalPos;
+        protected override void OnBeforeCreateScreenshot()
+        {
+            base.OnBeforeCreateScreenshot();
+      
+            cacheCameraLocalPos = tempGOCaptureCamera.transform.localPosition;
+            tempGOCaptureCamera.transform.position = new Vector3(0, -0.5f, -1.5f);
+        }
+        protected override void OnAfterCreateScreenshot()
+        {
+            base.OnAfterCreateScreenshot();
+       
+            tempGOCaptureCamera.transform.localPosition = cacheCameraLocalPos;
         }
         #endregion
     }
