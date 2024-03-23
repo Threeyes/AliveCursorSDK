@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.3.3]
+- Fix build error.
+
 ## [4.3.2]
 Update the follow pacakges:
 - json-for-unity.converters:1.5.1-1.6.3

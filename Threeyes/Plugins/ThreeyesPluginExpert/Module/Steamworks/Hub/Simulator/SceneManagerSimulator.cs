@@ -1,16 +1,13 @@
-#if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Threeyes.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
 using UnityEditor;
-using System.IO;
 using Threeyes.Core.Editor;
-
+#endif
 namespace Threeyes.Steamworks
 {
     public class SceneManagerSimulator : HubSceneManagerBase<SceneManagerSimulator>
@@ -27,6 +24,7 @@ namespace Threeyes.Steamworks
 
         async void InitAsync()
         {
+#if UNITY_EDITOR
             await Task.Yield();//等待Config初始化完成
 
             //#0 找到ModScene
@@ -67,7 +65,7 @@ namespace Threeyes.Steamworks
             }
             InitMod(modEntry);
             hasSceneLoaded = true;
+#endif 
         }
     }
 }
-#endif

@@ -27,56 +27,27 @@ namespace Threeyes.Steamworks
         }
 
         //——Asset——
-        /// <summary>
-        /// 从（内置的文件夹）中读取指定Item的SOAssetPack
-        /// 
-        /// 用途：
-        /// -Simulator
-        /// 
-        /// 相对于通过AD_AliveDesktop链接的好处：
-        /// -更加统一，不管是否为场景Mod都可以使用
-        /// 
-        /// Bug：
-        /// -【不重要】打包后如果是基于当前场景，则无法调用（可以通过AD_SOAssetPackDebugManager链接加载的方式解决）(或者把对应的SO放到Resources中)
-        /// </summary>
-        /// <param name="workshopItemInfo"></param>
-        /// <param name="modHost"></param>
-        /// <returns></returns>
-        //        public static SOAssetPack LoadAssetPack_UnityProject(WorkshopItemInfo workshopItemInfo)
-        //        {
-        //            SOAssetPack soAssetPack = null;
 
-        //#if UNITY_EDITOR
-        //            //直接从文件夹中读取
-        //            string relatedFilePath = SOWorkshopItemInfo.GetRelatedSOAssetPackFilePath(workshopItemInfo.title);//ToUpdate：应该是先获取SOWorkshopItemInfo。然后获取其itemName（因为itemName和title不一定一致）（可以是直接传入SOWorkshopItemInfo）
-        //            soAssetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(relatedFilePath);
-        //#else
-        //            Debug.LogError("Can't call this method at runtime!");
-        //#endif
-        //            return soAssetPack;
-        //        }
-
+#if UNITY_EDITOR
         public static TAsset LoadAsset_UnityProject<TAsset>(WorkshopItemInfo workshopItemInfo)
             where TAsset : Object
         {
             TAsset targetAsset = null;
 
-#if UNITY_EDITOR
             //直接从文件夹中读取
             string relatedFilePath = SOWorkshopItemInfo.GetRelatedSOAssetPackFilePath(workshopItemInfo.title);//ToUpdate：应该是先获取SOWorkshopItemInfo。然后获取其itemName（因为itemName和title不一定一致）（可以是直接传入SOWorkshopItemInfo）
             targetAsset = AssetDatabase.LoadAssetAtPath<TAsset>(relatedFilePath);
-#else
-            Debug.LogError("Can't call this method at runtime!");
-#endif
             return targetAsset;
         }
 
         public static List<TAsset> LoadAssets_UnityProject<TAsset>(WorkshopItemInfo workshopItemInfo)
             where TAsset : Object
         {
-            List<TAsset> listAsset = AssetDatabaseTool.LoadAssets<TAsset>($"t:{typeof(TAsset).Name}", new string[] { SOWorkshopItemInfo.GetRelatedItemDirPath(workshopItemInfo.title) });
+            List<TAsset> listAsset = new List<TAsset>();
+            AssetDatabaseTool.LoadAssets<TAsset>($"t:{typeof(TAsset).Name}", new string[] { SOWorkshopItemInfo.GetRelatedItemDirPath(workshopItemInfo.title) });
             return listAsset;
         }
+#endif
 
         //——Id——
 
