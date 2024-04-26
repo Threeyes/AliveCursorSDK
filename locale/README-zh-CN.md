@@ -3,7 +3,7 @@
 <p align="center">
     <a href="https://store.steampowered.com/app/1606490/Alive_Cursor/"><img src="https://github.com/Threeyes/AliveCursorSDK/blob/main/Threeyes/SDK/Textures/ACSDK%20Icon.png?raw=true" alt="Logo" width="200px" height="200px" />
     <br />
-	<a href="https://download.unity3d.com/download_unity/40eb3a945986/UnityDownloadAssistant-2021.3.5f1.exe"><img src="https://img.shields.io/badge/%20Unity-2021.3.5f1%20-blue" /></a>
+	<a href="https://unity.com/releases/editor/qa/lts-releases?version=2022.3"><img src="https://img.shields.io/badge/%20Unity-2022.3.10f1%20-blue" /></a>
 	<a href="https://openupm.com/packages/com.threeyes.alivecursor.sdk/"><img src="https://img.shields.io/npm/v/com.threeyes.alivecursor.sdk?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
 	<a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
     <br />
@@ -11,8 +11,8 @@
 
 ## 语言
 <p float="left">
-  <a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/locale/README-zh-CN.md"><img src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/cn.png"/></a>
-    <a href="https://github.com/Threeyes/AliveCursorSDK"><img src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/us.png"/></a>
+  <a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/locale/README-zh-CN.md">中文</a> | 
+  <a href="https://github.com/Threeyes/AliveCursorSDK">English</a>
 </p>
 
 ## 简介

@@ -11,8 +11,8 @@
 
 ## Language
 <p float="left">
-  <a href="https://github.com/Threeyes/AliveCursorSDK/wiki/Home-zh-CN">中文</a> | 
-  <a href="https://github.com/Threeyes/AliveCursorSDK/wiki/Home">English</a>
+  <a href="https://github.com/Threeyes/AliveCursorSDK/blob/main/locale/README-zh-CN.md">中文</a> | 
+  <a href="https://github.com/Threeyes/AliveCursorSDK">English</a>
 </p>
 
 
