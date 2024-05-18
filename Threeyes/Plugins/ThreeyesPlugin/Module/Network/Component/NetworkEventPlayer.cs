@@ -1,13 +1,13 @@
-﻿namespace Threeyes.Network
+namespace Threeyes.Network
 {
     using UnityEngine;
     using Threeyes.EventPlayer;
-#if MIRROR
+#if MIRROR//自动检测宏定义并激活，不需要再手动激活
     using Mirror;
 #endif
 
     /// <summary>
-    /// Todo:弄成通用的Network，放在EventPlayer中
+    /// Todo:弄成通用的Network，放在EventPlayer中(后期通过Netcode宏定义来实现通用支持)
     /// 
     /// </summary>
 #if MIRROR

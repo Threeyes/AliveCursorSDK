@@ -23,6 +23,7 @@ namespace Threeyes.EventPlayer
     /// 
     /// Todo：多ID可以参考Enum，用| &等来表示如何匹配传入的ID，其中,与|功能相同
     /// </summary>
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_EventPlayer + "EventPlayer", -100)]
     public class EventPlayer : MonoBehaviour, IHierarchyViewInfo
     {
         #region Networking
@@ -192,6 +193,7 @@ namespace Threeyes.EventPlayer
 
         public virtual void Play(bool isPlay)
         {
+            //Let remove target decide which one to call
             if (IsCommandMode)
             {
                 actionCommandPlay.Execute(isPlay);
@@ -556,7 +558,7 @@ namespace Threeyes.EventPlayer
         public const string strMenuItem_Root_Collection = strMenuItem_Root + "Collection/";
         protected const string strMenuItem_RootCoroutine = strMenuItem_Root + "Coroutine/";
         protected const string strMenuItem_Root_Param = strMenuItem_Root + "Param/";
-        protected const string strMenuItem_Root_Extend = strMenuItem_Root + "Extend/";
+        public const string strMenuItem_Root_Extend = strMenuItem_Root + "Extend/";
 
         public const int intCollectionMenuOrder = 100;
         protected const int intCoroutineMenuOrder = 200;

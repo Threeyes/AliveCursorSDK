@@ -270,8 +270,11 @@ namespace Threeyes.IO
         public string errorInfo = null;
     }
 
+    /// <summary>
+    /// PS:比较通用的类，因此不定义为嵌套类
+    /// </summary>
     [Serializable]
-    public class ReadFileOption
+    public class ReadFileOption : IEquatable<ReadFileOption>
     {
         public static ReadFileOption Default { get { return new ReadFileOption(); } }
 
@@ -285,5 +288,17 @@ namespace Threeyes.IO
         {
             this.isAsync = isAsync;
         }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as ReadFileOption); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(ReadFileOption other)
+        {
+            if (other == null)
+                return false;
+
+            return isAsync.Equals(other.isAsync);
+        }
+        #endregion
     }
 }

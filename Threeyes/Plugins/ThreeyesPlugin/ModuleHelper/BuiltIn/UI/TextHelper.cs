@@ -47,10 +47,42 @@ namespace Threeyes.ModuleHelper
 
         #region Set
 
+        //——以下为明确参数的方法名，可避免uMod链接错误——
+        public void SetVector2(Vector2 value)
+        {
+            SetObjs(value.x, value.y);//将值进行拆分，以便使用format处理
+        }
+        public void SetVector3(Vector3 value)
+        {
+            SetObjs(value.x, value.y, value.z);//将值进行拆分，以便使用format处理
+        }
+        public void SetInt(int value)
+        {
+            SetObj(value);
+        }
+        public void SetFloat(float value)
+        {
+            SetObj(value);
+        }
+        public void SetBool(bool value)
+        {
+            SetObj(value);
+        }
+        public void SetString(string value)
+        {
+            SetObj(value);
+        }
+
+        //————
+
         //配合format使用，适用于显示页数、进度
         public void Set(Vector2 value)
         {
             SetObjs(value.x, value.y);//将值进行拆分，以便使用format处理
+        }
+        public void Set(Vector3 value)
+        {
+            SetObjs(value.x, value.y, value.z);//将值进行拆分，以便使用format处理
         }
         public void Set(int value)
         {

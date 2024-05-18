@@ -9,13 +9,19 @@ using NaughtyAttributes;
 namespace Threeyes.ModuleHelper
 {
     /// <summary>
-    /// 设置Renderer及其子类的信息，适用于各类RP
+    /// 设置Renderer及其子类的信息，适用于各RP
     /// 
     /// Todo:
     /// -使用EnumDefinition_Material中的枚举
     /// </summary>
     public class RendererHelper : ComponentHelperBase<Renderer>
+          , IMaterialProvider
     {
+        #region IMaterialProvider
+        public Material TargetMaterial { get { return GetMaterial(false); } }
+        public Material TargetSharedMaterial { get { return GetMaterial(true); } }
+        #endregion
+
         #region Property & Field
         public Material Material
         {
@@ -23,24 +29,38 @@ namespace Threeyes.ModuleHelper
             {
                 if (!_material)
                 {
-                    if (layer == 0)
-                    {
-#if UNITY_EDITOR
-                        if (!Application.isPlaying)
-                            _material = Comp.sharedMaterial;
-                        else
-#endif
-                            _material = Comp.material;
-                    }
-                    else
-                    {
-                        if (Comp.materials.Length > layer)
-                            _material = Comp.materials[layer];
-                    }
+                    _material = GetMaterial(false);
                 }
                 return _material;
             }
         }
+
+        private Material GetMaterial(bool useSharedMaterial = false)
+        {
+            Material mat = null;
+            if (layer == 0)
+            {
+                if (!Application.isPlaying || useSharedMaterial)//非运行模式或共享材质
+                    mat = Comp.sharedMaterial;
+                else
+                    mat = Comp.material;
+            }
+            else
+            {
+                if (!Application.isPlaying || useSharedMaterial)//非运行模式或共享材质
+                {
+                    if (Comp.sharedMaterials.Length > layer)
+                        mat = Comp.sharedMaterials[layer];
+                }
+                else
+                {
+                    if (Comp.materials.Length > layer)
+                        mat = Comp.materials[layer];
+                }
+            }
+            return mat;
+        }
+
         [SerializeField] Material _material;
         [SerializeField] int layer = 0;
         #endregion
@@ -55,7 +75,7 @@ namespace Threeyes.ModuleHelper
 #if UNITY_EDITOR
                 if (!Application.isPlaying)
                 {
-                    if (Comp.sharedMaterials.Length >= layer + 1)
+                    if (Comp.sharedMaterials.Length > layer)
                     {
                         //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
                         Material[] mats = Comp.sharedMaterials;
@@ -70,7 +90,7 @@ namespace Threeyes.ModuleHelper
                 else
 #endif
                 {
-                    if (Comp.materials.Length >= layer + 1)
+                    if (Comp.materials.Length > layer)
                     {
                         //返回的是一个数组引用，需要更改此数组 Note that like all arrays returned by Unity, this returns a copy of materials array. If you want to change some materials in it, get the value, change an entry and set materials back.
                         Material[] mats = Comp.materials;

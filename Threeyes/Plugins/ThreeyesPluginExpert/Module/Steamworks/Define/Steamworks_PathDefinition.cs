@@ -118,6 +118,8 @@ namespace Threeyes.Steamworks
         #region ——Export——
 
         internal static bool UseModUploaderAsUnityExported { get; set; }//使用ModUploader作为导出路径
+        internal static bool UseModUploaderPrivateAsUnityExported { get; set; }//使用ModUploaderPrivate作为导出路径
+
         /// <summary>
         /// AliveCursor_ModUploader对应的Item文件夹
         /// </summary>
@@ -129,6 +131,8 @@ namespace Threeyes.Steamworks
 #if UNITY_EDITOR
                 if (UseModUploaderAsUnityExported)
                     return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploader\Export\Items";
+               else if (UseModUploaderPrivateAsUnityExported)
+                    return PathTool.ProjectDirPath + @$"\..\{productName}_ModUploaderPrivate\Export\Items";
                 return ExportItemRootDirPath;//本项目路径
 #else
 			return PathTool.ProjectDirPath + @$"\..\..\..\{productName}_ModUploader\Export\Items";

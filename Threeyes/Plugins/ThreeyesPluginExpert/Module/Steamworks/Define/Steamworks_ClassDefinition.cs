@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Threeyes.Steamworks
 {
-
     #region SystemWindow
     public class WindowEventExtArgs : EventArgs
     {
@@ -45,7 +44,7 @@ namespace Threeyes.Steamworks
             All = ~0
         }
     }
+#endregion
 }
 
 
-#endregion

@@ -70,9 +70,18 @@ namespace Threeyes.Data
         [SerializeField] protected TValue value;
         [SerializeField] protected TValue defaultValue;
 
-        [JsonIgnore] public UnityAction<TValue> actionValueChanged;
-        [JsonIgnore] public UnityAction<TValue> actionValueReset;
-        [JsonIgnore] public UnityAction<TValue, BasicDataState> actionValueChangedEx;
+#if USE_JsonDotNet
+  [JsonIgnore]
+#endif
+        public UnityAction<TValue> actionValueChanged;
+#if USE_JsonDotNet
+  [JsonIgnore]
+#endif
+        public UnityAction<TValue> actionValueReset;
+#if USE_JsonDotNet
+  [JsonIgnore]
+#endif
+        public UnityAction<TValue, BasicDataState> actionValueChangedEx;
 
         public BasicData()//用于反射调用
         {
@@ -139,7 +148,7 @@ namespace Threeyes.Data
         public override bool Equals(object other)
         {
             //Check for null and compare run-time types.
-            if ((other == null) || !GetType().Equals(other.GetType()))
+            if ((other == null) || !Equals(GetType(), other.GetType()))
             {
                 return false;
             }
@@ -156,7 +165,7 @@ namespace Threeyes.Data
         /// <returns></returns>
         protected virtual bool EqualsFunc(TValue otherValue)
         {
-            return value.Equals(otherValue);
+            return Equals(value, otherValue);//可以避免value为空导致报错的情况
         }
         #endregion
     }

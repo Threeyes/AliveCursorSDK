@@ -30,7 +30,7 @@ namespace Threeyes.Decoder
         }
 
         [System.Serializable]
-        public class DecodeOption : IDecodeOption
+        public class DecodeOption : IDecodeOption, IEquatable<DecodeOption>
         {
             public static DecodeOption Default { get { return new DecodeOption(Encoding.UTF8); } }
 
@@ -44,6 +44,17 @@ namespace Threeyes.Decoder
             {
                 this.encoding = encoding;
             }
+
+            #region IEquatable
+            public override bool Equals(object obj) { return Equals(obj as DecodeOption); }
+            public override int GetHashCode() { return base.GetHashCode(); }
+            public bool Equals(DecodeOption other)
+            {
+                if (other == null)
+                    return false;
+                return Equals(encoding, other.encoding);
+            }
+            #endregion
         }
 
         public class DecodeResult : DecodeResult<TextAsset> { }

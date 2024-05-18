@@ -87,9 +87,10 @@ namespace Threeyes.RuntimeSerialization
 
                     if (retryCount == maxRetryCount)
                         Debug.LogError($"【Instance】Try to generate new GUID for [{gameObject}] failed! Reach max retry count {maxRetryCount}!");
-                    else
-                        Debug.LogWarning($"【Temp】Update instance {gameObject.scene.name}_{gameObject.scene.rootCount}_{gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
-
+                    //else
+                    //{
+                        //Debug.LogWarning($"【Temp】Update instance {gameObject.scene.name}_{gameObject.scene.rootCount}_{gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
+                    //}
                     EditorUtility.SetDirty(this);// mark as dirty, so the change will be save into scene file
                 }
             }
@@ -130,9 +131,10 @@ namespace Threeyes.RuntimeSerialization
 
                         if (retryCount == maxRetryCount)
                             Debug.LogError($"【Prefab】Try to generate new GUID for [{gameObject}] failed! Reach max retry count {maxRetryCount}!");
-                        else
-                            Debug.LogWarning($"【Temp】Update prefab {gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
-
+                        //else
+                        //{
+                        //    Debug.LogWarning($"【Temp】Update prefab {gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
+                        //}
                         PrefabUtility.RecordPrefabInstancePropertyModifications(this);//通知预制物进行保存
                     }
                 }

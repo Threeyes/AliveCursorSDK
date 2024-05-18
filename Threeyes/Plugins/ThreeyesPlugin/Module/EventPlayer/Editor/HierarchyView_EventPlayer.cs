@@ -55,22 +55,16 @@ namespace Threeyes.EventPlayer.Editor
             //#The whole Rect
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 0, () => Event.current.control))//Ctrl+Left Click: SetAndActive
             {
-                Undo.RecordObject(comp, "EventPlayer Hierarchy Update");
-                TryPlayTargetEP(comp, true);
-                EditorUtility.SetDirty(comp);
+                RecordAndExecute(comp, (c) => TryPlayTargetEP(c, true));
             }
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 0, () => Event.current.alt))//Alt+Left Clitk: Switch IsActive Property
             {
-                //InvokeSelection(e => e.IsActive = !e.IsActive);
-                Undo.RecordObject(comp, "EventPlayer Hierarchy Update");
-                comp.IsActive = !comp.IsActive;
-                EditorUtility.SetDirty(comp);
+                RecordAndExecute(comp, (c) => c.IsActive = !c.IsActive);
             }
             //Middle Click: Toggle Play
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, selectionRect, 2, () => Event.current.alt))
             {
-                //Undo.RecordObject(ep, "EventPlayer Hierarchy Update");
-                comp.TogglePlay();
+                RecordAndExecute(comp, (c) => c.TogglePlay());
             }
 
             //#Display Active State
@@ -88,15 +82,15 @@ namespace Threeyes.EventPlayer.Editor
             Rect eleRectTog = remainRect.GetAvaliableRect(EditorDrawerTool.toggleSize);
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, eleRectTog, 0))
             {
-                TryPlayTargetEP(comp);
+                RecordAndExecute(comp, (c) => TryPlayTargetEP(c));
             }
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, eleRectTog, 1))
             {
-                comp.Stop();
+                RecordAndExecute(comp, (c) => c.Stop());
             }
             if (EditorDrawerTool.CheckSelect(ref isMouseDown, eleRectTog, 2))
             {
-                comp.TogglePlay();
+                RecordAndExecute(comp, (c) => c.TogglePlay());
             }
             GUI.Toggle(eleRectTog, comp.IsPlayed, new GUIContent(""), gUIStyleSwtichToggle);//Toggle只用于显示状态，其中的Tick 代表是否已经Play
 
@@ -108,29 +102,41 @@ namespace Threeyes.EventPlayer.Editor
             return remainRect;
         }
 
-
         static void TryPlayTargetEP(EventPlayer comp, bool? active = null)
         {
             //#1 如果是SEQ：直接跳到该EP序号并Play
             bool hasSetViaSequence = false;
             ISequence_EventPlayer eventPlayerSequence = comp.GetComponentInParent<ISequence_EventPlayer>();
+
             if (eventPlayerSequence != null)
             {
+                Object epsObj = eventPlayerSequence as Component;
+
                 int index = eventPlayerSequence.FindIndexForDataEditor(comp);
                 if (index != -1)
                 {
+                    Undo.RegisterFullObjectHierarchyUndo(epsObj, "EPS Hierarchy Update");
                     if (active.HasValue && active.Value)//先激活
                     {
                         eventPlayerSequence.Active(index);
                     }
                     eventPlayerSequence.Set(index);
                     hasSetViaSequence = true;
+
                 }
             }
 
             //#2 如果上述失败，则直接Play该EP
             if (!hasSetViaSequence)
-                comp.Play();
+                RecordAndExecute(comp, (c) => c.Play());
+        }
+
+        static void RecordAndExecute<TComp>(TComp comp, System.Action<TComp> act, string recordName = "EventPlayer Hierarchy Update")
+         where TComp : Component
+        {
+            Undo.RecordObject(comp, recordName);
+            act.Invoke(comp);
+            EditorUtility.SetDirty(comp);
         }
         #endregion
 

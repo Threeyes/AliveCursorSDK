@@ -33,10 +33,13 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Callback
-        public virtual void OnModInit(Scene scene, ModEntry modEntry)
+        public virtual void OnModPreInit(Scene scene, ModEntry modEntry)
         {
             modController = scene.GetComponents<TControllerInterface>().FirstOrDefault();
             defaultController.gameObject.SetActive(modController == null);//两者互斥
+        }
+        public virtual void OnModInit(Scene scene, ModEntry modEntry)
+        {
             if (modController != null)//Mod有自定义EnvironmentController：更新Environment
             {
                 //监听ModController是否OverrideDefaultController的设置

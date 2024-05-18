@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using Threeyes.Core;
 using UnityEngine;
 
@@ -49,7 +50,17 @@ namespace Threeyes.Core.Editor
             }
             return relativepath;
         }
-
+        /// <summary>
+        /// 获取父文件夹的相对路径
+        /// </summary>
+        /// <param name="unityRelatePath"></param>
+        /// <returns></returns>
+        public static string GetUnityRelateParentPath(string unityRelatePath)
+        {
+            string absPath = UnityRelateToAbsPath(unityRelatePath);
+            string absParentPath = Directory.GetParent(absPath).FullName;//PS：Directory.GetParent会强制返回绝对路径，所以需要进行转换
+            return AbsToUnityRelatePath(absParentPath);
+        }
     }
 }
 #endif

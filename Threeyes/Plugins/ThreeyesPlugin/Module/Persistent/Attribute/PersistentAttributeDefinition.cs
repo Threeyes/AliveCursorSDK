@@ -86,6 +86,12 @@ namespace Threeyes.Persistent
         /// 1.T OnAssetLoaded(ExternalResources.LoadResult<T> loadResult, PersistentChangeState persistentChangeState,,)) 
         /// 
         /// Usage:Generate [DataOption_File]
+        /// 
+        /// PS:
+        /// -defaultAssetField主要用于保存重置时的默认贴图
+        /// -建议使用额外的属性，来访问及返回需要的非空字段
+        /// -assetField和defaultAssetField需要标记为[JsonIgnore]
+        /// -如果不想用户在Editor中编辑assetField字段，可以标记为[HideInInspector]。如果希望调试，可以不加该Attribute
         /// </summary>
         /// <param name="assetFieldName">The name of the binding asset field</param>
         /// <param name="isAutoLoad">Auto load the asset</param>

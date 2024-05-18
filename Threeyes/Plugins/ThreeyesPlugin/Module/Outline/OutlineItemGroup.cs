@@ -40,7 +40,7 @@ namespace Threeyes.Outline
         {
             foreach (var e in listElement)
             {
-                e.Destroy();
+                e.ManualDestroy();
             }
             Clear();
         }

@@ -1,9 +1,8 @@
 using System.IO;
-using System.Linq;
 using Threeyes.Core;
-using Threeyes.RuntimeSerialization;
 using UnityEngine;
 using System.Collections.Generic;
+using Threeyes.Core.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -28,15 +27,19 @@ namespace Threeyes.Steamworks
 
         //——Asset——
 
-#if UNITY_EDITOR
         public static TAsset LoadAsset_UnityProject<TAsset>(WorkshopItemInfo workshopItemInfo)
             where TAsset : Object
         {
             TAsset targetAsset = null;
 
+#if UNITY_EDITOR
             //直接从文件夹中读取
             string relatedFilePath = SOWorkshopItemInfo.GetRelatedSOAssetPackFilePath(workshopItemInfo.title);//ToUpdate：应该是先获取SOWorkshopItemInfo。然后获取其itemName（因为itemName和title不一定一致）（可以是直接传入SOWorkshopItemInfo）
             targetAsset = AssetDatabase.LoadAssetAtPath<TAsset>(relatedFilePath);
+#else
+            Debug.LogError($"Can't call {nameof(LoadAsset_UnityProject)} at runtime!");
+#endif
+
             return targetAsset;
         }
 
@@ -44,10 +47,15 @@ namespace Threeyes.Steamworks
             where TAsset : Object
         {
             List<TAsset> listAsset = new List<TAsset>();
-            AssetDatabaseTool.LoadAssets<TAsset>($"t:{typeof(TAsset).Name}", new string[] { SOWorkshopItemInfo.GetRelatedItemDirPath(workshopItemInfo.title) });
+
+#if UNITY_EDITOR
+            listAsset = AssetDatabaseTool.LoadAssets<TAsset>($"t:{typeof(TAsset).Name}", new string[] { SOWorkshopItemInfo.GetRelatedItemDirPath(workshopItemInfo.title) });
+#else
+            Debug.LogError($"Can't call {nameof(LoadAsset_UnityProject)} at runtime!");
+#endif
+
             return listAsset;
         }
-#endif
 
         //——Id——
 

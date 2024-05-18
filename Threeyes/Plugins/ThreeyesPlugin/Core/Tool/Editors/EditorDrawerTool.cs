@@ -35,7 +35,7 @@ namespace Threeyes.Core.Editor
 
 
         //——Label Style——
-        static Color labelHLColor
+        public static Color labelHLColor
         {
             get
             {

@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using Threeyes.Core;
 using Threeyes.Core.Editor;
 using UnityEditor;
@@ -7,6 +7,10 @@ using UnityEngine.Events;
 
 namespace Threeyes.EventPlayer.Editor
 {
+    /// <summary>
+    /// ToUpdate：
+    /// -增加跳转链接（可以是文本跳转）
+    /// </summary>
     public class EventPlayerSettingWindow : EditorWindow
     {
         const string windowTitle = "EventPlayer Setting";
@@ -49,6 +53,7 @@ namespace Threeyes.EventPlayer.Editor
             EditorDrawerTool.DrawGroupTitleText("Extern Support");
             EditorDrawerTool.DrawSpace();
 
+            //————Third-Party————
             //#TimeLine
             if (DrawToggle(new GUIContent("TimeLine", "Import Timeline before you active this!"), () => inst.useTimeline, (b) => inst.useTimeline = b, ref isSettingChange))
                 DrawSubLines("[Unity.Timeline]", "[Unity.Timeline.Editor]");
@@ -69,6 +74,7 @@ namespace Threeyes.EventPlayer.Editor
                 GUILayout.EndHorizontal();
             }
 
+            //————BuiltIn————
             //#VideoPlayer
             EditorDrawerTool.DrawSpace();
             DrawToggle(new GUIContent("VideoPlayer"), () => inst.useVideoPlayer, (b) => inst.useVideoPlayer = b, ref isSettingChange);

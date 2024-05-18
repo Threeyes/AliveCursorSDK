@@ -48,6 +48,11 @@ namespace Threeyes.Steamworks
         #region Unity Method
         protected virtual void Awake()
         {
+            ///ToFix: 
+            ///-如果物体没有激活，那么可能就不会调用该Awake方法， 导致MaterialController.UpdateSetting方法访问cacheDefaultConfig等字段报错)
+            ///     PS：
+            ///     -UMod包加载可能无此问题，因此物体生成后默认都是显示的
+            ///     -可以通过hasSaveDefaultConfig字段判断是否已经初始化
             TrySaveDefaultConfig();//保存模型通过Prefab初始化的数据
             Config.actionPersistentChanged += OnPersistentChanged;
         }
@@ -63,7 +68,7 @@ namespace Threeyes.Steamworks
             UpdateSetting();
         }
         public virtual void OnModDeinit() { }
-        void OnPersistentChanged(PersistentChangeState persistentChangeState)
+        protected virtual void OnPersistentChanged(PersistentChangeState persistentChangeState)
         {
             ///PS:
             ///-因为用户每次更改配置都会调用该设置，如果是繁重且不需要重复调用的操作（如生成Mesh），则需要将此类操作单独处理（参考AudioVisualizer_IcoSphere）
@@ -143,7 +148,8 @@ namespace Threeyes.Steamworks
         [Header("RuntimeEditable")]
         [SerializeField] string runtimeEditableDisplayName;//方便用户自定义
 
-        [SerializeField] protected TConfig cacheDefaultConfig = null;//缓存组件序列化之前的DefaultConfig，方便还原
+        /* [SerializeField] */
+        protected TConfig cacheDefaultConfig = null;//缓存组件序列化之前的DefaultConfig，方便还原 (Warning：不应该标记为[SerializeField]，否则UMod还原会导致其在Awake的值被刷掉)
 
         public virtual void InitRuntimeEditable(FilePathModifier filePathModifier)
         {
@@ -185,7 +191,7 @@ namespace Threeyes.Steamworks
             defaultConfig.actionPersistentChanged += OnPersistentChanged;
         }
 
-        bool hasSaveDefaultConfig = false;
+        protected bool hasSaveDefaultConfig = false;
         /// <summary>
         /// 尝试保存DefaultConfig，便于UIRuntimeEdit重置
         /// 调用位置：
@@ -198,7 +204,7 @@ namespace Threeyes.Steamworks
                 return;
 
             ///Todo:
-            ///-备份defaultConfig，便于重置
+            ///-备份defaultConfig，便于重置和比较
             cacheDefaultConfig = UnityObjectTool.DeepCopy(defaultConfig);
 
             hasSaveDefaultConfig = true;

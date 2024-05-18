@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.3.4]
+- Optimize the code structure of ThreeyesPlugin (some items need to be repackaged).
+
 ## [4.3.3]
 - Fix build error.
 

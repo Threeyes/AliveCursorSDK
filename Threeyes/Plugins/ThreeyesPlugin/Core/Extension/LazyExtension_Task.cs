@@ -36,6 +36,15 @@ namespace Threeyes.Core
             return new CancellationTokenSource();
         }
 
+        public static Task<T> WithCancellation<T>(this Task<T> task, CancellationTokenSource source)
+        {
+            return task.IsCompleted ? task : task.ContinueWith(t => t.GetAwaiter().GetResult(), source.Token);
+        }
+
+        public static Task WithCancellation(this Task task, CancellationTokenSource source)
+        {
+            return task.ContinueWith(t => t.GetAwaiter().GetResult(), source.Token);
+        }
         /// <summary>
         /// 
         /// Ref:https://stackoverflow.com/questions/25632803/how-to-transform-task-waitcancellationtoken-to-an-await-statement
@@ -46,12 +55,12 @@ namespace Threeyes.Core
         /// <returns></returns>
         public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
         {
-            return task.ContinueWith(t => t.GetAwaiter().GetResult(), cancellationToken);
+            return task.IsCompleted ? task : task.ContinueWith(t => t.GetAwaiter().GetResult(), cancellationToken);
         }
 
         public static Task WithCancellation(this Task task, CancellationToken cancellationToken)
         {
-            return task.ContinueWith(t => t.GetAwaiter(), cancellationToken);
+            return task.ContinueWith(t => t.GetAwaiter().GetResult(), cancellationToken);
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Threeyes.Action;
 using Threeyes.Core;
-using Threeyes.Coroutine;
 using Threeyes.Steamworks;
 using UnityEngine;
 using UnityEngine.Events;

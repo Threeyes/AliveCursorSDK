@@ -17,14 +17,14 @@ namespace Threeyes.Core.Editor
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
+            serializedObject.Update();//The Update method actually reads and copies the data into an internal structure (SerializedProperty). That means once “updated” a SerializedObject and it’s SerializedProperties represents a copy of the serialized data in memory. 
             EditorGUI.BeginChangeCheck();
 
             OnInspectorGUIFunc();
 
             if (EditorGUI.EndChangeCheck())
             {
-                serializedObject.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();//Write the copied data back to disk.
                 EditorApplication.RepaintHierarchyWindow();
             }
         }

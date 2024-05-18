@@ -8,8 +8,10 @@ using Threeyes.Core;
 
 namespace Threeyes.EventPlayer
 {
-    //ToUpdate:应该是管理所有Core的Module的宏定义
-    [CreateAssetMenu(menuName = "SO/Manager/EventPlayerSettingManager")]
+    /// <summary>
+    /// ToDelete:统一改为CCU，能够自动检测并添加对应宏定义
+    /// </summary>
+    //[CreateAssetMenu(menuName = "Threeyes/Manager/EventPlayerSettingManager")]
     public class SOEventPlayerSettingManager : SOInstanceBase<SOEventPlayerSettingManager>
     {
         #region Property & Field
@@ -35,7 +37,7 @@ namespace Threeyes.EventPlayer
         static string pathInResources = "Threeyes";//该Manager在Resources下的路径，默认是Resources根目录
 
 
-        public string version = "0"; //Last cache version
+        public string version = "0.0.0"; //Last cache version
 
         //Display Setting
         public bool showPropertyInHierarchy = true;//Show info of subclass
@@ -43,9 +45,9 @@ namespace Threeyes.EventPlayer
         //Other Plugin Support Setting
         //[Header("Other Plugin Support")]
         public bool useTimeline = false;
-        public bool useVideoPlayer = false;
         public bool useBezierSolution = false;
         public bool useDoTweenPro = false;
+        public bool useVideoPlayer = false;
         public bool activeDoTweenProPreview = false;
 
         //RelatePath
@@ -75,19 +77,20 @@ namespace Threeyes.EventPlayer
                 if (_listDefineSymbolInfo == null)
                 {
                     _listDefineSymbolInfo = new List<DefineSymbolInfo>()
-                {
+                    {
+                    //Third-Party
                     new DefineSymbolInfo(new DefineSymbol("Threeyes_Timeline", "Timeline Event", "支持Timeline", baseExtendDir+"|"+ epExtendDir),()=>useTimeline,(v)=>useTimeline=v),
-                    new DefineSymbolInfo(new DefineSymbol("Threeyes_VideoPlayer", "VideoPlayer Event", "支持VideoPlayer", epExtendDir+"/"+"Video"),()=>useVideoPlayer,(v)=>useVideoPlayer=v),
                     new DefineSymbolInfo(new DefineSymbol("Threeyes_BezierSolution", "BezierSolution Support", "支持BezierSolution", epExtendDir+"/"+"BezierSolution"),()=>useBezierSolution,(v)=>useBezierSolution=v),
                     new DefineSymbolInfo(new DefineSymbol("Threeyes_DoTweenPro", "DoTweenPro Support", "支持DoTweenPro", epExtendDir+"/"+"DoTweenPro"),()=>useDoTweenPro,(v)=>useDoTweenPro=v),
-                };
+
+                    //BuiltIn
+                    new DefineSymbolInfo(new DefineSymbol("Threeyes_VideoPlayer", "VideoPlayer Event", "支持VideoPlayer", epExtendDir+"/"+"Video"),()=>useVideoPlayer,(v)=>useVideoPlayer=v),
+                    };
                 }
                 return _listDefineSymbolInfo;
             }
         }
         List<DefineSymbolInfo> _listDefineSymbolInfo = null;
-
-
         #endregion
 
         //根据PlayerSettings中的Define，初始化SO（便于项目迁移后的初始化）
@@ -142,12 +145,12 @@ namespace Threeyes.EventPlayer
         }
     }
 
-    //[InitializeOnLoad]
+    //[InitializeOnLoad]//Warning：Asset operations such as asset loading should be avoided in InitializeOnLoad methods. InitializeOnLoad methods are called before asset importing is completed and therefore the asset loading can fail resulting in a null object. To do initialization after a domain reload which requires asset operations use the AssetPostprocessor.OnPostprocessAllAssets callback. This callback supports all asset operations and has a parameter signaling if there was a domain reload.（https://docs.unity3d.com/ScriptReference/
     public static class EventPlayerVersionManager
     {
-        public static readonly string EventPlayer_Version = "3.0"; //Plugin Version
+        public static readonly string EventPlayer_Version = "4.0.1"; //Plugin Version
         /////Bug:
-        /////-在初始化时调用容易导致报错，改为在Instance实例创建时调用
+        /////-在初始化时调用容易导致报错，改为在Instance实例创建时调用（因为[InitializeOnLoad]调用时，资源还未加载完成）
         //static EventPlayerVersionManager()
         //{
         //    if (SOEventPlayerSettingManager.Instance)

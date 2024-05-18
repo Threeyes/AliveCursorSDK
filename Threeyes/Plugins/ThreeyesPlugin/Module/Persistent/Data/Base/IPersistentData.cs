@@ -106,7 +106,7 @@ namespace Threeyes.Persistent
     {
         Load,//Init
         Set,//Update
-        Delete,//Delete
+        Delete,//Delete或Reset
     }
 
     public class FilePathModifier_PD : FilePathModifier

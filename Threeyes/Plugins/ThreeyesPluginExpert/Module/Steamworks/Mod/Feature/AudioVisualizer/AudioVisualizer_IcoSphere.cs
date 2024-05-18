@@ -75,11 +75,13 @@ namespace Threeyes.Steamworks
         }
         protected virtual void OnEnable()
         {
-            ManagerHolder.SystemAudioManager.Register(this);
+            if (ManagerHolder.SystemAudioManager != null)//避免在建模场景测试时报错
+                ManagerHolder.SystemAudioManager.Register(this);
         }
         protected virtual void OnDisable()
         {
-            ManagerHolder.SystemAudioManager.UnRegister(this);
+            if (ManagerHolder.SystemAudioManager != null)//避免在建模场景测试时报错
+                ManagerHolder.SystemAudioManager.UnRegister(this);
         }
 
         void Update()
@@ -207,21 +209,23 @@ namespace Threeyes.Steamworks
         #region Init&Update
 
         #region Editor
-
+#if UNITY_EDITOR
         [ContextMenu("EditorGenerateWaveform")]
         void EditorGenerateWaveform()//非运行模式，基于当前配置生成Waveform
         {
             int rawSampleCount = 256;//提供模拟的RawSampleCount
             ReGenerateWaveform(rawSampleCount);
             UpdateWaveformSetting();
+            UnityEditor.EditorUtility.SetDirty(this);
         }
-        [ContextMenu("EditorGenerateSphere")]
-        void EditorGenerateSphere()
-        {
-            ///Todo:
-            ///-仅生成多边形，不缓存到非序列化字段中。不急，可以先用模型代替
-            //ReGenerateSphere();
-        }
+        //[ContextMenu("EditorGenerateSphere")]
+        //void EditorGenerateSphere()
+        //{
+        //    ///Todo:
+        //    ///-仅生成多边形，不缓存到非序列化字段中。不急，可以先用模型代替
+        //    //ReGenerateSphere();
+        //}
+#endif
         #endregion
 
         void ReGenerateSphere()
@@ -327,7 +331,7 @@ namespace Threeyes.Steamworks
             }
         }
 
-        [ContextMenu("UpdateWaveformSetting")]
+        //[ContextMenu("UpdateWaveformSetting")]
         void UpdateWaveformSetting()
         {
             waveform.colorGradient = Config.waveformGradient;

@@ -644,15 +644,24 @@ namespace Threeyes.Core
         //    return start * Quaternion.Euler(angle);
         //}
         /// <summary>
-        /// 围绕该start旋转值的指定轴，旋转某个角度
+        /// 围绕该start旋转值的指定轴，旋转某个角度（局部坐标）
         /// </summary>
         /// <param name="start"></param>
-        /// <param name="axis">旋转的轴向，会自动映射到自身坐标系，如Vector3.right</param>
+        /// <param name="axis">【Space.Self模式】旋转的轴向，会自动映射到自身坐标系，如Vector3.right</param>
         /// <param name="angle">旋转值</param>
         /// <returns></returns>
-        public static Quaternion RotateAround(this Quaternion start, Vector3 axis, float angle)
+        public static Quaternion RotateAround(this Quaternion start, Vector3 axis, float angle, Space relativeTo = Space.Self)
         {
-            return start * Quaternion.AngleAxis(angle, axis);
+            //世界坐标与局部坐标旋转值的区别：https://forum.unity.com/threads/understanding-rotations-in-local-and-world-space-quaternions.153330/#post-1051063
+
+            //Rotate around a local axis: rotation = rotation * Quaternion.AngleAxis(10, Vector3.Up);
+            //Rotate around a world axis: rotation = Quaternion.AngleAxis(10, Vector3.Up) * rotation;
+            //So, as you can see above, putting the desired rotation last rotates around a local axis, putting it first rotates around a world axis. There is just one really simple rule you need to memorize: Order matters.
+
+            if (relativeTo == Space.Self)
+                return start * Quaternion.AngleAxis(angle, axis);
+            else
+                return Quaternion.AngleAxis(angle, axis) * start;
 
             //if (angle >= 180)
             //    Debug.LogError("旋转角度大于180！");
@@ -661,6 +670,31 @@ namespace Threeyes.Core
             //return start * Quaternion.Euler(rotateValue);
         }
 
+        /// <summary>
+        /// 将局部旋转转变为全局旋转
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="tfParent"></param>
+        /// <returns></returns>
+        public static Quaternion ToWorld(this Quaternion source, Transform target)
+        {
+            if (target.parent)
+                return target.parent.rotation * source;//在父物体的旋转基础上，乘以该物体的旋转值，就能得到世界旋转值
+            return source;
+        }
+        /// <summary>
+        /// 将全局旋转变为局部旋转
+        /// 
+        /// Ref: https://forum.unity.com/threads/convert-world-space-rotation-to-local-space-rotation.332025/#post-2150730
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static Quaternion ToLocal(this Quaternion source, Transform target)
+        {
+            if (target.parent == null)
+                return source;
+            return Quaternion.Inverse(target.parent.rotation) * source;//如果有父物体，则基于父物体进行计算
+        }
         #endregion
 
         #region UnityEvent
@@ -688,6 +722,32 @@ namespace Threeyes.Core
             if (unityEvent != null)
                 unityEvent.Invoke(value1);
         }
+        public static void TryExecute(this UnityEvent unityEvent)
+        {
+            try
+            {
+                if (unityEvent != null)
+                    unityEvent.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
+        public static void TryExecute<T1>(this UnityEvent<T1> unityEvent, T1 value1)
+        {
+            try
+            {
+                if (unityEvent != null)
+                    unityEvent.Invoke(value1);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
         #endregion
 
         #region UnityAction
@@ -820,6 +880,61 @@ namespace Threeyes.Core
             if (action != null)
                 action(value1, value2, value3, value4, value5);
         }
+        public static void TryExecute(this Action action)
+        {
+            try
+            {
+                action.Execute();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        public static void TryExecute<T1>(this Action<T1> action, T1 value1)
+        {
+            try
+            {
+                action.Execute(value1);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        public static void TryExecute<T1, T2>(this Action<T1, T2> action, T1 value1, T2 value2)
+        {
+            try
+            {
+                action.Execute(value1, value2);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        public static void TryExecute<T1, T2, T3>(this Action<T1, T2, T3> action, T1 value1, T2 value2, T3 value3)
+        {
+            try
+            {
+                action.Execute(value1, value2, value3);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        public static void TryExecute<T1, T2, T3, T4>(this Action<T1, T2, T3, T4> action, T1 value1, T2 value2, T3 value3, T4 value4)
+        {
+            try
+            {
+                action.Execute(value1, value2, value3, value4);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
         #endregion
 
         #region Component
@@ -888,9 +1003,9 @@ namespace Threeyes.Core
         /// <summary>
         /// 递归遍历
         /// </summary>
-        public static void Recursive<T>(this T em, Func<T, IEnumerable> getEnum, UnityAction<T> action, bool includeSelf = false)
+        public static void Recursive<T>(this T em, Func<T, IEnumerable> getEnum, UnityAction<T> action, bool includeSelf = true, int? maxDepth = null)
         {
-            AlgorithmTool.Recursive(em, getEnum, action, includeSelf);
+            AlgorithmTool.Recursive(em, getEnum, action, includeSelf, maxDepth);
         }
         /// <summary>
         /// 递归遍历
@@ -901,7 +1016,7 @@ namespace Threeyes.Core
         /// <param name="includeSelf"></param>
         public static void Recursive<T>(this T em, UnityAction<T> action, Func<T, IEnumerable> getEnum, bool includeSelf, int maxDepth)
         {
-            em.Recursive(getEnum, action, includeSelf, maxDepth);
+            AlgorithmTool.Recursive(em, getEnum, action, includeSelf, maxDepth);
         }
 
         #endregion
@@ -1022,15 +1137,18 @@ namespace Threeyes.Core
             Rigidbody rigidbody = tf.GetComponent<Rigidbody>();
             bool cacheIsKinematic = false;
             RigidbodyInterpolation cacheRigidbodyInterpolation = RigidbodyInterpolation.None;
-            bool shouldChangRigdibody = false;
-            if (rigidbody && rigidbody.interpolation != RigidbodyInterpolation.None)
+            bool shouldChangeRigdibody = false;
+            if (rigidbody)
             {
-                shouldChangRigdibody = true;
-                cacheIsKinematic = rigidbody.isKinematic;
-                cacheRigidbodyInterpolation = rigidbody.interpolation;
-                rigidbody.interpolation = RigidbodyInterpolation.None;
-                rigidbody.isKinematic = true;
-                rigidbody.gameObject.SetActive(false);//最重要的起作用代码（可能会导致物体的OnEnable/Disable被多次调用）
+                if (rigidbody.interpolation != RigidbodyInterpolation.None)
+                {
+                    shouldChangeRigdibody = true;
+                    cacheIsKinematic = rigidbody.isKinematic;
+                    cacheRigidbodyInterpolation = rigidbody.interpolation;
+                    rigidbody.interpolation = RigidbodyInterpolation.None;
+                    rigidbody.isKinematic = true;
+                    rigidbody.gameObject.SetActive(false);//最重要的起作用代码（可能会导致物体的OnEnable/Disable被多次调用）
+                }
             }
 
             //#2 Set
@@ -1052,11 +1170,18 @@ namespace Threeyes.Core
                 tf.localScale = scale.Value;//PS:缩放暂无全局可设置字段
 
             //#3 Restore
-            if (rigidbody && shouldChangRigdibody)
+            if (rigidbody && shouldChangeRigdibody)
             {
-                rigidbody.isKinematic = cacheIsKinematic;
-                rigidbody.interpolation = cacheRigidbodyInterpolation;
-                rigidbody.gameObject.SetActive(true);
+                if (shouldChangeRigdibody)
+                {
+                    rigidbody.isKinematic = cacheIsKinematic;
+                    rigidbody.interpolation = cacheRigidbodyInterpolation;
+                    rigidbody.gameObject.SetActive(true);
+                }
+
+                //【ToTest】重置矢量，避免因为缩放等导致其有初始速度
+                rigidbody.velocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
             }
         }
 
@@ -1564,7 +1689,7 @@ namespace Threeyes.Core
                (tf) =>
                {
                    if (tReturn == null)
-                       tf.TryGetComponent(out tReturn);//Warning:不要直接使用GetComponent，因为如果TReturn为Component，其返回的是对应类型的空值而不是null而导致意外赋值给tReturn，这样会导致后续的(tReturn == null)无法进入！
+                       tf.TryGetComponent(out tReturn);//Warning:不要直接使用GetComponent，因为如果TReturn为Component，其内部会通过CastHelper<T>返回对应类型实例的Default值而不是null而导致意外赋值给tReturn，这样会导致后续的(tReturn == null)无法进入！
                },
                includeSelf
                );

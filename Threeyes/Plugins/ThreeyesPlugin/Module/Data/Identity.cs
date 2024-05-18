@@ -1,9 +1,8 @@
 using System;
+using Threeyes.Core;
 using UnityEngine;
 #if USE_JsonDotNet
 using Newtonsoft.Json;
-using UnityEditor;
-using Threeyes.Core;
 #endif
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
@@ -31,14 +30,19 @@ namespace Threeyes.Data
     {
         public static Identity Empty { get { return new Identity(""); } }
         public bool IsValid { get { return m_Guid.NotNullOrEmpty(); } }
-        [JsonIgnore] public string Guid { get => m_Guid; set => m_Guid = value; }
+#if USE_JsonDotNet
+  [JsonIgnore]
+#endif
+        public string Guid { get => m_Guid; set => m_Guid = value; }
 #if USE_NaughtyAttributes
         [AllowNesting]
         [ReadOnly]
 #endif
         [SerializeField] string m_Guid;
 
-        [JsonConstructor]//指明使用该Constructor来反序列化时创建类实例（https://www.newtonsoft.com/json/help/html/JsonConstructorAttribute.htm）
+#if USE_JsonDotNet
+  [JsonConstructor]//指明使用该Constructor来反序列化时创建类实例（https://www.newtonsoft.com/json/help/html/JsonConstructorAttribute.htm）
+#endif
         public Identity(string guid)
         {
             m_Guid = guid;
@@ -59,10 +63,6 @@ namespace Threeyes.Data
         }
 
         #region IEquatable (Ref: ReplayIdentity)
-        public override int GetHashCode()
-        {
-            return m_Guid.GetHashCode();
-        }
         public override bool Equals(object obj)
         {
             if (obj is Identity other)
@@ -70,6 +70,10 @@ namespace Threeyes.Data
                 return Equals(other);
             }
             return false;
+        }
+        public override int GetHashCode()
+        {
+            return m_Guid.GetHashCode();
         }
         public bool Equals(Identity other)
         {

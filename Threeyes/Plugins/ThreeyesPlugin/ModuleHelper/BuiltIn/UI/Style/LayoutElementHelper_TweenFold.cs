@@ -50,7 +50,7 @@ namespace Threeyes.ModuleHelper
                 layoutElement.gameObject.SetActive(true);
             tween = DOTween.To(
                 () => layoutElement.preferredWidth,
-                (f) => layoutElement.preferredWidth = f, isExpand ? tweenEndValue : 0, tweenDuration).SetEase(isExpand ? easeExpand : easeFold);
+                (f) => layoutElement.preferredWidth = f, isExpand ? tweenEndValue : 0, tweenDuration).SetEase(isExpand ? easeExpand : easeFold).SetUpdate(true);
             tween.onComplete += () =>
               {
                   if (!isExpand)

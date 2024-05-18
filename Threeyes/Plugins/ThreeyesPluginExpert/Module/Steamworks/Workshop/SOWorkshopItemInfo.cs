@@ -177,7 +177,12 @@ namespace Threeyes.Steamworks
 
         public static string GetSceneDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + SceneDirName; }
         public static string GetSceneFilePath(string itemName) { return GetSceneDirPath(itemName) + "/" + SceneName + ".unity"; }
-        public static string GetRelateSceneFilePath(string itemName) { return $"{GetRelatedItemDirPath(itemName)}/{SceneDirName}/{SceneName}.unity"; }//Unity的场景路径，确保打包后能正常加载，如：Assets/Items/Default/Scenes/Entry.unity
+        public static string GetRelateSceneFileName(string itemName)
+        {
+            string path= $"{GetRelatedItemDirPath(itemName)}/{SceneDirName}/{SceneName}";// Assets/Items/Default/Scenes/Entry
+            path = path.Substring(7, path.Length - 7);//移除"Assets/"
+            return path;
+        }//Unity的场景路径，确保打包后能正常加载，如：Items/Default/Scenes/Entry
         public static string GetDataDirPath(string itemName) { return GetItemDirPath(itemName) + "/" + DataDirName; }
         public static string GetItemInfoFilePath(string itemName) { return GetDataDirPath(itemName) + "/" + WorkshopItemInfoAssetName; }
         public string GetDefaultPreviewFilePath(string fileExtension) => GetDefaultPreviewFilePath(itemName, fileExtension);

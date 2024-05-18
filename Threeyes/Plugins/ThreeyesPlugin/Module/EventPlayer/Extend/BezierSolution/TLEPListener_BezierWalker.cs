@@ -57,8 +57,6 @@ namespace Threeyes.EventPlayer
         }
 
         #region Inner Method
-
-
         Transform GetTarget(PlayableInfo value)
         {
             return value.binding ? value.binding.transform : Comp.transform;

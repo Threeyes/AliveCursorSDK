@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Threeyes.Core
 {
@@ -22,9 +23,13 @@ namespace Threeyes.Core
         /// <returns></returns>
         public static RaycastHit[] RaycastAllOrdered(Ray ray, float maxDistance = Mathf.Infinity, int layerMask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
         {
-            RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, layerMask, queryTriggerInteraction);
+            RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, layerMask, queryTriggerInteraction);//Bug:有时会无法检测到墙壁上附着的物体
 
             Array.Sort(hits, raycastDistanceComparer);
+
+            List<string> names = hits.ToList().ConvertAll(h => h.collider.gameObject.name);
+
+            //Debug.LogError("Ordered: " + names.ConnectToString(", "));
             return hits;
         }
 
@@ -43,6 +48,9 @@ namespace Threeyes.Core
                 var distanceComparison = x.distance.CompareTo(y.distance);
                 if (distanceComparison != 0)
                     return distanceComparison;
+
+                //Fucking
+                //Debug.LogError($"【Test】FallbackDistance test for {x.collider.gameObject.name} and {y.collider.gameObject.name}");
                 return x.triangleIndex.CompareTo(y.triangleIndex);
             }
         }

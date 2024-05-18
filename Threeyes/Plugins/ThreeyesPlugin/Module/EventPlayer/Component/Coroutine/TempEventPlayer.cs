@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using System.Text;
-using Threeyes.Coroutine;
 using Threeyes.Core.Editor;
 using Threeyes.Core;
 #if UNITY_EDITOR
@@ -14,6 +13,7 @@ namespace Threeyes.EventPlayer
     /// <summary>
     /// Invoke Play Event for a while, then Invoke Stop Event 
     /// </summary>
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_Action_Coroutine + "TempEventPlayer")]
     public class TempEventPlayer : CoroutineEventPlayerBase
     {
         #region Property & Field

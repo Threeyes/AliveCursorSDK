@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Threeyes.Core;
-using UnityEngine.Events;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Threeyes.Core
@@ -548,6 +548,7 @@ namespace Threeyes.Core
         }
 
 
+        static readonly MethodInfo CloneMethod = typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
 
         //DeepCopy （https://stackoverflow.com/questions/39092168/c-sharp-copying-unityevent-information-using-reflection）
 
@@ -570,6 +571,104 @@ namespace Threeyes.Core
             return (T)DoCopy(obj);
         }
 
+        #region Constructor 【ToTest】(Ref: Newtonsoft.Json.Utilities.ExpressionReflectionDelegateFactory[MIT])
+        public static bool HasDefaultConstructor(Type t, bool nonPublic = true)//检查是否有默认构造函数
+        {
+            ValidationUtils.ArgumentNotNull(t, nameof(t));
+
+            if (t.IsValueType)
+            {
+                return true;
+            }
+
+            return (GetDefaultConstructor(t, nonPublic) != null);
+        }
+        public static ConstructorInfo GetDefaultConstructor(Type t, bool nonPublic)
+        {
+            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+            if (nonPublic)
+            {
+                bindingFlags = bindingFlags | BindingFlags.NonPublic;
+            }
+
+            return t.GetConstructors(bindingFlags).SingleOrDefault(c => !c.GetParameters().Any());//获取首个无参数构造函数
+        }
+        public static Func<object> CreateDefaultConstructor(Type type)
+        {
+            return CreateDefaultConstructor<object>(type);
+        }
+        public static Func<T> CreateDefaultConstructor<T>(Type type)
+        {
+            ValidationUtils.ArgumentNotNull(type, "type");
+
+            // avoid error from expressions compiler because of abstract class
+            if (type.IsAbstract)
+            {
+                return () => (T)Activator.CreateInstance(type)!;
+            }
+
+            try
+            {
+                Type resultType = typeof(T);
+
+                Expression expression = Expression.New(type);
+
+                expression = EnsureCastExpression(expression, resultType);
+
+                LambdaExpression lambdaExpression = Expression.Lambda(typeof(Func<T>), expression);
+
+                Func<T> compiled = (Func<T>)lambdaExpression.Compile();
+                return compiled;
+            }
+            catch
+            {
+                // an error can be thrown if constructor is not valid on Win8
+                // will have INVOCATION_FLAGS_NON_W8P_FX_API invocation flag
+                return () => (T)Activator.CreateInstance(type)!;
+            }
+        }
+
+        static Expression EnsureCastExpression(Expression expression, Type targetType, bool allowWidening = false)
+        {
+            Type expressionType = expression.Type;
+
+            // check if a cast or conversion is required
+            if (expressionType == targetType || (!expressionType.IsValueType && targetType.IsAssignableFrom(expressionType)))
+            {
+                return expression;
+            }
+
+            if (targetType.IsValueType)
+            {
+                Expression convert = Expression.Unbox(expression, targetType);
+
+                if (allowWidening && targetType.IsPrimitive())
+                {
+                    MethodInfo toTargetTypeMethod = typeof(Convert).GetMethod("To" + targetType.Name, new[] { typeof(object) });
+
+                    if (toTargetTypeMethod != null)
+                    {
+                        convert = Expression.Condition(Expression.TypeIs(expression, targetType), convert, Expression.Call(toTargetTypeMethod, expression));
+                    }
+                }
+
+                return Expression.Condition(Expression.Equal(expression, Expression.Constant(null, typeof(object))), Expression.Default(targetType), convert);
+            }
+
+            return Expression.Convert(expression, targetType);
+        }
+        //——Utility——
+        internal static class ValidationUtils
+        {
+            public static void ArgumentNotNull(/*[NotNull]*/object value, string parameterName)
+            {
+                if (value == null)
+                {
+                    Debug.LogError($"{parameterName} is null!");
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Does the copy.
@@ -577,6 +676,13 @@ namespace Threeyes.Core
         /// 
         /// PS：
         /// -（与UnityObjectTool.DoCopy相比）：可克隆所有的字段（ToAdd：Action），适用于整个数据类进行复制）
+        /// 
+        /// Todo：
+        /// -优化参考（https://github.com/Burtsev-Alexey/net-object-deep-copy）：
+        ///     -创建类：通过MemberwiseClone实现
+        ///     -剔除Delegate等类
+        /// -参考Newtown.Json
+        ///     -创建类：ExpressionReflectionDelegateFactory.CreateDefaultConstructor
         /// Bug:
         /// -尚未针对Action等进行处理，建议改用UnityObjectTool
         /// </summary>
@@ -598,7 +704,7 @@ namespace Threeyes.Core
             }
 
             // Array
-            else if (type.IsArray)
+            if (type.IsArray)
             {
                 Type elementType = type.GetElementType();
                 var array = obj as Array;
@@ -610,22 +716,36 @@ namespace Threeyes.Core
                 return Convert.ChangeType(copied, obj.GetType());
             }
 
+            if (typeof(Delegate).IsAssignableFrom(type))//忽略委托
+                return null;
+
             // Unity Object的子类：返回原引用，避免引用丢失
-            else if (type.IsInherit(typeof(UnityEngine.Object)))
+            if (type.IsInherit(typeof(UnityEngine.Object)))
             {
                 return obj;
             }
 
             // Class -> Recursion
-            else if (type.IsClass)
+            if (type.IsClass)
             {
                 //PS：目前仅支持默认构造函数
                 //Todo:要判断是否有默认结构，否则会报错（需要忽略Action、UnityAction等）
                 object copy = null;
+
+                if (TryCopyUnityEngineSpeicalType(obj, ref copy))//尝试克隆Unity定义的特殊类（不继承UnityEngine.Object）
+                {
+                    return copy;
+                }
+
                 try
                 {
-                    copy = Activator.CreateInstance(obj.GetType());//需要该object有对应的无参构造函数，否则会报错（包括根object）
+                    //#1 克隆引用（更优，UnityObjectTool应参考该实现）
+                    if (HasDefaultConstructor(type))
+                        copy = Activator.CreateInstance(obj.GetType());//Warnging：需要该类有对应的无参构造函数，否则会报错（包括根object）
+                    else
+                        copy = CloneMethod.Invoke(obj, null);//使用反射来调用protected方法
 
+                    //#2 复制字段
                     var fields = type.GetAllFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                     foreach (FieldInfo field in fields)
                     {
@@ -653,6 +773,27 @@ namespace Threeyes.Core
                 throw new ArgumentException("Unknown type");
             }
         }
+
+        /// <summary>
+        /// 克隆部分UnityEngine命名空间定义的特殊类
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="result"></param>
+        /// <returns>是否克隆成功</returns>
+        static bool TryCopyUnityEngineSpeicalType(object obj, ref object result)
+        {
+            Type type = obj.GetType();
+            //PS：AnimationCurve等会包含m_Ptr，直接拷贝拷贝该字段会导致引用相同而闪退！因此需要重新创建
+            if (obj is AnimationCurve animationCurve)
+            {
+                result = new AnimationCurve(animationCurve.keys);
+                return true;
+            }
+            return false;
+        }
+
+
         static List<string> listIgnoreFieldTypeName
       = new List<string>()
       {
@@ -805,7 +946,7 @@ namespace Threeyes.Core
                      isMatch &= mI.IsGenericMethod;
 
                  if (argTypes != null)//判断参数是否相同
-             {
+                 {
                      var curMethodInfoParams = mI.GetParameters();
                      if (curMethodInfoParams.Length != argTypes.Length)
                          return false;
@@ -942,13 +1083,13 @@ namespace Threeyes.Core
 
         #region Utility
 
-        public static void ForEachMember<TAttribute>(this Type type, BindingFlags flags, UnityAction<object> act)
+        public static void ForEachMember<TAttribute>(this Type type, BindingFlags flags, Action<object> act)
             where TAttribute : Attribute
         {
 
         }
 
-        public static void ForEachMemberWithInterface<TInterface>(this object obj, UnityAction<TInterface> act, bool isRecursive = true, bool includeSelf = true, int maxDepth = 7)
+        public static void ForEachMemberWithInterface<TInterface>(this object obj, Action<TInterface> act, bool isRecursive = true, bool includeSelf = true, int maxDepth = 7)
         {
             if (obj == null)
                 return;

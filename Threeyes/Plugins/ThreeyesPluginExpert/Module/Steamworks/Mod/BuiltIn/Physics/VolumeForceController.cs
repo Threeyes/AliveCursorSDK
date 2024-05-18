@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using Threeyes.Config;
-using Threeyes.Coroutine;
 using Threeyes.RuntimeEditor;
 using UnityEngine;
 using Newtonsoft.Json;
+using Threeyes.Core;
+
 namespace Threeyes.Steamworks
 {
     /// <summary>
@@ -28,7 +29,6 @@ namespace Threeyes.Steamworks
     public class VolumeForceController : ConfigurableComponentBase<VolumeForceController, SOVolumeForceControllerConfig, VolumeForceController.ConfigInfo, VolumeForceController.PropertyBag>
     , IRuntimeEditorSelectEnterHandler
     , IRuntimeEditorSelectExitHandler
-
     {
         public Transform TfForceCenter { get { if (!tfForceCenter) return transform; return tfForceCenter; } }
         public float ForceScale { get { return forceScale; } set { forceScale = value; } }//运行时更新缩放
@@ -37,7 +37,7 @@ namespace Threeyes.Steamworks
 
         [SerializeField] float forceScale = 0;//Runtime scaler for force/reactingForce（默认设置为0，可以避免在初始化/还原时意外受力而偏移）
         [SerializeField] Rigidbody rig;//Rig for this collider, which will receive the reacting force
-        [SerializeField] Transform tfVolumePivot;//The point of the volume(通常为碰撞体的父物体，其位置为碰撞体的Z轴最低点)
+        [SerializeField] Transform tfVolumePivot;//The point of the volume(通常为碰撞体的父物体，其位置为碰撞体的Z轴最低点)（不直接指定碰撞体类型，可以用任意形状的碰撞体）
         [SerializeField] Transform tfForceCenter;//Center Point of the force
         [SerializeField] GameObject goColShapeIndicator;//[Optional] The shapk of the collider, use this to temp display the collider area on runtime editing ConfigInfo.maxDistance. (Remember to hide this when you finish editing it!)
 

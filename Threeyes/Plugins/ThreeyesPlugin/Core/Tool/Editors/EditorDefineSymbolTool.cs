@@ -6,13 +6,18 @@ namespace Threeyes.Core.Editor
 {
     public static class EditorDefineSymbolTool
     {
+        /// <summary>
+        /// 仅当有元素不同，才会进行更新，忽略因排序导致的不同
+        /// </summary>
+        /// <param name="listDefineToAdd"></param>
+        /// <param name="listDefineToRemove"></param>
         public static void ModifyDefines(List<string> listDefineToAdd, List<string> listDefineToRemove)
         {
             //Debug.LogError("Begin ModifyDefines!");
             string strCurrentDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);//获取当前平台的宏定义
             HashSet<string> hashSetNewDefines = new HashSet<string>(strCurrentDefines.Split(';'));//使用HashSet存储的优势是能自动排序，保证新旧的表能够正确比较
 
-            //保证只会存在一次
+            //HashSet.Add保证每个元素只会存在一次
             foreach (var element in listDefineToAdd)
             {
                 hashSetNewDefines.Add(element);
@@ -30,6 +35,18 @@ namespace Threeyes.Core.Editor
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, strNewDefines);
             }
         }
+
+        /// <summary>
+        /// 检查两个宏定义列表是否一致
+        /// </summary>
+        /// <param name="listDefineOld"></param>
+        /// <param name="listDefineNew"></param>
+        /// <returns></returns>
+        public static bool CompareDefines(List<string> listDefineOld, List<string> listDefineNew)
+        {
+            return listDefineOld.IsElementEqual(listDefineNew);
+        }
+
 
         /// <summary>
         /// Add a custom define

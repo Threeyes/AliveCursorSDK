@@ -87,19 +87,9 @@ namespace Threeyes.Core
         {
             return trans.rect.height;
         }
-        public static void SetDefaultScale(this RectTransform trans)
-        {
-            trans.localScale = new Vector3(1, 1, 1);
-        }
-        public static void SetPivotAndAnchors(this RectTransform trans, Vector2 aVec)
-        {
-            trans.pivot = aVec;
-            trans.anchorMin = aVec;
-            trans.anchorMax = aVec;
-        }
 
         /// <summary>
-        /// 获取RectTransform中的某个位置
+        /// 获取RectTransform中的某个点的位置
         /// </summary>
         /// <param name="trans"></param>
         /// <param name="screenPoint">像素坐标，如mousePosition</param>
@@ -112,6 +102,17 @@ namespace Threeyes.Core
             return originalLocalPointerPosition;
         }
 
+
+        public static void SetDefaultScale(this RectTransform trans)
+        {
+            trans.localScale = new Vector3(1, 1, 1);
+        }
+        public static void SetPivotAndAnchors(this RectTransform trans, Vector2 aVec)
+        {
+            trans.pivot = aVec;
+            trans.anchorMin = aVec;
+            trans.anchorMax = aVec;
+        }
         public static void SetPositionOfPivot(this RectTransform trans, Vector2 newPos)
         {
             trans.localPosition = new Vector3(newPos.x, newPos.y, trans.localPosition.z);
@@ -134,13 +135,6 @@ namespace Threeyes.Core
             trans.localPosition = new Vector3(newPos.x - (1f - trans.pivot.x) * trans.rect.width, newPos.y - (1f - trans.pivot.y) * trans.rect.height, trans.localPosition.z);
         }
 
-        public static void SetSize(this RectTransform trans, Vector2 newSize)
-        {
-            Vector2 oldSize = trans.rect.size;
-            Vector2 deltaSize = newSize - oldSize;
-            trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
-            trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
-        }
         public static void SetWidth(this RectTransform trans, float newSize)
         {
             trans.SetSize(new Vector2(newSize, trans.rect.size.y));
@@ -149,6 +143,22 @@ namespace Threeyes.Core
         {
             trans.SetSize(new Vector2(trans.rect.size.x, newSize));
         }
+        public static void SetSize(this RectTransform trans, Vector2 newSize)
+        {
+            Vector2 oldSize = trans.rect.size;
+            Vector2 deltaSize = newSize - oldSize;
+            trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
+            trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
+        }
+        public static void SetTop(this RectTransform trans, float value)
+        {
+            trans.offsetMax = new Vector2(trans.offsetMax.x, value);
+        }
+        public static void SetBottom(this RectTransform trans, float value)
+        {
+            trans.offsetMin = new Vector2(trans.offsetMin.x, value);
+        }
+
         #endregion
     }
 }

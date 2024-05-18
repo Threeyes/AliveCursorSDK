@@ -16,11 +16,12 @@ public class AC_SOAction_TweenSystemCursorDepth : SOAction_TweenBase<ActionConfi
     protected override Tween CreateTween(ActionTweenRuntimeData<ActionConfig_TweenFloat, float, Transform> runtimeData)
     {
         //通过更改Depth，实现进出效果
+        var config = runtimeData.Config;
         Tween tween = DOTween.To(
             () => AC_ManagerHolder.SystemCursorManager.CurDepth,
             (f) => AC_ManagerHolder.SystemCursorManager.CurDepth = f,
-            runtimeData.EndValue,
-            runtimeData.Duration);
+            config.EndValue,
+            config.Duration);
 
         return tween;
     }

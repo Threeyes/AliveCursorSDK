@@ -8,6 +8,14 @@ namespace Threeyes.RuntimeEditor
     {
         bool IsActive { get; }
 
-        //ToAdd：当前选中的物体List
+    }
+
+    public interface IRuntimeEditor_ModeActiveHandler
+    {
+        /// <summary>
+        /// Enter/Exit RuntimeEditor Mode
+        /// </summary>
+        /// <param name="isActive"></param>
+        void OnRuntimeEditorModeChanged(bool isActive);
     }
 }

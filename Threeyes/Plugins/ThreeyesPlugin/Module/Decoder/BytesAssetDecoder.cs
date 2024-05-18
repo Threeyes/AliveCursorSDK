@@ -31,11 +31,22 @@ namespace Threeyes.Decoder
         }
 
         [System.Serializable]
-        public class DecodeOption : IDecodeOption
+        public class DecodeOption : IDecodeOption, System.IEquatable<DecodeOption>
         {
             public static DecodeOption Default { get { return new DecodeOption(); } }
 
             //ToAdd
+
+            #region IEquatable
+            public override bool Equals(object obj) { return Equals(obj as DecodeOption); }
+            public override int GetHashCode() { return base.GetHashCode(); }
+            public bool Equals(DecodeOption other)
+            {
+                if (other == null)
+                    return false;
+                return true;
+            }
+            #endregion
         }
         public class DecodeResult : DecodeResult<SOBytesAsset> { }
     }

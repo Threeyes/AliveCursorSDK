@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Threeyes.Core;
@@ -8,7 +8,10 @@ using UnityEngine.Events;
 namespace Threeyes.EventPlayer
 {
     /// <summary>
-    /// Work with Param
+    /// Invoke event with Param
+    /// 
+    /// Warning: 
+    /// -Don't call Play(TParam value) because it will conflict with Play(bool isPlay), use PlayWithParam(TParam value) instead.
     /// </summary>
     /// <typeparam name="TEP">Type of EP</typeparam>
     /// <typeparam name="TUnityEvent">UnityEvent with Param</typeparam>
@@ -57,21 +60,20 @@ namespace Threeyes.EventPlayer
         #endregion
 
         #region Public Method
-
-        public override void Play(bool isPlay)
-        {
-            PlayWithParam(isPlay, isPlay ? IsPlayWithParam : IsStopWithParam, Value);
-        }
-
         /// <summary>
         /// Execute the related play event with param (Parallel to Play(bool))
-        /// PS:该公开方法不能声明在基类，否则会与(Bool)EventPlayer冲突
+        /// Warning:该公开方法不能声明在基类，否则会与EventPlaye_Bool冲突
         /// </summary>
         /// <param name="value"></param>
         [System.Obsolete("Will messup with subClass Play(object). Use PlayWithParam(TParam) instead.", false)]
         public virtual void Play(TParam value)
         {
             PlayWithParam(true, true, value);
+        }
+
+        public override void Play(bool isPlay)
+        {
+            PlayWithParam(isPlay, isPlay ? IsPlayWithParam : IsStopWithParam, Value);
         }
 
         public void PlayWithParam(TParam value)
@@ -91,7 +93,6 @@ namespace Threeyes.EventPlayer
         {
             PlayWithParam(isPlay, true, value);
         }
-
 
         public void PlayWithParam(bool isPlay, bool isPlayStopWithParam, TParam value)
         {
@@ -145,7 +146,7 @@ namespace Threeyes.EventPlayer
         protected virtual bool CompareValue(TParam value1, TParam value2)
         {
             //Todo:新增一个值类型的子类，根据枚举值CompareType，可以判断 大于、大于等于、小于、不等于 等事件
-            return value1.Equals(value2);
+            return Equals(value1, value2);
         }
 
         protected virtual void PlayWithParamFunc(TParam value)

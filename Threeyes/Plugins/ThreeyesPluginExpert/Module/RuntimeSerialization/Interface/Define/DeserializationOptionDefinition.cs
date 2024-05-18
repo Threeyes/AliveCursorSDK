@@ -1,7 +1,7 @@
-#if USE_JsonDotNet
-using Newtonsoft.Json;
 using System;
 using UnityEngine;
+#if USE_JsonDotNet
+using Newtonsoft.Json;
 #endif
 namespace Threeyes.RuntimeSerialization
 {

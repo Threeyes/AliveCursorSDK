@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Text;
 using Threeyes.Core.Editor;
@@ -13,6 +13,7 @@ namespace Threeyes.EventPlayer
     /// <summary>
     /// Delay Invoke Play Event
     /// </summary>
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_Action_Coroutine + "DelayEventPlayer")]
     public class DelayEventPlayer : CoroutineEventPlayerBase
     {
         #region Property & Field
@@ -60,7 +61,7 @@ namespace Threeyes.EventPlayer
         public void DelayPlay(float delayTime, int delayFrame)
         {
             TryStopCoroutine();
-            cacheEnum = Coroutine.CoroutineManager.StartCoroutineEx(IEDelayPlay(delayTime, delayFrame));
+            cacheEnum = CoroutineManager.StartCoroutineEx(IEDelayPlay(delayTime, delayFrame));
         }
 
         IEnumerator IEDelayPlay(float delayTime, int delayFrame)

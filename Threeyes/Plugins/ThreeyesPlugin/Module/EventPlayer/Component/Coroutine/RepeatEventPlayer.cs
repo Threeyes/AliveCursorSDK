@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
-using Threeyes.Coroutine;
 using Threeyes.Core.Editor;
 using Threeyes.Core;
 #if UNITY_EDITOR
@@ -39,7 +38,7 @@ namespace Threeyes.EventPlayer
     /// /// <summary>
     /// Repeat Invoke Play Event
     /// </summary>
-
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_Action_Coroutine + "RepeatEventPlayer")]
     public class RepeatEventPlayer : CoroutineEventPlayerBase
     {
         #region Property & Field

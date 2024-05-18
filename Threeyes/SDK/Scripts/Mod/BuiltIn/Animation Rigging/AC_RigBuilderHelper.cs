@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using Threeyes.Coroutine;
 using NaughtyAttributes;
 using Threeyes.Steamworks;
+using Threeyes.Core;
 /// <summary>
 /// Make sure joints relation don't break when cursor size changed (Mainly for DampTransform or ChainIK)
 /// 

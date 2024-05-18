@@ -13,6 +13,10 @@ namespace Threeyes.Localization
     /// </summary>
     public interface ILocalizationManager
     {
+        /// <summary>
+        /// 当前多语言（如Chinese、English）
+        /// </summary>
+        string CurrentLanguage { get; }
         string GetFormatTranslationText(string translationName, string[] args = null);
         string GetTranslationText(string name, string fallback = null, bool replaceTokens = true);
     }

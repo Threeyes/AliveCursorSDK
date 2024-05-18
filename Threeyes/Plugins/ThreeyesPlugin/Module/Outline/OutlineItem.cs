@@ -64,20 +64,29 @@ namespace Threeyes.Outline
                 Init();
             }
         }
-        public void Destroy()
+        public void ManualDestroy()
         {
-            Destroy(this);
+            TryDestroyMaterials();//避免因为物体被隐藏导致OnDestroy不会被调用
+            DestroyImmediate(this);
         }
 
         protected override void OnDespawnFunc()
         {
+            TryDestroyMaterials();
             base.OnDespawnFunc();
+        }
+        bool hasDestroied = false;
+        private void TryDestroyMaterials()
+        {
+            if (hasDestroied)
+                return;
 
             RemoveMaterial();//在Destroy时移除
 
             // Destroy material instances
-            Destroy(outlineMaskMaterial);
-            Destroy(outlineFillMaterial);
+            DestroyImmediate(outlineMaskMaterial);
+            DestroyImmediate(outlineFillMaterial);
+            hasDestroied = true;
         }
 
         bool hasInit = false;
@@ -88,6 +97,8 @@ namespace Threeyes.Outline
             base.InitFunc(data);
             if (hasInit)
                 return;
+            m_renderer = GetComponent<Renderer>();
+
             // Instantiate outline materials
             outlineMaskMaterial = new Material(Shader.Find(outlineMaskShaderName));
             outlineFillMaterial = new Material(Shader.Find(outlineFillShaderName));
@@ -95,7 +106,6 @@ namespace Threeyes.Outline
             outlineMaskMaterial.name = outlineMaskMaterialName;
             outlineFillMaterial.name = outlineFillMaterialName;
 
-            m_renderer = GetComponent<Renderer>();
             AddMaterial();//在Init时加入
             UpdateMaterialProperties();
 
@@ -108,7 +118,7 @@ namespace Threeyes.Outline
                 return;
 
             // Append outline shaders
-            var materials = m_renderer.sharedMaterials.ToList();
+            var materials = m_renderer.sharedMaterials.ToList();//使用共享材质，避免克隆原材质
 
             materials.Add(outlineMaskMaterial);
             materials.Add(outlineFillMaterial);

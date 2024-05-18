@@ -38,16 +38,18 @@ namespace Threeyes.Steamworks
         [ContextMenu("InitUsingTargetProperties")]
         void InitUsingTargetProperties()
         {
-            if (_light)
+            if (!_light)
             {
-                Config.color = _light.color;
-                Config.intensity = _light.intensity;
-                Config.range = _light.range;
-
-                Config.shadowType = _light.shadows;
-                Config.shadowStrength = _light.shadowStrength;
-                UnityEditor.EditorUtility.SetDirty(this);
+                Debug.LogError($"{nameof(_light)} is null!");
             }
+
+            Config.color = _light.color;
+            Config.intensity = _light.intensity;
+            Config.range = _light.range;
+
+            Config.shadowType = _light.shadows;
+            Config.shadowStrength = _light.shadowStrength;
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 #endif
         #endregion
@@ -62,7 +64,7 @@ namespace Threeyes.Steamworks
 
             [Header("Shadow")]
             public LightShadows shadowType = LightShadows.None;
-            [HideIf(nameof(shadowType), LightShadows.None)] [Range(0, 1)] public float shadowStrength = 1;
+            [HideIf(nameof(shadowType), LightShadows.None)][Range(0, 1)] public float shadowStrength = 1;
             ///ToAdd（其他通用的光照相关的参数）：
 
             public ConfigInfo()

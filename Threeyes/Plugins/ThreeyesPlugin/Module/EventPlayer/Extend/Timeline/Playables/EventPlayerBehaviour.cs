@@ -1,7 +1,6 @@
 #if Threeyes_Timeline
 using System;
 using System.Collections.Generic;
-using Threeyes.Timeline;
 using Threeyes.Core;
 using UnityEngine;
 using UnityEngine.Events;

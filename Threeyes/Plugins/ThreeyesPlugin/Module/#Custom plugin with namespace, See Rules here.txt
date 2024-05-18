@@ -3,3 +3,4 @@ Asset Menu命名规范：
 
 注意：
 -这个文件夹的所有代码都需要有命名空间（包括Module/BuiltIn），命名空间名与顶层文件夹相同
+-子Module暂时不使用Asmdef，因为还未完成归类，贸然添加会导致打包Mod时引用丢失（因为UMod链接代码是会包含Asmdef的名称）。可以是AssetStore/Github版本自带一个Asmdef

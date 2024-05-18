@@ -218,6 +218,8 @@ namespace Threeyes.Steamworks
         /// <summary>
         /// 存放可供配置的信息
         /// 
+        /// PS：
+        /// -暂时不提供suspensionSpring，因为不太影响呈现
         /// </summary>
         [Serializable]
         public class WheelInfo
@@ -230,7 +232,7 @@ namespace Threeyes.Steamworks
             [Tooltip("Position the center of the wheel.")] public Vector3 center;//轮子的中心，可用于调节悬挂高度
 
             ///// ToAdd:
-            ///// -WheelCollider的forwardFriction/sidewaysFriction（另外使用bool来决定是否重载，避免用户觉得过于复杂）（PS：如果序列化异常，可以改为用前缀+float将每个类分拆成单独字段）
+            ///// +WheelCollider的forwardFriction/sidewaysFriction（另外使用bool来决定是否重载，避免用户觉得过于复杂）（PS：如果序列化异常，可以改为用前缀+float将每个类分拆成单独字段）
             [AllowNesting] public WheelFrictionCurveEx forwardFriction;
             [AllowNesting] public WheelFrictionCurveEx sidewaysFriction;
         }

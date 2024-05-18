@@ -43,19 +43,18 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
-    m_TemporalCoherenceThreshold: 1
     m_EnvironmentLightingMode: 0
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 10
+    serializedVersion: 12
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -63,6 +62,7 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -77,10 +77,16 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 500
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 2
+    m_PVRDenoiserTypeDirect: 0
+    m_PVRDenoiserTypeIndirect: 0
+    m_PVRDenoiserTypeAO: 0
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVRFilteringMode: 1
+    m_PVREnvironmentMIS: 0
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -88,15 +94,17 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -109,7 +117,9 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -117,7 +127,8 @@ NavMeshSettings:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5689323}
@@ -135,14 +146,15 @@ GameObject:
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5689322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1712040526}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -153,11 +165,12 @@ RectTransform:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5689322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
@@ -166,21 +179,22 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5689322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
@@ -194,28 +208,34 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: In this scene, you will learn to use the Component that inherit from <color=green>CoroutineEventPlayerBase</color>,
-    which will invoke the Play/Stop events in <color=green>specific</color> time (<color=orange>runtime
-    only</color>).
+  m_Text: 'In this scene, you will learn to use the Component that inherit from <color=green>CoroutineEventPlayerBase</color>,
+    which will invoke the Play/Stop events in <color=green>specific</color> time
+    (<color=orange>runtime only</color>).
+
+
+    1.Click the toggles in Hierarchy
+    windows, see how they works.'
 --- !u!222 &5689326
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5689322}
   m_CullTransparentMesh: 0
 --- !u!1 &152338666
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 152338667}
   - component: {fileID: 152338669}
   - component: {fileID: 152338668}
   m_Layer: 0
-  m_Name: Right Config Collection (Check these out!)
+  m_Name: Correct Config Collection (Check these out!)
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -225,11 +245,14 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 152338666}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1477059985}
   - {fileID: 1139037485}
@@ -240,13 +263,13 @@ Transform:
   - {fileID: 543061798}
   - {fileID: 1730450941}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &152338668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 152338666}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -256,27 +279,23 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 1
   isIncludeHide: 1
   isRecursive: 0
@@ -286,29 +305,34 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
 --- !u!114 &152338669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 152338666}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: You can Invoke all of my child's EP with this EventPlayer, or you can play
     them one by one.
+  isLogOnConsole: 1
 --- !u!1 &293158671
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 293158672}
@@ -325,20 +349,23 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 293158671}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 844212061}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &293158673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 293158671}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -348,11 +375,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 293158674}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 6
         m_Arguments:
@@ -363,12 +390,11 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 293158674}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -379,18 +405,17 @@ MonoBehaviour:
           m_StringArgument: Stopped
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -400,7 +425,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -412,23 +436,29 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 293158671}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: "[ReplayDeltaTime] \xD7 [DelayCount] is larger than [DefaultDuration].\nPS:
     if [IsPlayOnRepeatStart] is checked, these config will become valid again."
+  isLogOnConsole: 1
 --- !u!1 &543061797
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543061798}
@@ -445,36 +475,44 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543061797}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &543061799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543061797}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: "because the [IsContinuous] is checked,\nI will Play every frame, and Stop
     \nafter [DefaultDuration] seconds."
+  isLogOnConsole: 1
 --- !u!114 &543061800
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543061797}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -484,11 +522,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 543061799}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -499,12 +537,11 @@ MonoBehaviour:
           m_StringArgument: Play every frame
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 543061799}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -515,18 +552,17 @@ MonoBehaviour:
           m_StringArgument: Stop
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -536,7 +572,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 11
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -546,7 +581,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 591675703}
@@ -563,37 +599,45 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 591675702}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &591675704
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 591675702}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: "I will  Play every [ReplayDeltaTime] seconds in \n[DelayCount] times, for
     about [DefaultDuration] seconds.\nPS: If only one of the repeat config is not
     valid, it will be \ncalcualted by system."
+  isLogOnConsole: 1
 --- !u!114 &591675705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 591675702}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -603,11 +647,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 591675704}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -618,12 +662,11 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 591675704}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -634,18 +677,17 @@ MonoBehaviour:
           m_StringArgument: Stopped
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -655,7 +697,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -667,7 +708,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 844212061}
@@ -683,26 +725,34 @@ GameObject:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844212056}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: These EP have invalid config, it might not work as expect.
+  isLogOnConsole: 1
 --- !u!4 &844212061
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844212056}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2118506019}
   - {fileID: 293158672}
@@ -710,13 +760,13 @@ Transform:
   - {fileID: 1547065710}
   - {fileID: 953211419}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &953211418
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 953211419}
@@ -733,35 +783,43 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 953211418}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 844212061}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &953211420
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 953211418}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: All the repeat config is not valid!
+  isLogOnConsole: 1
 --- !u!114 &953211421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 953211418}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -771,11 +829,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 953211420}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -786,23 +844,20 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -812,7 +867,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -821,56 +875,60 @@ MonoBehaviour:
   replayCount: -1
   defaultDuration: -1
 --- !u!1001 &1122670794
-Prefab:
+PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1044172792093496, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
+    - target: {fileID: 1044172792093496, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
       propertyPath: m_Name
       value: Enivronment
       objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413976185777976, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 2}
-  m_IsPrefabAsset: 0
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ffe70447c2bd7794988d9f0ebaaabec1, type: 3}
 --- !u!1 &1139037484
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1139037485}
@@ -887,20 +945,23 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139037484}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1139037486
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139037484}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -910,11 +971,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139037487}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -926,12 +987,11 @@ MonoBehaviour:
             seconds
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1139037487}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -942,18 +1002,17 @@ MonoBehaviour:
           m_StringArgument: Stopped!
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -963,7 +1022,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -973,23 +1031,29 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139037484}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: Althought I am hiding in hierarchy, but still can be Play/Stop! The Coroutine
     will still running even it get hide on the middle of the process!
+  isLogOnConsole: 1
 --- !u!1 &1283981897
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1283981898}
@@ -1006,36 +1070,44 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283981897}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1283981899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283981897}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: Because [ReplayCount] and [DefaultDuration] is not valid, but [ReplayDelateTime]
     is valid, I will repeatedly Play until Stop is Invoked.
+  isLogOnConsole: 1
 --- !u!114 &1283981900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283981897}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1045,11 +1117,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1283981899}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1060,23 +1132,20 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1086,7 +1155,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1098,7 +1166,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1477059985}
@@ -1115,20 +1184,23 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477059984}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1477059986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477059984}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1138,11 +1210,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1477059987}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1154,12 +1226,11 @@ MonoBehaviour:
             seconds
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1477059987}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1170,18 +1241,17 @@ MonoBehaviour:
           m_StringArgument: Stopped!
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1191,7 +1261,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1201,22 +1270,28 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477059984}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: I will Play after [DefaultDelayFrame] frames + [DefaultDelayTime] seconds.
+  isLogOnConsole: 1
 --- !u!1 &1547065709
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1547065710}
@@ -1233,36 +1308,44 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547065709}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 844212061}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1547065711
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547065709}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
-  tips: '[ReplayDeltaTime] and [DefaultDuration] is not valid, the system can''t calculate
-    the rest property.'
+  tips: '[ReplayDeltaTime] and [DefaultDuration] is not valid, the system can''t
+    calculate the rest property.'
+  isLogOnConsole: 1
 --- !u!114 &1547065712
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547065709}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1272,11 +1355,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1547065711}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1287,23 +1370,20 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1313,7 +1393,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1325,7 +1404,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1578755282}
@@ -1342,35 +1422,43 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578755281}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1578755283
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578755281}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: I will Play at once, and Stop after [DefaultDuration] seconds.
+  isLogOnConsole: 1
 --- !u!114 &1578755284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578755281}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1380,11 +1468,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1578755283}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1395,12 +1483,11 @@ MonoBehaviour:
           m_StringArgument: Play
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1578755283}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1411,18 +1498,17 @@ MonoBehaviour:
           m_StringArgument: Stop after [DefaultDuration] seconds
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1432,7 +1518,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1442,7 +1527,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1599471988}
@@ -1459,36 +1545,44 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599471987}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 844212061}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1599471989
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599471987}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: '[ReplayDeltaTime] and [DelayCount] is not valid, the system can''t calculate
     the rest property.'
+  isLogOnConsole: 1
 --- !u!114 &1599471990
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599471987}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1498,11 +1592,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1599471989}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1513,23 +1607,20 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1539,7 +1630,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1551,7 +1641,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631126600}
@@ -1568,20 +1659,23 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631126599}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1631126601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631126599}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1591,11 +1685,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1631126602}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1606,12 +1700,11 @@ MonoBehaviour:
           m_StringArgument: Play every [DeltaTime]
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1631126602}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1622,18 +1715,17 @@ MonoBehaviour:
           m_StringArgument: Stopped
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1643,7 +1735,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1655,23 +1746,29 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631126599}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
-  tips: Because [PlayOnStart] is checked, I will invok Play on Coroutine starts, and
-    it will not get count to the [Duration]
+  tips: Because [PlayOnStart] is checked, I will invok Play on Coroutine starts,
+    and it will not get count to the [Duration]
+  isLogOnConsole: 1
 --- !u!1 &1712040522
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1712040526}
@@ -1689,11 +1786,12 @@ GameObject:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712040522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
@@ -1705,11 +1803,12 @@ MonoBehaviour:
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712040522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_UiScaleMode: 0
@@ -1722,11 +1821,13 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &1712040525
 Canvas:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712040522}
   m_Enabled: 1
   serializedVersion: 3
@@ -1738,7 +1839,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1746,15 +1849,16 @@ Canvas:
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712040522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5689323}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1765,7 +1869,8 @@ RectTransform:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1730450941}
@@ -1782,26 +1887,32 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730450940}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 152338667}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1730450942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730450940}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
@@ -1809,11 +1920,13 @@ MonoBehaviour:
     is Invoked.
 
 '
+  isLogOnConsole: 1
 --- !u!114 &1730450943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730450940}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1823,11 +1936,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1730450942}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1838,12 +1951,11 @@ MonoBehaviour:
           m_StringArgument: Play every frame
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1730450942}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1854,18 +1966,17 @@ MonoBehaviour:
           m_StringArgument: Stop
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1875,7 +1986,6 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
@@ -1885,7 +1995,8 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2118506019}
@@ -1902,35 +2013,43 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118506018}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 844212061}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2118506020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118506018}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05f9bbca5de24ec479d5ade46c196b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLog:
+    m_PersistentCalls:
+      m_Calls: []
   logType: 3
   withName: 1
   format: 
   tips: Neither [DefaultDelayFrame] nor [DefaultDelayTime] is valid!
+  isLogOnConsole: 1
 --- !u!114 &2118506021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118506018}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1940,11 +2059,11 @@ MonoBehaviour:
   onPlayStop:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onPlay:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2118506020}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1956,12 +2075,11 @@ MonoBehaviour:
             normal EP!
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onStop:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2118506020}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Log
         m_Mode: 5
         m_Arguments:
@@ -1972,18 +2090,17 @@ MonoBehaviour:
           m_StringArgument: Stopped!
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   onActiveDeactive:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: BoolEvent, ColyuPlugins, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  isPlayed: 0
   isActive: 1
   canPlay: 1
   canStop: 1
   isPlayOnAwake: 0
   isPlayOnce: 0
   isReverse: 0
+  listListener: []
   isGroup: 0
   isIncludeHide: 1
   isRecursive: 0
@@ -1993,9 +2110,16 @@ MonoBehaviour:
   targetId: 
   isLogOnPlay: 0
   isLogOnStop: 0
-  isPlayed: 0
   state: 0
   isIgnoreTimeScale: 0
   isCoroutineRunning: 0
   defaultDelayFrame: -1
   defaultDelayTime: -1
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1122670794}
+  - {fileID: 1712040526}
+  - {fileID: 152338667}
+  - {fileID: 844212061}

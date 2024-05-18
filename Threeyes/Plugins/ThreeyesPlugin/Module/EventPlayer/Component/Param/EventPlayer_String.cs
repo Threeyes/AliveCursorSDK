@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -12,6 +12,7 @@ namespace Threeyes.EventPlayer
     /// <summary>
     /// Event with string
     /// </summary>
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_Action_Param + "EventPlayer_String")]
     public class EventPlayer_String : EventPlayerWithParamBase<EventPlayer_String, StringEvent, string>
     {
         #region Editor Method

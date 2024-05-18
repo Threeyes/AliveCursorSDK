@@ -1,6 +1,5 @@
 #if Threeyes_Timeline
 using Threeyes.Core;
-using Threeyes.Timeline;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;

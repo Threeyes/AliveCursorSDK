@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Threeyes.Core;
 using Threeyes.Data;
+using Threeyes.InputSystem;
 using UnityEngine;
 public class AC_CommonSettingManagerSimulator : AC_CommonSettingManagerBase<AC_CommonSettingManagerSimulator>
 {

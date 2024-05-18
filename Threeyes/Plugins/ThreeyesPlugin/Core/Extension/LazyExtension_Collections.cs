@@ -116,6 +116,56 @@ namespace Threeyes.Core
         #endregion
 
         #region Compare
+        /// <summary>
+        /// 获取新增的元素
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">旧列表</param>
+        /// <param name="newSource">新列表</param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetAddedElements<T>(this IEnumerable<T> source, IEnumerable<T> newList)
+        {
+            var listSource = source.ToList();
+            var listNewList = newList.ToList();
+            return listNewList.FindAll(d => !listSource.Contains(d));//ToUpdate:默认比较相同元素，后期提供自定义判断相同的方法
+        }
+        /// <summary>
+        /// 获取被删除的元素
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">旧列表</param>
+        /// <param name="newSource">新列表</param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetDeletedElements<T>(this IEnumerable<T> source, IEnumerable<T> newList)
+        {
+            var listSource = source.ToList();
+            var listNewList = newList.ToList();
+            return listSource.FindAll(d => !listNewList.Contains(d));//ToUpdate:默认比较相同元素，后期提供自定义判断相同的方法
+        }
+
+        /// <summary>
+        /// 检查两个列表元素是否相同，考虑排序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list1"></param>
+        /// <param name="list2"></param>
+        /// <returns></returns>
+        public static bool IsSequenceEqual<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
+        {
+            if (list1 == list2)//引用相同（包括都为null）
+                return true;
+            if (list1 == null || list2 == null)
+                return false;
+
+            if (list1.Count() != list2.Count())
+                return false;
+            for (int i = 0; i != list1.Count(); i++)
+            {
+                if (!Equals(list1.ElementAt(i), list2.ElementAt(i)))//调用每个元素的Equals(object)或IEquatable<T>方法进行比较。使用Equals(a,b)可避免引用为空导致报错
+                    return false;
+            }
+            return true;
+        }
 
         /// <summary>
         /// Check if two lists have the same element(忽略排序) 
@@ -126,7 +176,9 @@ namespace Threeyes.Core
         /// <returns></returns>
         public static bool IsElementEqual<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
         {
-            //参考https://stackoverflow.com/questions/12795882/quickest-way-to-compare-two-list
+            //参考:https://stackoverflow.com/questions/12795882/quickest-way-to-compare-two-list
+            if (list1.Count() != list2.Count())
+                return false;
             var firstNotSecond = list1.Except(list2).ToList();
             var secondNotFirst = list2.Except(list1).ToList();
             return !firstNotSecond.Any() && !secondNotFirst.Any();
@@ -148,7 +200,11 @@ namespace Threeyes.Core
         #endregion
 
         #region GetOrSet
-
+        public static void AddIfNotNull<T>(this ICollection<T> list, T item)
+        {
+            if (item != null)
+                list.Add(item);
+        }
         public static void AddOnce<T>(this ICollection<T> list, T item)
         {
             if (!list.Contains(item))

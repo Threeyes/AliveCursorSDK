@@ -9,9 +9,12 @@ namespace Threeyes.Steamworks
         where T : HubSceneManagerBase<T>
     {
         #region Interface
+        public bool IsChangingScene { get { return isChangingScene; } }
+
         public Scene HubScene { get { return hubScene; } }
         public Scene CurModScene { get { return curModScene; } }
 
+        [SerializeField] protected bool isChangingScene = false;
         protected Scene hubScene;
         protected Scene curModScene;
 

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Threeyes.Coroutine;
 using System;
 using Threeyes.Persistent;
 using Newtonsoft.Json;

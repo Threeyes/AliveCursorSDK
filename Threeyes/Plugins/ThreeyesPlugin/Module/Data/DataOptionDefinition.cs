@@ -33,6 +33,7 @@ namespace Threeyes.Data
     {
         /// <summary>
         /// Init base on reflection info
+        /// 根据Member的Attribute进行初始化（如Range、Enum类型等）
         /// </summary>
         /// <param name="memberInfo">relate member (Field or Property)</param>
         /// <returns></returns>
@@ -54,18 +55,21 @@ namespace Threeyes.Data
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     public abstract class DataOption_RangeBase<TValue> : DataOption
+        , IEquatable<DataOption_RangeBase<TValue>>
     {
         public bool UseRange { get { return useRange; } set { useRange = value; } }
         public TValue MinValue { get { return minValue; } set { minValue = value; } }//如果不限制，则使用TValue类型的最小值表示
         public TValue MaxValue { get { return maxValue; } set { maxValue = value; } }//如果不限制，则使用TValue类型的最大值表示
 
         [SerializeField] protected bool useRange = false;
-        #if USE_NaughtyAttributes
-        [ShowIf(nameof(useRange))] [AllowNesting] 
+#if USE_NaughtyAttributes
+        [ShowIf(nameof(useRange))]
+        [AllowNesting]
 #endif
         [SerializeField] protected TValue minValue;
 #if USE_NaughtyAttributes
-    [ShowIf(nameof(useRange))] [AllowNesting] 
+        [ShowIf(nameof(useRange))]
+        [AllowNesting]
 #endif
         [SerializeField] protected TValue maxValue;
 
@@ -75,6 +79,17 @@ namespace Threeyes.Data
             this.minValue = minValue;
             this.maxValue = maxValue;
         }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_RangeBase<TValue>); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_RangeBase<TValue> other)
+        {
+            if (other == null)
+                return false;
+            return useRange.Equals(other.useRange) && Equals(minValue, other.minValue) && Equals(maxValue, other.maxValue);//比较必要字段。为了避免TValue为引用类型，需要使用Equals(a,b)方法
+        }
+        #endregion
     }
     [Serializable]
     public class DataOption_Int : DataOption_RangeBase<int>
@@ -192,10 +207,10 @@ namespace Threeyes.Data
     }
     [Serializable]
     public class DataOption_Gradient : DataOption
+        , IEquatable<DataOption_Gradient>
     {
         public bool UseHDR { get { return useHDR; } set { useHDR = value; } }
         [SerializeField] protected bool useHDR = false;
-
 
         public DataOption_Gradient()
         {
@@ -220,10 +235,22 @@ namespace Threeyes.Data
             }
             return this;
         }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_Gradient); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_Gradient other)
+        {
+            if (other == null)
+                return false;
+            return useHDR.Equals(other.useHDR);
+        }
+        #endregion
     }
 
     [Serializable]
     public class DataOption_Color : DataOption
+        , IEquatable<DataOption_Color>
     {
         public bool UseAlpha { get { return useAlpha; } set { useAlpha = value; } }
         public bool UseHDR { get { return useHDR; } set { useHDR = value; } }
@@ -266,6 +293,17 @@ namespace Threeyes.Data
             }
             return this;
         }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_Color); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_Color other)
+        {
+            if (other == null)
+                return false;
+            return useAlpha.Equals(other.useAlpha) && useHDR.Equals(other.useHDR);
+        }
+        #endregion
     }
 
     /// <summary>
@@ -273,17 +311,29 @@ namespace Threeyes.Data
     /// </summary>
     [Serializable]
     public class DataOption_OptionInfo : DataOption
+        , IEquatable<DataOption_OptionInfo>
     {
         public List<OptionData> listOptionData = new List<OptionData>();
 
-#region Define
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_OptionInfo); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_OptionInfo other)
+        {
+            if (other == null)
+                return false;
 
+            return listOptionData.IsSequenceEqual(other.listOptionData);
+        }
+        #endregion
+
+        #region Define
         /// <summary>
         /// (PS: 为了兼容UGUI、TextMeshpro或以后的UIToolkit，需要定义对应的数据类）
         /// （Ref：Dropdown.OptionData）
         /// </summary>
         [Serializable]
-        public class OptionData
+        public class OptionData : IEquatable<OptionData>
         {
             public string text
             {
@@ -318,20 +368,31 @@ namespace Threeyes.Data
             }
             public OptionData(string text)
             {
-                this.text = text;
+                this.m_Text = text;
             }
             public OptionData(Sprite image)
             {
-                this.image = image;
+                this.m_Image = image;
             }
 
             public OptionData(string text, Sprite image)
             {
-                this.text = text;
-                this.image = image;
+                this.m_Text = text;
+                this.m_Image = image;
             }
+
+            #region IEquatable
+            public override bool Equals(object obj) { return Equals(obj as OptionData); }
+            public override int GetHashCode() { return base.GetHashCode(); }
+            public bool Equals(OptionData other)
+            {
+                if (other == null)
+                    return false;
+                return Equals(m_Text, other.m_Text) && Equals(m_Image, other.m_Image);//可避免引用为空导致报错
+            }
+            #endregion
         }
-#endregion
+        #endregion
     }
 
     /// <summary>
@@ -345,6 +406,7 @@ namespace Threeyes.Data
 
     [Serializable]
     public class DataOption_UnityObject : DataOption_Object
+        , IEquatable<DataOption_UnityObject>
     {
         /// <summary>
         ///注意：
@@ -356,6 +418,17 @@ namespace Threeyes.Data
         public string objectTypeFullName;//枚举所在类型的FullName
 
         public DataOption_UnityObject() { }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_UnityObject); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_UnityObject other)
+        {
+            if (other == null)
+                return false;
+            return Equals(objectTypeFullName, other.objectTypeFullName);//避免某个string为null
+        }
+        #endregion
     }
 
     /// <summary>
@@ -363,6 +436,7 @@ namespace Threeyes.Data
     /// </summary>
     [Serializable]
     public class DataOption_Enum : DataOption
+        , IEquatable<DataOption_Enum>
     {
         ///命名规范：
         /// 对应Type.FullName
@@ -373,23 +447,6 @@ namespace Threeyes.Data
         [Tooltip("The full name of enum type (eg: UnityEngine.UI.Slider+Direction)")]
         public string enumTypeFullName;//枚举所在类型的FullName
 
-        public override IDataOption Init(MemberInfo memberInfo, object obj = null)
-        {
-            Type variableType = memberInfo.GetVariableType();
-            enumTypeFullName = variableType?.FullName;
-            return this;
-        }
-
-        /// <summary>
-        /// 通过传入的枚举类型，自动初始化
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public virtual IDataOption Init(Type enumType)
-        {
-            enumTypeFullName = enumType?.FullName;
-            return this;
-        }
         public Type EnumType
         {
             get
@@ -432,7 +489,9 @@ namespace Threeyes.Data
         /// Warning:
         /// 不能直接声明Dictionary为ReadOnly，否则UMod加载会报错
         /// </summary>
-        [JsonIgnore]
+#if USE_JsonDotNet
+  [JsonIgnore]
+#endif
         public static Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName
         {
             get
@@ -451,7 +510,23 @@ namespace Threeyes.Data
         public const string defaultNothingEnumName = "0";
         public const string defaultEverythingEnumName = "-1";
 
+        public override IDataOption Init(MemberInfo memberInfo, object obj = null)
+        {
+            Type variableType = memberInfo.GetVariableType();
+            enumTypeFullName = variableType?.FullName;
+            return this;
+        }
 
+        /// <summary>
+        /// 通过传入的枚举类型，自动初始化
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public virtual IDataOption Init(Type enumType)
+        {
+            enumTypeFullName = enumType?.FullName;
+            return this;
+        }
         public string DisplayNameToEnumName(string displayName, Dictionary<string, string> dicEnumNameToDisplayName = null)
         {
             string enumName = displayName;
@@ -499,7 +574,7 @@ namespace Threeyes.Data
             {
                 if (UseFlag)
                 {
-                    //如果Enume没有定义0/-1，则添加
+                    //如果Enum没有定义0/-1，则添加
                     if (value.Equals(0) && !Enum.IsDefined(enumType, 0))
                         return defaultNothingEnumName;
                     if (value.Equals(-1) && !Enum.IsDefined(enumType, -1))
@@ -594,6 +669,18 @@ namespace Threeyes.Data
             }
             return null;
         }
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_Enum); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_Enum other)
+        {
+            if (other == null)
+                return false;
+            return Equals(enumTypeFullName, other.enumTypeFullName);//避免某个string为null
+
+        }
+        #endregion
     }
 
     //——File——
@@ -603,6 +690,7 @@ namespace Threeyes.Data
     /// </summary>
     [Serializable]
     public class DataOption_File : DataOption
+        , IEquatable<DataOption_File>
     {
         /// <summary>
         /// Valid file extension（eg: "jpg", "jpeg", or "*" for anytype ）
@@ -615,6 +703,18 @@ namespace Threeyes.Data
 
         [SerializeField] protected string[] overrideFileFilterExtensions;
         [SerializeField] protected ReadFileOption readFileOption;
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_File); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_File other)
+        {
+            if (other == null)
+                return false;
+
+            return overrideFileFilterExtensions.IsSequenceEqual(other.overrideFileFilterExtensions) && Equals(readFileOption, other.readFileOption);
+        }
+        #endregion
     }
 
     [Serializable]
@@ -622,10 +722,22 @@ namespace Threeyes.Data
 
     [Serializable]
     public class DataOption_File<TAsset, TDecodeOption> : DataOption_File<TAsset>
+        , IEquatable<DataOption_File<TAsset, TDecodeOption>>
     where TDecodeOption : class, IDecodeOption
     {
         public override IDecodeOption DecodeOption { get { return decodeOption; } set { decodeOption = value as TDecodeOption; } }
         [SerializeField] protected TDecodeOption decodeOption;
+
+        #region IEquatable
+        public override bool Equals(object obj) { return Equals(obj as DataOption_File<TAsset, TDecodeOption>); }
+        public override int GetHashCode() { return base.GetHashCode(); }
+        public bool Equals(DataOption_File<TAsset, TDecodeOption> other)
+        {
+            if (!base.Equals(other))
+                return false;
+            return decodeOption.Equals(other.decodeOption);
+        }
+        #endregion
     }
 
     //PS：放在这里便于所有人访问
@@ -646,7 +758,6 @@ namespace Threeyes.Data
     {
         public override string[] DefaultFileFilterExtensions { get { return new string[] { "jpg", "jpeg", "png" }; } }
     }
-
 
     [Serializable]
     public class DataOption_SO : DataOption

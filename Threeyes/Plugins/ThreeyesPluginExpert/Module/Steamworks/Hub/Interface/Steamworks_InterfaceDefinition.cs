@@ -9,6 +9,9 @@ namespace Threeyes.Steamworks
     {
         /// <summary>
         /// Get call before PersistentData is Loaded
+        /// 
+        /// 用途：
+        /// -获取Mod可能存在的ActiveController
         /// </summary>
         void OnModPreInit(Scene scene, ModEntry modEntry);
     }
@@ -77,7 +80,7 @@ namespace Threeyes.Steamworks
     }
 
     public interface IHubSystemAudio_DataChangedHandler { }//用于Register/UnRegister的基接口
-    public interface IHubSystemAudio_RawSampleDataChangedHandler: IHubSystemAudio_DataChangedHandler
+    public interface IHubSystemAudio_RawSampleDataChangedHandler : IHubSystemAudio_DataChangedHandler
     {
         void OnRawSampleDataChanged(float[] rawSampleData);
     }
@@ -93,6 +96,8 @@ namespace Threeyes.Steamworks
     //——ModManager——
     public interface IHubEnvironmentManager
     {
+        IEnvironmentController BaseActiveController { get; }
+
         /// <summary>
         /// The main camera
         /// </summary>
@@ -100,6 +105,7 @@ namespace Threeyes.Steamworks
     }
     public interface IHubSceneManager
     {
+        bool IsChangingScene { get; }
         Scene HubScene { get; }
         public Scene CurModScene { get; }
     }
@@ -114,13 +120,17 @@ namespace Threeyes.Steamworks
 
     //——Mod——
     public interface IEnvironmentManager<TControllerInterface> :
-    IHubManagerWithController<TControllerInterface>
-    , IHubEnvironmentManager
-    , IHubManagerModInitHandler
+        IHubManagerWithController<TControllerInterface>
+        , IHubEnvironmentManager
+        , IHubManagerModPreInitHandler
+        , IHubManagerModInitHandler
         where TControllerInterface : IEnvironmentController
     {
     }
-    public interface IPostProcessingManager<TControllerInterface> : IHubManagerModInitHandler, IHubManagerWithController<TControllerInterface>
+    public interface IPostProcessingManager<TControllerInterface> :
+        IHubManagerWithController<TControllerInterface>
+        , IHubManagerModPreInitHandler
+        , IHubManagerModInitHandler
         where TControllerInterface : IPostProcessingController
     {
     }

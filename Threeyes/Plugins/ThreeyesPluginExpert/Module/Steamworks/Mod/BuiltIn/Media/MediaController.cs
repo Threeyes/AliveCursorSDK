@@ -7,7 +7,6 @@ using Threeyes.UI;
 using Threeyes.Decoder;
 using UnityEngine.Video;
 using UnityEngine.Networking;
-using Threeyes.Coroutine;
 using NaughtyAttributes;
 using static Threeyes.Steamworks.MediaController.ConfigInfo;
 using System.Collections.Generic;
@@ -20,7 +19,11 @@ namespace Threeyes.Steamworks
     /// <summary>
     /// - 作为各种媒体的封装管理类
     /// 
+    /// Todo：
+    /// -首次初始化时，需要延后一帧，等待RendererHelper初始化材质，否则可能导致内容被冲掉
+    /// 
     /// PS:
+    /// -如果videoPlayer的RenderMode设置为APIOnly，则可以通过videoPlayer.texture获取对应的图片
     /// -标记为sealed避免滥用
     /// -以下的部分输出方式为可选，如果不需要就可以不赋值相关组件字段
     /// 
@@ -44,7 +47,7 @@ namespace Threeyes.Steamworks
         /// -输出音源：如果不需要声音，则把VideoPlayer的AudioOutputMode设置为None；如果需要3D音源，则设置为AudioSource（如果是PrefabMode，则需要在Debug模式才能设置AudioSource）
         /// </summary>
         [Header("Video")]
-        public VideoPlayerHelper videoPlayerHelper;//[Optional] 控制视频的输入源/播放/暂停。
+        public VideoPlayerHelper videoPlayerHelper;//[Optional] 控制视频的输入源/播放/暂停。（支持RenderMode为RenderTexture/MaterialOverride/APIOnly）
         public bool useRendererHelperToDisplayVideo = true;//通过RendererHelper更新Video图像帧，仅适用于VideoRenderMode为RenderTexture
 
         public StringEvent onErrorInfoChanged = new StringEvent();//【ToUse】可选的提示错误信息（如文件加载失败、url读取失败等）（如果没错需要清空）
@@ -55,13 +58,28 @@ namespace Threeyes.Steamworks
         private void OnEnable()
         {
             if (useRendererHelperToDisplayGif && gifPlayer)
-                gifPlayer.onUpdateTexture.AddListener(rendererHelper.SetTexture);
+                gifPlayer.onUpdateTexture.AddListener(SetTextureFunc);
+
+            if (useRendererHelperToDisplayVideo && videoPlayerHelper)
+                videoPlayerHelper.Comp.prepareCompleted += OnVIdeoPlayerPrepareCompleted;
         }
         private void OnDisable()
         {
             if (useRendererHelperToDisplayGif && gifPlayer)
-                gifPlayer.onUpdateTexture.AddListener(rendererHelper.SetTexture);
+                gifPlayer.onUpdateTexture.RemoveListener(SetTextureFunc);
+
+            if (useRendererHelperToDisplayVideo && videoPlayerHelper)
+                videoPlayerHelper.Comp.prepareCompleted -= OnVIdeoPlayerPrepareCompleted;
         }
+        private void OnVIdeoPlayerPrepareCompleted(VideoPlayer source)
+        {
+            if (useRendererHelperToDisplayVideo && videoPlayerHelper.Comp.renderMode == VideoRenderMode.APIOnly)//当视频准备完成时，当其RenderMode为APIOnly，则主动获取其贴图
+            {
+                SetTextureFunc(source.texture);
+            }
+        }
+
+
 
         #region IModHandler
 
@@ -204,15 +222,14 @@ namespace Threeyes.Steamworks
             else
                 videoPlayerHelper.SetRemoteUrl(absPath);
 
-            //#2 设置输出源
-            if (useRendererHelperToDisplayVideo && videoPlayerHelper.Comp.renderMode == VideoRenderMode.RenderTexture && videoPlayerHelper.Comp.targetTexture != null)
+            //#2 设置输出源（使用VideoPlayer的目标RenderTexture）(ToUpdate:直接创建VideoClip对应的RenderTexture（或克隆VideoPlayer当前引用的），参考RenderTextureHelper)
+            if (useRendererHelperToDisplayVideo && videoPlayerHelper.Comp.renderMode == VideoRenderMode.RenderTexture && videoPlayerHelper.Comp.targetTexture)
             {
                 SetTextureFunc(videoPlayerHelper.Comp.targetTexture);
             }
 
             //#3 初始化设置
             videoPlayerHelper.SetMute(Config.isVideoMute);
-
             videoPlayerHelper.Play();
             curMediaType = MediaType.Video;
         }
@@ -233,7 +250,7 @@ namespace Threeyes.Steamworks
         #region IContextMenuProvider
 
         static readonly int contextMenuPriority_Video = 20;
-        public /*override*/ List<ToolStripItemInfo> GetContextMenuInfo()
+        public /*override*/ List<ToolStripItemInfo> GetContextMenuInfos()
         {
             //List<ToolStripItemInfo> listInfo = base.GetContextMenuInfo();
             List<ToolStripItemInfo> listInfo = new List<ToolStripItemInfo>();

@@ -150,8 +150,7 @@ namespace Threeyes.Core
                                 int totalCount = srcList.Count;
                                 for (int i = startIndex; i != totalCount; i++)
                                 {
-                                    object tempElement =
-                                    ReflectionTool.CreateInstance(elementType);
+                                    object tempElement = ReflectionTool.CreateInstance(elementType);
                                     dstList.Add(tempElement);
                                 }
                             }
@@ -391,7 +390,7 @@ namespace Threeyes.Core
             typeof(IntPtr),//拷贝该字段会导致闪退！PS：AnimationCurve 等会包含该字段
             
             //Unity
-            typeof(AnimationCurve),//ToSupport（参考Gradient）
+            typeof(AnimationCurve),//ToSupport（参考ActionConfig_TweenBase<TValue>.Clone，直接用旧数据创建新实例）
     };
 
         /// <summary>

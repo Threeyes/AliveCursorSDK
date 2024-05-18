@@ -4,240 +4,242 @@ using DG.Tweening.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public static class LazyExtension_DoTweenPro
+namespace Threeyes.EventPlayer
 {
-
-    static DOTweenAnimation tweenAnimation;//Real
-    static DOTweenPath tweenPath;
-    static void TryConvert(this ABSAnimationComponent aBSAnimationComponent)
+    public static class LazyExtension_DoTweenPro
     {
-        //tweenAnimation = null;
-        tweenAnimation = aBSAnimationComponent as DOTweenAnimation;
 
-        //tweenPath = null;
-        tweenPath = aBSAnimationComponent as DOTweenPath;
-    }
-
-
-
-    #region Set
-    public static Tween CreateEditorPreview(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
+        static DOTweenAnimation tweenAnimation;//Real
+        static DOTweenPath tweenPath;
+        static void TryConvert(this ABSAnimationComponent aBSAnimationComponent)
         {
-            return tweenAnimation.CreateEditorPreview();
+            //tweenAnimation = null;
+            tweenAnimation = aBSAnimationComponent as DOTweenAnimation;
+
+            //tweenPath = null;
+            tweenPath = aBSAnimationComponent as DOTweenPath;
         }
-        if (tweenPath)
+
+
+
+#region Set
+        public static Tween CreateEditorPreview(this ABSAnimationComponent aBSAnimationComponent)
         {
-            tweenPath.Invoke("Awake", 0);//Create Tween ( ≤Œøº DoTweenPro source Code£©
-        }
-        return null;
-    }
-
-
-    public static void ReCreateTween(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-        {
-            //tweenAnimation.DOKill();//Warning:Kills all tweens with the given ID or target and returns the number of actual
-            if (tweenAnimation.tween != null)
-                tweenAnimation.tween.Kill();
-            tweenAnimation.tween = null;
-            tweenAnimation.CreateTween();
-        }
-        //if (tweenPath)
-        //{
-        //    //≤ŒøºDOTweenModuleUtils.CreateDOTweenPathTween()
-        //    Comp.tween = motionTarget.transform.DOPath(tweenPath.path, tweenPath.duration, tweenPath.pathMode);
-        //    tweenPath.Invoke("Awake", 0);//Create Tween ( ≤Œøº DoTweenPro source Code£©
-        //}
-    }
-
-    public static void SetAutoPlay(this ABSAnimationComponent aBSAnimationComponent, bool isOn)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            tweenAnimation.autoPlay = isOn;
-        if (tweenPath)
-            tweenPath.autoPlay = isOn;
-    }
-
-    public static void SetAutoKill(this ABSAnimationComponent aBSAnimationComponent, bool isOn)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            tweenAnimation.autoKill = isOn;
-        if (tweenPath)
-            tweenPath.autoKill = isOn;
-    }
-
-    public static void SetTarget(this ABSAnimationComponent aBSAnimationComponent, GameObject target, bool isSelf, bool isTargetChanged)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-        {
-            tweenAnimation.targetIsSelf = isSelf;
-            tweenAnimation.targetGO = target;
-
-            //PS:DOTweenAnimation÷–¿‡–ÕŒ™Componentµƒtarget≤≈ «ƒø±Í
-            //Bug&&ToFix£∫ “ÚŒ™÷ª”–DOTweenAnimationInspector÷–≤≈ª·∏¸–¬targetµƒ÷µ£¨À˘“‘÷ª”–—°÷–µƒClip≤≈ª·ø¥µΩ∏¸–¬
-            //Ω‚æˆ∞Ï∑®£∫
-            //1.Œ ◊˜’ﬂµ»ªÿ∏¥£∫https://github.com/Demigiant/dotween/issues/500
-            //2.√ø¥ŒSetTarget∫Û«ø÷∆µ˜”√DOTweenAnimationInspectorµƒµ˜”√∑Ω∑®
-            //≤ŒøºDOTweenAnimationInspector.Validateµƒ650––£¨ –Ë“™ ÷∂ØªÒ»°Component
-            //#ToReplace£∫≤¢≤ªƒ‹∏¸–¬»´≤ø¿‡–Õ£¨÷ª «¡Ÿ ± π”√£¨∫Û∆⁄ π”√◊˜’ﬂÃ·π©µƒ∑Ω∞∏
-            bool isValid = Validate(tweenAnimation, target);//◊˜”√ «∏¸–¬targetµƒ÷µ
-
-            //            //ToDelete(Œﬁ–ß): ≥¢ ‘µ˜”√DOTweenAnimationInspectorµƒOnInspectorGUI()
-            //#if UNITY_EDITOR
-            //            if (!Application.isPlaying && !isValid && isTargetChanged)
-            //            {
-            //                tweenAnimation.target = null;
-            //                GameObject cacheObj = UnityEditor.Selection.activeGameObject;
-            //                UnityEditor.Selection.activeGameObject = tweenAnimation.gameObject;//«ø÷∆∏¸–¬
-
-            //                var cacheType = tweenAnimation.animationType;
-            //                tweenAnimation.animationType = DOTweenAnimation.AnimationType.None;
-            //                UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
-            //                UnityEditor.SceneView.RepaintAll();
-            //                UnityEditor.Selection.activeGameObject = null;//«ø÷∆∏¸–¬
-            //                tweenAnimation.animationType = cacheType;
-            //                UnityEditor.Selection.activeGameObject = tweenAnimation.gameObject;//«ø÷∆∏¸–¬
-            //                UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
-            //                UnityEditor.SceneView.RepaintAll();
-
-            //                //EditorTool.RepaintAllViews();
-            //                //EditorTool.RepaintAllViews();
-            //                //UnityEditor.Selection.activeGameObject = cacheObj;
-
-            //                Debug.Log("Target Changed");
-            //            }
-            //#endif
-        }
-        ////To Impl: ◊˜Œ™∆‰◊”ŒÔÃÂ
-        //if (tweenPath)
-        //{
-        //}
-    }
-
-
-    public static void SetDuration(this ABSAnimationComponent aBSAnimationComponent, float duration)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            tweenAnimation.duration = duration;
-        if (tweenPath)
-            tweenPath.duration = duration;
-    }
-
-    public static void SetLoops(this ABSAnimationComponent aBSAnimationComponent, int value)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            tweenAnimation.loops = value;
-        if (tweenPath)
-            tweenPath.loops = value;
-    }
-
-    public static void SetLoopType(this ABSAnimationComponent aBSAnimationComponent, LoopType value)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            tweenAnimation.loopType = value;
-        if (tweenPath)
-            tweenPath.loopType = value;
-    }
-
-    #endregion
-
-    #region Get
-
-    public static GameObject GetTarget(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            return tweenAnimation.targetGO;
-        return null;
-    }
-
-    public static Tween GetTween(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        if (!aBSAnimationComponent)
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+            {
+                return tweenAnimation.CreateEditorPreview();
+            }
+            if (tweenPath)
+            {
+                tweenPath.Invoke("Awake", 0);//Create Tween ( ÂèÇËÄÉ DoTweenPro source CodeÔºâ
+            }
             return null;
-        aBSAnimationComponent.TryConvert();
-        return aBSAnimationComponent.tween;
-    }
-
-    public static int GetLoops(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            return tweenAnimation.loops;
-        if (tweenPath)
-            return tweenPath.loops;
-        LogNullError();
-        return 0;
-    }
-
-    public static LoopType GetLoopType(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            return tweenAnimation.loopType;
-        if (tweenPath)
-            return tweenPath.loopType;
-
-        LogNullError();
-        return default(LoopType);
-    }
-
-    public static float GetDuration(this ABSAnimationComponent aBSAnimationComponent)
-    {
-        aBSAnimationComponent.TryConvert();
-        if (tweenAnimation)
-            return tweenAnimation.duration;
-        if (tweenPath)
-            return tweenPath.duration;
-        //Debug.LogError("Null!");
-        return 0;
-    }
-
-    public static void Goto(this ABSAnimationComponent aBSAnimationComponent, float time)
-    {
-        aBSAnimationComponent.TryConvert();
-
-        if (aBSAnimationComponent && aBSAnimationComponent.tween != null)
-        {
-            aBSAnimationComponent.tween.Goto(time);
         }
-    }
 
 
-    static void LogNullError()
-    {
-        Debug.LogError("Null ABSAnimationComponent !");
-    }
+        public static void ReCreateTween(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+            {
+                //tweenAnimation.DOKill();//Warning:Kills all tweens with the given ID or target and returns the number of actual
+                if (tweenAnimation.tween != null)
+                    tweenAnimation.tween.Kill();
+                tweenAnimation.tween = null;
+                tweenAnimation.CreateTween();
+            }
+            //if (tweenPath)
+            //{
+            //    //ÂèÇËÄÉDOTweenModuleUtils.CreateDOTweenPathTween()
+            //    Comp.tween = motionTarget.transform.DOPath(tweenPath.path, tweenPath.duration, tweenPath.pathMode);
+            //    tweenPath.Invoke("Awake", 0);//Create Tween ( ÂèÇËÄÉ DoTweenPro source CodeÔºâ
+            //}
+        }
 
-    #endregion
+        public static void SetAutoPlay(this ABSAnimationComponent aBSAnimationComponent, bool isOn)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                tweenAnimation.autoPlay = isOn;
+            if (tweenPath)
+                tweenPath.autoPlay = isOn;
+        }
 
-    #region Copy From DoTweenAnimationInspector
+        public static void SetAutoKill(this ABSAnimationComponent aBSAnimationComponent, bool isOn)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                tweenAnimation.autoKill = isOn;
+            if (tweenPath)
+                tweenPath.autoKill = isOn;
+        }
 
-    /// <summary>
-    ///  if a Component that can be animated with the given animationType is attached to the src
-    ///  PS: Ref from: 
-    /// </summary>
-    /// <param name="_src"></param>
-    /// <param name="targetGO"></param>
-    /// <returns></returns>
-    // Checks
-    static bool Validate(DOTweenAnimation _src, GameObject targetGO)
-    {
-        if (_src.animationType == DOTweenAnimation.AnimationType.None) return false;
+        public static void SetTarget(this ABSAnimationComponent aBSAnimationComponent, GameObject target, bool isSelf, bool isTargetChanged)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+            {
+                tweenAnimation.targetIsSelf = isSelf;
+                tweenAnimation.targetGO = target;
 
-        Component srcTarget;
-        // First check for external plugins
+                //PS:DOTweenAnimation‰∏≠Á±ªÂûã‰∏∫ComponentÁöÑtargetÊâçÊòØÁõÆÊ†á
+                //Bug&&ToFixÔºö Âõ†‰∏∫Âè™ÊúâDOTweenAnimationInspector‰∏≠Êâç‰ºöÊõ¥Êñ∞targetÁöÑÂÄºÔºåÊâÄ‰ª•Âè™ÊúâÈÄâ‰∏≠ÁöÑClipÊâç‰ºöÁúãÂà∞Êõ¥Êñ∞
+                //Ëß£ÂÜ≥ÂäûÊ≥ïÔºö
+                //1.ÈóÆ‰ΩúËÄÖÁ≠âÂõûÂ§çÔºöhttps://github.com/Demigiant/dotween/issues/500
+                //2.ÊØèÊ¨°SetTargetÂêéÂº∫Âà∂Ë∞ÉÁî®DOTweenAnimationInspectorÁöÑË∞ÉÁî®ÊñπÊ≥ï
+                //ÂèÇËÄÉDOTweenAnimationInspector.ValidateÁöÑ650Ë°åÔºå ÈúÄË¶ÅÊâãÂä®Ëé∑ÂèñComponent
+                //#ToReplaceÔºöÂπ∂‰∏çËÉΩÊõ¥Êñ∞ÂÖ®ÈÉ®Á±ªÂûãÔºåÂè™ÊòØ‰∏¥Êó∂‰ΩøÁî®ÔºåÂêéÊúü‰ΩøÁî®‰ΩúËÄÖÊèê‰æõÁöÑÊñπÊ°à
+                bool isValid = Validate(tweenAnimation, target);//‰ΩúÁî®ÊòØÊõ¥Êñ∞targetÁöÑÂÄº
+
+                //            //ToDelete(Êó†Êïà): Â∞ùËØïË∞ÉÁî®DOTweenAnimationInspectorÁöÑOnInspectorGUI()
+                //#if UNITY_EDITOR
+                //            if (!Application.isPlaying && !isValid && isTargetChanged)
+                //            {
+                //                tweenAnimation.target = null;
+                //                GameObject cacheObj = UnityEditor.Selection.activeGameObject;
+                //                UnityEditor.Selection.activeGameObject = tweenAnimation.gameObject;//Âº∫Âà∂Êõ¥Êñ∞
+
+                //                var cacheType = tweenAnimation.animationType;
+                //                tweenAnimation.animationType = DOTweenAnimation.AnimationType.None;
+                //                UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
+                //                UnityEditor.SceneView.RepaintAll();
+                //                UnityEditor.Selection.activeGameObject = null;//Âº∫Âà∂Êõ¥Êñ∞
+                //                tweenAnimation.animationType = cacheType;
+                //                UnityEditor.Selection.activeGameObject = tweenAnimation.gameObject;//Âº∫Âà∂Êõ¥Êñ∞
+                //                UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
+                //                UnityEditor.SceneView.RepaintAll();
+
+                //                //EditorTool.RepaintAllViews();
+                //                //EditorTool.RepaintAllViews();
+                //                //UnityEditor.Selection.activeGameObject = cacheObj;
+
+                //                Debug.Log("Target Changed");
+                //            }
+                //#endif
+            }
+            ////To Impl: ‰Ωú‰∏∫ÂÖ∂Â≠êÁâ©‰Ωì
+            //if (tweenPath)
+            //{
+            //}
+        }
+
+
+        public static void SetDuration(this ABSAnimationComponent aBSAnimationComponent, float duration)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                tweenAnimation.duration = duration;
+            if (tweenPath)
+                tweenPath.duration = duration;
+        }
+
+        public static void SetLoops(this ABSAnimationComponent aBSAnimationComponent, int value)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                tweenAnimation.loops = value;
+            if (tweenPath)
+                tweenPath.loops = value;
+        }
+
+        public static void SetLoopType(this ABSAnimationComponent aBSAnimationComponent, LoopType value)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                tweenAnimation.loopType = value;
+            if (tweenPath)
+                tweenPath.loopType = value;
+        }
+
+#endregion
+
+#region Get
+
+        public static GameObject GetTarget(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                return tweenAnimation.targetGO;
+            return null;
+        }
+
+        public static Tween GetTween(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            if (!aBSAnimationComponent)
+                return null;
+            aBSAnimationComponent.TryConvert();
+            return aBSAnimationComponent.tween;
+        }
+
+        public static int GetLoops(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                return tweenAnimation.loops;
+            if (tweenPath)
+                return tweenPath.loops;
+            LogNullError();
+            return 0;
+        }
+
+        public static LoopType GetLoopType(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                return tweenAnimation.loopType;
+            if (tweenPath)
+                return tweenPath.loopType;
+
+            LogNullError();
+            return default(LoopType);
+        }
+
+        public static float GetDuration(this ABSAnimationComponent aBSAnimationComponent)
+        {
+            aBSAnimationComponent.TryConvert();
+            if (tweenAnimation)
+                return tweenAnimation.duration;
+            if (tweenPath)
+                return tweenPath.duration;
+            //Debug.LogError("Null!");
+            return 0;
+        }
+
+        public static void Goto(this ABSAnimationComponent aBSAnimationComponent, float time)
+        {
+            aBSAnimationComponent.TryConvert();
+
+            if (aBSAnimationComponent && aBSAnimationComponent.tween != null)
+            {
+                aBSAnimationComponent.tween.Goto(time);
+            }
+        }
+
+
+        static void LogNullError()
+        {
+            Debug.LogError("Null ABSAnimationComponent !");
+        }
+
+#endregion
+
+#region Copy From DoTweenAnimationInspector
+
+        /// <summary>
+        ///  if a Component that can be animated with the given animationType is attached to the src
+        ///  PS: Ref from: 
+        /// </summary>
+        /// <param name="_src"></param>
+        /// <param name="targetGO"></param>
+        /// <returns></returns>
+        // Checks
+        static bool Validate(DOTweenAnimation _src, GameObject targetGO)
+        {
+            if (_src.animationType == DOTweenAnimation.AnimationType.None) return false;
+
+            Component srcTarget;
+            // First check for external plugins
 #if false // TK2D_MARKER
             if (_Tk2dAnimationTypeToComponent.ContainsKey(_src.animationType)) {
                 foreach (Type t in _Tk2dAnimationTypeToComponent[_src.animationType]) {
@@ -262,27 +264,27 @@ public static class LazyExtension_DoTweenPro
                 }
             }
 #endif
-        // Then check for regular stuff
-        if (_AnimationTypeToComponent.ContainsKey(_src.animationType))
-        {
-            foreach (Type t in _AnimationTypeToComponent[_src.animationType])
+            // Then check for regular stuff
+            if (_AnimationTypeToComponent.ContainsKey(_src.animationType))
             {
-                srcTarget = targetGO.GetComponent(t);
-                if (srcTarget != null)
+                foreach (Type t in _AnimationTypeToComponent[_src.animationType])
                 {
-                    _src.target = srcTarget;
-                    _src.targetType = DOTweenAnimation.TypeToDOTargetType(t);
-                    return true;
+                    srcTarget = targetGO.GetComponent(t);
+                    if (srcTarget != null)
+                    {
+                        _src.target = srcTarget;
+                        _src.targetType = DOTweenAnimation.TypeToDOTargetType(t);
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
-    }
 
-    /// <summary>
-    /// PS:÷ª «¡Ÿ ±≤‚ ‘ π”√£¨“ÚŒ™‘⁄DoTweenUtilityPanel¿Ô√Ê∏¸–¬÷ß≥÷ªÚ’ﬂ…˝º∂µΩ–¬∞Ê∫Û£¨ø…ƒ‹ª·µº÷¬“˝”√∂™ ß£¨À˘“‘“ª¬…Ω˚”√ø…ƒ‹≤ª¥Ê‘⁄µƒ
-    /// </summary>
-    static readonly Dictionary<DOTweenAnimation.AnimationType, Type[]> _AnimationTypeToComponent = new Dictionary<DOTweenAnimation.AnimationType, Type[]>() {
+        /// <summary>
+        /// PS:Âè™ÊòØ‰∏¥Êó∂ÊµãËØï‰ΩøÁî®ÔºåÂõ†‰∏∫Âú®DoTweenUtilityPanelÈáåÈù¢Êõ¥Êñ∞ÊîØÊåÅÊàñËÄÖÂçáÁ∫ßÂà∞Êñ∞ÁâàÂêéÔºåÂèØËÉΩ‰ºöÂØºËá¥ÂºïÁî®‰∏¢Â§±ÔºåÊâÄ‰ª•‰∏ÄÂæãÁ¶ÅÁî®ÂèØËÉΩ‰∏çÂ≠òÂú®ÁöÑ
+        /// </summary>
+        static readonly Dictionary<DOTweenAnimation.AnimationType, Type[]> _AnimationTypeToComponent = new Dictionary<DOTweenAnimation.AnimationType, Type[]>() {
             {
                 DOTweenAnimation.AnimationType.Move,
                 new[]
@@ -363,6 +365,7 @@ public static class LazyExtension_DoTweenPro
 //            { DOTweenAnimation.AnimationType.UIWidthHeight, new[] { typeof(RectTransform) } },
 //#endif
         };
-    #endregion
+#endregion
+    }
 }
 #endif

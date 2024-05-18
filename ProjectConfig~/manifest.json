@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.threeyes.alivecursor.sdk": "4.3.3",
+    "com.threeyes.alivecursor.sdk": "4.3.4",
     "com.beans.deform": "1.2.1",
     "com.coffee.ui-effect": "4.0.0-preview.10",
     "com.dbrizov.naughtyattributes": "2.1.4",

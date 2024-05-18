@@ -14,12 +14,13 @@ public class AC_SOAction_TweenCursorBaseScale : SOAction_TweenBase<ActionConfig_
 {
 	protected override Tween CreateTween(ActionTweenRuntimeData<ActionConfig_TweenVector3Ex, Vector3, Transform> runtimeData)
 	{
-		//PS：不需要Punch/Shake等变化
-		Tween tween = DOTween.To(
+        //PS：不需要Punch/Shake等变化
+        var config = runtimeData.Config;
+        Tween tween = DOTween.To(
 			() => AC_ManagerHolder.TransformManager.CursorBaseScale,
 			(f) => AC_ManagerHolder.TransformManager.CursorBaseScale = f,
-			runtimeData.EndValue,
-			runtimeData.Duration);
+            config.EndValue,
+            config.Duration);
 
 		return tween;
 	}

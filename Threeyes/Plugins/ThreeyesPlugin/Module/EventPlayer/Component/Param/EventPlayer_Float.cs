@@ -12,12 +12,13 @@ namespace Threeyes.EventPlayer
     /// <summary>
     /// Event with float
     /// </summary>
+    [AddComponentMenu(EditorDefinition_EventPlayer.AssetMenuPrefix_Action_Param + "EventPlayer_Float")]
     public class EventPlayer_Float : EventPlayerWithParamBase<EventPlayer_Float, FloatEvent, float>
     {
         #region Editor Method
 #if UNITY_EDITOR
 
-        //¡ª¡ªMenuItem¡ª¡ª
+        //â€”â€”MenuItemâ€”â€”
         static string instName = "FloatEP ";
         [UnityEditor.MenuItem(strMenuItem_Root_Param + "Float", false, intParamMenuOrder + 1)]
         public static void CreateFloatEventPlayer()
@@ -25,7 +26,7 @@ namespace Threeyes.EventPlayer
             EditorTool.CreateGameObjectAsChild<EventPlayer_Float>(instName);
         }
 
-        //¡ª¡ªHierarchy GUI¡ª¡ª
+        //â€”â€”Hierarchy GUIâ€”â€”
         public override string ShortTypeName { get { return "F"; } }
 
 #endif

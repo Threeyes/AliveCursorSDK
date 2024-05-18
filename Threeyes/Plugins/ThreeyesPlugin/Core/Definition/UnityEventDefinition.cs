@@ -74,6 +74,8 @@ namespace Threeyes.Core
     public class TextureEvent : UnityEvent<Texture> { }
     [System.Serializable]
     public class Texture2DEvent : UnityEvent<Texture2D> { }
+    [System.Serializable]
+    public class RenderTextureEvent : UnityEvent<RenderTexture> { }
 
     [System.Serializable]
     public class ScriptableObjectEvent : UnityEvent<ScriptableObject> { }

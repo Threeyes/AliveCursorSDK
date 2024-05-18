@@ -41,7 +41,7 @@ public class AC_AssistantManagerSimulator : AssistantManagerSimulator
     }
     async void InitAsync()
     {
-        while (!SceneManagerSimulator.Instance.HasSceneLoaded)
+        while (SceneManagerSimulator.Instance.IsChangingScene)
         {
             await Task.Yield();//等待Scene初始化完成，并初始化所有的Controller
         }

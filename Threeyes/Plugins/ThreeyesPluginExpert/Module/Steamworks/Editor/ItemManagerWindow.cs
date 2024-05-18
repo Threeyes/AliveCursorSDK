@@ -34,68 +34,77 @@ namespace Threeyes.Steamworks
         public abstract void AfterBuild(ModBuildResult result, ref TSOItemInfo soItemInfo);
 
     }
-    public abstract class ItemManagerWindow<TItemManagerWindow, TItemManagerWindowInfo, TSOEditorSettingManager, TSOItemInfo, TItemInfo> : EditorWindow
+    public abstract class ItemManagerWindow : EditorWindow
+    {
+        protected static SORuntimeSettingManager SORuntimeManagerInst { get { return SORuntimeSettingManager.Instance; } }
+
+        protected VisualTreeAsset uxmlAsset = default;
+
+        //——Item Manager Group——
+        protected VisualElement visualElementItemManagerGroup;
+        protected DropdownField dropdownFieldActiveItem;
+        protected TextField textFieldNewItemName;
+        protected Button buttonCreateItem;
+        protected HelpBox helpBoxItemManager;//提示框
+
+        //——SOWorkshopItemInfo Group——
+        protected VisualElement visualElementSOWorkshopItemInfoGroup;
+        protected VisualElement visualElementPreviewArea;
+        protected Label labelPreviewRemark;
+        protected HelpBox helpBoxPreview;//预览图提示框
+
+
+        //——Interaction Group——
+        //Edit
+        protected Button buttonSelectItemDirButton;
+        protected Button buttonEditScene;//Create/Edit Scene
+
+        //Build
+        protected HelpBox helpBoxBuild;//打包提示框
+        protected TextField textFieldExePath;
+        protected Button buttonSelectExe;
+        protected Button buttonItemBuild;
+        protected Button buttonItemBuildAndRun;
+        protected Button buttonItemRun;
+        //Button buttonItemBuildAll;
+        //Upload
+        protected TextField textFieldChangeLog;
+        protected Button buttonItemUpload;
+        protected Button buttonItemReuploadAll;
+        protected Button buttonItemOpenUrl;
+        //进度条相关组件
+        protected ProgressBar progressBarUpload;
+
+        protected Label labelAgreement;//Steam上传相关协议，可以点击
+
+        //——SDK Info Group——
+        protected Label labelSDKVersion;
+        protected Button buttonUpdateSDK;
+
+        protected abstract void InitUIWithCurInfo();
+    }
+
+    public abstract class ItemManagerWindow<TItemManagerWindow, TItemManagerWindowInfo, TSOEditorSettingManager, TSOItemInfo, TItemInfo> : ItemManagerWindow
         where TItemManagerWindow : ItemManagerWindow<TItemManagerWindow, TItemManagerWindowInfo, TSOEditorSettingManager, TSOItemInfo, TItemInfo>
         where TItemManagerWindowInfo : ItemManagerWindowInfo<TSOEditorSettingManager, TSOItemInfo>, new()
         where TSOEditorSettingManager : SOEditorSettingManager<TSOEditorSettingManager, TSOItemInfo>
         where TSOItemInfo : SOWorkshopItemInfo<TItemInfo>
         where TItemInfo : WorkshopItemInfo, new()
     {
-        public static TSOEditorSettingManager SOManagerInst { get { return info.SOEditorSettingManagerInst; } }
-        static SORuntimeSettingManager SORuntimeManagerInst { get { return SORuntimeSettingManager.Instance; } }
+        public static ItemManagerWindow<TItemManagerWindow, TItemManagerWindowInfo, TSOEditorSettingManager, TSOItemInfo, TItemInfo> WindowInstance;
 
+        public static TSOEditorSettingManager SOManagerInst { get { return info.SOEditorSettingManagerInst; } }
         public static readonly TItemManagerWindowInfo info = new TItemManagerWindowInfo();
 
-        private VisualTreeAsset uxmlAsset = default;
-
-        //——Item Manager Group——
-        VisualElement visualElementItemManagerGroup;
-        DropdownField dropdownFieldActiveItem;
-        TextField textFieldNewItemName;
-        Button buttonCreateItem;
-        HelpBox helpBoxItemManager;//提示框
-
-        //——SOWorkshopItemInfo Group——
-        VisualElement visualElementSOWorkshopItemInfoGroup;
-        VisualElement visualElementPreviewArea;
-        Label labelPreviewRemark;
-        HelpBox helpBoxPreview;//预览图提示框
-
-
-        //——Interaction Group——
-        //Edit
-        Button buttonSelectItemDirButton;
-        protected Button buttonEditScene;//Create/Edit Scene
-
-        //Build
-        HelpBox helpBoxBuild;//打包提示框
-        TextField textFieldExePath;
-        Button buttonSelectExe;
-        Button buttonItemBuild;
-        Button buttonItemBuildAndRun;
-        Button buttonItemRun;
-        //Button buttonItemBuildAll;
-        //Upload
-        TextField textFieldChangeLog;
-        Button buttonItemUpload;
-        Button buttonItemReuploadAll;
-        Button buttonItemOpenUrl;
-        //进度条相关组件
-        ProgressBar progressBarUpload;
-
-        Label labelAgreement;//Steam上传相关协议，可以点击
-
-        //——SDK Info Group——
-        Label labelSDKVersion;
-        Button buttonUpdateSDK;
 
         //——Runtime——
-        public List<TSOItemInfo> listValidItemInfo = new List<TSOItemInfo>();//扫描到的信息
-        protected TSOItemInfo curSOWorkshopItemInfo;
         protected static readonly Vector2 k_MinWindowSize = new Vector2(450, 600);
+        protected static List<TSOItemInfo> listValidItemInfo = new List<TSOItemInfo>();//扫描到的信息
+        protected static TSOItemInfo curSOWorkshopItemInfo;
 
         private void OnEnable()
         {
+            WindowInstance = this;
             uxmlAsset = Resources.Load<VisualTreeAsset>(info.WindowAssetPath);
             uxmlAsset.CloneTree(rootVisualElement);
             InitUXMLField();
@@ -200,11 +209,11 @@ namespace Threeyes.Steamworks
             Update_PackageInfo();
         }
 
-        #region UpdateUI
+        #region Init&Update UI
         /// <summary>
         /// 刷新所有UI，使用上次选中的信息（适用于全局状态更新）
         /// </summary>
-        void InitUIWithCurInfo()
+        protected override void InitUIWithCurInfo()
         {
             InitUI(curSOWorkshopItemInfo);
         }
@@ -215,6 +224,9 @@ namespace Threeyes.Steamworks
         }
         /// <summary>
         /// 
+        /// 设置：
+        /// -listValidItemInfo
+        /// -SOManagerInst.CurWorkshopItemInfo（通过InitCurInfo方法）
         /// </summary>
         /// <param name="defaultSelect">需要默认选中的物体</param>
         void InitItemDropdownState(TSOItemInfo defaultSelect = null)
@@ -254,13 +266,12 @@ namespace Threeyes.Steamworks
                 dropdownFieldActiveItem.value = choiceTips;
             }
 
-            InitCurInfo(targetInfo);//显示选中的Item信息
+            InitCurInfo(targetInfo);
         }
 
 
-
         /// <summary>
-        /// 显示当前选中Item信息
+        /// 初始化当前选中Item信息
         /// </summary>
         /// <param name="target">可空</param>
         void InitCurInfo(TSOItemInfo target)
@@ -448,6 +459,9 @@ namespace Threeyes.Steamworks
 
         private void OnProjectChange()
         {
+            if (isBuildingMod)
+                return;
+
             ///监听项目的文件变化，每当有变化就自动刷新，并保持选中当前Item
             //Actions that trigger this message include creating, renaming, or reparenting assets, as well as moving or renaming folders in the project.
             InitUIWithCurInfo();
@@ -459,7 +473,13 @@ namespace Threeyes.Steamworks
         {
             var info = listValidItemInfo.Find(i => i.itemName == evt.newValue);
             if (info)
+            {
                 InitCurInfo(info); //显示Item信息
+            }
+            else
+            {
+                Debug.LogError($"Can't find Info for {evt.newValue} !");
+            }
         }
 
         private void OnNewItemNameTextFieldChanged(ChangeEvent<string> evt)
@@ -1139,9 +1159,10 @@ namespace Threeyes.Steamworks
         //        int a = 1;
         //    }
         //}
-
+        static bool isBuildingMod = false;
         static bool BuildItemFunc(TSOItemInfo sOWorkshopItemInfo, out string errorLog)
         {
+
             //TestCacheLog();//【遇到打包失败且无错误提示时激活该行】编辑器调试时，通过在ReceivedLog中打断点可及时获取未打印的报错信息，避免被清空
 
             errorLog = null;
@@ -1150,6 +1171,11 @@ namespace Threeyes.Steamworks
                 errorLog = "sOWorkshopItemInfo is null" + "\r\n";
                 return false;
             }
+
+            ////#针对uMod 2.9.7或更高版本:Cache
+            string curSOInfoPath = AssetDatabase.GetAssetPath(curSOWorkshopItemInfo);
+            string sOInfoPath = AssetDatabase.GetAssetPath(sOWorkshopItemInfo);
+
 
             //——检查基本配置是否完成——
             string itemBuildValidErrorLog;
@@ -1160,6 +1186,8 @@ namespace Threeyes.Steamworks
             }
             try
             {
+                isBuildingMod = true;
+
                 if (GetActiveExportProfileSettings(sOWorkshopItemInfo) != null)
                 {
                     info.BeforeBuild(ref sOWorkshopItemInfo);//进行打包前的预处理（如更新SOAssetPack）
@@ -1179,11 +1207,18 @@ namespace Threeyes.Steamworks
                     activeExportSettings.SetActiveExportProfile(GetActiveExportProfileSettings(sOWorkshopItemInfo));
                     ModBuildResult result = ModToolsUtil.StartBuild(activeExportSettings);
 
-                    //设置额外信息（如其他Tags）
-                    info.AfterBuild(result, ref sOWorkshopItemInfo);
+                    ////#针对uMod 2.9.7或更高版本（经测试有效，但因UMod打包失败会导致SO发生变化而暂时不升级到此版本）:
+                    ////-调用StartBuild后该版本增加了对自定义SO的支持，因此会对SO进行修改(临时变为LinkScriptableObjectV2，之后才会改回原状)。因此需要刷新后重新链接
+                    //AssetDatabase.Refresh();
+                    //sOWorkshopItemInfo = AssetDatabase.LoadAssetAtPath<TSOItemInfo>(sOInfoPath);
+                    //curSOWorkshopItemInfo = AssetDatabase.LoadAssetAtPath<TSOItemInfo>(curSOInfoPath);
+                    //WindowInstance.InitUI(curSOWorkshopItemInfo);//会自动初始化listValidItemInfo和SOManagerInst.CurWorkshopItemInfo
 
                     if (result.Successful)
                     {
+                        //设置额外信息（如其他Tags）
+                        info.AfterBuild(result, ref sOWorkshopItemInfo);
+
                         //#拷贝预览图
                         //ToAdd:先删掉旧的预览图(非必须，只是有残留影响不大。删除时的出错情况太多（如占用），暂不实现）
                         //ToUpdate：图片使用同样的名称：Preview.XXX
@@ -1210,6 +1245,10 @@ namespace Threeyes.Steamworks
             {
                 errorLog = "Build Failed:\r\n" + e;
                 return false;
+            }
+            finally
+            {
+                isBuildingMod = false;//Reset
             }
             return true;
         }

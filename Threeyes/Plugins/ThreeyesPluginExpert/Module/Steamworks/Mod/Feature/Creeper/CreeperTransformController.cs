@@ -12,6 +12,12 @@ namespace Threeyes.Steamworks
     /// 功能：
     /// -决定根模型的位置/旋转
     ///
+    /// ToUpdate：
+    /// -尝试tfLookEndPoint与tfPosEndPoint分别对应不同物体，且通过Lerp逐渐朝向目的位置（可以是本组件创建一个空物体，限定角速度Lerp到tfLookEndPoint的目标位置），从而使移动时的朝向更加平滑而不是固定一个角度
+    /// -针对AD，提炼出CreeperUserInput，通过向该组件或类似组件传递移动信号。实现：
+    ///     #1 可以攀爬障碍物：该组件会尝试往前方及下向发射射线，当检测到前方指定距离有障碍物就获取其法线指定高度的一个点作为新的目标移动点
+    ///     #2 平面移动：遇到障碍物就暂停，跟车辆一样
+    /// 
     /// PS:
     /// -为了方便多个实例Creeper，不做成单例
     /// -不需要将所有脚都弄成IK，比如螃蟹就可以保留2个自由活动的前手关节
@@ -24,7 +30,7 @@ namespace Threeyes.Steamworks
 
         public CreeperModelController creeperModelController;
         [Header("Body")]
-        public bool isSyncRotOrLookAt = true;// GhostBody是同步tfEndPoint的旋转，还是朝向该目标
+        public bool isSyncRotOrLookAt = true;// GhostBody是同步tfEndPoint的旋转，还是朝向该目标（ToUpdate：挪到Config中）
         public Vector3 localBodyUp = new Vector3(0, 1, 0);//GhostBody的局部Up轴
         public Transform tfPosEndPoint;//躯干位置的终点
         public Transform tfLookEndPoint;//躯干朝向的目标

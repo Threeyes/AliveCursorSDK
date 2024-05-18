@@ -1,6 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 using Threeyes.Core;
+using Threeyes.InputSystem;
 
 public class AC_SystemCursorManagerSimulator : AC_SystemCursorManagerBase<AC_SystemCursorManagerSimulator>
 {

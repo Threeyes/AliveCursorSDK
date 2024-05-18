@@ -54,7 +54,7 @@ namespace Threeyes.Persistent
 #endif
         }
 
-        public override void Dispose()
+        public override void Dispose()//退出时还原
         {
 #if UNITY_EDITOR
             /// 【编辑器模式】程序退出前重置TargetValue，避免其资源数值被修改。

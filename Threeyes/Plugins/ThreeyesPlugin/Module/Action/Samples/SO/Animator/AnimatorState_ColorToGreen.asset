@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 864b4a9039f25d848b395ed0a710151d, type: 3}
+  m_Name: AnimatorState_ColorToGreen
+  m_EditorClassIdentifier: 
+  remark: 
+  isActiveEnter: 1
+  isActiveExit: 0
+  enterConfig:
+    endValue: 1
+    layerIndex: 0
+    stateName: ColorToGreen
+    statePlayType: 3
+    normalizedTime: 0
+    fixedTime: 0
+    normalizedTransitionDuration: 0.1
+    normalizedTimeOffset: 0
+    fixedTransitionDuration: 0
+    fixedTimeOffset: 0
+    normalizedTransitionTime: 0
+  exitConfig:
+    endValue: 1
+    layerIndex: 0
+    stateName: Scale
+    statePlayType: 3
+    normalizedTime: 0
+    fixedTime: 0
+    normalizedTransitionDuration: 0.1
+    normalizedTimeOffset: 0
+    fixedTransitionDuration: 0
+    fixedTimeOffset: 0
+    normalizedTransitionTime: 0

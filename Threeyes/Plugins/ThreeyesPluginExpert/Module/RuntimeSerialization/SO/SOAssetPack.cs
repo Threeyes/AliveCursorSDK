@@ -310,7 +310,7 @@ namespace Threeyes.RuntimeSerialization
         #region ——Editor——
 #if UNITY_EDITOR
 
-        [ContextMenu("EditorScanData")]
+        [ContextMenu("UpdateData")]
         void EditorScanData()
         {
             //基于当前文件夹进行更新（常用于测试）

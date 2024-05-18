@@ -1,8 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Threeyes.Core;
-using Threeyes.Coroutine;
 using UnityEngine;
 
 namespace Threeyes.EventPlayer
@@ -37,9 +36,11 @@ namespace Threeyes.EventPlayer
         protected virtual void TryStopCoroutine()
         {
             if (cacheEnum != null)
+            {
                 CoroutineManager.StopCoroutineEx(cacheEnum);
+                cacheEnum = null;
+            }
         }
-
         protected override void StopFunc()
         {
             TryStopCoroutine();//In case the developer has manual stop the Coroutine

@@ -1,4 +1,4 @@
-﻿//#define InspectorDebug
+//#define InspectorDebug
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
@@ -232,6 +232,7 @@ namespace Threeyes.EventPlayer.Editor
         /// </summary>
         private void DrawSubContent()
         {
+            //ToUpdate：应该是返回List，以便自定义多个模块
             gPPSub.Clear();
             targetComp.SetInspectorGUISubProperty(gPPSub);
             if (gPPSub.HasContent)//EventPlayer没有内容，不显示

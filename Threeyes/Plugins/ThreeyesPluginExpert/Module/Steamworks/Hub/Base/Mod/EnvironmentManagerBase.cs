@@ -19,6 +19,8 @@ namespace Threeyes.Steamworks
             where TSOControllerConfigInterface : ISOEnvironmentControllerConfig
     {
         #region Interface
+        public IEnvironmentController BaseActiveController { get { return ActiveController; } }
+
         public virtual Camera MainCamera { get { return mainCamera; } }// 1.为了方便Modder计算可视区域，只能暴露Camera给用户，但是要提醒用户注意还原相机！否则其FOV等属性可能会被篡改（ToUpdate：可以通过将Camera放到一个子场景中，每次加载Mod就重置子场景）（ToRemove：移动到）
         #endregion
 
@@ -27,11 +29,15 @@ namespace Threeyes.Steamworks
         #endregion
 
         #region Callback
+        public virtual void OnModPreInit(Scene scene, ModEntry modEntry)
+        {
+            //提前获取，避免SkyboxController等实例访问
+            modController = scene.GetComponents<TControllerInterface>().FirstOrDefault();
+            defaultController.gameObject.SetActive(modController == null);//两者互斥
+        }
         public virtual void OnModInit(Scene scene, ModEntry modEntry)
         {
             //设置Mod环境
-            modController = scene.GetComponents<TControllerInterface>().FirstOrDefault();
-            defaultController.gameObject.SetActive(modController == null);//两者互斥
             ActiveController.OnModControllerInit();//初始化
             ManagerHolderManager.Instance.FireGlobalControllerConfigStateEvent<TSOControllerConfigInterface>(modController == null);//设置对应的全局Config是否可用
         }
