@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.3.5]
+- Change ValueHolder's namespace to Core (some items need to be repackaged).
+- Add reflection method Components (ReflectionMethodHolderXXX).
+
 ## [4.3.4]
 - Optimize the code structure of ThreeyesPlugin (some items need to be repackaged).
 
