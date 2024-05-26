@@ -8,6 +8,39 @@ namespace Threeyes.Core
 {
     public static class PhysicsTool
     {
+        /// <summary>
+        /// 尝试获取Hierarchy最顶端的Rigidbody
+        /// </summary>
+        /// <param name="collider"></param>
+        /// <returns></returns>
+        public static Rigidbody GetRootRigidbody(this Collider collider)
+        {
+            if (!collider)
+                return null;
+
+            Rigidbody attachRig = collider.attachedRigidbody;
+            if (!attachRig)
+                return null;
+            return attachRig.GetRootRigidbody();
+        }
+
+        static Rigidbody GetRootRigidbody(this Rigidbody rig)
+        {
+            Joint joint = rig.GetComponent<Joint>();
+            if (!joint)//如果不使用Joint，则代表为顶层物体
+                return rig;
+            else//否则进行判断
+            {
+                Rigidbody jointConnectedBody = joint.connectedBody;
+                if (!jointConnectedBody)
+                    return rig;
+
+                if (!rig.transform.IsChildOf(jointConnectedBody.transform))//如果该ConnectedBody不是该Rigidbody的父物体，则代表不同层级，可以直接返回该物体
+                    return rig;
+                return GetRootRigidbody(jointConnectedBody);//往上搜索，直到找到最顶端的目标
+            }
+        }
+
         static RaycastDistanceComparer raycastDistanceComparer = new RaycastDistanceComparer();
 
         /// <summary>

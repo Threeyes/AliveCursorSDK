@@ -26,7 +26,8 @@ namespace Threeyes.Steamworks
     }
 
     public abstract class EnvironmentControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IEnvironmentController
-            where TSOConfig : SOConfigBase<TConfig>, ISOEnvironmentControllerConfig
+        where TSOConfig : SOConfigBase<TConfig>, ISOEnvironmentControllerConfig
+        where TConfig : new()
     {
         public abstract Light SunSourceLight { get; }
 

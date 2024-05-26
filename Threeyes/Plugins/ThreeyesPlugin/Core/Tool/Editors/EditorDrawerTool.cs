@@ -4,6 +4,8 @@ using UnityEngine.Events;
 using System.Text;
 using System.Collections.Generic;
 using UnityEditor;
+using Enum = System.Enum;
+using Type = System.Type;
 
 namespace Threeyes.Core.Editor
 {
@@ -256,6 +258,7 @@ namespace Threeyes.Core.Editor
 
         #region GUI Draw
 
+        #region Group
         public static void DrawSpace()
         {
             GUILayout.Space(2);
@@ -316,6 +319,18 @@ namespace Threeyes.Core.Editor
             r.width -= 4;
             EditorGUI.DrawRect(r, color);
         }
+
+        /// <summary>
+        /// Group的标题，居中形式
+        /// </summary>
+        /// <param name="text"></param>
+        public static void DrawGroupTitleText(string text)
+        {
+            GUILayout.Label(text, gUISytleGroupTitleText);//Warning:如果不使用缓存直接修改值，会导致频繁更新而卡顿
+        }
+        #endregion
+
+        #region Element
 
         /// <summary>
         /// 调用默认的方法进行绘制
@@ -391,8 +406,49 @@ namespace Threeyes.Core.Editor
             return result;
         }
 
+        public static void DrawEnum(UnityEngine.Object target, string label, Type enumType, System.Func<Enum> getter, UnityAction<Enum> setter = null, Enum defaultValue = null)
+        {
+            if (enumType == null)
+                return;
+
+            //PS：如果开发者更改了枚举定义名，会导致返回null，从而将值重置为默认值
+            Enum lastValue = getter();
+            if (lastValue != null)
+            {
+                try
+                {
+                    bool useFlag = enumType.IsDefined(typeof(System.FlagsAttribute), false);//检查enumType是否定义了Flags
+                    Enum result = useFlag ? EditorGUILayout.EnumFlagsField(label, lastValue) : EditorGUILayout.EnumPopup(label, lastValue);//针对Flag有不同的绘制diamagnetic
+
+                    if (!lastValue.Equals(result))//更新值
+                    {
+                        Undo.RecordObject(target, "SetEnum");
+                        setter.Execute(result);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError(e);//ToDelete
+                }
+            }
+            else
+            {
+                if (defaultValue == null)//尝试获取默认有效值
+                {
+                    System.Array values = Enum.GetValues(enumType);
+                    if (values.Length > 0)
+                        defaultValue = values.GetValue(0) as Enum;
+                }
+
+                Undo.RecordObject(target, "SetEnum");
+                setter.Execute(defaultValue);//设置为首个默认值
+            }
+        }
+
+
         /// <summary>
         /// 
+        /// ToDelete：改为DawEnum
         /// </summary>
         /// <param name="gUIContent">如果Text为空，则不显示</param>
         /// <param name="getter"></param>
@@ -414,14 +470,8 @@ namespace Threeyes.Core.Editor
             return result;
         }
 
-        /// <summary>
-        /// Group的标题，居中形式
-        /// </summary>
-        /// <param name="text"></param>
-        public static void DrawGroupTitleText(string text)
-        {
-            GUILayout.Label(text, gUISytleGroupTitleText);//Warning:如果不使用缓存直接修改值，会导致频繁更新而卡顿
-        }
+        #endregion
+
         /// <summary>
         ///  TextArea with autowarp
         /// </summary>

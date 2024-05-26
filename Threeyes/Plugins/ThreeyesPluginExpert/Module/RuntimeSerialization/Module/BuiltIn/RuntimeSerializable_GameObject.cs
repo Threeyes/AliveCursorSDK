@@ -89,7 +89,7 @@ namespace Threeyes.RuntimeSerialization
                         Debug.LogError($"【Instance】Try to generate new GUID for [{gameObject}] failed! Reach max retry count {maxRetryCount}!");
                     //else
                     //{
-                        //Debug.LogWarning($"【Temp】Update instance {gameObject.scene.name}_{gameObject.scene.rootCount}_{gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
+                    //Debug.LogWarning($"【Temp】Update instance {gameObject.scene.name}_{gameObject.scene.rootCount}_{gameObject.name}'s {nameof(cacheInstanceID)} to {cacheInstanceID.Guid}");
                     //}
                     EditorUtility.SetDirty(this);// mark as dirty, so the change will be save into scene file
                 }
@@ -265,6 +265,7 @@ namespace Threeyes.RuntimeSerialization
             //#1 扫描并存储该物体所有RTSComponent的序列化数据
             //propertyBag.serializedComponents.AddRange(listRSComponent.ConvertAll(rsc => rsc.OnSerialize()));//【ToDelete】
             List<IRuntimeSerializableComponent> listRSComponent = gameObject.GetComponents<IRuntimeSerializableComponent>().ToList();
+            listRSComponent.RemoveAll(rsC => !rsC.ID.IsValid);//移除所有无效的ID（可能原因：运行时临时添加）（ToUpdate【V2】：后期可以标志指定组件为运行时添加，并且实时为其生成ID）
             List<IComponentPropertyBag> listCPB = new List<IComponentPropertyBag>();
             foreach (var rsComponent in listRSComponent)
             {

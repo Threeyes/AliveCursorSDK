@@ -77,8 +77,11 @@ namespace Threeyes.Steamworks
 
         /// <summary>
         /// Update setting base on config info
+        /// 
+        /// PS:
+        /// -如果Config里面都是实时相关字段，则不需要调用
         /// </summary>
-        public abstract void UpdateSetting();
+        public virtual void UpdateSetting() { }
         #endregion
 
         #region IRuntimeSerializableComponent

@@ -467,49 +467,6 @@ namespace Threeyes.Data
             }
         }
 
-        //——Warning:调用以下的属性之前，尽量先判断EnumType是否为空——
-        public bool UseFlag
-        {
-            get
-            {
-                if (EnumType != null)
-                {
-                    return EnumType.IsDefined(typeof(FlagsAttribute), false);
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 存储特殊映射
-        /// PS：
-        /// 1.因为Enum不一定是int，因此统一通过string存储Enum值，便于转换）
-        /// 2.只有未定义时，其EnumName为其数值的对应字符串；如果已经定义，则无需转换
-        ///
-        /// Warning:
-        /// 不能直接声明Dictionary为ReadOnly，否则UMod加载会报错
-        /// </summary>
-#if USE_JsonDotNet
-  [JsonIgnore]
-#endif
-        public static Dictionary<string, string> defaultDicSpeicalEnumNameToDisplayName
-        {
-            get
-            {
-                if (_defaultDicSpeicalEnumNameToDisplayName == null)
-                    _defaultDicSpeicalEnumNameToDisplayName = new Dictionary<string, string>
-                {
-                    {defaultNothingEnumName,"Nothing" },
-                    {defaultEverythingEnumName,"Everything" }
-                };
-                return _defaultDicSpeicalEnumNameToDisplayName;
-            }
-        }
-        static Dictionary<string, string> _defaultDicSpeicalEnumNameToDisplayName;
-
-        public const string defaultNothingEnumName = "0";
-        public const string defaultEverythingEnumName = "-1";
-
         public override IDataOption Init(MemberInfo memberInfo, object obj = null)
         {
             Type variableType = memberInfo.GetVariableType();
@@ -517,113 +474,25 @@ namespace Threeyes.Data
             return this;
         }
 
+
+        //——Warning:调用以下的属性之前，尽量先判断EnumType是否为空——
+        public bool UseFlag { get { return EnumTool.HasFlagsAttribute(EnumType); } }
         /// <summary>
-        /// 通过传入的枚举类型，自动初始化
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public virtual IDataOption Init(Type enumType)
-        {
-            enumTypeFullName = enumType?.FullName;
-            return this;
-        }
-        public string DisplayNameToEnumName(string displayName, Dictionary<string, string> dicEnumNameToDisplayName = null)
-        {
-            string enumName = displayName;
-
-            if (dicEnumNameToDisplayName == null)
-                dicEnumNameToDisplayName = defaultDicSpeicalEnumNameToDisplayName;
-            if (dicEnumNameToDisplayName.ContainsValue(displayName))
-                enumName = dicEnumNameToDisplayName.GetKey(displayName);
-            return enumName;
-        }
-
-        //——ToUpdate:改为返回Dic
-
-        /// <summary>
-        /// 每个Enum的UI显示名称（与EnumName一一对应，转换而成）
-        /// Return all Name or value in string type, mainly for UI display
-        /// （针对Unity官方的Flag枚举（如CameraType)，因为并无定义0/1对应的枚举，所以会保存为其值的字符串）
-        /// <paramref name="dicEnumNameToDisplayName"/>针对特殊值的自定义显示<paramref name="dicEnumNameToDisplayName"/>>
-        /// </summary>
-        public List<string> GetListDisplayName(Dictionary<string, string> dicEnumNameToDisplayName = null)
-        {
-            if (dicEnumNameToDisplayName == null)
-                dicEnumNameToDisplayName = defaultDicSpeicalEnumNameToDisplayName;
-
-            List<string> listResult = new List<string>(ListEnumName);
-
-            //对EnumName进行名字替换
-            for (int i = 0; i != listResult.Count; i++)
-            {
-                string curEnumName = listResult[i];
-                if (dicEnumNameToDisplayName.ContainsKey(curEnumName))
-                {
-                    listResult[i] = dicEnumNameToDisplayName[curEnumName];
-                }
-            }
-            return listResult;
-        }
-
-        public string GetEnumName(object value)
-        {
-            string enumName = "";
-
-            Type enumType = EnumType;
-            if (enumType != null)
-            {
-                if (UseFlag)
-                {
-                    //如果Enum没有定义0/-1，则添加
-                    if (value.Equals(0) && !Enum.IsDefined(enumType, 0))
-                        return defaultNothingEnumName;
-                    if (value.Equals(-1) && !Enum.IsDefined(enumType, -1))
-                        return defaultEverythingEnumName;
-                }
-                try
-                {
-                    enumName = Enum.GetName(enumType, value);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError("GetEnumName failed:" + e);
-                }
-            }
-            return enumName;
-        }
-
-        /// <summary>
-        /// 每个Enum对应的string名称
+        /// 每个Enum对应的string名称（用于Inspector展示）
         ///
         /// 默认顺序：
         /// 0
         /// -1
         /// 其他值...
         /// </summary>
-        public List<string> ListEnumName
-        {
-            get
-            {
-                List<string> listResult = new List<string>();
-                if (EnumType != null)
-                {
-                    listResult.AddRange(Enum.GetNames(EnumType));
-                    if (UseFlag)
-                    {
-                        //如果Enume没有定义0/-1，则添加（需要注意顺序不能弄错）
-                        if (!Enum.IsDefined(EnumType, 0))
-                            listResult.Insert(0, defaultNothingEnumName);
-                        if (!Enum.IsDefined(EnumType, -1))
-                            listResult.Add(defaultEverythingEnumName);
-                    }
-                }
-                return listResult;
-            }
-        }
+        public List<string> ListEnumName { get { return EnumTool.GetNamesEx(EnumType); } }
+
 
         /// <summary>
         /// Return all define name
-        /// (如果是FLag，那就返回除了0的所有值)
+        /// 
+        /// PS：
+        /// -如果是Flag，那就返回除了0的所有值
         /// </summary>
         public List<Enum> ListEnumValue
         {
@@ -642,33 +511,42 @@ namespace Threeyes.Data
         }
 
         /// <summary>
+        /// 通过传入的枚举类型，自动初始化
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public virtual IDataOption Init(Type enumType)
+        {
+            enumTypeFullName = enumType?.FullName;
+            return this;
+        }
+
+        /// <summary>
         /// Convert from name/value to Enum type
         /// </summary>
         /// <param name="enumNameOrValue">enum name (including multi name splited by ','), or value in string format）</param>
         /// <returns></returns>
-        public Enum Parse(string enumNameOrValue)
-        {
-            if (EnumType != null && enumNameOrValue.NotNullOrEmpty())
-            {
-                //判断当前所有名称是否都是该枚举的定义，避免更换枚举或改名的情况。注意如果是Flag就要将添加的"0"和"-1"考虑进去 (PS:不能用Enum.IsDefined，因为该方法不能判断多个值）
-                string[] arrCurEnum = enumNameOrValue.Split(',');//分离出所有可能的值
-                if (arrCurEnum.ToList().TrueForAll((str) => ListEnumName.Contains(str.Trim())))
-                {
-                    object result = null;
-                    try
-                    {
-                        result = Enum.Parse(EnumType, enumNameOrValue);
-                        if (result != null)
-                            return result as Enum;
-                    }
-                    catch
-                    {
-                        //暂不处理
-                    }
-                }
-            }
-            return null;
-        }
+        public Enum Parse(string enumNameOrValue) { return EnumTool.Parse(EnumType, enumNameOrValue); }
+
+        /// <summary>
+        /// 
+        /// PS:
+        /// -不声明为静态，避免后续要针对特殊字段进行处理
+        /// </summary>
+        /// <param name="displayName"></param>
+        /// <param name="dicEnumNameToDisplayName"></param>
+        /// <returns></returns>
+        public string DisplayNameToEnumName(string displayName, Dictionary<string, string> dicEnumNameToDisplayName = null) { return EnumTool.DisplayNameToEnumName(displayName, dicEnumNameToDisplayName); }
+
+        public string GetEnumName(object value) { return EnumTool.GetNameEx(EnumType, value); }
+
+        /// <summary>
+        /// 每个Enum的UI显示名称（与EnumName一一对应，转换而成）
+        /// Return all Name or value in string type, mainly for UI display
+        /// （针对Unity官方的Flag枚举（如CameraType)，因为并无定义0/1对应的枚举，所以会保存为其值的字符串）
+        /// <paramref name="dicEnumNameToDisplayName"/>针对特殊值的自定义显示<paramref name="dicEnumNameToDisplayName"/>>
+        /// </summary>
+        public List<string> GetListDisplayName(Dictionary<string, string> dicEnumNameToDisplayName = null) { return EnumTool.GetDisplayNames(EnumType, dicEnumNameToDisplayName); }
 
         #region IEquatable
         public override bool Equals(object obj) { return Equals(obj as DataOption_Enum); }

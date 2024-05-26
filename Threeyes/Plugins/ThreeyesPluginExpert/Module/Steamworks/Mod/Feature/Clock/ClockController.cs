@@ -208,13 +208,6 @@ namespace Threeyes.Steamworks
             SetTimeTweenFunc(timeType, lastValue, curValue, onTimePercentChanged, getPercent, tween, ease, tweenDuration, delay);
         }
 
-        #region IModHandler
-        public override void UpdateSetting()
-        {
-            //都是实时更新，暂不需要做操作
-        }
-        #endregion
-
         #region Debug
 
         [ContextMenu("UpdateTimeAtOnce")]

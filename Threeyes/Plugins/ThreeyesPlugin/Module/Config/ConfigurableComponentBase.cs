@@ -6,12 +6,13 @@ using NaughtyAttributes;
 namespace Threeyes.Config
 {
     public abstract class ConfigurableComponentBase<TConfig> : MonoBehaviour, IConfigurableComponent<TConfig>
+        where TConfig : new()
     {
         public virtual TConfig Config { get { return defaultConfig; } }
 
         public TConfig DefaultConfig { get { return defaultConfig; } set { defaultConfig = value; } }
         [Header("Config")]
-        [SerializeField] protected TConfig defaultConfig;//Default config
+        [SerializeField] protected TConfig defaultConfig = new TConfig();//Default config (使用其默认构造函数初始化，可以避免生成实例时，tongguoAwake获取该值时尚未初始化导致报错)
     }
 
     /// <summary>
@@ -21,7 +22,8 @@ namespace Threeyes.Config
     /// <typeparam name="TSOConfig"></typeparam>
     /// <typeparam name="TConfig"></typeparam>
     public abstract class ConfigurableComponentBase<TSOConfig, TConfig> : ConfigurableComponentBase<TConfig>, IConfigurableComponent<TSOConfig, TConfig>
-    where TSOConfig : SOConfigBase<TConfig>
+        where TSOConfig : SOConfigBase<TConfig>
+        where TConfig : new()
     {
         public override TConfig Config
         {
@@ -41,6 +43,7 @@ namespace Threeyes.Config
     public abstract class ConfigurableComponentBase<TComp, TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>
         where TComp : Component
         where TSOConfig : SOConfigBase<TConfig>
+        where TConfig : new()
     {
         //Cache for easy access
         public virtual TComp Comp
@@ -69,6 +72,7 @@ namespace Threeyes.Config
     public abstract class ConfigurableInstanceBase<T, TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, ISetInstance
         where T : ConfigurableInstanceBase<T, TSOConfig, TConfig>
         where TSOConfig : SOConfigBase<TConfig>
+        where TConfig : new()
     {
         public static T Instance { get { return instance; } protected set { instance = value; } }
         private static T instance;

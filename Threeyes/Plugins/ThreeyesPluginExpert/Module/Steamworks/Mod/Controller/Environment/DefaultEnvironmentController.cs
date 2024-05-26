@@ -24,7 +24,7 @@ namespace Threeyes.Steamworks
     //[AddComponentMenu(Steamworks_EditorDefinition.ComponentMenuPrefix_Root_Mod_Controller + "DefaultEnvironmentController")]
     public class DefaultEnvironmentController<TSOConfig, TConfig> : EnvironmentControllerBase<TSOConfig, TConfig>
        where TSOConfig : SOConfigBase<TConfig>, ISOEnvironmentControllerConfig
-        where TConfig : DefaultEnvironmentControllerConfigInfo
+        where TConfig : DefaultEnvironmentControllerConfigInfo, new()
     {
         #region Property & Field
         public override Light SunSourceLight { get { return sunSourceLight; } }

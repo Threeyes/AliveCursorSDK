@@ -82,7 +82,7 @@ namespace Threeyes.RuntimeSerialization
                     //当前物体并非源头Prefab（也就是实例）：跳过，等后续源头Prefab调用此方法更新ID，这样可以避免冲突
                     if (!EditorTool.IsPersistentGameObject(go))
                     {
-                        Debug.LogWarning($"【Temp】Wait for prefab asset to update GUID: [{go.name}_{rsComponent.ContainerType}]");
+                        Debug.LogWarning($"【Temp】Wait for prefab asset to update GUID: [{go.name}_{rsComponent.ContainerType}]", go);
                         return;
                     }
                 }
@@ -98,9 +98,9 @@ namespace Threeyes.RuntimeSerialization
                 while (!IsIDUniqueInGameObject(rsComponent, id, ref failedReason) && retryCount < maxRetryCount);
 
                 if (retryCount == maxRetryCount)
-                    Debug.LogError($"Try to generate new GUID for [{go.name} ({rsComponent.ContainerType})] failed! Reach max retry count {maxRetryCount}!");
+                    Debug.LogError($"Try to generate new GUID for [{go.name} ({rsComponent.ContainerType})] failed! Reach max retry count {maxRetryCount}!", go);
                 else
-                    Debug.LogWarning($"【Temp】Update [{go.name} ({rsComponent.ContainerType})]'s {nameof(id)} to {id.Guid}");
+                    Debug.Log($"【Temp】Update [{go.name} ({rsComponent.ContainerType})]'s {nameof(id)} to {id.Guid}", go);
 
                 if (EditorTool.IsInstanceGameObject(go))
                 {

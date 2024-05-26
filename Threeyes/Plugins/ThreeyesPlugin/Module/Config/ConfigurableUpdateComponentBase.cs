@@ -12,6 +12,7 @@ namespace Threeyes.Config
     public abstract class ConfigurableUpdateComponentBase<TComp, TSOConfig, TConfig> : ConfigurableComponentBase<TComp, TSOConfig, TConfig>
         where TComp : Component
         where TSOConfig : SOConfigBase<TConfig>
+        where TConfig : new()
     {
         public UpdateMethodType updateMethodType = UpdateMethodType.Late;
         protected float DeltaTime

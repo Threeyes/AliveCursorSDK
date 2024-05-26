@@ -78,10 +78,7 @@ namespace Threeyes.Steamworks
         #region IModHandler
         public override void UpdateSetting()
         {
-            ///Todo:
-            ///-实时更新碰撞体
-            ///
-            UpdateCollider();
+            UpdateCollider();//实时更新碰撞体
         }
 
         float cacheMaxDistance;

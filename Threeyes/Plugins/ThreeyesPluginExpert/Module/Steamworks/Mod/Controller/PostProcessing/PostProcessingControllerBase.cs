@@ -19,6 +19,7 @@ namespace Threeyes.Steamworks
     /// <typeparam name="TConfig"></typeparam>
     public abstract class PostProcessingControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>, IPostProcessingController
         where TSOConfig : SOConfigBase<TConfig>, ISOPostProcessingControllerConfig
+         where TConfig : new()
     {
         public event UnityAction<bool> IsUsePostProcessingChanged;
         public abstract bool IsUsePostProcessing { get; }

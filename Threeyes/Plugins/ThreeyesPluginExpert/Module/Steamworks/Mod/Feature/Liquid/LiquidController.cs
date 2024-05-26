@@ -7,6 +7,9 @@ namespace Threeyes.Steamworks
     /// <summary>
     /// Control liquid shader
     /// 
+    /// Require:
+    /// -Mesh with "Threeyes/SpecialFX/Liquid.shader"
+    /// 
     /// Ref：
     /// https://www.patreon.com/posts/quick-game-art-18245226
     ///https://pastebin.com/ppbzx7mn
@@ -21,11 +24,23 @@ namespace Threeyes.Steamworks
     /// 
     /// PS:
     /// -因为FillAmount可能是运行时更新，所以暂不存到ConfigInfo中，或者增加是否为DynamicFillAmount等相关字段
+    /// -Shader的其他字段，由MaterialController提供
     /// </summary>
     public class LiquidController : ConfigurableComponentBase<Renderer, LiquidController, SOLiquidControllerConfig, LiquidController.ConfigInfo, LiquidController.PropertyBag>
 , IModHandler
     {
         #region Property & Field
+        static int ShaderID_FillAmount { get { if (shaderID_FillAmount == 0) shaderID_FillAmount = Shader.PropertyToID("_FillAmount"); return shaderID_FillAmount; } }
+        static int shaderID_FillAmount = 0;
+
+        static int ShaderID_WobbleX { get { if (shaderID_WobbleX == 0) shaderID_WobbleX = Shader.PropertyToID("_WobbleX"); return shaderID_WobbleX; } }
+        static int shaderID_WobbleX = 0;
+        static int ShaderID_WobbleZ { get { if (shaderID_WobbleZ == 0) shaderID_WobbleZ = Shader.PropertyToID("_WobbleZ"); return shaderID_WobbleZ; } }
+        static int shaderID_WobbleZ = 0;
+        static int ShaderID_FoamLineWidth { get { if (shaderID_FoamLineWidth == 0) shaderID_FoamLineWidth = Shader.PropertyToID("_FoamLineWidth"); return shaderID_FoamLineWidth; } }
+        static int shaderID_FoamLineWidth = 0;
+        static int ShaderID_GlobalScale { get { if (shaderID_GlobalScale == 0) shaderID_GlobalScale = Shader.PropertyToID("_GlobalScale"); return shaderID_GlobalScale; } }
+        static int shaderID_GlobalScale = 0;
 
         /// <summary>
         /// Runtime FillAmount，
@@ -33,7 +48,7 @@ namespace Threeyes.Steamworks
         /// PS：
         /// -This property is mainly for runtime modify other Sources (Such as UnityEvent），This field's value will not change ConfigInfo.startFillAmount or to be saved/serialized（因为该属性主要用于运行时更改FillAmount（如根据时间回调更新），所以不适合存储到Config中及序列化）
         /// </summary>
-        public float FillAmount { get { return Comp ? Comp.material.GetFloat("_FillAmount") : 0; } set { SetShaderProperty_FillAmount(value); } }
+        public float FillAmount { get { return Comp ? Comp.material.GetFloat(ShaderID_FillAmount) : 0; } set { SetShaderProperty_FillAmount(value); } }
 
         /// <summary>
         /// 在startFillAmount的基础上额外的数值
@@ -61,7 +76,7 @@ namespace Threeyes.Steamworks
         }
         void SetShaderProperty_FillAmount(float value)
         {
-            Comp?.material.SetFloat("_FillAmount", value);
+            Comp?.material.SetFloat(ShaderID_FillAmount, value);
         }
 
         protected virtual Material TargetMaterial { get { return Comp ? Comp.material : null; } }//override this if you prefer different material
@@ -69,7 +84,9 @@ namespace Threeyes.Steamworks
         public Transform TfMotionSource { get { return tfMotionSource ? tfMotionSource : transform; } }
         public Transform TfLiquidSource { get { return Comp ? Comp.transform : transform; } }
 
-        public Transform tfMotionSource;//The target to calculate offset
+        public Transform tfMotionSource;//[Optional]The custom target to calculate offset
+        public Transform tfWaterSurface;//[Optional] water surface panel (因为当前Shader未能实现水面与物体相交，所以可以用该水平面加半透明双面材质模拟水面)
+
         [Header("Model Setting")]//PS: Set these value and Invoke SetShaderModelConfig in MenuItem before game started to recalculate the Material propertys
         [Tooltip("The ScaleFactor in model import window")]
         public float modelScaleFactor = 1;
@@ -135,16 +152,31 @@ namespace Threeyes.Steamworks
             wobbleZSinOutputScale = Mathf.Lerp(wobbleZSinOutputScale, 0, DeltaTime * Config.wobbleRecovery);
 
             //#3 设置Wobble值
-            TargetMaterial.SetFloat("_WobbleX", wobbleXSinOutputScale * Mathf.Sin(wobbleXSinInput));
-            TargetMaterial.SetFloat("_WobbleZ", wobbleZSinOutputScale * Mathf.Sin(wobbleZSinInput));
+            float finalWobbleX = wobbleXSinOutputScale * Mathf.Sin(wobbleXSinInput);
+            float finalWobbleZ = wobbleZSinOutputScale * Mathf.Sin(wobbleZSinInput);
+            TargetMaterial.SetFloat(ShaderID_WobbleX, finalWobbleX);
+            TargetMaterial.SetFloat(ShaderID_WobbleZ, finalWobbleZ);
 
             //#4 设置Foam值
             curFoamLineWdith += (deltaVelocity.magnitude * Config.foamIncreaseSpeed - Config.foamDecreaseSpeed) * DeltaTime;//PS: angularVelocity会导致瞬间增加的Bug，暂时i不考虑
             curFoamLineWdith = Mathf.Clamp(curFoamLineWdith, Config.rangeFoam.x, Config.rangeFoam.y);
-            TargetMaterial.SetFloat("_FoamLineWidth", curFoamLineWdith);//Foam Line Width
+            TargetMaterial.SetFloat(ShaderID_FoamLineWidth, curFoamLineWdith);//Foam Line Width
 
             //#5 确保材质与物体的全局缩放值同步
-            TargetMaterial.SetFloat("_GlobalScale", TfLiquidSource.lossyScale.y * modelScaleFactor);
+            TargetMaterial.SetFloat(ShaderID_GlobalScale, TfLiquidSource.lossyScale.y * modelScaleFactor);
+
+            if (tfWaterSurface)
+            {
+                //ToFix:解决偏转时的Y轴位置（参考o.fillEdge的实现）
+                tfWaterSurface.localPosition = new Vector3(0, modelVerticePosYRange.x + (modelVerticePosYRange.y - modelVerticePosYRange.x) * FillAmount, 0);//设置中心高度。(PS:局部坐标不需要考虑_GlobalScale)
+
+                float rotatedZRadius = Mathf.Atan(finalWobbleX);
+                tfWaterSurface.eulerAngles = new Vector3(Mathf.Atan(finalWobbleZ) * Mathf.Rad2Deg, 0, -rotatedZRadius * Mathf.Rad2Deg);//设置偏转值（PS：Wobble值对应tan(X°）的值）。（ToFix：角度不太匹配，可能使用Sin进行计算）
+
+                /////注释原因：Shader暂未考虑因为旋转导致高度变化的情况，后续可以优化（通过三角函数计算）
+                /////-因为液体偏转，因此最低点，及液体区间发生了变化，需要进行三角函数变换
+                //float totalHeigh = (modelVerticePosYRange.y - modelVerticePosYRange.x) * Mathf.Cos(rotatedZRadius);
+            }
 
             // Save Last Data
             lastPos = TfMotionSource.position;
@@ -222,7 +254,7 @@ namespace Threeyes.Steamworks
                 modelVerticePosYRange = new Vector2(float.MaxValue, float.MinValue);//初始化为两个最不可能的值，避免因为用户手动设置导致无法匹配
 
                 //查找所有顶点的Y轴最大/最小值
-                foreach (Vector3 point in meshFilter.sharedMesh.vertices)//Note that this method returns the vertices in local space, not in world space.
+                foreach (Vector3 point in meshFilter.sharedMesh.vertices)//Note: this method returns the vertices in local space, not in world space. (需要Mesh Readable，否则运行时报错)
                 {
                     if (point.y < modelVerticePosYRange.x)//最小值
                         modelVerticePosYRange.x = point.y;
@@ -235,15 +267,15 @@ namespace Threeyes.Steamworks
 
         /// <summary>
         /// Use config data to setup shader (Only executed before game start)
+        /// 
+        /// PS：
+        /// -用户既可以通过该方法主动计算Vertice的范围，也可以自行设置显示区域，避免因模型带有外壳导致溢出的情况
         /// </summary>
         [ContextMenu("SetShaderModelConfig")]
         public void SetShaderModelConfig()
         {
-            if (Application.isPlaying)
-                return;
-
-            ///PS:
-            ///-既可以通过CalculateModelVerticeRange主动获取Vertice的范围，也可以由用户限制显示区域，避免模型带有外壳导致溢出的情况
+            //if (Application.isPlaying)
+            //    return;
 
             //Remap the pos range to [-0.5f,0.5f]（将点重映射到区间内）
             float middlePoint = (modelVerticePosYRange.y + modelVerticePosYRange.x) / 2;

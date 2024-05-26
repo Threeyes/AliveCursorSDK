@@ -7,9 +7,10 @@ using Threeyes.Config;
 public abstract class AC_StateControllerBase<TSOConfig, TConfig> : ConfigurableComponentBase<TSOConfig, TConfig>,
 	IAC_StateController
 	where TSOConfig : SOConfigBase<TConfig>
+    where TConfig : new()
 {
-	#region Interface
-	public abstract void SetState(AC_CursorStateInfoEx cursorStateInfo);
+    #region Interface
+    public abstract void SetState(AC_CursorStateInfoEx cursorStateInfo);
 	public abstract bool IsCurStateActionComplete(ActionState actionState);
 	#endregion
 

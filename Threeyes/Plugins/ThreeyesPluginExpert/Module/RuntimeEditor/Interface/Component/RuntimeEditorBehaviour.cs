@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Threeyes.RuntimeEditor
 {
     /// <summary>
-    /// 发送RuntimeEditor模式物体被选中/取消选中等事件
+    /// 接收RuntimeEditor模式物体被选中/取消选中等事件
     ///
     /// </summary>
     public class RuntimeEditorBehaviour : MonoBehaviour

@@ -24,6 +24,7 @@ namespace Threeyes.Config
     /// <typeparam name="TConfig"></typeparam>
     public interface IConfigurableComponent<TSOConfig, TConfig> : IConfigurableComponent<TConfig>
         where TSOConfig : SOConfigBase<TConfig>
+        where TConfig : new()
     {
         TSOConfig SOOverrideConfig { get; set; }
 

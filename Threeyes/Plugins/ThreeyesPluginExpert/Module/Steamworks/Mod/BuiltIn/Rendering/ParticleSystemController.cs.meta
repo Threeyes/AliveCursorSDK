@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c7a67ce7e87e7134ca9de7aff86aee2c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mainParticleSystem: {instanceID: 0}
+  - preGizmoIndicator: {fileID: 3104589442489947884, guid: e6720230c6e583e48bef0bda2fb07872,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
