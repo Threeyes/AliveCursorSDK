@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.3.8]
+- Add more Function modules.
+
 ## [4.3.5]
 - Change ValueHolder's namespace to Core (some items need to be repackaged).
 - Add reflection method Components (ReflectionMethodHolderXXX).
