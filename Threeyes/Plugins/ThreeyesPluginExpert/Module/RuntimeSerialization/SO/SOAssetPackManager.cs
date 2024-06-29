@@ -42,7 +42,7 @@ namespace Threeyes.RuntimeSerialization
                 if (!aPInfo.IsValid)
                     continue;
 
-                string tempGuid = aPInfo.sOAssetPack.GetPrefabMetadata_Runtime(prefab);
+                string tempGuid = aPInfo.sOAssetPack.GetPrefabMetadata(prefab);
                 if (tempGuid.NotNullOrEmpty())
                 {
                     guid = tempGuid;
@@ -55,10 +55,16 @@ namespace Threeyes.RuntimeSerialization
         #endregion
 
         #region Deserialize
+        /// <summary>
+        /// 尝试获取实例对应的Prefab
+        /// </summary>
+        /// <param name="runtimeSerializable_GameObject"></param>
+        /// <returns></returns>
         public static GameObject TryGetPrefab(RuntimeSerializable_GameObject runtimeSerializable_GameObject)
         {
             string latestScope;
-            return TryGetPrefab(runtimeSerializable_GameObject.CachePrefabID.Guid, runtimeSerializable_GameObject.CacheScope, out latestScope);
+            string prefabGUID = runtimeSerializable_GameObject.CachePrefabID.IsValid ? runtimeSerializable_GameObject.CachePrefabID.Guid : runtimeSerializable_GameObject.PersistentPrefabID.Guid;//PS:针对提前摆放的实例，其CachePrefabID可能为空，因此需要直接使用PersistentPrefabID访问
+            return TryGetPrefab(prefabGUID, runtimeSerializable_GameObject.CacheScope, out latestScope);
         }
 
         /// <summary>

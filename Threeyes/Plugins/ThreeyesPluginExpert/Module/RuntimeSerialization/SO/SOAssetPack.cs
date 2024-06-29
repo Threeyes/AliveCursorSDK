@@ -25,6 +25,7 @@ namespace Threeyes.RuntimeSerialization
     [CreateAssetMenu(menuName = "SO/RuntimeSerialization/" + "AssetPack", fileName = "AssetPack")]
     public class SOAssetPack : ScriptableObject, ISerializationCallbackReceiver
     {
+        #region Property & Field
         const int k_InvalidId = -1;
 
         [HideInInspector]
@@ -63,19 +64,9 @@ namespace Threeyes.RuntimeSerialization
         /// 外部注册并生成Prefab的方法
         /// </summary>
         readonly HashSet<IPrefabFactory> m_PrefabFactories = new();
+        #endregion
 
-        /// <summary>
-        /// Register an IPrefabFactory to instantiate prefabs which were not saved along with the scene
-        /// </summary>
-        /// <param name="factory">An IPrefabFactory which can instantiate prefabs by guid</param>
-        public void RegisterPrefabFactory(IPrefabFactory factory) { m_PrefabFactories.Add(factory); }
-
-        /// <summary>
-        /// Unregister an IPrefabFactory
-        /// </summary>
-        /// <param name="factory">The IPrefabFactory to be unregistered</param>
-        public void UnregisterPrefabFactory(IPrefabFactory factory) { m_PrefabFactories.Remove(factory); }
-
+        #region Common
         /// <summary>
         /// Clear all asset references in this SOAssetPack
         /// </summary>
@@ -85,7 +76,9 @@ namespace Threeyes.RuntimeSerialization
             m_AssetLookupMap.Clear();
             m_PrefabDictionary.Clear();
         }
+        #endregion
 
+        #region Asset
         /// <summary>
         /// Get the guid and sub-asset index for a given asset
         /// Also adds the asset to the asset pack in the editor
@@ -166,7 +159,327 @@ namespace Threeyes.RuntimeSerialization
 
             return asset.GetAsset(fileId);
         }
+        #endregion
 
+        #region Prefab
+        /// <summary>
+        /// Register an IPrefabFactory to instantiate prefabs which were not saved along with the scene
+        /// </summary>
+        /// <param name="factory">An IPrefabFactory which can instantiate prefabs by guid</param>
+        public void RegisterPrefabFactory(IPrefabFactory factory) { m_PrefabFactories.Add(factory); }
+
+        /// <summary>
+        /// Unregister an IPrefabFactory
+        /// </summary>
+        /// <param name="factory">The IPrefabFactory to be unregistered</param>
+        public void UnregisterPrefabFactory(IPrefabFactory factory) { m_PrefabFactories.Remove(factory); }
+
+        /// <summary>
+        /// Instantiate the prefab with the given guid, if it is in the asset pack or can be created by a registered factory
+        /// </summary>
+        /// <param name="prefabGuid">The guid of the prefab to be instantiated</param>
+        /// <param name="parent">The parent object to be used when calling Instantiate</param>
+        /// <returns>The instantiated prefab, or null if one was not instantiated</returns>
+        public GameObject TryInstantiatePrefab(string prefabGuid, Transform parent)
+        {
+            if (m_PrefabDictionary.TryGetValue(prefabGuid, out var prefab))
+            {
+                if (prefab != null)
+                    return Instantiate(prefab, parent);
+                else
+                {
+                    Debug.LogError($"Prefab with guid [{prefabGuid}] is null!");
+                    return null;
+                }
+            }
+
+            foreach (var factory in m_PrefabFactories)//第三方注册的创建Prefab的工厂（暂未用上）
+            {
+                try
+                {
+                    prefab = factory.TryInstantiatePrefab(prefabGuid, parent);
+                    if (prefab != null)
+                        return prefab;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            }
+
+            return null;
+        }
+
+        public GameObject TryGetPrefab(string prefabGuid)
+        {
+            if (m_PrefabDictionary.TryGetValue(prefabGuid, out var prefab))
+            {
+                if (prefab != null)
+                    return prefab;
+                else
+                {
+                    Debug.LogError($"Prefab with guid [{prefabGuid}] is null!");
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取Prefab的信息
+        /// 
+        /// 用途：
+        /// -序列化
+        /// </summary>
+        /// <param name="prefab"></param>
+        /// <param name="guid"></param>
+        public string GetPrefabMetadata(GameObject prefab)
+        {
+            string guid = "";
+            foreach (var pair in m_PrefabDictionary)
+            {
+                if (pair.Value == prefab)
+                {
+                    guid = pair.Key;
+                    break;
+                }
+            }
+            return guid;
+        }
+        #endregion
+
+        #region ——Editor——
+#if UNITY_EDITOR
+
+        readonly Dictionary<UnityObject, string> m_GuidMap = new();
+
+        /// <summary>
+        /// 基于当前文件夹进行更新（常用于测试）
+        /// </summary>
+        [ContextMenu("UpdateData")]
+        void EditorScanData()
+        {
+            string relatedPath = AssetDatabase.GetAssetPath(this);
+            string sourceAbsDirPath = EditorPathTool.UnityRelateToAbsPath(relatedPath);
+            string destAbsDirPath = System.IO.Directory.GetParent(sourceAbsDirPath).FullName;
+            CreateFromFolder(destAbsDirPath, destAbsDirPath, relatedPath.GetFileNameWithoutExtension());
+        }
+
+        /// <summary>
+        /// 针对特定文件夹创建或更新SOAssetPack
+        /// 
+        /// Ref：Unity.RuntimeSceneSerialization.EditorInternal.MenuItems.SaveJsonScene
+        /// </summary>
+        /// <param name="sourceAbsDirPath">目标文件夹路径</param>
+        /// <param name="destAbsDirPath">存储SOAssetPack的文件夹路径</param>
+        public static void CreateFromFolder(string sourceAbsDirPath, string destAbsDirPath, string fileNameWithoutExtension = "AssetPack")
+        {
+            //#1 获取文件夹位置
+            string relateDirPath = EditorPathTool.AbsToUnityRelatePath(sourceAbsDirPath);
+
+            //#2 创建或清空已有SOAssetPack（位置为选中文件夹里）
+            PathTool.GetOrCreateDir(destAbsDirPath);
+            string assetPackPath = EditorPathTool.AbsToUnityRelatePath(destAbsDirPath + "/" + fileNameWithoutExtension + ".asset");
+            SOAssetPack assetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(assetPackPath);
+            bool created = false;
+            if (assetPack == null)
+            {
+                created = true;
+                assetPack = ScriptableObject.CreateInstance<SOAssetPack>();
+            }
+            else
+            {
+                assetPack.Clear();//清空
+            }
+
+            //#3 扫描文件夹下的所有预制物
+            var prefabGuids = AssetDatabase.FindAssets("t:Prefab", new string[] { relateDirPath });
+            foreach (var prefabGuid in prefabGuids)
+            {
+                string prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
+                assetPack.EditorAddPrefabMetadata(prefabGuid, prefabPath);
+            }
+            ///ToUpdate：应该同时扫描并添加文件夹里的所有Asset
+
+            //#3 保存SOAssetPack并刷新
+            if (created)
+            {
+                //if (assetPack.AssetCount > 0)//不管有无资源都创建
+                AssetDatabase.CreateAsset(assetPack, assetPackPath);
+            }
+            else
+            {
+                //if (assetPack.AssetCount > 0)
+                EditorUtility.SetDirty(assetPack);
+                //else if (AssetDatabase.LoadAssetAtPath<SOAssetPack>(assetPackPath) != null)
+                //    AssetDatabase.DeleteAsset(assetPackPath);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log($"{(created ? "Create" : "Update")} assetPack with [{assetPack.Prefabs.Count}] Prefabs at: " + assetPackPath);
+        }
+
+        /// <summary>
+        /// Get the guid of a given prefab, storing the result in the given SOAssetPack, if provided
+        /// 根据传入的Prefab实例，存储其对应根Prefab的信息
+        /// Ref: AssetPack.GetPrefabMetadata
+        /// </summary>
+        /// <param name="prefabInstance">The prefab instance whose guid to find</param>
+        /// <param name="guid">The guid, if one is found</param>
+        /// <param name="assetPack">The SOAssetPack to store the prefab and guid</param>
+        public static void EditorGetPrefabMetadata(GameObject prefabInstance, out string guid, SOAssetPack assetPack = null)
+        {
+            var path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(prefabInstance);//查找根Prefab的实例
+            if (string.IsNullOrEmpty(path))
+            {
+                Debug.LogWarning($"Could not find prefab path for {prefabInstance.name}");
+                guid = null;
+                return;
+            }
+
+            guid = AssetDatabase.AssetPathToGUID(path);
+            if (string.IsNullOrEmpty(guid))
+            {
+                Debug.LogWarning($"Could not find guid for {path}");
+                return;
+            }
+
+            if (assetPack != null)
+                assetPack.EditorAddPrefabMetadata(guid, path);
+        }
+
+        /// <summary>
+        /// 利用传入的Prefab资源信息初始化
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="path"></param>
+        void EditorAddPrefabMetadata(string guid, string path)
+        {
+            if (m_PrefabDictionary.ContainsKey(guid))
+                return;
+            m_PrefabDictionary[guid] = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        }
+
+        void GetOrAddAssetMetadata(UnityObject obj, out string guid, out long fileId, bool warnIfMissing)
+        {
+            Asset asset;
+            if (!m_GuidMap.TryGetValue(obj, out guid))
+            {
+                if (TryGetGUIDAndLocalFileIdentifier(obj, out guid, out fileId, warnIfMissing))
+                {
+                    m_GuidMap[obj] = guid;
+                    if (!m_AssetDictionary.TryGetValue(guid, out asset))
+                    {
+                        asset = new Asset();
+                        m_AssetDictionary[guid] = asset;
+                    }
+
+                    asset.AddAssetMetadata(obj, fileId);
+                    return;
+                }
+
+                m_GuidMap[obj] = null;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(guid))
+            {
+                fileId = k_InvalidId;
+                return;
+            }
+
+            if (!m_AssetDictionary.TryGetValue(guid, out asset))
+            {
+                asset = new Asset();
+                m_AssetDictionary[guid] = asset;
+            }
+
+            asset.GetOrAddAssetMetadata(obj, out fileId, warnIfMissing);
+        }
+
+        static bool TryGetGUIDAndLocalFileIdentifier(UnityObject obj, out string guid, out long fileId, bool warnIfMissing)
+        {
+            if (!AssetDatabase.TryGetGUIDAndLocalFileIdentifier(obj, out guid, out fileId))
+            {
+                // ReSharper disable once CommentTypo
+                // Check if target object is marked as "DontSave"--that means it is a scene object but won't be found in metadata
+                // Otherwise, this is an error, and we cannot find a valid asset path
+                // Suppress warning in certain edge cases (i.e. during deserialization before scene object metadata is set up)
+                if ((obj.hideFlags & HideFlags.DontSave) == HideFlags.None && warnIfMissing)
+                    Debug.LogWarningFormat("Could not find asset path for {0}", obj);
+
+                guid = string.Empty;
+                fileId = k_InvalidId;
+                return false;
+            }
+            return true;
+        }
+
+        #region Scene （PS：新实现与Scene无关，因此可以注释）
+        //const string k_AssetPackFilter = "t:" + nameof(SOAssetPack);
+        //static readonly Dictionary<SceneAsset, SOAssetPack> k_SceneToAssetPackCache = new();
+
+        ///// <summary>
+        ///// The associated SceneAsset for this SOAssetPack
+        ///// </summary>
+        //public UnityObject SceneAsset { set => m_SceneAsset = value; get => m_SceneAsset; }
+        //[SerializeField]
+        //UnityObject m_SceneAsset;//ToDelete
+
+        ///// <summary>
+        ///// Get the SOAssetPack associated with the given scene(找到Scene路径下匹配的SOAssetPack)
+        ///// </summary>
+        ///// <param name="sceneAsset">The SceneAsset which will be used to find the SOAssetPack</param>
+        ///// <returns>The associated SOAssetPack, if one exists</returns>
+        //public static SOAssetPack GetAssetPackForScene(SceneAsset sceneAsset)
+        //{
+        //    if (k_SceneToAssetPackCache.TryGetValue(sceneAsset, out var assetPack))
+        //        return assetPack;
+
+        //    var allAssetPacks = AssetDatabase.FindAssets(k_AssetPackFilter);
+        //    foreach (var guid in allAssetPacks)
+        //    {
+        //        var path = AssetDatabase.GUIDToAssetPath(guid);
+        //        if (string.IsNullOrEmpty(path))
+        //            continue;
+
+        //        var loadedAssetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(path);
+        //        if (loadedAssetPack == null)
+        //            continue;
+
+        //        var loadedSceneAsset = loadedAssetPack.SceneAsset as SceneAsset;
+        //        if (loadedSceneAsset == null)
+        //            continue;
+
+        //        k_SceneToAssetPackCache[loadedSceneAsset] = loadedAssetPack;
+
+        //        if (loadedSceneAsset == sceneAsset)
+        //            assetPack = loadedAssetPack;
+        //    }
+        //    return assetPack;
+        //}
+        ///// <summary>
+        ///// Remove a cached asset pack mapping
+        ///// </summary>
+        ///// <param name="sceneAsset">The SceneAsset associated to the SOAssetPack to remove</param>
+        //public static void RemoveCachedAssetPack(SceneAsset sceneAsset)
+        //{
+        //    if (sceneAsset != null)
+        //        k_SceneToAssetPackCache.Remove(sceneAsset);
+        //}
+
+        ///// <summary>
+        ///// Clear the cached map of scenes to asset packs
+        ///// </summary>
+        //public static void ClearSceneToAssetPackCache() { k_SceneToAssetPackCache.Clear(); }
+        #endregion
+
+#endif
+        #endregion
+
+        #region ISerializationCallbackReceiver
         /// <summary>
         /// Called before serialization to set up lists from dictionaries
         /// </summary>
@@ -236,301 +549,6 @@ namespace Threeyes.RuntimeSerialization
                 m_PrefabDictionary[guid] = prefab;
             }
         }
-
-        /// <summary>
-        /// 用于重新生成Prefab
-        /// Instantiate the prefab with the given guid, if it is in the asset pack or can be created by a registered factory
-        /// </summary>
-        /// <param name="prefabGuid">The guid of the prefab to be instantiated</param>
-        /// <param name="parent">The parent object to be used when calling Instantiate</param>
-        /// <returns>The instantiated prefab, or null if one was not instantiated</returns>
-        public GameObject TryInstantiatePrefab(string prefabGuid, Transform parent)
-        {
-            if (m_PrefabDictionary.TryGetValue(prefabGuid, out var prefab))
-            {
-                if (prefab != null)
-                    return Instantiate(prefab, parent);
-                else
-                {
-                    Debug.LogError($"Prefab with guid [{prefabGuid}] is null!");
-                    return null;
-                }
-            }
-
-            foreach (var factory in m_PrefabFactories)//第三方注册的创建Prefab的工厂（暂未用上）
-            {
-                try
-                {
-                    prefab = factory.TryInstantiatePrefab(prefabGuid, parent);
-                    if (prefab != null)
-                        return prefab;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
-            }
-
-            return null;
-        }
-        public GameObject TryGetPrefab(string prefabGuid)
-        {
-            if (m_PrefabDictionary.TryGetValue(prefabGuid, out var prefab))
-            {
-                if (prefab != null)
-                    return prefab;
-                else
-                {
-                    Debug.LogError($"Prefab with guid [{prefabGuid}] is null!");
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 【序列化时】获取Prefab的信息
-        /// </summary>
-        /// <param name="prefab"></param>
-        /// <param name="guid"></param>
-        public string GetPrefabMetadata_Runtime(GameObject prefab)
-        {
-            string guid = "";
-            foreach (var pair in m_PrefabDictionary)
-            {
-                if (pair.Value == prefab)
-                {
-                    guid = pair.Key;
-                    break;
-                }
-            }
-            return guid;
-        }
-
-        #region ——Editor——
-#if UNITY_EDITOR
-
-        [ContextMenu("UpdateData")]
-        void EditorScanData()
-        {
-            //基于当前文件夹进行更新（常用于测试）
-            string relatedPath = AssetDatabase.GetAssetPath(this);
-            string sourceAbsDirPath = EditorPathTool.UnityRelateToAbsPath(relatedPath);
-            string destAbsDirPath = System.IO.Directory.GetParent(sourceAbsDirPath).FullName;
-            CreateFromFolder(destAbsDirPath, destAbsDirPath, relatedPath.GetFileNameWithoutExtension());
-        }
-
-        readonly Dictionary<UnityObject, string> m_GuidMap = new();
-
-        /// <summary>
-        /// 针对特定文件夹创建或更新SOAssetPack
-        /// 
-        /// Ref：Unity.RuntimeSceneSerialization.EditorInternal.MenuItems.SaveJsonScene
-        /// </summary>
-        /// <param name="sourceAbsDirPath">目标文件夹路径</param>
-        /// <param name="destAbsDirPath">存储SOAssetPack的文件夹路径</param>
-        public static void CreateFromFolder(string sourceAbsDirPath, string destAbsDirPath, string fileNameWithoutExtension = "AssetPack")
-        {
-            //#1 获取文件夹位置
-            string relateDirPath = EditorPathTool.AbsToUnityRelatePath(sourceAbsDirPath);
-
-            //#2 创建或清空已有SOAssetPack（位置为选中文件夹里）
-            PathTool.GetOrCreateDir(destAbsDirPath);
-            string assetPackPath = EditorPathTool.AbsToUnityRelatePath(destAbsDirPath + "/" + fileNameWithoutExtension + ".asset");
-            SOAssetPack assetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(assetPackPath);
-            bool created = false;
-            if (assetPack == null)
-            {
-                created = true;
-                assetPack = ScriptableObject.CreateInstance<SOAssetPack>();
-            }
-            else
-            {
-                assetPack.Clear();//清空
-            }
-
-            //#3 扫描文件夹下的所有预制物
-            var prefabGuids = AssetDatabase.FindAssets("t:Prefab", new string[] { relateDirPath });
-            foreach (var prefabGuid in prefabGuids)
-            {
-                string prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
-                assetPack.AddPrefabMetadata(prefabGuid, prefabPath);
-            }
-
-            //#3 保存SOAssetPack并刷新
-            if (created)
-            {
-                //if (assetPack.AssetCount > 0)//不管有无资源都创建
-                AssetDatabase.CreateAsset(assetPack, assetPackPath);
-            }
-            else
-            {
-                //if (assetPack.AssetCount > 0)
-                EditorUtility.SetDirty(assetPack);
-                //else if (AssetDatabase.LoadAssetAtPath<SOAssetPack>(assetPackPath) != null)
-                //    AssetDatabase.DeleteAsset(assetPackPath);
-            }
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            Debug.Log($"{(created ? "Create" : "Update")} assetPack with [{assetPack.Prefabs.Count}] Prefabs at: " + assetPackPath);
-        }
-
-        /// <summary>
-        /// Get the guid of a given prefab, storing the result in the given SOAssetPack, if provided
-        /// </summary>
-        /// <param name="prefabInstance">The prefab instance whose guid to find</param>
-        /// <param name="guid">The guid, if one is found</param>
-        /// <param name="assetPack">The SOAssetPack to store the prefab and guid</param>
-        public static void GetPrefabMetadata(GameObject prefabInstance, out string guid, SOAssetPack assetPack = null)
-        {
-            var path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(prefabInstance);
-            if (string.IsNullOrEmpty(path))
-            {
-                Debug.LogWarning($"Could not find prefab path for {prefabInstance.name}");
-                guid = null;
-                return;
-            }
-
-            guid = AssetDatabase.AssetPathToGUID(path);
-            if (string.IsNullOrEmpty(guid))
-            {
-                Debug.LogWarning($"Could not find guid for {path}");
-                return;
-            }
-
-            if (assetPack != null)
-                assetPack.m_PrefabDictionary[guid] = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        }
-
-        /// <summary>
-        /// 利用传入的Prefab资源信息初始化
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <param name="path"></param>
-        public void AddPrefabMetadata(string guid, string path)
-        {
-            if (m_PrefabDictionary.ContainsKey(guid))
-                return;
-            m_PrefabDictionary[guid] = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        }
-
-        void GetOrAddAssetMetadata(UnityObject obj, out string guid, out long fileId, bool warnIfMissing)
-        {
-            Asset asset;
-            if (!m_GuidMap.TryGetValue(obj, out guid))
-            {
-                if (TryGetGUIDAndLocalFileIdentifier(obj, out guid, out fileId, warnIfMissing))
-                {
-                    m_GuidMap[obj] = guid;
-                    if (!m_AssetDictionary.TryGetValue(guid, out asset))
-                    {
-                        asset = new Asset();
-                        m_AssetDictionary[guid] = asset;
-                    }
-
-                    asset.AddAssetMetadata(obj, fileId);
-                    return;
-                }
-
-                m_GuidMap[obj] = null;
-                return;
-            }
-
-            if (string.IsNullOrEmpty(guid))
-            {
-                fileId = k_InvalidId;
-                return;
-            }
-
-            if (!m_AssetDictionary.TryGetValue(guid, out asset))
-            {
-                asset = new Asset();
-                m_AssetDictionary[guid] = asset;
-            }
-
-            asset.GetOrAddAssetMetadata(obj, out fileId, warnIfMissing);
-        }
-
-        static bool TryGetGUIDAndLocalFileIdentifier(UnityObject obj, out string guid, out long fileId, bool warnIfMissing)
-        {
-            if (!AssetDatabase.TryGetGUIDAndLocalFileIdentifier(obj, out guid, out fileId))
-            {
-                // ReSharper disable once CommentTypo
-                // Check if target object is marked as "DontSave"--that means it is a scene object but won't be found in metadata
-                // Otherwise, this is an error, and we cannot find a valid asset path
-                // Suppress warning in certain edge cases (i.e. during deserialization before scene object metadata is set up)
-                if ((obj.hideFlags & HideFlags.DontSave) == HideFlags.None && warnIfMissing)
-                    Debug.LogWarningFormat("Could not find asset path for {0}", obj);
-
-                guid = string.Empty;
-                fileId = k_InvalidId;
-                return false;
-            }
-            return true;
-        }
-
-        #region Scene Related （PS：新实现与Scene无关）
-        //const string k_AssetPackFilter = "t:" + nameof(SOAssetPack);
-        //static readonly Dictionary<SceneAsset, SOAssetPack> k_SceneToAssetPackCache = new();
-
-        ///// <summary>
-        ///// The associated SceneAsset for this SOAssetPack
-        ///// </summary>
-        //public UnityObject SceneAsset { set => m_SceneAsset = value; get => m_SceneAsset; }
-        //[SerializeField]
-        //UnityObject m_SceneAsset;//ToDelete
-
-        ///// <summary>
-        ///// Get the SOAssetPack associated with the given scene(找到Scene路径下匹配的SOAssetPack)
-        ///// </summary>
-        ///// <param name="sceneAsset">The SceneAsset which will be used to find the SOAssetPack</param>
-        ///// <returns>The associated SOAssetPack, if one exists</returns>
-        //public static SOAssetPack GetAssetPackForScene(SceneAsset sceneAsset)
-        //{
-        //    if (k_SceneToAssetPackCache.TryGetValue(sceneAsset, out var assetPack))
-        //        return assetPack;
-
-        //    var allAssetPacks = AssetDatabase.FindAssets(k_AssetPackFilter);
-        //    foreach (var guid in allAssetPacks)
-        //    {
-        //        var path = AssetDatabase.GUIDToAssetPath(guid);
-        //        if (string.IsNullOrEmpty(path))
-        //            continue;
-
-        //        var loadedAssetPack = AssetDatabase.LoadAssetAtPath<SOAssetPack>(path);
-        //        if (loadedAssetPack == null)
-        //            continue;
-
-        //        var loadedSceneAsset = loadedAssetPack.SceneAsset as SceneAsset;
-        //        if (loadedSceneAsset == null)
-        //            continue;
-
-        //        k_SceneToAssetPackCache[loadedSceneAsset] = loadedAssetPack;
-
-        //        if (loadedSceneAsset == sceneAsset)
-        //            assetPack = loadedAssetPack;
-        //    }
-        //    return assetPack;
-        //}
-        ///// <summary>
-        ///// Remove a cached asset pack mapping
-        ///// </summary>
-        ///// <param name="sceneAsset">The SceneAsset associated to the SOAssetPack to remove</param>
-        //public static void RemoveCachedAssetPack(SceneAsset sceneAsset)
-        //{
-        //    if (sceneAsset != null)
-        //        k_SceneToAssetPackCache.Remove(sceneAsset);
-        //}
-
-        ///// <summary>
-        ///// Clear the cached map of scenes to asset packs
-        ///// </summary>
-        //public static void ClearSceneToAssetPackCache() { k_SceneToAssetPackCache.Clear(); }
-        #endregion
-
-#endif
         #endregion
 
         #region Define

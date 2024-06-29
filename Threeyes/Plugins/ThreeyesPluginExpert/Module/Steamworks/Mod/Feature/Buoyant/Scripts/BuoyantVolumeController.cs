@@ -73,7 +73,7 @@ namespace Threeyes.Steamworks
                 }
                 else//自动添加组件
                 {
-                    if (rigidbody.GetComponent<NotBuoyantableObject>() != null)//跳过标记为不可漂浮的物体
+                    if (rigidbody.GetComponent<INotBuoyantableObject>() != null)//跳过标记为不可漂浮的物体
                         return;
 
                     buoyantObjectController = rigidbody.AddComponentOnce<BuoyantObjectController>();
@@ -193,4 +193,10 @@ namespace Threeyes.Steamworks
         public class PropertyBag : ConfigurableComponentPropertyBagBase<BuoyantVolumeController, ConfigInfo> { }
         #endregion
     }
+
+    /// <summary>
+    /// Mark this gameobject as can't set to buoyant by BuoyantVolumeController
+    /// 标记该物体不可漂浮，可避免意外修改
+    /// </summary>
+    public interface INotBuoyantableObject { }
 }

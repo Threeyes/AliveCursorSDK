@@ -81,6 +81,97 @@ namespace Threeyes.ModuleHelper
             Canvas.ForceUpdateCanvases();//强制Canvas更新
         }
 
+
+        #region Center on item (Ref: https://forum.unity.com/threads/scrollrect-scroll-to-a-gameobject-position.473214/#post-3088504)
+        [Header("Center on item")]
+        public RectTransform rectTfScroll;
+        public RectTransform rectTfMask;
+        public RectTransform rectTfContent;
+        [ContextMenu("SetupCenter")]
+        private void SetupCenter()
+        {
+            if (!rectTfScroll)
+                rectTfScroll = Comp.GetComponent<RectTransform>();
+            if (!rectTfContent)
+                rectTfContent = Comp.content;
+            if (!rectTfMask)
+            {
+                var mask = rectTfScroll.GetComponentInChildren<Mask>(true);
+                if (mask)
+                {
+                    rectTfMask = mask.rectTransform;
+                }
+                else
+                {
+                    var mask2D = rectTfScroll.GetComponentInChildren<RectMask2D>(true);
+                    if (mask2D)
+                    {
+                        rectTfMask = mask2D.rectTransform;
+                    }
+                }
+            }
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
+        }
+        /// <summary>
+        /// 居中到指定子元素
+        /// </summary>
+        /// <param name="target"></param>
+        public void CenterOnItem(RectTransform target)
+        {
+            Canvas.ForceUpdateCanvases();//强制Canvas更新，确保即使该帧添加了新元素也能定位到正确位置
+
+            // Item is here
+            var itemCenterPositionInScroll = GetWorldPointInParent(rectTfScroll, target);
+            // But must be here(目标位置为Mask的锚点位置，后续可自定义)
+            var targetPositionInScroll = GetWorldPointInParent(rectTfScroll, rectTfMask);
+            // So it has to move this distance
+            var difference = targetPositionInScroll - itemCenterPositionInScroll;
+            difference.z = 0f;
+
+            //clear axis data that is not enabled in the scrollrect
+            if (!Comp.horizontal)
+            {
+                difference.x = 0f;
+            }
+            if (!Comp.vertical)
+            {
+                difference.y = 0f;
+            }
+
+            var normalizedDifference = new Vector2(
+                difference.x / (rectTfContent.rect.size.x - rectTfScroll.rect.size.x),
+                difference.y / (rectTfContent.rect.size.y - rectTfScroll.rect.size.y));
+
+            var newNormalizedPosition = Comp.normalizedPosition - normalizedDifference;
+            if (Comp.movementType != ScrollRect.MovementType.Unrestricted)
+            {
+                newNormalizedPosition.x = Mathf.Clamp01(newNormalizedPosition.x);
+                newNormalizedPosition.y = Mathf.Clamp01(newNormalizedPosition.y);
+            }
+
+            Comp.normalizedPosition = newNormalizedPosition;
+        }
+
+        static Vector3 GetWidgetWorldPoint(RectTransform target)
+        {
+            //pivot position + item size has to be included
+            var pivotOffset = new Vector3(
+                (0.5f - target.pivot.x) * target.rect.size.x,
+                (0.5f - target.pivot.y) * target.rect.size.y,
+                0f);
+            var localPosition = target.localPosition + pivotOffset;
+            return target.parent.TransformPoint(localPosition);
+        }
+        static Vector3 GetWorldPointInParent(RectTransform target, RectTransform child)
+        {
+            Vector3 worldPoint = GetWidgetWorldPoint(child);
+            return target.InverseTransformPoint(worldPoint);
+        }
+        #endregion 
+
+        #region Define
         [AttributeUsage(AttributeTargets.Field)]
         public class DirectionInfo : Attribute
         {
@@ -121,6 +212,6 @@ namespace Threeyes.ModuleHelper
             [DirectionInfo(1, 0, -1)]
             TopToBottom = 3
         }
-
+        #endregion
     }
 }

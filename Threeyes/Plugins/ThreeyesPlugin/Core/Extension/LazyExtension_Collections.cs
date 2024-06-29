@@ -117,6 +117,25 @@ namespace Threeyes.Core
 
         #region Compare
         /// <summary>
+        /// 找到两个列表所有变更的元素清单
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="newList"></param>
+        /// <param name="added">新增</param>
+        /// <param name="removed">删除</param>
+        /// <param name="samed">相同</param>
+        public static void GetChangedElements<T>(this IEnumerable<T> source, IEnumerable<T> newList, out List<T> added, out List<T> removed, out List<T> samed)
+        {
+            var listSource = source.ToList();
+            var listNewList = newList.ToList();
+
+            added = listNewList.FindAll(d => !listSource.Contains(d));
+            removed = listSource.FindAll(d => !listNewList.Contains(d));
+            samed = listNewList.FindAll(d => listSource.Contains(d));
+        }
+
+        /// <summary>
         /// 获取新增的元素
         /// </summary>
         /// <typeparam name="T"></typeparam>

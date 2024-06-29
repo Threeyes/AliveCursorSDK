@@ -17,7 +17,7 @@ namespace Threeyes.Steamworks
         /// <summary>
         /// 当前App的版本
         /// </summary>
-        public string strAppVersion { get { return Application.version; } }//App版本，格式必须是A.B
+        public string strAppVersion { get { return Application.version; } }//App版本，格式必须是A.B.C
         public static TConfig Config
         {
             get
@@ -208,7 +208,7 @@ namespace Threeyes.Steamworks
     #region Define
     public abstract class HubSettingConfigInfoBase : SerializableDataBase
     {
-        public Version version = new Version("3.0");//Warning：格式必须是A.B，否则报错！（The major and minor components are required; the build and revision components are optional）
+        public Version version = new Version("3.0.0");//Warning：格式必须是A.B.c，否则报错！（The major and minor components are required; the build and revision components are optional）
     }
     #endregion
 

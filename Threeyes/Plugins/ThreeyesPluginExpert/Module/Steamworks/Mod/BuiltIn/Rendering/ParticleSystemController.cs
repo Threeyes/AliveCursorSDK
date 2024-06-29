@@ -23,8 +23,21 @@ namespace Threeyes.Steamworks
             }
         }
 
-
         [Header("RuntimeGizmo")]//用于运行时选中
         public GameObject preGizmoIndicator;//挂载RuntimeEditorBehaviour等组件，会自动据当前是否为编辑状态进行显隐
+
+        #region Editor
+#if UNITY_EDITOR
+        [ContextMenu("EditorSetup")]
+        void EditorSetup()
+        {
+            if(!mainParticleSystem)
+            {
+                mainParticleSystem = GetComponent<ParticleSystem>();
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
+        }
+#endif
+        #endregion
     }
 }

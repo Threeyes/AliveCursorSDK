@@ -9,22 +9,25 @@ using Threeyes.Core;
 namespace Threeyes.Steamworks
 {
     /// <summary>
-    /// Add Force inside volume, force will decay according to distance
-    /// 为区域中的物体添加力，力度会根据距离衰减
+    /// Add Force inside volume, force may decay according to distance
+    /// 为区域中的物体添加力，力度可以设置为根据距离衰减
+    /// 
+    /// 用途：
+    /// -声波、风力、水流
+    /// -仿《王国之泪》风扇机，为物体提供推力
     /// 
     /// Todo：
     /// -对TriggerEnter的物体施加力
     /// -可选更新力的方式：Update、Manual
     /// -提供可编辑的配置：最大距离、最大力度、是否根据距离衰减（后期可通过AnimationCurver设置）
     /// -可根据maxDistance，在运行时修改Trigger的Z轴（注意Box/Sphere的Trigger的Center.Z要为0.5，确保碰撞体的原点在根部）。需要增加一个对Collider的可选引用
+    /// -如果被Socket吸附，则反作用力改为作用在Socket上（通过宏定义来限制，避免AC报错）（Socket物体可以继承通用接口引用，使该组件更加通用）
     /// 
     /// PS:
     /// -该组件可以挂载Rigidbody或Trigger上，OnTriggerStay都可以生效
     /// -可以适配不同的Trigger（Box/Sphere）
     /// -可以通过设置Trigger的LayerOverrides，来决定哪些物体可以交互
     /// 
-    /// Todo：
-    /// -如果被Socket吸附，则反作用力改为作用在Socket上（通过宏定义来限制，避免AC报错）
     /// </summary>
     public class VolumeForceController : ConfigurableComponentBase<VolumeForceController, SOVolumeForceControllerConfig, VolumeForceController.ConfigInfo, VolumeForceController.PropertyBag>
     , IRuntimeEditorSelectEnterHandler

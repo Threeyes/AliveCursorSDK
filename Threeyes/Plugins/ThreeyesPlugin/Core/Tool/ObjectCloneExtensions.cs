@@ -44,7 +44,6 @@ namespace Threeyes.Core
                     Array clonedArray = (Array)cloneObject;
                     clonedArray.ForEach((array, indices) => array.SetValue(InternalCopy(clonedArray.GetValue(indices), visited), indices));
                 }
-
             }
             visited.Add(originalObject, cloneObject);
             CopyFields(originalObject, visited, cloneObject, typeToReflect);

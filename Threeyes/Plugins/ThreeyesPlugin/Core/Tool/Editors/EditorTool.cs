@@ -39,7 +39,7 @@ namespace Threeyes.Core.Editor
         }
 
         /// <summary>
-        /// 是否为场景中的实例物体
+        /// 是否为场景中的实例物体(包括Prefab实例)
         /// 
         /// -否：在PrefabMode下或Prefab资源
         /// </summary>

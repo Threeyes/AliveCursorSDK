@@ -24,7 +24,7 @@ namespace Threeyes.Steamworks
     /// -支持零重力物体及全局模式
     /// +当运行时临时添加该组件，为其添加默认的effectors(默认都是沉底，增加该组件的目的是提供浮力。如果想漂在水上们就需要提前增加该组件)
     /// -【V2】增加配置项
-    /// 
+    /// - 【V2】添加类似AD_XRSocketInteractor的Keylock系统，适用于针对或排除特定物体。还可以用于水粒子系统触发加水等特殊功能
     /// 
     /// Ref: 
     /// </summary>

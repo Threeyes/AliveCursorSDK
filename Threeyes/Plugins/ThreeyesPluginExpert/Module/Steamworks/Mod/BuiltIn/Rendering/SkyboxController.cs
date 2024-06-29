@@ -72,7 +72,7 @@ namespace Threeyes.Steamworks
             return targetMaterialProvider is IMaterialProvider;
         }
         /// <summary>
-        /// 
+        /// 尝试从目标中返回指定材质
         /// </summary>
         /// <param name="materialProvider">如果找不到，则返回null</param>
         /// <returns></returns>

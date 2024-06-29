@@ -50,6 +50,7 @@ namespace Threeyes.Persistent
             //PS：
             //1.使用JsonDotNetTool.ShouldSerialize作为filter的原因：标记为不需要序列化的字段，也没有拷贝的必要;
             //2.event等不应该拷贝，否则会覆盖掉原值
+            //3.标记为[JsonIgnore]的Texture等不应该拷贝，因为是实时读取的
             return JsonDotNetTool.ShouldSerialize(objectType, memberInfo);
         }
         #endregion
@@ -104,11 +105,11 @@ namespace Threeyes.Persistent
             //#1 【Cache】缓存新旧object值及相关Attribute绑定方法
             SetupInstance(originInst, newInst, persistentChangeState, persistentDirPath, true);
 
-            //#2 只复制可持久化的字段，忽略其他字段，避免场景引用等信息丢失【主要是针对Load时的值同步】
+            //#2 只复制newInst可持久化的字段到originInst，忽略其他字段，避免场景引用等信息丢失【主要是针对Load时的值同步】
             UnityObjectTool.CopyFields(newInst, originInst, funcCopyFilter: funcCopyFilter);
             //CopyInstance(newInst, originInst, funcCopyFilter);
 
-            //#3 【Set】调用object中的相关Attribute的方法（如加载图片）
+            //#3 【Set】调用originInst中的相关Attribute的方法（如加载图片）
             SetupInstance(originInst, newInst, persistentChangeState, persistentDirPath, false);
         }
 

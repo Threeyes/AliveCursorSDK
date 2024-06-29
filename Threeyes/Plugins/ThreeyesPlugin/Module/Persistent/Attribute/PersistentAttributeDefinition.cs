@@ -283,28 +283,35 @@ namespace Threeyes.Persistent
     }
 
     /// <summary>
-    /// Cache option list's selected index
-    /// [valid for int field only]
+    /// Cache option list's selected index, Can used to mark int field only.
     /// 
-    /// Usage:Generate [DataOption_OptionInfo]
+    /// Usage:
+    /// -Generate [DataOption_OptionInfo]（通过标记List和当前元素ID，生成对应的可选项DataOption_OptionInfo）
+    /// 
+    /// PS：
+    /// -通过UIRE来运行时修改被标记的字段数值
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
     public class PersistentOptionAttribute : Attribute
     {
         public string ListOptionFieldName { get; set; }
-        public string OptionTargetFieldName { get; set; }
-
+        public string OptionTargetFieldName { get; set; }//ToUpdate:可以为空，因为关键的是该Attribute对应的Index
+        public string DataOptionPropertyName { get; set; }//【可空】 PS：之所以用Property，是为了方便运行时根据ListOptionFieldName获取对应的Option信息
+        public bool UseStringAsOptionName { get; set; }
         /// <summary>
         /// 
         /// ToUpdate:大于等于-1才有效（-1预留给全选，如果默认不选择任何选项，可以将初始值设置为-2）
         /// </summary>
         /// <param name="listOptionFieldName">List or Array field of options</param>
         /// <param name="optionTargetFieldName">Target option field to set when option index changed</param>
-        public PersistentOptionAttribute(string listOptionFieldName, string optionTargetFieldName)
+        /// <param name="dataOptionPropertyName">[Optional] custom final data option （可用于自定义最终的显示内容等)</param>
+        /// <param name="useStringAsOptionName">true：use ToString(); false: use index</param>
+        public PersistentOptionAttribute(string listOptionFieldName, string optionTargetFieldName, string dataOptionPropertyName = null, bool useStringAsOptionName = true)
         {
-            //Todo:listOptionFieldName支持IList，优点是不需要自行封装 DataOption_OptionInfo
-            ListOptionFieldName = listOptionFieldName;
+            ListOptionFieldName = listOptionFieldName;//PS：listOptionFieldName支持IList，优点是不需要自行封装 DataOption_OptionInfo
             OptionTargetFieldName = optionTargetFieldName;
+            DataOptionPropertyName = dataOptionPropertyName;
+            UseStringAsOptionName = useStringAsOptionName;
         }
         //ToAdd:后期增加直接获取DataOption_OptionInfo属性的构造函数，参考PersistentAssetFilePathAttribute
 
@@ -317,6 +324,15 @@ namespace Threeyes.Persistent
         /// <returns></returns>
         public DataOption_OptionInfo GetDataOption_OptionInfo(FieldInfo fieldInfoAttribute, object obj)
         {
+            //#1 如果有自定义的Option属性，则直接返回
+            if (DataOptionPropertyName.NotNullOrEmpty())
+            {
+                DataOption_OptionInfo dataOption = ReflectionTool.GetPropertyValue<DataOption_OptionInfo>(obj, DataOptionPropertyName, null);
+                if (dataOption != null)
+                    return dataOption;
+            }
+
+            //#2 如果上述操作无效，则fallback：通过List转换成对应的Option
             DataOption_OptionInfo dataOption_OptionInfo = new DataOption_OptionInfo();
             var listOptionValue = ReflectionTool.GetFieldValue(obj, ListOptionFieldName);
             if (listOptionValue != null)
@@ -325,7 +341,21 @@ namespace Threeyes.Persistent
                 {
                     for (int i = 0; i != listInst.Count; i++)
                     {
-                        DataOption_OptionInfo.OptionData optionData = new DataOption_OptionInfo.OptionData(i.ToString());
+                        string optionText = i.ToString();//默认使用序号
+
+                        if (UseStringAsOptionName)//尝试使用该物体的ToString
+                        {
+                            object element = listInst[i];
+                            if (element != null)
+                            {
+                                if (element is UnityEngine.Object unityObj)
+                                    optionText = unityObj.name;
+                                else
+                                    optionText = element.ToString();
+                            }
+                        }
+
+                        DataOption_OptionInfo.OptionData optionData = new DataOption_OptionInfo.OptionData(optionText);
                         dataOption_OptionInfo.listOptionData.Add(optionData);
                     }
                 }
@@ -347,7 +377,7 @@ namespace Threeyes.Persistent
 
             //#2获取List对应的值
             var listOptionValue = ReflectionTool.GetFieldValue(obj, ListOptionFieldName);
-            if (listOptionValue is IList listInst)
+            if (listOptionValue is IList listInst && listInst.Count > 0)
             {
                 if (curIndex >= listInst.Count)
                 {

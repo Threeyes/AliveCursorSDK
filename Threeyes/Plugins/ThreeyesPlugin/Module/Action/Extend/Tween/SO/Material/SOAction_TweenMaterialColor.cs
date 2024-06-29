@@ -2,9 +2,9 @@ using UnityEngine;
 using Threeyes.Core;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
+#endif
 #if USE_JsonDotNet
 using Newtonsoft.Json;
-#endif
 #endif
 #if USE_DOTween
 using DG.Tweening;

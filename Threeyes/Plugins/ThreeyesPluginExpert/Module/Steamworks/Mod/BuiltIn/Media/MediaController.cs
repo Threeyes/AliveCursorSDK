@@ -261,10 +261,12 @@ namespace Threeyes.Steamworks
             /// -提供多语言
             if (curMediaType == MediaType.Video && videoPlayerHelper)
             {
-                listInfo.Add(new ToolStripItemInfo("Video/Mute", (o, arg) => SetVideoMuteFunc(true), contextMenuPriority_Video));
-                listInfo.Add(new ToolStripItemInfo("Video/Unmute", (o, arg) => SetVideoMuteFunc(false), contextMenuPriority_Video + 1));
+                if (!Config.isVideoMute)
+                    listInfo.Add(new ToolStripItemInfo("Video/Mute", (o, arg) => SetVideoMuteFunc(true), contextMenuPriority_Video));
+                else
+                    listInfo.Add(new ToolStripItemInfo("Video/Unmute", (o, arg) => SetVideoMuteFunc(false), contextMenuPriority_Video + 1));
 
-                //——以下选项暂不持久化，因为涉及到视频进度的问题，仅让用户在运行时调用——
+                //——以下选项暂不使用持久化字段保存状态，因为涉及到视频进度的问题，仅让用户在运行时调用——
                 listInfo.Add(new ToolStripItemInfo("Video/TogglePlay", (o, arg) => videoPlayerHelper.TogglePlayPause(), contextMenuPriority_Video + 2));
             }
             return listInfo;
@@ -395,16 +397,16 @@ namespace Threeyes.Steamworks
             //ToAdd：通过string提供外部路径，当其更新时根据文件的后缀调用不同的组件进行初始化。（研究如何标记为使用preUICommonFileField好让用户编辑;或者）
             [JsonIgnore] public SOBytesAsset defaultMedia;
             [JsonIgnore] public SOBytesAsset externalMedia;//
-            [Tooltip("The local media file, support image/gif/video")] [PersistentAssetFilePath(nameof(externalMedia), true, dataOption_FilePropertyName: nameof(ExternalMediaDataOption), defaultAssetFieldName: nameof(defaultMedia))] [ShowIf(nameof(mediaSource), MediaSource.Local)] public string externalMediaFilePath;
+            [Tooltip("The local media file, support image/gif/video")][PersistentAssetFilePath(nameof(externalMedia), true, dataOption_FilePropertyName: nameof(ExternalMediaDataOption), defaultAssetFieldName: nameof(defaultMedia))][ShowIf(nameof(mediaSource), MediaSource.Local)] public string externalMediaFilePath;
 
-            [Tooltip("The URL source of the media file, support image/gif/video")] [ShowIf(nameof(mediaSource), MediaSource.Remote)] [AllowNesting] public string urlMediaPath;//（优先使用Media，如果没有再Fallback为该字段）外部的流媒体Url路径（支持视频、图片等。【V2】如果是gif可以先下载到临时路径再解压）
+            [Tooltip("The URL source of the media file, support image/gif/video")][ShowIf(nameof(mediaSource), MediaSource.Remote)][AllowNesting] public string urlMediaPath;//（优先使用Media，如果没有再Fallback为该字段）外部的流媒体Url路径（支持视频、图片等。【V2】如果是gif可以先下载到临时路径再解压）
             DataOption_File ExternalMediaDataOption { get { return new DataOption_BytesFile() { OverrideFileFilterExtensions = new string[] { "jpg", "png", "gif", "mp4" } }; } }
 
             //——Setting——
             public bool isVideoMute = false;
 
             //——Persistent——
-            [HideInInspector] [JsonIgnore] [PersistentDirPath] public string PersistentDirPath;
+            [HideInInspector][JsonIgnore][PersistentDirPath] public string PersistentDirPath;
 
             public ConfigInfo()
             {

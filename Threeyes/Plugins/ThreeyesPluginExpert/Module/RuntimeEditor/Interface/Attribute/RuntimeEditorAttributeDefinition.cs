@@ -59,6 +59,9 @@ namespace Threeyes.RuntimeEditor
     /// <summary>
     /// Disables add or delete elements of an array or list
     /// 不可增减元素
+    /// 
+    /// 用途：
+    /// -禁止用户添加或删除列表元素
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RuntimeEditorNonAddOrDeleteElementAttribute : Attribute

@@ -217,7 +217,7 @@ namespace Threeyes.Persistent
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TEvent"></typeparam>
     /// <typeparam name="TDataOption">TValue's realte DataOption</typeparam>
-    public abstract class PersistentDataBase<TValue, TEvent, TDataOption> : PersistentDataBase<TValue, TEvent>, IDataOptionContainer<TDataOption>
+    public abstract class PersistentDataBase<TValue, TEvent, TDataOption> : PersistentDataBase<TValue, TEvent>, IDataOptionHolder<TDataOption>
         where TEvent : UnityEvent<TValue>
         where TDataOption : IDataOption
     {

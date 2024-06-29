@@ -70,7 +70,7 @@ namespace Threeyes.Core
         }
 
         /// <summary>
-        /// 复制obj的字段到另一个obj中
+        /// 复制obj的字段到另一个obj中，需要检验新旧obj特定字段的差异
         /// 
         /// </summary>
         /// <param name="srcObj"></param>
@@ -78,7 +78,7 @@ namespace Threeyes.Core
         /// <param name="bindingAttr"></param>
         /// <param name="funcCopyFilter"></param>
         /// <param name="maxDepth"></param>
-        public static void CopyFields(object srcObj, object dstObj, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Func<Type, MemberInfo, bool> funcCopyFilter = null, int maxDepth = 7, bool includeUnityObject = false)
+        public static void CopyFields(object srcObj, object dstObj, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Func<Type, MemberInfo, bool> funcCopyFilter = null, int maxDepth = 7)
         {
             maxDepth--;
             if (maxDepth == -1)
@@ -120,7 +120,7 @@ namespace Threeyes.Core
                 {
                     fieldInfo.SetValue(dstObj, GetFieldClone(fieldInfo.GetValue(srcObj), funcCopyFilter, maxDepth, bindingAttr));
                 }
-                else if (fieldType.GetInterface(nameof(IList)) != null)//List<T>、T[]等合集
+                else if (fieldType.GetInterface(nameof(IList)) != null)//List<T>、T[]等合集：尽量保证长度一致
                 {
                     //PS:针对Array、List<SO>进行迭代，而不是直接创建Clone，因此无法直接调用GetFieldClone
 
@@ -129,28 +129,32 @@ namespace Threeyes.Core
                     var dstList = fieldInfo.GetValue(dstObj) as IList;
                     if (srcList != null && dstList != null)//排除List未初始化导致为null的情况
                     {
-                        Type elementType = ReflectionTool.GetCollectionElementType(fieldType);
 
-                        if (elementType != null && elementType.IsInherit(UnityObjectType)) //UnityEngine.Object的子类：其作用是为了供程序内部引用，为了避免引用丢失，需要迭代调用本方法复制其字段内容而不是返回原值（前提是SO的具体类型一致）【太复杂，ToDelete】
-                        {
-                            if (dstList.Count == srcList.Count)//只有合集长度相同才复制，避免影响原来的List的长度、位置或顺序
-                            {
-                                for (int i = 0; i != dstList.Count; i++)
-                                {
-                                    CopyFields(srcList[i], dstList[i], bindingAttr, funcCopyFilter, maxDepth);
-                                }
-                            }
-                        }
-                        else//其他元素：直接使用新List覆盖
+                        #region ——旧版实现——
+                        /////ToUpdate:可以设置List克隆方式，比如直接替换，还是删除多余部分
+                        Type elementType = ReflectionTool.GetCollectionElementType(fieldType);
+                        bool isElementAUnityObject = elementType.IsInherit(UnityObjectType);
+                        //if (elementType != null && isElementAUnityObject) //UnityEngine.Object的子类：其作用是为了供程序内部引用，为了避免引用丢失，需要迭代调用本方法复制其字段内容而不是返回原值（前提是SO的具体类型一致【ToDelete。太复杂，List不应该再引用其他SO，而且会导致PersistentOption提供可选的Material列表无法正常拷贝】）
+                        //{
+                        //    if (dstList.Count == srcList.Count)//只有合集长度相同才复制，避免影响原来的List的长度、位置或顺序
+                        //    {
+                        //        for (int i = 0; i != dstList.Count; i++)
+                        //        {
+                        //            CopyFields(srcList[i], dstList[i], bindingAttr, funcCopyFilter, maxDepth);
+                        //        }
+                        //    }
+                        //}
+                        //else//其他元素：直接使用新List覆盖
                         {
                             //#1 确保元素数量一致
-                            if (srcList.Count > dstList.Count)//Dst元素过少：填充对应的默认实例
+                            if (srcList.Count > dstList.Count)//Dst元素过少：为Dst填充对应的默认实例
                             {
                                 int startIndex = dstList.Count;
                                 int totalCount = srcList.Count;
                                 for (int i = startIndex; i != totalCount; i++)
                                 {
-                                    object tempElement = ReflectionTool.CreateInstance(elementType);
+                                    //如果是值类型或UnityObject，则返回原值
+                                    object tempElement = IsTypeShouldReturnOriginValue(elementType) ? srcList[i] : ReflectionTool.CreateInstance(elementType);
                                     dstList.Add(tempElement);
                                 }
                             }
@@ -164,7 +168,7 @@ namespace Threeyes.Core
                             for (int i = 0; i != dstList.Count; i++)
                             {
                                 //ToUpdate：针对Texture，不应该拷贝，否则List<Class>中的Texture会被拷贝（参考CopyFields(srcList[i], dstList[i], bindingAttr, funcCopyFilter, maxDepth);的正确实现）
-                                if (IsSimpleType(elementType))
+                                if (IsTypeShouldReturnOriginValue(elementType))
                                     dstList[i] = GetFieldClone(srcList[i], funcCopyFilter, maxDepth, bindingAttr);
                                 else
                                     CopyFields(srcList[i], dstList[i], bindingAttr, funcCopyFilter, maxDepth);
@@ -180,6 +184,43 @@ namespace Threeyes.Core
                             //	//}
                             //}
                         }
+                        #endregion
+
+                        #region ——旧版实现2 直接拷贝所有——
+                        /////【Bug】:
+                        /////-【重要】更改MaterialController中的List<TextureShaderProperty>中任意字段后，会导致重置。原因是直接清掉原listTextureShaderProperty中的所有数据，导致调用CopyFiledsAndLoadAsset时，TextureShaderProperty实例中本来需要被忽略拷贝的Texture等也因为创建新实例导致重置为null。正确方法应该是旧版实现1中的保留原引用
+                        /////Todo：
+                        /////-PersistentOption可以正常使用
+                        //Type elementType = ReflectionTool.GetCollectionElementType(fieldType);
+                        //bool isElementAUnityObject = elementType.IsInherit(UnityObjectType);
+                        //dstList.Clear();//清空Dst
+
+                        //for (int i = 0; i != srcList.Count; i++)
+                        //{
+                        //    //object temp = GetFieldClone(srcList[i], funcCopyFilter, maxDepth, bindingAttr);
+                        //    //dstList.Add(temp);
+                        //    if (IsTypeShouldReturnOriginValue(elementType))//返回原值的类型
+                        //    {
+                        //        dstList.Add(null);//占位
+                        //        dstList[i] = GetFieldClone(srcList[i], funcCopyFilter, maxDepth, bindingAttr);
+                        //    }
+                        //    else if(isElementAUnityObject)
+                        //    {
+                        //        //Todo:应该不清除原引用，避免丢失
+                        //    }
+                        //    else//复杂类型：进行迭代克隆
+                        //    {
+                        //        object tempElement = ReflectionTool.CreateInstance(elementType);//创建该类的新实例，避免与Src引用相同元素
+                        //        dstList.Add(tempElement);
+                        //        CopyFields(srcList[i], dstList[i], bindingAttr, funcCopyFilter, maxDepth);//继续遍历
+                        //    }
+                        //}
+                        #endregion
+
+                        #region ——新版实现——
+                        //能够拷贝UnityObject列表，适用于通过PersistentOption提供可选的Material列表(缺点:没有针对子类继续筛选,弃用！后续应参考该实现在此重现)
+                        //fieldInfo.SetValue(dstObj, ReflectionTool.DoCopy(srcList));//
+                        #endregion
                     }
                 }
                 else if (fieldType.IsClass)// 自定义Class -> Recursion (克隆并筛选)
@@ -220,13 +261,13 @@ namespace Threeyes.Core
         }
 
         /// <summary>
-        /// 
+        /// 该类型是否应该返回原值
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsSimpleType(Type type)
+        public static bool IsTypeShouldReturnOriginValue(Type type)
         {
-            return type.IsValueType || type == typeof(string);
+            return type.IsValueType || type == typeof(string) || type.IsInherit(UnityObjectType);
         }
         //void CreateListInstance<TElement>()
 

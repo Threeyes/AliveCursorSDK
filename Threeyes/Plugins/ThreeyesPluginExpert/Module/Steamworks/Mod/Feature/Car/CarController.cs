@@ -6,6 +6,8 @@ using Threeyes.Core;
 using Threeyes.RuntimeEditor;
 using UnityEngine;
 using NaughtyAttributes;
+using Threeyes.UI;
+
 namespace Threeyes.Steamworks
 {
     /// <summary>
@@ -21,8 +23,7 @@ namespace Threeyes.Steamworks
     /// +SteerAngle偏转的进度事件（归一化，方便模型方向盘同步）
     /// +增加通过listWheelAppearance一键导入配置到Config.listWheelInfo的相关字段中
     /// </summary>
-    public class CarController : ConfigurableComponentBase<
-       CarController, SOCarControllerConfig, CarController.ConfigInfo, CarController.PropertyBag>
+    public class CarController : ConfigurableComponentBase<CarController, SOCarControllerConfig, CarController.ConfigInfo, CarController.PropertyBag>, IContextMenuProvider
     {
         public float CurrentSpeed { get { return m_Rigidbody.velocity.magnitude * 2.23693629f; } }
 
@@ -31,6 +32,9 @@ namespace Threeyes.Steamworks
         //#Events
         public FloatEvent onSteerProgressChanged;//SteerAngle偏转的进度[0,1]，其中0为最小值，1为最大值（归一化，方便模型方向盘同步）
         public FloatEvent onMotorProgressChanged;//加减速的进度
+        public BoolEvent onBoostStartStop;
+        public BoolEvent onBrakeStartStop;
+
         public List<WheelAppearance> listWheelAppearance = new List<WheelAppearance>();//与listWheelInfo一一对应的引用
 
         //#Runtime
@@ -54,10 +58,12 @@ namespace Threeyes.Steamworks
         public void SetBoost(bool isBoost)
         {
             isBoosting = isBoost;
+            onBoostStartStop.Invoke(isBoost);
         }
         public void SetBrake(bool isBreak)
         {
             isBreaking = isBreak;
+            onBrakeStartStop.Invoke(isBreak);
         }
         #endregion
 
@@ -163,7 +169,6 @@ namespace Threeyes.Steamworks
         {
             for (int i = 0; i < Config.listWheelInfo.Count; i++)
             {
-                WheelInfo wheelInfo = Config.listWheelInfo[i];
                 WheelAppearance wheelAppearance = listWheelAppearance[i];
                 UpdateSingleWheel(wheelAppearance.wheelCollider, wheelAppearance.tfWheelModel);
             }
@@ -177,6 +182,43 @@ namespace Threeyes.Steamworks
             wheelTransform.rotation = rot;
             wheelTransform.position = pos;
         }
+
+        #region IContextMenuProvider
+        static readonly int contextMenuPriority_Car = 20;
+        public List<ToolStripItemInfo> GetContextMenuInfos()
+        {
+            List<ToolStripItemInfo> listInfo = new List<ToolStripItemInfo>
+            {
+                ///PS：
+                ///-以下参数基于百分比修改，适用于任意大小的车辆
+                ///-增加100%及降低50%，是为了方便复原
+
+                //# 悬挂高度
+                new ToolStripItemInfo("Car/Suspension/Raise 100%", (o, arg) =>
+                {
+                    Config.listWheelInfo.ForEach(w=>w.center*=2);
+                    UpdateSetting();
+                },contextMenuPriority_Car),
+                new ToolStripItemInfo("Car/Suspension/Lower 50%", (o, arg) =>
+                {
+                    Config.listWheelInfo.ForEach(w=>w.center*=0.5f);
+                    UpdateSetting();
+                },contextMenuPriority_Car+1),
+
+                //# motorTorque
+                new ToolStripItemInfo("Car/Torque/Raise 100%", (o, arg) =>
+                {
+                    Config.motorForce*=2;
+                },contextMenuPriority_Car+10),
+                   new ToolStripItemInfo("Car/Torque/Lower 50%", (o, arg) =>
+                {
+                    Config.motorForce*=0.5f;
+                },contextMenuPriority_Car+11),
+         };
+            return listInfo;
+        }
+        #endregion
+
 
         #region Editor
 #if UNITY_EDITOR

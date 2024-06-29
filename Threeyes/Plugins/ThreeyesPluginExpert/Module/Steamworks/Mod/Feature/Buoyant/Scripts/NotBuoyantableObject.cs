@@ -8,7 +8,7 @@ namespace Threeyes.Steamworks
     /// Mark this gameobject as can't set to buoyant by BuoyantVolumeController
     /// 标记该物体不可漂浮，可避免意外修改
     /// </summary>
-    public class NotBuoyantableObject : MonoBehaviour
+    public class NotBuoyantableObject : MonoBehaviour, INotBuoyantableObject
     {
     }
 }

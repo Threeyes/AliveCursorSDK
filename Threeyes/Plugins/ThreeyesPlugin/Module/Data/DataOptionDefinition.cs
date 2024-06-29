@@ -23,7 +23,7 @@ namespace Threeyes.Data
     {
         IDataOption BaseDataOption { get; }
     }
-    public interface IDataOptionContainer<TDataOption> : IDataOptionHolder
+    public interface IDataOptionHolder<TDataOption> : IDataOptionHolder
         where TDataOption : IDataOption
     {
         TDataOption DataOption { get; }

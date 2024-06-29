@@ -170,7 +170,7 @@ namespace Threeyes.Data
         #endregion
     }
 
-    public abstract class BasicData<TValue, TDataOption> : BasicData<TValue>, IDataOptionContainer<TDataOption>
+    public abstract class BasicData<TValue, TDataOption> : BasicData<TValue>, IDataOptionHolder<TDataOption>
         where TDataOption : IDataOption
     {
         public virtual IDataOption BaseDataOption { get { return option; } }

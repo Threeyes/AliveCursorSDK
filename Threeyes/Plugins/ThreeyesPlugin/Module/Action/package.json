@@ -2,7 +2,7 @@
 	"name": "com.threeyes.action",
 	"displayName": "Threeyes Action",
 	"description": "Use ScriptableObject to store&execute waitable Action configs, support reuse and dynamic modification of configurations.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"unity": "2021.3",
 	"author": 
 	{

@@ -381,6 +381,8 @@ namespace Threeyes.Steamworks
             {
                 Config.whiteBalance_IsActive = false;
             }
+
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 #endif
         #endregion
