@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.3.9]
+- Fix TweenOption_Vector3Ex's field not Serialized.
+
 ## [4.3.8]
 - Add more Function modules.
 

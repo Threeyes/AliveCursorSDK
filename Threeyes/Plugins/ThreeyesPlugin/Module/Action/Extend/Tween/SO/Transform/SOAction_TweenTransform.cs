@@ -2,6 +2,9 @@ using UnityEngine;
 #if USE_NaughtyAttributes
 using NaughtyAttributes;
 #endif
+#if USE_JsonDotNet
+using Newtonsoft.Json;
+#endif
 #if USE_DOTween
 using DG.Tweening;
 #endif
@@ -40,13 +43,13 @@ namespace Threeyes.Action
                     switch (targetTransformType)
                     {
                         case TransformType.Position:
-                            tween = options.isLocal ?
+                            tween = options.IsLocal ?
                             receiver.DOLocalMove(endValue, duration) :
                              receiver.DOMove(endValue, duration); break;
                         case TransformType.Rotation:
-                            tween = options.isLocal ?
-                            receiver.DOLocalRotate(endValue, duration, options.rotateMode) :
-                             receiver.DORotate(endValue, duration, options.rotateMode); break;
+                            tween = options.IsLocal ?
+                            receiver.DOLocalRotate(endValue, duration, options.RotateMode) :
+                             receiver.DORotate(endValue, duration, options.RotateMode); break;
                         case TransformType.Scale:
 
                             tween = receiver.DOScale(endValue, duration); break;//PS:LocalScale only
@@ -96,19 +99,28 @@ namespace Threeyes.Action
         [System.Serializable]
         public class TweenOption_Transform : TweenOption_Vector3Ex
         {
-            //Common
+#if USE_JsonDotNet
+            [JsonIgnore]
+#endif
+            public bool IsLocal { get { return isLocal; } set { isLocal = value; } }
+#if USE_JsonDotNet
+            [JsonIgnore]
+#endif
+            public RotateMode RotateMode { get { return rotateMode; } set { rotateMode = value; } }
+
+            //# Common
 #if USE_NaughtyAttributes
             [AllowNesting]
             [ShowIf(nameof(IsLocalMode))]
 #endif
-            public bool isLocal = true;//是否为局部坐标
+            [SerializeField] bool isLocal = true;//是否为局部坐标
 
-            //#Rotation
+            //# Rotation
 #if USE_NaughtyAttributes
             [AllowNesting]
             [ShowIf(nameof(IsRotateCommonMode))]
 #endif
-            public RotateMode rotateMode = RotateMode.Fast;
+            [SerializeField] RotateMode rotateMode = RotateMode.Fast;
 
             #region NaughtAttribute
             [HideInInspector] public TransformType transformType = TransformType.Position; //#Common Setting (Runtime SetUp by SOAction_TweenTransform)（PS：仅用于NaughtAttribute的其他字段判断，不使用该值）

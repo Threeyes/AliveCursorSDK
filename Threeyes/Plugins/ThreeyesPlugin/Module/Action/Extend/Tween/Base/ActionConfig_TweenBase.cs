@@ -360,7 +360,7 @@ namespace Threeyes.Action
         public bool FadeOut { get { return fadeOut; } set { fadeOut = value; } }
 
         //#Tween Type
-        private Vector3TweenType tweenType = Vector3TweenType.Common;
+        [SerializeField] Vector3TweenType tweenType = Vector3TweenType.Common;
 
         //——Punch || Shake——
 #if USE_NaughtyAttributes
@@ -368,13 +368,13 @@ namespace Threeyes.Action
         [ShowIf(EConditionOperator.Or, "IsPunchMode", "IsShakeMode")]
 #endif
         [Tooltip("Indicates how much will the punch vibrate")]
-        private int vibrato = 10;
+        [SerializeField] int vibrato = 10;
 #if USE_NaughtyAttributes
         [AllowNesting]
         [ShowIf(EConditionOperator.Or, "IsPunchMode", "IsShakeMode")]
 #endif
         [Tooltip("If TRUE the tween will smoothly snap all values to integers")]
-        private bool snapping = false;
+        [SerializeField] bool snapping = false;
 
         //——Punch——
 #if USE_NaughtyAttributes
@@ -383,7 +383,7 @@ namespace Threeyes.Action
 #endif
         [Range(0, 1)]
         [Tooltip("Represents how much (0 to 1) the vector will go beyond the starting rotation when bouncing backwards. 1 creates a full oscillation between the punch rotation and the opposite rotation, while 0 oscillates only between the punch and the start rotation")]
-        private float elasticity = 1;
+        [SerializeField] float elasticity = 1;
 
         //——Shake——
 #if USE_NaughtyAttributes
@@ -392,14 +392,14 @@ namespace Threeyes.Action
 #endif
         [Range(0, 180)]
         [Tooltip("Indicates how much the shake will be random (0 to 180 - values higher than 90 kind of suck, so beware). Setting it to 0 will shake along a single direction.")]
-        private float randomness = 90;
+        [SerializeField] float randomness = 90;
 
 #if USE_NaughtyAttributes
         [AllowNesting]
         [ShowIf(nameof(IsShakeMode))]
 #endif
         [Tooltip("If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it will not")]
-        private bool fadeOut = true;
+        [SerializeField] bool fadeOut = true;
 
         #region Experimental
         //PS: These fields are interal for DOTween.Shake only, keep them for further usage

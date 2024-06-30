@@ -680,6 +680,7 @@ MonoBehaviour:
     skyboxType: 0
     defaultSkyboxMaterial: {fileID: 2100000, guid: 6a075527c9045204db03585cc6efed51,
       type: 2}
+    defaultSkyboxSunSize: 0.04
     panoramaSkyboxMaterial: {fileID: 0}
     defaultPanoramaTexture: {fileID: 0}
     externalPanoramaTexture: {fileID: 0}
@@ -2678,6 +2679,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroyOnLoad: 0
+  isChangingScene: 0
+  curSOWorkshopItemInfo: {fileID: 0}
+  curWorkshopItemInfo:
+    title: 
+    description: 
+    modFileRelatePath: 
+    previewFileRelatePath: 
+    itemVisibility: 0
+    tags: []
+    itemLocation: 0
+    id: 0
+    dirPath: 
+    fileSize: 0
 --- !u!114 &926324524
 MonoBehaviour:
   m_ObjectHideFlags: 0

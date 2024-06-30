@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoredAction_Wander
   m_EditorClassIdentifier: 
   movementConfig:
-    moveSpeed: 1
+    moveSpeed: 2
     rotateSpeed: 3
   maxForce: 1
   turnChance: 0.02
