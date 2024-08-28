@@ -26,7 +26,7 @@ namespace Threeyes.ModuleHelper
                 List<CanvasGroupHelper> listHelper = new List<CanvasGroupHelper>();
                 ForEachChildComponent((c) =>
                 {
-                    if (c.isShowing)
+                    if (c.IsShowing)
                         listHelper.Add(c);
                 });
                 return listHelper;

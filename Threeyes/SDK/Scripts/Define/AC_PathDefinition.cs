@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Threeyes.Steamworks;
+using Threeyes.GameFramework;
 using UnityEngine;
 
 public static class AC_PathDefinition
@@ -23,6 +23,6 @@ public static class AC_PathDefinition
     /// ——————Cursor
     /// ————————CursorTheme.json
 
-    public static string Data_Save_SystemDirPath { get { return Steamworks_PathDefinition.Data_SaveDirPath + "/System"; } }//存储系统信息的根目录
+    public static string Data_Save_SystemDirPath { get { return GameFramework_PathDefinition.Data_SaveDirPath + "/System"; } }//存储系统信息的根目录
     public static string Data_Save_System_CursorDirPath { get { return Data_Save_SystemDirPath + "/Cursor"; } }//存储系统光标信息的目录
 }

@@ -1,4 +1,5 @@
-using Threeyes.Steamworks;
+#if USE_UnityHair
+using Threeyes.GameFramework;
 
 public class AC_HairInstanceController : HairInstanceController
     , IAC_CursorState_ChangedHandler
@@ -14,3 +15,4 @@ public class AC_HairInstanceController : HairInstanceController
     }
     #endregion
 }
+#endif

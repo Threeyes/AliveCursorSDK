@@ -1,5 +1,5 @@
 using Threeyes.Config;
-using Threeyes.Steamworks;
+using Threeyes.GameFramework;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = AC_EditorDefinition.AssetMenuPrefix_Root_Mod_Controller_Environment + "DefaultEnvironmentControllerConfig", fileName = "DefaultEnvironmentControllerConfig")]

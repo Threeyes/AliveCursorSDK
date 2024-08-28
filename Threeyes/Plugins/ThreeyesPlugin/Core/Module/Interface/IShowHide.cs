@@ -23,7 +23,7 @@ namespace Threeyes.Core
 
     //#region Override IShowHideInterface
     //public bool IsShowing { get { return isShowing; } set { isShowing = value; } }
-    //public bool isShowing = false;
+    //[SerializeField] protected bool isShowing = false;
 
     //public void Show()
     //{

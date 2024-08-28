@@ -17,6 +17,8 @@ namespace Threeyes.Core
         {
             get
             {
+                //if (hasDestroied) return null;
+
                 if (!_Instance)
                 {
                     _Instance = FindObjectOfType<CoroutineManager>();
@@ -35,6 +37,12 @@ namespace Threeyes.Core
             }
         }
 
+        //static bool hasDestroied = false;//可能有bug，暂不使用
+        //private void OnDestroy()
+        //{
+        //    hasDestroied = true;
+        //}
+
         /// <summary>
         /// 开启协程
         /// 注意：在重新载入场景时，原有的组件可能会为空，因此要判断if(this)才能继续执行
@@ -43,21 +51,17 @@ namespace Threeyes.Core
         /// <returns></returns>
         public static Coroutine StartCoroutineEx(IEnumerator routine)
         {
-            if (routine == null)
-                return null;
-
-            if (!Application.isPlaying)
-            {
-                return null;
-            }
+            //if (hasDestroied) return null;
+            if (routine == null) return null;
+            if (!Application.isPlaying) return null;
 
             return Instance.StartCoroutine(routine);
         }
 
         public static void StopCoroutineEx(Coroutine routine)
         {
-            if (routine == null)
-                return;
+            //if (hasDestroied) return;
+            if (routine == null) return;
 
             if (Application.isPlaying)
             {

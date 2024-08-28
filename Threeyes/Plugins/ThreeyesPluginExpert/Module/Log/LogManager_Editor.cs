@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Threeyes.Log
 {
@@ -23,13 +24,29 @@ namespace Threeyes.Log
         }
         public override void Log(object message)
         {
-            Debug.Log(message);
+            LogStatic(message);
         }
         public override void LogWarning(object message)
         {
-            Debug.LogWarning(message);
+            LogWarningStatic(message);
         }
         public override void LogError(object message)
+        {
+            LogErrorStatic(message);
+        }
+
+        //[Conditional("ENABLE_LOG")]
+        static public void LogStatic(object message)
+        {
+            Debug.Log(message);
+        }
+        //[Conditional("ENABLE_LOG")]
+        static public void LogWarningStatic(object message)
+        {
+            Debug.LogWarning(message);
+        }
+        //[Conditional("ENABLE_LOG")]
+        static public void LogErrorStatic(object message)
         {
             Debug.LogError(message);
         }

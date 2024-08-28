@@ -250,19 +250,19 @@ namespace Threeyes.Core
         {
             string path = "";
 #if UNITY_ANDROID
-        try
-        {
-            string[] srcs = Application.persistentDataPath.Split(new string[1] { "Android" }, System.StringSplitOptions.None);
-            if (srcs.Length > 0)
+            try
             {
-                string result = srcs[0];
-                path = result.Substring(0, result.Length - 1);
+                string[] srcs = Application.persistentDataPath.Split(new string[1] { "Android" }, System.StringSplitOptions.None);
+                if (srcs.Length > 0)
+                {
+                    string result = srcs[0];
+                    path = result.Substring(0, result.Length - 1);
+                }
             }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("设置根目录出错：\r\n" + e);
-        }
+            catch (Exception e)
+            {
+                Debug.LogError("设置根目录出错：\r\n" + e);
+            }
 #endif
 
             return path;
@@ -352,12 +352,17 @@ namespace Threeyes.Core
 
         /// <summary>
         /// 
+        /// Warning:
+        /// -Android：FilePrefix只适用于WWW加载，如果加了之后就变为只读。PS：如果是VideoPlayer的url，则不需要加prefix
+        /// 
+        /// ToUpdate:
+        /// -针对其他平台也要考虑FilePrefix
         /// </summary>
         /// <param name="externalFileLocation"></param>
         /// <param name="subPath"></param>
         /// <param name="withFilePrefix"></param>
         /// <returns></returns>
-        public static string GetPath(ExternalFileLocation externalFileLocation, string subPath, bool withFilePrefix = true)
+        public static string GetPath(ExternalFileLocation externalFileLocation, string subPath, bool withFilePrefix = false)
         {
             string resultPath = "";
             //对应路径：https://www.cnblogs.com/vsirWaiter/p/5340284.html
@@ -405,6 +410,14 @@ namespace Threeyes.Core
         /// <param name="isSelect">true：选中；false：打开</param>
         public static void OpenFile(string filePath, bool isSelect = true)
         {
+#if UNITY_ANDROID ||UNITY_IOS
+#if !UNITY_EDITOR
+            //复制路径到剪贴板中，让用户自行打开（暂时不用第三方插件，避免权限问题）
+            //ToUpdate:弹出通用提示框，提示路径已经粘贴到剪贴板
+            GUIUtility.systemCopyBuffer = filePath;
+            return;
+#endif
+#endif
             string cmd = "explorer.exe";
             string arg = ConvertToSystemFormat(filePath); //(PS:路径只能是\\）
             if (isSelect)

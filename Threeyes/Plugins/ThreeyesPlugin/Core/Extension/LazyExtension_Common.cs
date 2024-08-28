@@ -949,6 +949,24 @@ namespace Threeyes.Core
         #endregion
 
         #region GameObject
+
+
+        /// <summary>
+        /// Checks if a GameObject has been destroyed.
+        /// 
+        /// Ref: https://discussions.unity.com/t/how-to-detect-if-a-gameobject-has-been-destroyed/2385/4
+        /// </summary>
+        /// <param name="gameObject">GameObject reference to check for destructedness</param>
+        /// <returns>If the game object has been marked as destroyed by UnityEngine</returns>
+        public static bool IsDestroyed(this GameObject gameObject)
+        {
+            // UnityEngine overloads the == opeator for the GameObject type
+            // and returns null when the object has been destroyed, but 
+            // actually the object is still there but has not been cleaned up yet
+            // if we test both we can determine if the object has been destroyed.
+            return gameObject == null && !ReferenceEquals(gameObject, null);
+        }
+
         public static T InstantiateUIPrefab<T>(this GameObject obj, Transform tfParent = null, Vector3 position = default, Quaternion rotation = default)
         {
             return obj.InstantiatePrefab(tfParent, position, rotation, Vector3.one).GetComponent<T>();//默认使用缩放1
@@ -1035,11 +1053,19 @@ namespace Threeyes.Core
 
         #region Transform
 
-        public static string GetHierarchyName(this Transform tf)
+        /// <summary>
+        /// 获取层级的名称，通常用于Transform.Find
+        /// </summary>
+        /// <param name="tf"></param>
+        /// <param name="rootParent">可选的父物体，常用于相同层级迁移</param>
+        /// <returns></returns>
+        public static string GetHierarchyName(this Transform tf, Transform rootParent = null)
         {
             string result = tf.name;
             while (tf.parent)
             {
+                if (rootParent && tf.parent == rootParent) break;//当遇到父物体时体哦啊出
+
                 result = tf.parent.name + "/" + result;
                 tf = tf.parent;
             }

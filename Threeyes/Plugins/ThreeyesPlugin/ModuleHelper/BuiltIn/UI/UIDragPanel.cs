@@ -18,7 +18,7 @@ namespace Threeyes.ModuleHelper
     {
         public bool initOnAwake = true;//如果是挂载Prefab上，可以禁用并主动设置引用，否则会报警告
         public RectTransform panelRectTransform;//需要拖拽的Panel，要求有父物体且边界范围设置正确
-        public RectTransform parentRectTransform;
+        public RectTransform parentRectTransform;//【可空】Panel的父物体
 
         private Vector2 originalLocalPointerPosition;
         private Vector3 originalPanelLocalPosition;

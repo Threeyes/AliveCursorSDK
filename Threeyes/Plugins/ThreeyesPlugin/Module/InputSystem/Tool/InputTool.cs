@@ -99,6 +99,11 @@ namespace Threeyes.InputSystem
         public static Func<int, bool> OverrideGetMouseButtonDown;
         public static Func<int, bool> OverrideGetMouseButton;
         public static Func<int, bool> OverrideGetMouseButtonUp;
+        public static Func<Vector2> OverrideGetMouseWheelDelta;
+        public static Func<KeyCode, bool> OverrideGetKeyDown;
+        public static Func<KeyCode, bool> OverrideGetKey;
+        public static Func<KeyCode, bool> OverrideGetKeyUp;
+
 
         #region Unit Func
         /// <summary>
@@ -109,16 +114,15 @@ namespace Threeyes.InputSystem
         public static float GetAxis(string axisName)
         {
             if (OverrideGetAxis != null)
-            {
                 return OverrideGetAxis.Invoke(axisName);
-            }
+
 #if ENABLE_INPUT_SYSTEM
             ///PS:以下字段需要当前Input的有对应名称的Action，否则会报错
             ///Look: Mouse X、Mouse Y
             ///Move: Horizontal、Vertical
             ///其他axisName：报错，后期完善
             float result = 0;
-            //Ref:https://forum.unity.com/threads/mouse-jittering-with-new-inputsystem.1173761/#post-7526288
+            //#针对输入的原值进行缩放处理，使其结果与旧版Input一致，Ref:https://forum.unity.com/threads/mouse-jittering-with-new-inputsystem.1173761/#post-7526288
             float mosueSensitivity = 0.05f;//参考旧版InputManager
             if (axisName == "Mouse X")
                 result = Mouse.current.delta.ReadValue().x * mosueSensitivity;
@@ -127,11 +131,6 @@ namespace Threeyes.InputSystem
             else
                 Debug.LogError($"{axisName} Not define! Please use inputAction instead!");
 
-            ///PS:以下需要通过InputAction获取，名称不固定
-            //if (axisName == "Horizontal")
-            //    result = PlayerInput.isSinglePlayer.actions["Movement"].leftStick.ReadValue().x;
-            //else if (axisName == "Vertical")
-            //    result = Gamepad.current.leftStick.ReadValue().y;
             return result;
 #else
             return Input.GetAxis(axisName);
@@ -140,9 +139,8 @@ namespace Threeyes.InputSystem
         static Vector2 GetMousePosition()
         {
             if (OverrideGetMousePosition != null)
-            {
                 return OverrideGetMousePosition.Invoke();
-            }
+
 #if ENABLE_INPUT_SYSTEM
             return Mouse.current != null ? Mouse.current.position.ReadValue() : default(Vector2);
 #else
@@ -152,9 +150,8 @@ namespace Threeyes.InputSystem
         public static bool GetMouseButtonDown(int index)
         {
             if (OverrideGetMouseButtonDown != null)
-            {
                 return OverrideGetMouseButtonDown.Invoke(index);
-            }
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
@@ -164,9 +161,8 @@ namespace Threeyes.InputSystem
         public static bool GetMouseButton(int index)
         {
             if (OverrideGetMouseButton != null)
-            {
                 return OverrideGetMouseButton.Invoke(index);
-            }
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.isPressed : false;
 #else
@@ -176,15 +172,27 @@ namespace Threeyes.InputSystem
         public static bool GetMouseButtonUp(int index)
         {
             if (OverrideGetMouseButtonUp != null)
-            {
                 return OverrideGetMouseButtonUp.Invoke(index);
-            }
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
             return Input.GetMouseButtonUp(index);
 #endif
         }
+
+        static float GetMouseWheelDelta()
+        {
+#if ENABLE_INPUT_SYSTEM
+            if (OverrideGetMouseWheelDelta != null)
+                return OverrideGetMouseWheelDelta.Invoke().y;
+
+            return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y / 120 : 0.0f;//PS：针对鼠标，要除以滚轴的单位滚动数值
+#else
+            return Input.mouseScrollDelta.y;
+#endif
+        }
+
 
 
         static int GetTouchCount()
@@ -228,6 +236,10 @@ namespace Threeyes.InputSystem
 
         public static bool GetKeyDown(KeyCode oldKey)
         {
+            if (OverrideGetKeyDown != null)
+                return OverrideGetKeyDown.Invoke(oldKey);
+
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
@@ -237,6 +249,9 @@ namespace Threeyes.InputSystem
 
         public static bool GetKey(KeyCode oldKey)
         {
+            if (OverrideGetKey != null)
+                return OverrideGetKey.Invoke(oldKey);
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.isPressed : false;
 #else
@@ -246,22 +261,15 @@ namespace Threeyes.InputSystem
 
         public static bool GetKeyUp(KeyCode oldKey)
         {
+            if (OverrideGetKeyUp != null)
+                return OverrideGetKeyUp.Invoke(oldKey);
+
 #if ENABLE_INPUT_SYSTEM
             var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
             return Input.GetKeyUp(oldKey);
 #endif
         }
-
-        static float GetMouseWheelDelta()
-        {
-#if ENABLE_INPUT_SYSTEM
-            return Mouse.current.scroll != null ? Mouse.current.scroll.ReadValue().y / 120 : 0.0f;//PS：要除以滚轴的单位滚动数值
-#else
-            return Input.mouseScrollDelta.y;
-#endif
-        }
-
 
         public static bool GetKeyboardExists()
         {
@@ -418,7 +426,7 @@ namespace Threeyes.InputSystem
             { KeyCode.Menu, NewCode.ContextMenu },
         };
 
-        private static Controls.ButtonControl GetMouseButtonControl(int index)
+        public static Controls.ButtonControl GetMouseButtonControl(int index)
         {
             if (Mouse.current != null)
             {
@@ -434,8 +442,19 @@ namespace Threeyes.InputSystem
 
             return null;
         }
-        private static Controls.ButtonControl GetButtonControl(KeyCode oldKey)
+        public static Controls.ButtonControl GetButtonControl(KeyCode oldKey)
         {
+            if (Keyboard.current != null)
+            {
+                var newKey = default(NewCode);
+
+                if (keyMapping.TryGetValue(oldKey, out newKey))
+                {
+                    if (newKey == NewCode.None)//PS:没有None对应的KeyControl
+                        return null;
+                    return Keyboard.current[newKey];
+                }
+            }
             if (Mouse.current != null)
             {
                 switch (oldKey)
@@ -448,17 +467,6 @@ namespace Threeyes.InputSystem
                 }
             }
 
-            if (Keyboard.current != null)
-            {
-                var newKey = default(NewCode);
-
-                if (keyMapping.TryGetValue(oldKey, out newKey))
-                {
-                    if (newKey == NewCode.None)//PS:没有None对应的KeyControl
-                        return null;
-                    return Keyboard.current[newKey];
-                }
-            }
             return null;
         }
 #endif

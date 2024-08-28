@@ -8,7 +8,9 @@ namespace Threeyes.Core
 {
     public static class UITool
     {
-        static EventSystem curEventSystem { get { return EventSystem.current; } }
+        static EventSystem curEventSystem { get { if (!_curEventSystem) _curEventSystem = EventSystem.current; return _curEventSystem; } }
+        static EventSystem _curEventSystem;
+        public static System.Func<bool> OverrideIsHoveringUI;
 
         /// <summary>
         /// Warning:
@@ -17,6 +19,9 @@ namespace Threeyes.Core
         /// <returns></returns>
         public static bool IsHoveringUI()
         {
+            if (OverrideIsHoveringUI != null)//适用于：屏幕有需要忽略的OnScreenUI（如虚拟摇杆） 。后续还可以通过提供需要忽略UI的特征来进行排除
+                return OverrideIsHoveringUI.Invoke();
+
             if (curEventSystem)
             {
                 return curEventSystem.IsPointerOverGameObject();
@@ -60,6 +65,34 @@ namespace Threeyes.Core
                 return inputField && inputField.isFocused;
             }
             return false;
+        }
+
+
+        /// <summary>
+        /// 获取某一点的顶层UI
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool GetFirstUIHit(Vector3 screenPosition, out GameObject result)
+        {
+            if (!curEventSystem)
+            {
+                result = null;
+                return false;
+            }
+            List<RaycastResult> results = new List<RaycastResult>();
+            curEventSystem.RaycastAll(new PointerEventData(curEventSystem) { position = screenPosition }, results);//Warning：EventSystem.current.currentSelectedGameObject无法正常返回当前UI，因此要通过RaycastAll检测
+
+            if (results.Count > 0)
+            {
+                result = results[0].gameObject;
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Threeyes.ShowHide
         [SerializeField] protected bool isShowing = false;
         public virtual bool IsShowing { get { return isShowing; } set { isShowing = value; } }
 
-        public Toggle.ToggleEvent onShowHide;
+        public BoolEvent onShowHide;
         public UnityEvent onShow;
         public UnityEvent onHide;
 

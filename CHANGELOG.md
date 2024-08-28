@@ -1,5 +1,8 @@
 # Changelog
 
+## [4.4.0]
+- Change namespace from Threeyes.Steamworks to Threeyes.GameFramework.
+
 ## [4.3.9]
 - Fix TweenOption_Vector3Ex's field not Serialized.
 

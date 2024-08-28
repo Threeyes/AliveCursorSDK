@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Threeyes.Action;
 using Threeyes.Core;
-using Threeyes.Steamworks;
+using Threeyes.GameFramework;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -144,7 +144,7 @@ public class AC_StateManagerBase<T> : HubManagerWithControllerBase<T, IAC_StateC
         while (true)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (DebugTool.GetDebugMode(isDebugIgnoreInput))
+            if (PlatformTool.GetDebugMode(isDebugIgnoreInput))
                 yield break;
 #endif
 

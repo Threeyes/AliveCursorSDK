@@ -41,7 +41,7 @@ namespace Threeyes.ModuleHelper
         public bool isShowOnAwake = false;
         public bool isHideOnAwake = false;
         public bool canRepeatShowHide = true;//能否重复Show/Hide，true可避免显隐错误，保证CanvasGroup的唯一显示；false可保证事件只调用一次
-        public bool isShowing = false;
+        [SerializeField] bool isShowing = false;
         public bool isUseStartValue = true;//在动画执行前使用开始值。true：重新开始动画
 
         public BoolEvent onShowHide;
@@ -107,6 +107,7 @@ namespace Threeyes.ModuleHelper
         //保留参数
         public Vector2 alphaRange = new Vector2(0, 1);
         public float tweenDuration = 0.8f;
+        public bool ignoreTimeScale = true;
 
 #if USE_DOTween
         public Ease ease = Ease.Linear;
@@ -118,7 +119,7 @@ namespace Threeyes.ModuleHelper
             if (isUseStartValue)
                 Comp.alpha = isShow ? alphaRange.x : alphaRange.y;//Init
 
-            tweener = Comp.DOFade(isShow ? alphaRange.y : alphaRange.x, tweenDuration).SetEase(ease);
+            tweener = Comp.DOFade(isShow ? alphaRange.y : alphaRange.x, tweenDuration).SetEase(ease).SetUpdate(ignoreTimeScale);
 
             if (isShow)
             {

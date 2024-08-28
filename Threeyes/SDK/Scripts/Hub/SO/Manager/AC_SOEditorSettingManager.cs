@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-using Threeyes.Steamworks;
+using Threeyes.GameFramework;
 /// <summary>
 /// 【Editor】缓存用户设置
 /// </summary>

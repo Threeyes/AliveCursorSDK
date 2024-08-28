@@ -8,7 +8,7 @@ namespace Threeyes.ShowHide
         {
             base.Awake();
 
-            Show(DebugTool.IsDebugBuild);
+            Show(PlatformTool.IsDebugBuild);
         }
     }
 }
